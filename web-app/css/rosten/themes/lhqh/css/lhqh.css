@@ -1,0 +1,257 @@
+@CHARSET "UTF-8";
+@import url("Header.css");
+@import url("Formdata.css");
+
+/*
+ * 页面风格栏颜色样式
+ */
+.rosten #rosten_form .dijitTabHover .dijitTabInnerDiv{
+	background-color:#e5e5e7;
+}	
+
+.rosten #rosten_form .dijitTabActive .dijitTabInnerDiv{
+	background-color:#e5e5e7;
+}
+.rosten .dijitGutterH,.rosten .dijitSplitterV{
+	background-color:#e5e5e7;
+}
+
+.rosten .verticalAlign *{
+	vertical-align:middle;
+}
+.rosten .sideBar .dijitAccordionTitleSelected .dijitAccordionArrow{
+	background:none;
+	width:0px;
+}
+.rosten .sideBar .dijitAccordionContainer{
+	border:0px;
+}
+.rosten .sideBar .dijitAccordionTitleSelected{
+	border-top:0px;
+	background-image:url("../images/titleBar_bg.png");
+	font-size:14px;
+	font-weight:normal;
+	height:18px;
+	text-align:center;
+}
+/*
+ * 侧边栏样式
+ */
+.rosten .simpleNavigation ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+	font-size:14px;
+}
+.rosten .simpleNavigation img {
+    border: none;
+}
+.rosten .simpleNavigation li{
+	border-bottom:1px solid #C8C8C8;
+}
+.rosten .simpleNavigation li a *{
+	vertical-align:middle;
+}
+.rosten .simpleNavigation li a {
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    text-decoration: none;
+	outline:none;
+	height:20px;
+}
+
+.rosten .simpleNavigation li a:link, .rosten .simpleNavigation li a:visited {
+    color: black;
+    display: block;
+    padding: 5px 0 5px 10px;
+}
+
+.rosten .simpleNavigation li a:hover {
+	background-image:url("../images/titleBar_bg.png");
+    padding: 5px 0 5px 10px;
+}
+
+/*
+ * 弹出广告样式
+ */
+.rosten .popwindow{
+	background-image:url("../images/header_menu_bg.png");
+}
+
+/*
+ * 弹出对话框样式
+ */
+.rosten .dijitDialog .dijitDialogTitleBar .dijitDialogTitle,.rosten .dijitDialog .dijitDialogPaneContent,.rosten .dijitTitlePaneTitle{
+	font-size:12px;
+}
+.rosten .dijitTitlePaneTitle,.rosten .dijitDialog .dijitDialogTitleBar{
+	background-image:url("../images/titleBar_bg.png");
+}
+
+/*
+ * actionbar css 
+ */
+.rosten .ActionBarOuter .dijitToolbar{
+	background: url(../images/header_menu_bg.png) repeat-x;
+}
+.rosten .ActionBarOuter .actionBarIcon{
+	background-repeat:no-repeat;
+	height:16px;
+	text-align:center;
+	width:16px;
+}
+.rosten .ActionBarOuter .dijitButtonText{
+ 	padding-top:2px;
+ }
+ 
+/*
+ *	tree css
+ */ 
+.rosten .tree .dijitFolderOpened {
+    background: url(../images/tree_open.gif) no-repeat;
+} 
+.rosten .tree .dijitFolderClosed {
+    background: url(../images/tree_close.gif) no-repeat;
+} 
+.rosten .tree .dijitLeaf {
+    background: url(../images/tree_leaf.gif) no-repeat;
+}
+
+/*
+ *  tree dialog css
+ */
+.rosten .userTree .dijitFolderOpened {
+    background: url(../images/user_tree_open.gif) no-repeat;
+}
+.rosten .userTree .dijitFolderClosed {
+    background: url(../images/user_tree_open.gif) no-repeat;
+} 
+.rosten .userTree .dijitLeaf {
+	background: url(../images/user_tree_leaf.gif) no-repeat;
+}
+
+/*
+ *	grid css
+ */ 
+
+.rosten .rostenGridView {
+    border-right: 0px solid #eCe8b9;
+    border-top: 1px solid #F6F4EB;
+    border-bottom: 1px solid #eCe8b9;
+    border-left: 0px solid #F6F4EB;
+    padding: 0;
+    width: 100%;
+    -moz-user-select: none;
+} .rosten .rostenGridView table {
+    font-size: 12px;
+    font-weight: normal;
+    border-collapse: collapse;
+    width: 100%;
+    padding: 0px;
+    margin: 0;
+    display: table !important;
+    display: block;
+} .rosten .rostenGridView td {
+    border-left: 1px solid #eee;
+    border-right: 0px solid #bbb;
+    border-top: 0px;
+    border-bottom: 0px;
+    line-height: 20px;
+} .rosten .rostenGridView th {
+    line-height: 22px;
+} .rosten .rostenGridView .dojoxGridHeader,.rosten .rostenGridView .dojoxGridHeader .dojoxGridCell{
+	/*
+	 * 表格表头样式
+	 */
+ 	background: url(../images/titleBar_bg.png) repeat-x;
+}.rosten .rostenGridView .dojoxGridHeader .dijitCheckBox{
+	margin-top:4px;
+	margin-left:1px;
+} .rosten .rostenGridView .dojoxGridRowSelected{
+	/*
+	 * 表格选中后背景
+	 */
+	 background-color:#e5e5e7;
+} .rosten .rostenGridView .dojoxGridRowbar{
+	background-image:url(../images/row_back.png);
+	background-color:white;
+}.rosten .rostenGridView .dojoxGridRowbarOver{
+	/*
+	 * 表格内容鼠标移动时选择框背景
+	 */
+	background-color:#FFFFFF;
+}.rosten .rostenGridView .dojoxGridRowOver .dojoxGridCell{
+	/*
+	 * 表格内容鼠标移动时表格数据背景
+	 */
+	background-image:url(../images/row_back.png);
+	background-color:#e5e5e7;
+	color:#4A4AFF;
+}.rosten .rostenGridView .dojoxGridRowbarSelected .dojoxGridRowbarInner {
+	background-image:none;
+    background-repeat: no-repeat;
+} .rosten .rostenGridView .dojoxGridRowbarSelected{
+	background:none;
+} .rosten .rostenGridView .dojoxGridCellFocus{
+	/*
+	 * 表格内容鼠标选中表格数据时去除表格内列边框
+	 */
+	border:none;
+}  .rosten .rostenGridView .pagecontrol {
+	border-top:1px solid #ccc;
+	font-size:12px;
+	/*bottom: 0;*/
+	padding: 0px; 
+	position: absolute;
+	width:100%;
+	text-indent: 0px;
+} .rosten .rostenGridView .pagecontrol .dijitInputInner{
+	text-align:center;
+} .rosten .rostenGridView .prevpagelink {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-prev.gif') no-repeat;
+} .rosten .rostenGridView .prevpagelinkdisabled {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-prev-disabled.gif') no-repeat;
+} .rosten .rostenGridView .nextpagelink {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-next.gif') no-repeat;
+} .rosten .rostenGridView .nextpagelinkdisabled {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-next-disabled.gif') no-repeat;
+} .rosten .rostenGridView .lastpagelink {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-last.gif') no-repeat;
+} .rosten .rostenGridView .lastpagelinkdisabled {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-last-disabled.gif') no-repeat;
+} .rosten .rostenGridView .firstpagelink {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-first.gif') no-repeat;
+} .rosten .rostenGridView .firstpagelinkdisabled {
+    cursor: hand;
+    width: 16px;
+    height: 16px;
+    background: url('../images/page-first-disabled.gif') no-repeat;
+} .rosten .rostenGridView .gotopage {
+    width: 25px;
+    font-size: 12px;
+    padding: 0;
+    height: 20px;
+}
+
+

@@ -1,0 +1,73 @@
+@CHARSET "UTF-8";
+
+/*
+ * 数据表格样式
+ */
+ .rosten .dijitMenuItem{
+	font-size:20px;
+}
+.rosten .rosten_form {
+	width: 773px;
+	margin:0 auto;
+	font-size:12px;
+	padding: 5px;
+}
+.rosten .rosten_form tr{
+	height:30px;	
+}
+.rosten .rosten_form .line_style{
+	line-height:230%;
+}
+
+.rosten .rosten_form .dijitButtonText {
+    font-size: 12px;
+}
+.rosten .rosten_form .input{
+	font-size:13px;
+	padding-top:3px;
+	padding-bottom:2px;
+}
+.rosten .rosten_form .input1{
+	margin-left:1px;
+	width:194px;
+	height:19px;
+	font-size:15px;
+	padding-top:3px;
+}
+.rosten .rosten_form .dijitSelect{
+	margin-left:1px;
+	height:23px;
+}
+.rosten .rosten_form .tableHeader {
+	border-collapse: collapse;
+	font-size: 15px;
+	COLOR: #2E2E5A;
+	/*background: url("../images/html/list_hd_bg.png");*/
+	
+}
+
+.rosten .rosten_form .tableData {
+	font-size: 12px;
+	BACKGROUND: #FFFFFF;
+	COLOR: #000000;
+	margin:0 auto;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.rosten .rosten_form .fieldset-form {
+	border: #ccc 1px solid;
+	margin-bottom: 6px;
+	padding-bottom: 4px;
+}
+
+.rosten .rosten_form .fieldset-form legend {
+	margin: 0;
+	margin-left: 5px;
+	padding: 0 2px;
+	font-weight: 700;
+}
+
+.rosten .rosten_form .fieldset-form legend span {
+	font-weight: normal;
+}

@@ -1,0 +1,41 @@
+/* 页面布局 */
+@import url("rostenGrid.css");
+@import url("departUser.css");
+@import url("rostenShare.css");
+html, body, #container{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+	font-size:12px;
+}
+#header {
+	height:100px;
+	padding: 0 0 0 0;
+	overflow: hidden;
+}
+#contentBody{
+	padding: 0 0 0 0;
+}
+#sideBar {
+	width:206px; 
+	padding: 0 0 0 0;
+}
+#footer {
+	text-align:center;
+	color:#999999;
+
+}
+#preLoader {
+        width:100%; height:100%; margin:0; padding:0;
+        position:absolute; top:0; left:0;
+        background:#fff url('../../images/rosten/share/wait_big.gif') no-repeat center center;
+        z-index:999;
+}
+#preLoader p {
+        color:#ededed;
+        font:72pt Arial,san-serif;
+        font-weight:bold;
+        
+}

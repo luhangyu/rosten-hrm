@@ -1,0 +1,402 @@
+.rosten .bbs {
+	width: 980px;
+	margin: 0 auto;
+	clear: both;
+	min-height: 300px;
+	_height: 300px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+	clear: both;
+	min-height: 300px;
+	_height: 300px;
+	padding-top: 8px;
+}
+
+.rosten .bbs  .newspage {
+	margin: 20px auto;
+	width: 832px;
+}
+
+.rosten .bbs  .newspagebg {
+	width: 796px;
+	margin: 0 auto;
+	padding-bottom: 30px;
+	border-left: 1px solid #D8D7D7;
+	border-right: 1px solid #D8D7D7;
+	border-bottom: 1px solid #D8D7D7;
+	border-top: 1px solid #D8D7D7;
+	word-break: break-all;
+}
+
+.rosten .bbs  .newspage .title {
+	width: 100%;
+}
+
+.rosten .bbs  .newspage .title h3 {
+	font-size: 22px;
+	font-weight: bold;
+	width: 90%;
+	padding: 20px 0 10px 0;
+	text-align: center;
+	margin: 0 auto;
+	color: #2F2727;
+	background: url(../../images/rosten/share/newscont_titlebg.gif)
+		no-repeat left bottom;
+}
+
+.rosten .bbs  .newspage .title h4 {
+	font-weight: normal;
+	width: 90%;
+	margin: 5px auto;
+	padding: 5px 0;
+	text-align: center;
+	color: #000;
+	border-bottom: 1px solid #ccc;
+}
+
+.rosten .bbs  .newspage .title h4 span {
+	padding-right: 10px;
+}
+
+.rosten .bbs  .newspage .newcont {
+	padding: 10px 0;
+	width: 90%;
+	margin: 10px auto;
+	min-height: 400px;
+	_height: 400px;
+	font-size: 16px !important;
+	font-family: 宋体 !important;
+	line-height: 180% !important;
+}
+
+.rosten .bbs  .newspage .newcont * {
+	font-size: 16px !important;
+	font-family: 宋体 !important;
+	line-height: 180% !important;
+}
+
+.rosten .bbs  .newspage table {
+	width: 98% !important;
+}
+
+.rosten .bbs  .newspage img {
+	border: 0;
+	max-width: 550px;
+	width: expression(width > 550 ? "550px" : "px");
+	overflow: auto;
+}
+
+.rosten .bbs  .newspage .download {
+	width: 90%;
+	margin: 5px auto;
+	text-align: left
+}
+
+.rosten .bbs  .newspage .newsbar {
+	width: 97%;
+	margin: 0 auto;
+	height: 20px;
+	border-top: 1px solid #911C11;
+	/*background: #EDEEF1;*/
+	text-align: center;
+	padding-top: 5px;
+}
+
+.rosten .bbs  .newspage .newsbar button {
+	margin-right: 40px;
+	margin-top: 7px;
+	display: inline;
+}
+
+.rosten .flowLog table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.rosten .flowLog table th,.rosten .flowLog table td {
+	border: 1px dotted #828282;
+	border-width: 1px 0;
+	text-align: left;
+	padding: .5em .4em;
+	line-height: 1.6;
+	color: #222;
+}
+
+.rosten .flowLog table th {
+	border-right: 1px dotted #828282;
+	width: 100px;
+	text-align: center;
+	color: #777;
+}
+/*意见显示 */
+.rosten .commentLog .title-nav {
+	margin: 1em auto;
+	height: 26px;
+	line-height: 26px;
+	border-bottom: 1px solid #b0cadf;
+}
+
+.rosten .commentLog .title-nav h3 {
+	float: left;
+	width: 45%;
+	margin: 0px
+}
+
+.rosten .commentLog .title-nav h3 span {
+	font-weight: bold;
+	color: #2b92ec;
+	font-size: 14px;
+	padding-left: 5px;
+}
+
+.rosten .commentLog .title-nav h3 em {
+	margin: 0 0px 0 14px;
+	font-weight: normal;
+	color: #555;
+}
+
+.rosten .commentLog .title-nav h3 em cite {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border: 1px solid #ccc;
+	font-size: 0;
+	background: #eee;
+	margin-right: 3px;
+}
+
+.rosten .commentLog .title-nav h3 em.bg-ysb {
+	color: #3684f9;
+}
+
+.rosten .commentLog .title-nav h3 em.bg-kbj {
+	color: #23be09;
+}
+
+.rosten .commentLog .title-nav h3 em.bg-ysb cite {
+	background: #d9e9ff;
+	border-color: #b2cbee;
+}
+
+.rosten .commentLog .title-nav h3 em.bg-kbj cite {
+	background: #92e190;
+	border-color: #6ecb6b;
+}
+
+.rosten .commentLog .title-nav h3 em.bg-wkf cite {
+	background: #eee;
+}
+
+.rosten .commentLog .title-nav h4 {
+	float: right;
+	width: 45%;
+	text-align: right;
+	margin: 0px
+}
+
+.rosten .commentLog .title-nav h4 a {
+	height: 22px;
+	line-height: 22px;
+	padding: 0 .5em;
+	color: #fff;
+	background: #4786dd;
+	display: inline-block;
+	margin: 0 3px;
+}
+
+.rosten .commentLog .title-nav h4 a:hover {
+	background: #165cbe;
+	color: #fff;
+}
+
+/*意见列表*/
+.rosten .commentLog .rz-list {
+	border-bottom: 1px dotted #ccc;
+	margin: 2px 0 13px;
+}
+
+.rosten .commentLog .rz-list-cur {
+	background: #f3f7fe;
+}
+
+.rosten .commentLog .rz-list h3 {
+	font-weight: bold;
+}
+
+.rosten .commentLog .rz-list .rz-list-con {
+	line-height: 1.6;
+	color: #555;
+	padding-left: 2em;
+	min-height: 60px;
+	_height: 60px;
+	margin-top: 5px;
+}
+
+.rosten .commentLog .rz-list h5 {
+	height: 15px;
+	line-height: 15px;
+	text-align: right;
+}
+
+.rosten .commentLog .rz-list h5 a {
+	margin: 0 .6em;
+	color: #06F;
+	display: none;
+}
+
+.rosten .commentLog .rz-list-cur h5 a {
+	display: inline;
+	font-weight: normal;
+}
+
+.rosten .commentLog .rz-list-edit {
+	padding: .2em;
+	display: none;
+}
+
+.rosten .commentLog .rz-list-edit textarea {
+	width: 99%;
+	overflow: auto;
+	border: 1px solid #ccc;
+	height: 70px;
+	padding: 2px;
+	font-size: 12px;
+}
+
+.rosten .commentLog .rz-list-edit-tool {
+	padding: .3em .12em .2em 0;
+	text-align: right;
+}
+
+/*
+* 附件上传css样式
+*/
+.dojoxUploaderFileList {
+	border: 1px solid #ccc;
+	min-height: 50px;
+}
+
+.dojoxUploaderFileListTable {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 5px;
+}
+
+.dojoxUploaderFileListHeader th {
+	background-color: #eee;
+	padding: 3px;
+}
+
+.dojoxUploaderFileListRow {
+	
+}
+
+.dojoxUploaderIndex {
+	width: 20px;
+}
+
+.dojoxUploaderIcon {
+	width: 50px;
+}
+
+.dojoxUploaderFileName {
+	
+}
+
+.dojoxUploaderSize {
+	width: 70px;
+}
+
+.dojoxUploaderFileListContent {
+	width: 100%;
+}
+
+.dojoxUploaderFileListProgress {
+	border: 1px solid #666;
+	height: 15px;
+	position: relative;
+	background: #fff;
+	overflow: hidden;
+}
+
+.dojoxUploaderFileListPercentText {
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	font-size: 10px;
+	text-align: right;
+}
+
+.dojoxUploaderFileListProgressBar {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 15px;
+	width: 0%;
+	background: #bfe1fd;
+}
+
+.rosten .tooltipLink .dijitButtonNode,.rosten .tooltipLink .dijitButtonNode .dijitDropDownButtonHover,.rosten .buttonLink .dijitButtonNode,.rosten .buttonLink .dijitButtonHover .dijitButtonNode
+	{
+	background: none !important;
+	border: none;
+}
+
+.rosten .tooltipLink .dijitArrowButtonInner {
+	display: none;
+}
+
+.rosten .tooltipLink button,.rosten .tooltipLink button .dijitButtonText,.rosten .buttonLink button .dijitButtonText
+	{
+	text-decoration: underline !important;
+	color: blue;
+	display: inline;
+}
+/*
+*首页工作计划样式
+*/
+.por-mod { padding:.5em; }
+.por-rz-tool { padding:3px 0; text-align:right; }
+.por-rz-tool a { color:#0005c6; text-decoration:underline; }
+table.por-rz-tab { width:100%; border-collapse:collapse; }
+table.por-rz-tab th, table.por-rz-tab td { border:1px dotted #828282; border-width:1px 0; text-align:left; padding:.5em .4em; line-height:1.6; color:#222; }
+table.por-rz-tab th { border-right:1px dotted #828282; width:4em; text-align:center; color:#777; }
+.por-rz-bot { padding:.2em 0; text-align:right; }
+.por-rz-bot a { color:#0000ff; }
+a.link-njthwxrz { color:#777; }
+a.link-njthwxrz-cur { color:#0000ff; }
+.por-jh-tool { height:28px; position:relative; text-align:center;margin-bottom:8px }
+.por-jh-tool span { color:#333; font-weight:bold; font-size:14px; }
+.por-jh-tool span em { color:red; margin:0 .4em; }
+table.por-jh-tab { width:100%; border-collapse:collapse; }
+table.por-jh-tab td { border-collapse:collapse; border:1px solid #ccc; padding:0; text-align:center;/*border-bottom:2px solid #ccc;*/ cursor:pointer; }
+table.por-jh-tab td div { padding:5px 0.5em 1em; }
+table.por-jh-tab td div.week-today {/*background:#e7f0f9;*/ background-image:url(../../images/rosten/share/gx.gif); background-repeat:no-repeat; background-position:center bottom; }
+table.por-jh-tab td h3 { padding-bottom:.5em; font-weight:normal; }
+table.por-jh-tab td.week-today {/*background:#e7f0f9;*/ background-image:url(../../images/rosten/share/gx.gif); background-repeat:no-repeat; background-position:center bottom; }
+table.por-jh-tab td.today-has {/*border-bottom:2px solid #f60;*/ background-image:url(../../images/rosten/share/org-has.gif); background-repeat:no-repeat; background-position:right bottom; }
+table.por-jh-tab td.week-day-cur { background-color:#afcae7; }
+.por-jh-bot { height:34px; line-height:45px; overflow:hidden; border-bottom:1px solid #ccc; }
+.por-jh-bot span { color:#322f2f; font-weight:bold; float:left; }
+.por-jh-bot a { float:right; color:#0005c6; text-decoration:underline; }
+ul.today-jh li { padding:5px 0 2px; }
+ul.today-jh li a { color:#333; }
+a.jh-pre-w { background:url(../../images/rosten/share/date_up.gif); color:#2c6899; width:33px; height:21px; display:inline-block; position:relative; top:5px; *top:3px;
+left:-10px;margin-left:20px }
+a.jh-next-w { background:url(../../images/rosten/share/date_down.gif); color:#2c6899; width:33px; height:21px; display:inline-block; position:relative; top:5px; *top:3px;
+left:10px; }
+a.jh-today { background:url(../../images/rosten/share/tab_btn01.gif); width:66px; height:19px; _height:21px; line-height:19px; color:#2c6899; position:absolute; top:3px; left:0px; border:1px solid #a4c9de; }
+
+/* 上传附件样式 */
+.rosten .attachFile ul { margin-left:-45px;margin-top:-15px}
+.rosten .attachFile ul li { float:left; margin-top:5px; height:40px; margin-left:7px; display:inline; background-color:#E3EAF4; position:relative; z-index:95; }
+.rosten .attachFile ul li a { width:100%; height:100%; display:block; cursor:pointer; text-decoration:none; margin-right:30px;margin-top:15px}
+.rosten .attachFile ul li a:hover { text-decoration:none; }
+.rosten .attachFile ul li .xtclose { position:absolute; top:5px; right:6px; width:15px; height:15px; display:block; background:url(../../images/rosten/share/ico_blue.gif) no-repeat left -1029px; cursor:pointer}
+.rosten .attachFile ul li p {text-align:left; }
+.rosten .attachFile ul li .xtname{ color:#155FBE; padding:0; width:100%; display:inline-block; }
+
+
+
+
+

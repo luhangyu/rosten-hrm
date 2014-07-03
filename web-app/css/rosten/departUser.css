@@ -1,0 +1,51 @@
+.rosten .departUser table{
+	border-collapse:collapse;
+}
+.rosten .departUser .fieldlist{
+	width:580px;
+	margin:0 auto;
+	margin-bottom:4px;
+	border:#b5d0e5 1px solid;
+	background:#F6F9FE;
+}
+.rosten .departUser .fieldlist td{
+	padding:4px 8px 4px 8px;
+}
+.rosten .departUser .fieldlist .tab_box{
+	width:100%;
+	border:#b3cee3 1px solid;
+	background:#fff;
+	overflow:auto;
+}
+.rosten .departUser .fieldlist .titlelist{
+	width:100%;
+	background:#fff;
+}
+.rosten .departUser .btn_choose{
+	width:100%；
+	text-align:center;
+}
+.rosten .departUser .btn_choose button{
+	clear:both;
+	width:33px;
+	height:21px;
+	border:0px!important;
+	outline: none!important;
+	margin-top:10px;
+	
+}
+.rosten .departUser .allRight{
+	background:url('../../images/rosten/share/btn_allright.gif') left top no-repeat;
+}
+.rosten .departUser .right{
+	background:url('../../images/rosten/share/btn_right.gif') left top no-repeat;
+}
+.rosten .departUser .left{
+	background:url('../../images/rosten/share/btn_left.gif') left top no-repeat;
+}
+.rosten .departUser .allLeft{
+	background:url('../../images/rosten/share/btn_allleft.gif') left top no-repeat;
+}
+.rosten .departUser .dijitLeaf {
+	background:url('../../images/rosten/share/user_tree_leaf.gif') no-repeat;
+}

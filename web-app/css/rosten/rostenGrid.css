@@ -1,0 +1,101 @@
+/*
+ *	grid css
+ */
+.rosten .rostenGridView {
+	border:1px solid #ddd;
+}
+.rosten .rostenGridView a {
+	color:#108ac6;
+	text-decoration:none;
+}
+.rosten .rostenGridView input {
+	font-size:12px;
+	background-color:#fcfcfc;
+	border:1px solid #ccc;
+	text-align:center;
+}
+.rosten .rostenGridView input:focus {
+	border:1px solid #b2d1ff;
+}
+.rosten .rostenGridView .dojoxGridCell {
+	border:1px dotted #D5CDB5;
+	border-left-color:transparent;
+	border-top-color:transparent;
+}
+.rosten .rostenGridView .dojoxGridRowTable tr {
+	height:25px;
+}
+.rosten .rostenGridView .dojoxGridHeader th {
+	border-style:solid;
+	border-width:1px;
+	border-color:transparent #BCBCBC #BCBCBC transparent;
+}
+.rosten .rostenGridView .dojoxGridHeader .dojoxGridSortNode {
+	background:none;
+	border:none;
+}
+.rosten .rostenGridView .pagecontrol {
+	text-align:right;
+	line-height:25px;
+}
+.rosten .rostenGridView .pagecontrol .num {
+	color:#108ac6;
+}
+.rosten .rostenGridView .pagecontrol .enable {
+	cursor:pointer;
+	color:#108ac6;
+	display:inline
+}
+.rosten .rostenGridView .pagecontrol .disable {
+	color:gray;
+	display:inline
+}
+.rosten .rostenGridView .pagecontrol .dijitInputInner {
+	text-align:center;
+}
+.rosten .rostenGridView .prevpagelink {
+	cursor:hand;
+	display:inline;
+	color:#108AC6;
+}
+.rosten .rostenGridView .prevpagelinkdisabled {
+	cursor:hand;
+	color:gray;
+	display:inline;
+}
+.rosten .rostenGridView .nextpagelink {
+	cursor:hand;
+	display:inline;
+	color:#108AC6;
+}
+.rosten .rostenGridView .nextpagelinkdisabled {
+	cursor:hand;
+	color:gray;
+	display:inline;
+}
+.rosten .rostenGridView .lastpagelink {
+	cursor:hand;
+	display:inline;
+	color:#108AC6;
+}
+.rosten .rostenGridView .lastpagelinkdisabled {
+	cursor:hand;
+	color:gray;
+	display:inline;
+}
+.rosten .rostenGridView .firstpagelink {
+	cursor:hand;
+	display:inline;
+	color:#108AC6;
+}
+.rosten .rostenGridView .firstpagelinkdisabled {
+	cursor:hand;
+	color:gray;
+	display:inline;
+}
+.rosten .rostenGridView .gotopage {
+	width:25px;
+	font-size:12px;
+	padding:0;
+	height:20px;
+}

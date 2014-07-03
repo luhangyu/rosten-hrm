@@ -1,0 +1,153 @@
+@CHARSET "UTF-8";
+@import url("Header.css");
+@import url("Formdata.css");
+
+/*
+ * 页面风格栏颜色样式
+ */
+.rosten .rosten_blockTitleHeader {
+	background-image:url("../images/titleBar_bg.png");
+}	
+.rosten #rosten_form .dijitTabHover .dijitTabInnerDiv{
+	background-color:#C8FCD3;
+}	
+
+.rosten #rosten_form .dijitTabActive .dijitTabInnerDiv{
+	background-color:#C8FCD3;
+}
+
+.rosten .dijitGutterH,.rosten .dijitSplitterV{
+	background-color:#C8FCD3;
+}
+
+.rosten .verticalAlign *{
+	vertical-align:middle;
+}
+.rosten .sideBar .dijitAccordionTitleSelected .dijitAccordionArrow{
+	background:none;
+	width:0px;
+}
+.rosten .sideBar .dijitAccordionContainer{
+	border:0px;
+}
+.rosten .sideBar .dijitAccordionTitleSelected{
+	border-top:0px;
+	background-image:url("../images/titleBar_bg.png");
+	font-size:14px;
+	font-weight:normal;
+	height:18px;
+	text-align:center;
+}
+/*
+ * 侧边栏样式
+ */
+.rosten .simpleNavigation ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+	font-size:14px;
+}
+.rosten .simpleNavigation img {
+    border: none;
+}
+.rosten .simpleNavigation li{
+	border-bottom:1px solid #C8C8C8;
+}
+.rosten .simpleNavigation li a *{
+	vertical-align:middle;
+}
+.rosten .simpleNavigation li a {
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    text-decoration: none;
+	outline:none;
+	height:20px;
+}
+
+.rosten .simpleNavigation li a:link, .rosten .simpleNavigation li a:visited {
+    color: black;
+    display: block;
+    padding: 5px 0 5px 10px;
+}
+
+.rosten .simpleNavigation li a:hover {
+	background-image:url("../images/titleBar_bg.png");
+    padding: 5px 0 5px 10px;
+}
+
+/*
+ * 弹出广告样式
+ */
+.rosten .popwindow{
+	background-image:url("../images/header_menu_bg.png");
+}
+
+/*
+ * 弹出对话框样式
+ */
+.rosten .dijitDialog .dijitDialogTitleBar .dijitDialogTitle,.rosten .dijitDialog .dijitDialogPaneContent,.rosten .dijitTitlePaneTitle{
+	font-size:12px;
+}
+.rosten .dijitTitlePaneTitle,.rosten .dijitDialog .dijitDialogTitleBar{
+	background-image:url("../images/titleBar_bg.png");
+}
+
+/*
+ * actionbar css 
+ */
+.rosten .ActionBarOuter .dijitToolbar{
+	background: url(../images/header_menu_bg.png) repeat-x;
+}
+.rosten .ActionBarOuter .actionBarIcon{
+	background-repeat:no-repeat;
+	height:16px;
+	text-align:center;
+	width:16px;
+}
+.rosten .ActionBarOuter .dijitButtonText{
+ 	padding-top:2px;
+ }
+ 
+/*
+ *	tree css
+ */ 
+.rosten .tree .dijitFolderOpened {
+    background: url(../images/tree_open.gif) no-repeat;
+} 
+.rosten .tree .dijitFolderClosed {
+    background: url(../images/tree_close.gif) no-repeat;
+} 
+.rosten .tree .dijitLeaf {
+    background: url(../images/tree_leaf.gif) no-repeat;
+}
+
+/*
+ *  tree dialog css
+ */
+.rosten .userTree .dijitFolderOpened {
+    background: url(../images/user_tree_open.gif) no-repeat;
+}
+.rosten .userTree .dijitFolderClosed {
+    background: url(../images/user_tree_open.gif) no-repeat;
+} 
+.rosten .userTree .dijitLeaf {
+	background: url(../images/user_tree_leaf.gif) no-repeat;
+}
+
+/*
+ * grid css
+ */
+.rosten .rostenGridView .dojoxGridHeader .dojoxGridCell,.rosten .rostenGridView .dojoxGridRowbarOver,.rosten .rostenGridView .dojoxGridRowOver .dojoxGridCell,.rosten .rostenGridView .pagecontrol{
+ 	background: url(../images/titleBar_bg.png) repeat-x;
+ }
+.rosten .rostenGridView .dojoxGridRowbar{
+	background-image:url(../images/row_back.png);
+}
+.rosten .rostenGridView .dojoxGridRowbar{
+	background-color:white;
+}
+.rosten .rostenGridView .dojoxGridRowbarOver{
+	background-color:#E1EBFB;
+}
+
+

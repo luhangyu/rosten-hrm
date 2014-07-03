@@ -1,0 +1,132 @@
+.rosten .headerTop {
+    width:100%;
+    background: url('../images/header_bg.png');
+    overflow: hidden;	/* erase window level scrollbars */
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+    
+} 
+.rosten .headerTop .headerLogo{
+	background:url("../../../../../images/rosten/share/header_logo.png") no-repeat;
+	width:533px;
+	height:70px;
+}
+.rosten .headerTop .nav {
+	float:right;
+	margin-top:10px;
+}
+.rosten .headerTop .nav a {
+    text-decoration: none;
+    color: #f8f8f8;
+} 
+.rosten .headerTop .nav a:hover {
+    color: #4A4AFF;
+}
+
+.rosten .headerTop .nav0Icon {
+    float: left;
+    width: 16px;
+    background: transparent url('../images/header_user.gif') no-repeat !important;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/header_user.gif');
+} 
+.rosten .headerTop .nav0Div {
+	float:left;
+	width:250px;
+	color:#fafafa;
+}	
+.rosten .headerTop .nav1Icon {
+	float:left;
+    width: 16px;
+    background: transparent url('../images/header_close.gif') no-repeat !important;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/header_close.gif');
+}
+.rosten .headerTop .nav1Div {
+	float:left;
+	width:40px;
+	padding-left:3px
+}	
+.rosten .headerTop .nav2Icon {
+    float: left;
+    width: 16px;
+    background: transparent url('../images/header_logout.gif') no-repeat !important;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/header_logout.gif');
+}
+.rosten .headerTop .nav2Div {
+	float:left;
+	width:40px;
+	padding-left:3px
+}
+.rosten .headerTop .nav3Icon {
+    float: left;
+    width: 16px;
+    background: transparent url('../images/header_password.gif') no-repeat !important;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/header_password.gif');
+}	
+.rosten .headerTop .nav3Div {
+	float:left;
+	width:60px;
+	padding-left:3px
+}
+.rosten .headerTop .nav4Icon {
+    float: left;
+    width: 16px;
+    background: transparent url('../images/header_bookmark.gif') no-repeat !important;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/header_bookmark.gif');
+}
+.rosten .headerTop .nav4Div {
+	float:left;
+	width:70px;
+	padding-left:3px
+}
+.rosten .headerTop .nav5Icon {
+    float: left;
+    width: 16px;
+    background: transparent url('../images/header_skin.gif') no-repeat !important;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/header_skin.gif');
+}
+.rosten .headerTop .nav5Div {
+	float:left;
+	width:60px;
+	padding-left:3px
+}
+
+/*
+ * 导航菜单样式
+ */
+.rosten .headerMenu{
+	background:url("../images/header_menu_bg.png");
+	height: 30px;
+	text-align:left;
+	width:100%;
+	clear:both;
+}
+.rosten .headerMenu .naviMenuList {
+}
+.rosten .headerMenu .naviMenuList ul {
+    margin: 0;
+    padding: 5px 0 0 0;
+    list-style: none;
+} 
+.rosten .headerMenu .naviMenuList li {
+    display: inline;
+    float: left;
+    } 
+.rosten .headerMenu .naviMenuList a {
+    
+    text-decoration: none;
+} 
+.rosten .headerMenu .naviMenuList a span {
+    display: block;
+    padding: 0 10px 0 10px;
+    color: #004c7e;
+} 
+.rosten .headerMenu .naviMenuList a:hover span {
+    color:#243C5F;
+    border: 1px solid #004c7e;
+} 
+.rosten .headerMenu .naviMenuList a:hover {
+	
+	/*
+    background: url(../images/header/header_menu_list.jpg) repeat-x;
+    */
+}

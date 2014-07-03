@@ -1,0 +1,32 @@
+<div data-dojo-attach-point="containerNode" class="rostenGridView">
+	<div data-dojo-attach-point="_gridData">
+	    <div data-dojo-attach-point="_gridNode"></div>
+	    <div class="pagecontrol" data-dojo-attach-point="pageControl">
+	        
+        	<span>
+        		<div class="firstpagelink" data-dojo-attach-point="firstButton" style="cursor:pointer;" data-dojo-attach-event="onclick:firstPage">［首页］</div>
+        	</span>
+        	<span>
+        		<div class="prevpagelink" data-dojo-attach-point="prevButton" style="cursor:pointer;" data-dojo-attach-event="onclick:prevPage">［前一页］</div>
+        	</span>
+        	<span>
+        		<div class="nextpagelink" data-dojo-attach-point="nextButton" style="cursor:pointer;" data-dojo-attach-event="onclick:nextPage">［下一页］</div>
+        	</span>
+        	<span>
+        		<div class="lastpagelink" data-dojo-attach-point="lastButton" style="cursor:pointer;" data-dojo-attach-event="onclick:lastPage">［尾页］</div>
+        	</span>
+        	<span>第</span>
+        	<span>
+        		<input style="width:25px;margin-left:5px;margin-right:5px" value=1 data-dojo-type="dijit/form/TextBox" data-dojo-attach-event="onKeyPress:pageKeyPress" data-dojo-attach-point="gotopage"/>
+        	</span>
+        	<span>页&nbsp;共</span>
+        	<span style="margin-left:5px;margin-right:5px" data-dojo-attach-point="totalPages"></span>
+        	<span >页&nbsp;</span>
+        	<span>总共</span>
+        	<span data-dojo-attach-point="totalCount" style="margin-left:5px;margin-right:5px;"></span>
+        	<img data-dojo-attach-point="loadingimg" src='images/rosten/share/wait.gif' style="margin-right:5px;width:16px;height:16px;display:none;"/>
+        	<span style="margin-right:20px">条记录</span>
+	        
+		</div>
+	</div>
+</div>

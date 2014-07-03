@@ -1,0 +1,231 @@
+@CHARSET "UTF-8";
+@import url("Header.css");
+@import url("Formdata.css");
+
+/*
+ * 页面风格栏颜色样式
+ */
+
+/* MESSAGES AND ERRORS */
+
+.message {
+    background: #f3f8fc url(../images/information.png) 8px 50% no-repeat;
+    border: 1px solid #b2d1ff;
+    color: #006dba;
+    margin: 10px 0 5px 0;
+    padding: 5px 5px 5px 30px
+}
+
+div.errors {
+    background: #fff3f3;
+    border: 1px solid red;
+    color: #cc0000;
+    margin: 10px 0 5px 0;
+    padding: 5px 0 5px 0;
+}
+div.errors ul {
+    list-style: none;
+    padding: 0;
+}
+div.errors li {
+	background: url(../images/exclamation.png) 8px 0% no-repeat;
+    line-height: 16px;
+    padding-left: 30px;
+}
+
+td.errors select {
+    border: 1px solid red;
+}
+td.errors input {
+    border: 1px solid red;
+}
+td.errors textarea {
+    border: 1px solid red;
+}
+
+
+.docCreateIcon{
+  background-image: url("../images/doc_create.png");
+  background-repeat: no-repeat;
+  margin: 0px;
+  width: 16px;
+  height:16px;
+}
+.docOpenIcon{
+  background-image: url("../images/doc_open.png");
+  background-repeat: no-repeat;
+  margin: 0px;
+  width: 16px;
+  height:16px;
+}
+.docEditIcon{
+  background-image: url("../images/doc_edit.png");
+  background-repeat: no-repeat;
+  margin: 0px;
+  width: 16px;
+  height:16px;
+}
+
+.docDeleteIcon{
+  background-image: url("../images/doc_delete.png");
+  background-repeat: no-repeat;
+  margin: 0px;
+  width: 16px;
+  height:16px;
+}
+
+/*
+ * 图片文字对齐样式class
+ */
+ .rosten .rosten_blockTitleHeader {
+	background-image:url("../images/titleBar_bg.png");
+}	
+.rosten .verticalAlign *{
+	vertical-align:middle;
+}
+
+/*
+ * 界面侧边栏样式
+ * dojo1.4.0样式隐藏
+ * 
+.rosten .sideBar .dijitAccordionTitle-selected .dijitAccordionArrow{
+	background:none;
+	width:0px;
+}
+.rosten .sideBar .dijitAccordionContainer{
+	border:0px;
+}
+.rosten .sideBar .dijitAccordionTitle-selected{
+	border-top:0px;
+	background-image:url("../images/titleBar_bg.png");
+	font-size:14px;
+	font-weight:normal;
+	height:20px;
+	text-align:center;
+}
+ */
+.rosten .sideBar .dijitAccordionTitleSelected .dijitAccordionArrow{
+	background:none;
+	width:0px;
+}
+.rosten .sideBar .dijitAccordionContainer{
+	border:0px;
+}
+.rosten .sideBar .dijitAccordionTitleSelected{
+	border-top:0px;
+	background-image:url("../images/titleBar_bg.png");
+	font-size:14px;
+	font-weight:normal;
+	height:18px;
+	text-align:center;
+}
+/*
+ * 侧边栏样式
+ */
+.rosten .simpleNavigation ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+	font-size:14px;
+}
+.rosten .simpleNavigation img {
+    border: none;
+}
+.rosten .simpleNavigation li{
+	border-bottom:1px solid #C8C8C8;
+}
+.rosten .simpleNavigation li a *{
+	vertical-align:middle;
+}
+.rosten .simpleNavigation li a {
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    text-decoration: none;
+	outline:none;
+	height:20px;
+}
+
+.rosten .simpleNavigation li a:link, .rosten .simpleNavigation li a:visited {
+    color: black;
+    display: block;
+    padding: 5px 0 5px 10px;
+}
+
+.rosten .simpleNavigation li a:hover {
+    /*color: #627EB7;*/
+	background-image:url("../images/titleBar_bg.png");
+    padding: 5px 0 5px 10px;
+	/*border:1px solid #c8c8c8;*/
+	background-color: #60a1ea; 
+}
+
+/*
+ * 弹出广告样式
+ */
+.rosten .popwindow{
+	background-image:url("../images/header_menu_bg.png");
+}
+
+/*
+ * 弹出对话框样式
+ */
+.rosten .dijitDialog .dijitDialogTitleBar .dijitDialogTitle,.rosten .dijitDialog .dijitDialogPaneContent,.rosten .dijitTitlePaneTitle{
+	font-size:12px;
+}
+.rosten .dijitTitlePaneTitle,.rosten .dijitDialog .dijitDialogTitleBar{
+	background-image:url("../images/titleBar_bg.png");
+}
+/*
+ * actionbar css 
+ */
+.rosten .ActionBarOuter .dijitToolbar{
+	background: url(../images/header_menu_bg.png) repeat-x;
+}
+.rosten .ActionBarOuter .actionBarIcon{
+	background-repeat:no-repeat;
+	height:16px;
+	text-align:center;
+	width:16px;
+}
+ 
+/*
+ *	tree css
+ */ 
+.rosten .tree .dijitFolderOpened {
+    background: url(../images/tree_open.gif) no-repeat;
+} 
+.rosten .tree .dijitFolderClosed {
+    background: url(../images/tree_close.gif) no-repeat;
+} 
+.rosten .tree .dijitLeaf {
+    background: url(../images/tree_leaf.gif) no-repeat;
+}
+
+/*
+ *  tree dialog css
+ */
+.rosten .departTree .dijitFolderOpened {
+    background: url(../images/user_tree_open.gif) no-repeat;
+}
+.rosten .departTree .dijitFolderClosed {
+    background: url(../images/user_tree_open.gif) no-repeat;
+} 
+.rosten .departTree .dijitLeaf {
+	background: url(../images/user_tree_leaf.gif) no-repeat;
+}
+
+/*
+ * grid css
+ */
+.rosten .rostenGridView .dojoxGridHeader .dojoxGridCell,.rosten .rostenGridView .dojoxGridRowbarOver,.rosten .rostenGridView .dojoxGridRowOver .dojoxGridCell,.rosten .rostenGridView .pagecontrol{
+ 	background: url(../images/titleBar_bg.png) repeat-x;
+ }
+.rosten .rostenGridView .dojoxGridRowbar{
+	background-image:url(../images/row_back.png);
+}
+.rosten .rostenGridView .dojoxGridRowbar{
+	background-color:white;
+}
+.rosten .rostenGridView .dojoxGridRowbarOver{
+	background-color:#E1EBFB;
+}
