@@ -19,6 +19,7 @@
 		 		"dijit/layout/TabContainer",
 		 		"dijit/layout/ContentPane",
 		 		"dijit/form/ValidationTextBox",
+		 		"dijit/form/DateTextBox",
 		 		"dijit/form/SimpleTextarea",
 		 		"dijit/form/Button",
 		     	"rosten/widget/ActionBar",
@@ -31,10 +32,31 @@
 					rosten.cssinit();
 				});
 				trainCourse_save = function(){
-					var category = registry.byId("category");
-					if(category.attr("value")==""){
-						rosten.alert("大类名称不正确！").queryDlgClose = function(){
-							category.focus();
+					var courseName = registry.byId("courseName");
+					if(!courseName.isValid()){
+						rosten.alert("培训班名称不正确！").queryDlgClose = function(){
+							courseName.focus();
+						};
+						return;
+					}
+					var organizeName = registry.byId("organizeName");
+					if(!organizeName.isValid()){
+						rosten.alert("组织者名称不正确！").queryDlgClose = function(){
+							organizeName.focus();
+						};
+						return;
+					}
+					var trainDate = registry.byId("trainDate");
+					if(!trainDate.isValid()){
+						rosten.alert("培训时间不正确！").queryDlgClose = function(){
+							trainDate.focus();
+						};
+						return;
+					}
+					var trainAddress = registry.byId("trainAddress");
+					if(!trainAddress.isValid()){
+						rosten.alert("培训地点不正确！").queryDlgClose = function(){
+							trainAddress.focus();
 						};
 						return;
 					}
@@ -70,10 +92,10 @@
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
-					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>大类名称：</div></td>
+					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>培训班名称：</div></td>
 					    <td width="250">
-					    	<input id="category" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='name:"category",${fieldAcl.isReadOnly("courseName")},
+					    	<input id="courseName" data-dojo-type="dijit/form/ValidationTextBox" 
+			                 	data-dojo-props='name:"courseName",${fieldAcl.isReadOnly("courseName")},
 			                 		trim:true,required:true,"class":"input",
 			                 		missingMessage:"请正确填写培训班名称！",invalidMessage:"请正确填写培训班名称！",
 									value:"${trainCourse?.courseName}"
@@ -81,8 +103,8 @@
 					    </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>组织者名称：</div></td>
 					    <td width="250">
-					    	<input id="category" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='name:"category",${fieldAcl.isReadOnly("organizeName")},
+					    	<input id="organizeName" data-dojo-type="dijit/form/ValidationTextBox" 
+			                 	data-dojo-props='name:"organizeName",${fieldAcl.isReadOnly("organizeName")},
 			                 		trim:true,required:true,"class":"input",
 			                 		missingMessage:"请正确填写组织者名称！",invalidMessage:"请正确填写组织者名称！",
 									value:"${trainCourse?.organizeName}"
@@ -109,9 +131,9 @@
 			            </td>    
 					</tr>
 					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>培训对象：</div></td>
+					    <td><div align="right">培训对象：</div></td>
 					    <td colspan=3>
-					    	<input id="trainObject" data-dojo-type="dijit/form/DateTextBox" 
+					    	<input id="trainObject" data-dojo-type="dijit/form/ValidationTextBox" 
 			                	data-dojo-props='name:"trainObject",${fieldAcl.isReadOnly("trainObject")},
 			                	trim:true,
 			                	style:{width:"550px"},
