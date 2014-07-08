@@ -1,0 +1,31 @@
+/**
+ * @author rosten
+ */
+define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
+		connect, lang,registry,kernel) {
+	
+	
+	
+	/*
+	 * 此功能默认必须存在
+	 */
+	show_barginNaviEntity = function(oString) {
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+		
+		switch (oString) {
+		case "bargainManage":
+            var naviJson = {
+                identifier : oString,
+                actionBarSrc : rosten.webPath + "/publiccAction/downloadFileView?userId=" + userid,
+                gridSrc : rosten.webPath + "/publicc/downloadFileGrid?companyId=" + companyId
+            };
+            rosten.kernel.addRightContent(naviJson);
+
+            var rostenGrid = rosten.kernel.getGrid();
+            break;
+		}
+		
+	}
+	connect.connect("show_naviEntity", show_barginNaviEntity);
+});
