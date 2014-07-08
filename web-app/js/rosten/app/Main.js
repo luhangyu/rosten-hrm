@@ -88,12 +88,10 @@ define(["dojo/_base/kernel"
              	});
             }else if (oString == "person") {
             	addMailNavigation();
-            } else if (oString == "bbs") {
+            }else if (oString == "trainManage") {
             	deleteMailNavigation();
-            	require(["rosten/app/BbsManage"],function(){
-            		if(rosten.variable.showStartBbs==undefined || rosten.variable.showStartBbs!=true){
-            			show_bbsNaviEntity("mybbsManage");
-            		}
+            	require(["rosten/app/TrainManage"],function(){
+            		show_trainNaviEntity("trainCourse");
             	});
             }else if(oString=="personconfig"){
                 deleteMailNavigation();
@@ -226,10 +224,10 @@ define(["dojo/_base/kernel"
     		userId = rosten.kernel.getUserInforByKey("idnumber");
     		companyId = rosten.kernel.getUserInforByKey("companyid");
     	}
-    	showStartBbs(userId,companyId);
-    	showStartGtask(userId,companyId);
+    	//showStartBbs(userId,companyId);
+    	//showStartGtask(userId,companyId);
     	//showStartMail(userId,companyId);
-    	showStartDownloadFile(userId,companyId);
+    	//showStartDownloadFile(userId,companyId);
     };
     showStartGtask = function(userId,companyId){
     	rosten.readNoTime(rosten.webPath + "/start/getGtask", {userId:userId,companyId:companyId}, function(data) {

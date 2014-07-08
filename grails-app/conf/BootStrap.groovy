@@ -26,7 +26,7 @@ class BootStrap {
 			model.save(fialOnError:true)
 			
 			model = new Model(modelName:"平台管理",description:"超级管理员系统平台配置文件管理模块",serialNo:3,modelCode:"plat")
-			model.modelUrl = "/rosten-hrm/system/navigation"
+			model.modelUrl = "/system/navigation"
 			
 			def resource = new Resource()
 			resource.resourceName = "组织机构管理"
