@@ -3,9 +3,22 @@ package com.rosten.app.staff
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.util.FieldAcl
+import com.rosten.app.system.Depart
 
 class StaffController {
 	def springSecurityService
+	
+	def personInforView ={
+		def model =[:]
+		model["depart"] = Depart.get(params.id)
+		render(view:'/staff/personManageView',model:model)
+	}
+	
+	def depart ={
+		def model =[:]
+		model["company"] = Company.get(params.companyId)
+		render(view:'/staff/personManage',model:model)
+	}
 	
 	def getPersonInfor ={
 		def model =[:]
