@@ -50,7 +50,7 @@ class WorkResume {
 		proveName nullable:true,blank:true
 		remark nullable:true,blank:true
     }
-	static belongsTo = [use:User]
+	static belongsTo = [user:User]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

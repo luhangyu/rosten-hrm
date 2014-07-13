@@ -4,6 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
     <title>人员信息</title>
+    <style type="text/css">
+    	body{
+			overflow:auto;
+		}
+    </style>
 	<script type="text/javascript">
 	require(["dojo/parser",
 		 		"dojo/_base/kernel",
@@ -97,305 +102,134 @@
 	<div class="rosten_action">
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'systemAction',action:'administratorForm',params:[userId:loginUser?.id])}"'></div>
 	</div>
-		<div style="text-Align:center">
-        <form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;">
-			
-        	<input id="id" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='name:"id",value:"${user?.id }",style:{display:"none"}'
-        	></input>
-            <fieldset class="fieldset-form">
-                <legend class="tableHeader">人员配置</legend>
-                <table class="tableData">
-                    <tbody>
-                        <tr>
-                            <td width="100">
-                                <div align="right" >
-                                    <span style="color:red">*&nbsp;</span>用户名：
-                                </div>
-                            </td>
-                            <td>
-                            	<g:if test='${userType.equals("admin") }'>
-                            		<input id="userNameFront" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"userNameFront","class":"input",style:{width:"50px"},
-              							value:"${company?.shortName}-",disabled:true
-                                	'/>
-                                	
-                                	<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
-	                                	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
-	                                		"class":"input",
-	                                		trim:true,
-	                                		required:true,
-	                                		promptMessage:"请正确输入用户名...",
-	                                		style:{width:"140px"},
-	                                		<g:if test="${username && !"".equals(username)}">disabled:true,</g:if>
-	              							value:"${username}"
-	                                '/>
-                            	</g:if>
-                            	<g:else>
-                            		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
-	                                	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
-	                                		"class":"input",
-	                                		trim:true,
-	                                		required:true,
-	                                		promptMessage:"请正确输入用户名...",
-	              							value:"${user?.username}"
-	                                '/>
-                            	</g:else>
-                            	
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="100">
-                                <div align="right" >中文名：</div>
-                            </td>
-                            <td>
-                            	<input id="chinaName" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"chinaName",${fieldAcl.isReadOnly("chinaName")},
-                                		"class":"input",
-                                		trim:true,
-              							value:"${user?.chinaName}"
-                                '/>
-                            </td>
-                        </tr>
-                        <g:if test='${userType.equals("admin") }'>
-	                        <tr>
-		                        <td>
-		                        	 <div align="right"><span style="color:red">*&nbsp;</span>用户类型：</div>
-		                        </td>
-		                        <td>
-		                        	<select id="userTypeName" data-dojo-type="dijit/form/ComboBox"
-	                             		data-dojo-props='name:"userTypeName",
-	                             			autoComplete:true,
-	                             			style:{fontSize:"14px",width:"194px"},
-	                             			${fieldAcl.isReadOnly("userTypeName")},
-	              							value:"${user?.userTypeEntity?.typeName }"
-	                                '>
-	                                <g:each in="${userTypeList}" var="item">
-	                                	<option value="${item.id }">${item.typeName }</option>
-	                                </g:each>	
-	                                
-	                                </select>
-									
-		                        </td>
-		                    </tr>
-                        </g:if>
-						<tr>
-                            <td>
-                                <div align="right">
-                                    <span style="color:red">*&nbsp;</span>用户密码：
-                                </div>
-                            </td>
-                            <td>
-                            	<input id="password" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"password",${fieldAcl.isReadOnly("password")},
-                                		"class":"input",
-                                		type:"password",
+	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;">
+	<div>
+		<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${user?.id }"' />
+        <input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
+	</div>
+	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
+        <div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"账号信息",toggleable:false,moreText:"",height:"100px",marginBottom:"2px"'>
+				<table border="0" width="740" align="left">
+					<tr>
+					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>账号：</div></td>
+					    <td width="250">
+					    	<input id="userNameFront" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"userNameFront",style:{width:"50px"},
+             						value:"${company?.shortName}-",disabled:true
+                            '/>
+					    	<g:if test='${userType.equals("admin") }'>
+					    		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
+                                	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
                                 		trim:true,
                                 		required:true,
-                                		promptMessage:"请正确输入密码...",
-              							value:"${user?.password}"
+                                		promptMessage:"请正确输入账号...",
+                                		style:{width:"100px"},
+                                		<g:if test="${username && !"".equals(username)}">disabled:true,</g:if>
+              							value:"${username}"
                                 '/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div align="right">
-                                    <span style="color:red">*&nbsp;</span>密码确认：
-                                </div>
-                            </td>
-                            <td>
-                            	<input id="passwordcheck" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"passwordcheck",${fieldAcl.isReadOnly("password")},
-                                		"class":"input",
-                                		type:"password",
+					    	</g:if>
+					    	<g:else>
+                           		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
+                                	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
                                 		trim:true,
                                 		required:true,
-                                		promptMessage:"请正确输入密码...",
-              							value:"${user?.password}"
+                                		promptMessage:"请正确输入账号...",
+              							value:"${user?.username}"
                                 '/>
-                            </td>
-                        </tr>
-                        <g:if test='${userType.equals("super") }'>
-	                        <tr>
-	                           <td>
-	                                <div align="right" >
-	                                    <span style="color:red">*&nbsp;</span>所属机构：
-	                                </div>
-	                            </td>
-	                            <td>
-	                            	<input id="companyName" data-dojo-type="dijit/form/ValidationTextBox" 
-	                                	data-dojo-props='name:"companyName",${fieldAcl.isReadOnly("companyName")},
-	                                		"class":"input",
-	                                		trim:true,
-	                                		required:true,
-	                                		disabled:true,
-	              							value:"${user?.company?.companyName}"
-	                                '/>
-	                                <input id="companyId" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='name:"companyId",value:"${user?.company?.id }",style:{display:"none"}'/>
-									<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectCompany()}'>选择</button>
-	                            </td>
-	                        </tr>
-                        </g:if>
-                        <g:if test='${userType.equals("admin") }'>
-                        	<tr>
-	                           <td>
-	                                <div align="right"><span style="color:red">*&nbsp;</span>所属部门：</div>
-	                            </td>
-	                            <td>
-	                            	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
-	                                	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
-	                                		"class":"input",
-	                                		trim:true,
-	                                		required:true,
-	                                		style:{width:"400px"},
-	              							value:"${user?.getDepartName()}"
-	                                '/>
-	                                <g:hiddenField name="allowdepartsId" value="${user?.getDepartEntity()?.id }" />
-									<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
-	                            </td>
-	                        </tr>
-							<tr>
-	                           <td>
-	                                <div align="right">具有角色：</div>
-	                            </td>
-	                            <td>
-	                            	<input id="allowrolesName" data-dojo-type="dijit/form/ValidationTextBox"
-	                   					data-dojo-props='"class":"input",
-	                   						trim:true,
-	                   						style:{width:"400px"},
-	                   						${fieldAcl.isReadOnly("allowrolesName")},
-	                   						value:"${allowrolesName }"
-	                   				'/>
-	                   				<g:hiddenField name="allowrolesId" value="${allowrolesId }" />
+                           	</g:else>	
+					    </td>
+					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>具有角色：</div></td>
+					    <td width="250">
+					    	<input id="allowrolesName" data-dojo-type="dijit/form/ValidationTextBox"
+                					data-dojo-props='trim:true,${fieldAcl.isReadOnly("allowrolesName")},
+                						value:"${allowrolesName }"
+                				'/>
+                 				<g:if test='${userType.equals("admin") }'>
+                 					<g:hiddenField name="allowrolesId" value="${allowrolesId }" />
 									<button data-dojo-type="dijit.form.Button" 
 										data-dojo-props = 'onClick:function(){selectRole("${createLink(controller:'system',action:'roleSelect',params:[companyId:company?.id])}")}'
 									>选择</button>
-								
-	                            </td>
-	                        </tr>
-                        </g:if>
-                        <g:if test='${userType.equals("super") }'>
-	                        <tr>
-		                        <td>
-		                        	 <div align="right"><span style="color:red">*&nbsp;</span>是否管理员：</div>
-		                        </td>
-		                        <td>
-		                        	<input id="admin1" data-dojo-type="dijit/form/RadioButton"
-	                             		data-dojo-props='name:"sysFlag",
-	                             			type:"radio",
-	                             			${fieldAcl.isReadOnly("sysFlag")},
-	                             			<g:if test="${!user?.sysFlag || user.sysFlag==true }">checked:true,</g:if>
-	              							value:"true"
-	                                '/>
-									<label for="admin1">是</label>
-									
-	                                <input id="admin2" data-dojo-type="dijit/form/RadioButton"
-	                             		data-dojo-props='name:"sysFlag",
-	                             			type:"radio",
-	                             			${fieldAcl.isReadOnly("sysFlag")},
-	                             			<g:if test="${user?.sysFlag && user.sysFlag==false }">checked:true,</g:if>
-	              							value:"false"
-	                                '/>
-									<label for="admin2">否</label>
-									
-		                        </td>
-		                    </tr>
-	                    </g:if>
-	                    <tr>
-	                        <td>
-	                        	 <div align="right"><span style="color:red">*&nbsp;</span>CSS样式表：</div>
-	                        </td>
-	                        <td>
-	                        	<select id="cssStyle" data-dojo-type="dijit/form/FilteringSelect"
-                             		data-dojo-props='name:"cssStyle",
-                             			style:{fontSize:"14px",width:"194px"},
-                             			autoComplete:false,
-                             			${fieldAcl.isReadOnly("cssStyle")},
-              							value:"${(user!=null && user.cssStyle!=null)?user.cssStyle:"normal" }"
-                                '>
-                                	<option value="normal">标准样式</option>
-									<option value="cfyl">春风杨柳</option>
-									<option value="hbls">环保绿色</option>
-									<option value="jqsy">金秋十月</option>	
-									<option value="jsnz">金色农庄</option>
-									<option value="lhqh">蓝灰情怀</option>
-									<option value="rose">浪漫玫瑰</option>
-									<option value="shys">深红夜思</option>
-                                
-                                </select>
-								
-	                        </td>
-	                    </tr>
-	                    <tr>
-                           <td>
-                                <div align="right" >手机号码：</div>
-                            </td>
-                            <td>
-                            	<input id="telephone" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"telephone",${fieldAcl.isReadOnly("telephone")},
-                                		"class":"input",
+                 				</g:if>
+			           </td>
+					</tr>
+					<g:if test='${userType.equals("admin") }'>
+						<tr>
+						    <td><div align="right"><span style="color:red">*&nbsp;</span>密码：</div></td>
+						    <td>
+						    	<input id="password" data-dojo-type="dijit/form/ValidationTextBox" 
+	                               	data-dojo-props='name:"password",${fieldAcl.isReadOnly("password")},
+	                               		type:"password",
+	                               		trim:true,
+	                               		required:true,
+	                               		promptMessage:"请正确输入密码...",
+	             						value:"${user?.password}"
+	                           	'/>
+				            </td>
+						    <td><div align="right"><span style="color:red">*&nbsp;</span>密码确认：</div></td>
+						    <td>
+						    	<input id="passwordcheck" data-dojo-type="dijit/form/ValidationTextBox" 
+                                	data-dojo-props='name:"passwordcheck",${fieldAcl.isReadOnly("password")},
+                                		type:"password",
                                 		trim:true,
-              							value:"${user?.telephone}"
+                                		required:true,
+                                		promptMessage:"请正确输入密码...",
+              							value:"${user?.password}"
                                 '/>
-                            </td>
-                        </tr>
-                        <tr>
-                           <td>
-                                <div align="right" >身份证号码：</div>
-                            </td>
-                            <td>
-                            	<input id="idCard" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"idCard",${fieldAcl.isReadOnly("idCard")},
-                                		"class":"input",
-                                		trim:true,
-              							value:"${user?.idCard}"
-                                '/>
-                            </td>
-                        </tr>
-                        <tr>
-                           <td>
-                                <div align="right" >邮箱地址：</div>
-                            </td>
-                            <td>
-                            	<input id="email" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"email",${fieldAcl.isReadOnly("email")},
-                                		"class":"input",
-                                		trim:true,
-              							value:"${user?.email}"
-                                '/>
-                            </td>
-                        </tr>
-                        <tr>
-                           <td>
-                                <div align="right" >联系地址：</div>
-                            </td>
-                            <td>
-                            	<input id="address" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"address",${fieldAcl.isReadOnly("address")},
-                                		"class":"input",
-                                		trim:true,
-                                		style:{width:"400px"},
-              							value:"${user?.address}"
-                                '/>
-                            </td>
-                        </tr>
-                        <tr>
-                        	<td>
-                                <div align="right" >内容描述：</div>
-                            </td>
-                             <td colspan="3">
-                             	<textarea id="description" data-dojo-type="dijit/form/SimpleTextarea"
-                             		data-dojo-props='name:"description",${fieldAcl.isReadOnly("description")},
-                                		"class":"input",
-                                		style:{width:"400px",marginLeft:"1px"},
-                                		trim:true,
-              							value:"${user?.description}"
-                                '></textarea>
-    						</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </fieldset>
-	</form>
+				            </td>    
+						</tr>
+					
+					</g:if>
+					<tr>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>CSS样式表：</div></td>
+					    <td>
+					    	<select id="cssStyle" data-dojo-type="dijit/form/FilteringSelect"
+                           		data-dojo-props='name:"cssStyle",
+                           			autoComplete:false,
+                           			${fieldAcl.isReadOnly("cssStyle")},
+            						value:"${(user!=null && user.cssStyle!=null)?user.cssStyle:"normal" }"
+                            '>
+	                            <option value="normal">标准样式</option>
+								<option value="cfyl">春风杨柳</option>
+								<option value="hbls">环保绿色</option>
+								<option value="jqsy">金秋十月</option>	
+								<option value="jsnz">金色农庄</option>
+								<option value="lhqh">蓝灰情怀</option>
+								<option value="rose">浪漫玫瑰</option>
+								<option value="shys">深红夜思</option>
+                              
+                           	</select>
+			            </td>
+					    <td></td>
+					    <td></td>    
+					</tr>
+					
+				</table>
+			</div>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况",toggleable:false,moreText:"",height:"300px",marginBottom:"2px",
+				href:"${createLink(controller:'staff',action:'getPersonInfor',id:user?.id)}"
+			'>
+			</div>
+			
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
+				通讯方式
+			</div>
+			
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"学历学位",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
+				学历学位
+			</div>
+			
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"工作经历",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
+				工作经历
+			</div>
+			
+        </div>
+		<div data-dojo-type="dijit/layout/ContentPane" title="合同信息" data-dojo-props=''>
+		
+	
+		</div>
 	</div>
+	
+	</form>
 </body>
 </html>

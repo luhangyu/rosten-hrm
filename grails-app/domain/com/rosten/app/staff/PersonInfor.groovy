@@ -64,7 +64,7 @@ class PersonInfor {
 		blood nullable:true,blank:true
     }
 	
-	static belongsTo = [use:User]
+	static belongsTo = [user:User]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
