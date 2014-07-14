@@ -225,8 +225,13 @@
 			
         </div>
 		<div data-dojo-type="dijit/layout/ContentPane" title="合同信息" data-dojo-props=''>
-		
 	
+		</div>
+		<div data-dojo-type="dijit/layout/ContentPane" title="劳资福利" data-dojo-props=''>
+		
+		</div>
+		<div data-dojo-type="dijit/layout/ContentPane" title="......" data-dojo-props=''>
+		
 		</div>
 	</div>
 	
