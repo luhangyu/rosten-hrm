@@ -10,44 +10,41 @@
 <body>
 	<table border="0" width="740" align="left">
 		<tr>
-		   
-		    <td width="120"><div align="right">开始时间：</div></td>
+		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>工作单位：</div></td>
+	  		<td width="250">
+		    	<input id="workCompany" data-dojo-type="dijit/form/ValidationTextBox" 
+	                 	data-dojo-props='name:"workCompany",trim:true,required:true,${fieldAcl.isReadOnly("workCompany")},
+							value:"${workResumeEntity?.workCompany}"
+	                '/>
+		    </td>
+		    
+	       	<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>工作内容：</div></td>
+		  	<td width="250">
+		    	<input id="workContent" data-dojo-type="dijit/form/ValidationTextBox" 
+	                 	data-dojo-props='name:"workContent",trim:true,required:true,${fieldAcl.isReadOnly("workContent")},
+							value:"${workResumeEntity?.workContent}"
+	                '/>
+		    </td>
+		</tr>
+		<tr>
+		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>开始时间：</div></td>
 		    <td width="250">
-		    	<input id="workstartDate" data-dojo-type="dijit/form/DateTextBox" 
-	               	data-dojo-props='name:"workstartDate",${fieldAcl.isReadOnly("startDate")},
-	               		trim:true,
-	               		required:true,
+		    	<input id="workStartDate" data-dojo-type="dijit/form/DateTextBox" 
+	               	data-dojo-props='name:"workStartDate",${fieldAcl.isReadOnly("startDate")},
+	               		trim:true,required:true,
 						value:"${workResumeEntity?.getFormatteStartDate()}"
 	          	'/>
            </td>
            
-           <td width="120"><div align="right">结束时间：</div></td>
+           <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>结束时间：</div></td>
 		  <td width="250">
-		    	<input id="workendDate" data-dojo-type="dijit/form/DateTextBox" 
-	                 	data-dojo-props='name:"workendDate",trim:true,${fieldAcl.isReadOnly("endDate")},
+		    	<input id="workEndDate" data-dojo-type="dijit/form/DateTextBox" 
+	                 	data-dojo-props='name:"workEndDate",trim:true,required:true,${fieldAcl.isReadOnly("endDate")},
 							value:"${workResumeEntity?.getFormatteEndDate()}"
 	                '/>
 		    </td>
            
 		</tr>
-		<tr>
-		     <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>工作单位：</div></td>
-		  <td width="250">
-		    	<input id="workCompany" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"workCompany",trim:true,${fieldAcl.isReadOnly("workCompany")},
-							value:"${workResumeEntity?.workCompany}"
-	                '/>
-		    </td>
-		    
-		       <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>工作内容：</div></td>
-		  <td width="250">
-		    	<input id="workContent" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"workContent",trim:true,${fieldAcl.isReadOnly("workContent")},
-							value:"${workResumeEntity?.workContent}"
-	                '/>
-		    </td>
-		</tr>
-		
 		<tr>
 		 <td width="120"><div align="right">担任职务：</div></td>
 		  <td width="250">
@@ -67,15 +64,15 @@
 		</tr>
 		
 		<tr>
-		 <td width="120"><div align="right">备注：</div></td>
-		  <td  colspan="3">
-					    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
-    							data-dojo-props='name:"remark",
-                               		style:{width:"550px",height:"150px"},
-                               		trim:true,value:"${workResumeEntity?.remark}"
-                           '>
-    						</textarea>
-					    </td>
+		 	<td width="120"><div align="right">备注：</div></td>
+		  	<td  colspan="3">
+	    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
+				data-dojo-props='name:"remark",
+                    style:{width:"550px",height:"150px"},
+                    trim:true,value:"${workResumeEntity?.remark}"
+            '>
+			</textarea>
+	    	</td>
 		</tr>
 		
 	</table>

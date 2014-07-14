@@ -107,7 +107,7 @@
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
         <div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"账号信息",toggleable:false,moreText:"",height:"100px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"账号信息 <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"100px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>账号：</div></td>
@@ -136,7 +136,7 @@
                                 '/>
                            	</g:else>	
 					    </td>
-					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>具有角色：</div></td>
+					    <td width="120"><div align="right">具有角色：</div></td>
 					    <td width="250">
 					    	<input id="allowrolesName" data-dojo-type="dijit/form/ValidationTextBox"
                 					data-dojo-props='trim:true,readOnly:true,
@@ -203,7 +203,7 @@
 					
 				</table>
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getPersonInfor',id:user?.id,params:[departId:departId])}"
 			'>
 			</div>

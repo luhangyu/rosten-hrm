@@ -13,31 +13,33 @@ define(["dojo/_base/connect",
         var unid = _getGridItemValue(rostenGrid,rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		var currentDepartId = rosten.variable.currentDeartId;
+		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&currentDepartId=" + currentDepartId);
 		rostenGrid.clearSelected();
 	};
 	add_personInfor = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
         var currentDepartId = rosten.variable.currentDeartId;
-        rosten.openNewWindow("user", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&currentDepartId=" + currentDepartId);
+        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&currentDepartId=" + currentDepartId);
     };
     read_personInfor = function() {
-        change_user();
+    	change_personInfor();
     };
     change_personInfor = function() {
-        var unid = rosten.getGridUnid("single");
+        var unid = rosten._getGridUnid(dom_rostenGrid,"single");
         if (unid == "")
             return;
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("user", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
-        rosten.kernel.getGrid().clearSelected();
+        var currentDepartId = rosten.variable.currentDeartId;
+        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&currentDepartId=" + currentDepartId);
+        dom_rostenGrid.clearSelected();
     };
     delete_personInfor = function() {
         var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
         _1.callback = function() {
-            var unids = rosten.getGridUnid("multi");
+            var unids = rosten._getGridUnid(dom_rostenGrid,"multi");
             if (unids == "")
                 return;
             var content = {};
@@ -46,7 +48,7 @@ define(["dojo/_base/connect",
         };
     };
     personInfor_changePassword = function(){
-    	var unid = rosten.getGridUnid("single");
+    	var unid = rosten._getGridUnid(dom_rostenGrid,"single");
         if (unid == "")
             return;
     	rosten.kernel.createRostenShowDialog(rosten.webPath + "/system/passwordChangeShow1/"+ unid, {

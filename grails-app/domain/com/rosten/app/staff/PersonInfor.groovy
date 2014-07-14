@@ -12,7 +12,7 @@ class PersonInfor {
 	String idCard
 	
 	//性别
-	String sex
+	String sex = "男"
 	
 	//出生日期
 	Date birthday
