@@ -7,9 +7,147 @@ import com.rosten.app.system.Depart
 import com.rosten.app.util.Util
 import com.rosten.app.system.UserDepart
 import grails.converters.JSON
+import com.rosten.app.system.UserRole
+import com.rosten.app.system.UserType
+import com.rosten.app.system.SystemService
 
 class StaffController {
 	def springSecurityService
+	def systemService
+	
+	def userDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def user = User.get(it)
+				if(user){
+					user.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			log.debug(e);
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
+	def userSave ={
+		def model=[:]
+		
+		def user = new User()
+		if(params.id && !"".equals(params.id)){
+			user = User.get(params.id)
+		}else{
+			user.enabled = true
+			if(!params.sysFlag && params.userNameFront){
+				params.username = params.userNameFront + params.username
+			}
+		}
+		user.properties = params
+		user.clearErrors()
+		
+		if(params.userTypeName && !params.userTypeName.equals(user.getUserTypeName())){
+			def userType = UserType.findByTypeName(params.userTypeName)
+			if(userType){
+				user.userTypeEntity = userType
+			}
+		}
+		
+		if(params.companyId){
+			def company = Company.get(params.companyId)
+			user.company = company
+		}
+		if(user.save(flush:true)){
+			
+			UserDepart.removeAll(user)
+			if(params.allowdepartsId){
+				def depart = Depart.get(params.allowdepartsId)
+				if(depart){
+					UserDepart.create(user, depart)
+				}
+			}
+			
+			UserRole.removeAll(user)
+			if(params.allowrolesId){
+				params.allowrolesId.split(",").each{
+					def role = Role.get(it)
+					UserRole.create(user, role)
+				}
+			}
+			
+			model["result"] = "true"
+		}else{
+			user.errors.each{
+				println it
+			}
+			model["result"] = "false"
+		}
+		render model as JSON
+	}
+	def userAdd ={
+		redirect(action:"userShow",params:params)
+	}
+	def userShow ={
+		def model =[:]
+		
+		def loginUser = User.get(params.userid)
+		model["loginUser"]= loginUser
+		
+		if(params.id){
+			def _user = User.get(params.id)
+			model["user"] = _user
+			
+			def allowrolesName=[]
+			def allowrolesId =[]
+			UserRole.findAllByUser(_user).each{
+				allowrolesName << it.role.authority
+				allowrolesId << it.role.id
+			}
+			model["allowrolesName"] = allowrolesName.join(',')
+			model["allowrolesId"] = allowrolesId.join(",")
+			
+			if(_user.company){
+				model["userTypeList"] = UserType.findAllByCompany(_user.company)
+			}
+			
+			model["username"] = Util.strRight(_user.username, "-")
+			
+		}else{
+//			model["user"] = new User()
+		}
+		if(params.companyId){
+			def company = Company.get(params.companyId)
+			model["company"] = company
+			model["userTypeList"] = UserType.findAllByCompany(company)
+		}
+		
+		
+		model["userType"] = "normal"
+		
+		FieldAcl fa = new FieldAcl()
+		fa.readOnly +=["allowdepartsName","allowrolesName"]
+		if(loginUser!=null){
+			if(systemService.checkIsRosten(loginUser.username)){
+				model["userType"] = "super"
+			}else if(loginUser.sysFlag){
+				model["userType"] = "admin"
+			}else{
+				model["userType"] = "normal"
+			}
+		}
+		if(loginUser==null || model["userType"].equals("normal")){
+			params.each{key,value->
+				fa.readOnly << key
+			}
+		}
+		if(params.id){
+			fa.readOnly << "username"
+		}
+		model["fieldAcl"] = fa
+		render(view:'/staff/user',model:model)
+	}
 	
 	def userGrid ={
 		def departEntity = Depart.get(params.departId)
@@ -126,7 +264,9 @@ class StaffController {
 		}
 		
 		model["contactInforEntity"] = entity
+		FieldAcl fa = new FieldAcl()
 		
+		model["fieldAcl"] = fa
 		render(view:'/staff/contactInfor',model:model)
 	}
 	def getDegree ={
@@ -140,8 +280,24 @@ class StaffController {
 			entity = new Degree()
 		}
 		model["degreeEntity"] = entity
-		
+		FieldAcl fa = new FieldAcl()
+	
+		model["fieldAcl"] = fa
 		render(view:'/staff/degree',model:model)
 	}
-    def index() { }
+    def getWorkResume={
+		def model =[:]
+		def entity
+		
+		def user = User.get(params.userId)
+		if(user){
+			entity = WorkResume.findByUser(user)
+		}else{
+			entity = new WorkResume()
+		}
+		model["workResumeEntity"] = entity
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		render(view:'/staff/workResume',model:model)
+	}
 }

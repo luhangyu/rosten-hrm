@@ -211,16 +211,16 @@
 			'>
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
-				通讯方式
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"160px",marginBottom:"2px",
+				href:"${createLink(controller:'staff',action:'getContactInfor',id:user?.id)}"'>
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"学历学位",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
-				学历学位
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"学历学位",toggleable:false,moreText:"",height:"100px",marginBottom:"2px",
+				href:"${createLink(controller:'staff',action:'getDegree',id:user?.id)}"'>
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"工作经历",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
-				工作经历
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"工作经历",toggleable:false,moreText:"",height:"250px",marginBottom:"2px",
+				href:"${createLink(controller:'staff',action:'getWorkResume',id:user?.id)}"'>
 			</div>
 			
         </div>

@@ -13,13 +13,13 @@ define(["dojo/_base/connect",
         var unid = _getGridItemValue(rostenGrid,rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("personInfor", rosten.webPath + "/system/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 		rostenGrid.clearSelected();
 	};
 	add_personInfor = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("user", rosten.webPath + "/system/userAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("user", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid);
     };
     read_personInfor = function() {
         change_user();
@@ -30,7 +30,7 @@ define(["dojo/_base/connect",
             return;
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("user", rosten.webPath + "/system/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+        rosten.openNewWindow("user", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
         rosten.kernel.getGrid().clearSelected();
     };
     delete_personInfor = function() {
@@ -41,7 +41,7 @@ define(["dojo/_base/connect",
                 return;
             var content = {};
             content.id = unids;
-            rosten.read(rosten.webPath + "/system/userDelete", content, delete_callback);
+            rosten.read(rosten.webPath + "/staff/userDelete", content, delete_callback);
         };
     };
     personInfor_changePassword = function(){
