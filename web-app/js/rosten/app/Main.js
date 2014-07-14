@@ -83,7 +83,8 @@ define(["dojo/_base/kernel"
              		if(oString=="plat"){
              			show_systemNaviEntity("companyManage");
              		}else{
-             			show_systemNaviEntity("userManage");
+//             			show_systemNaviEntity("userManage");
+             			returnToMain();
              		}
              	});
             }else if (oString == "person") {
