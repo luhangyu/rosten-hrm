@@ -92,8 +92,12 @@ class StaffController {
 	def userShow ={
 		def model =[:]
 		
+		//当前登录用户
 		def loginUser = User.get(params.userid)
 		model["loginUser"]= loginUser
+		
+		//当前选中的部门
+		model["departId"] = params.currentDepartId;
 		
 		if(params.id){
 			def _user = User.get(params.id)
@@ -115,14 +119,14 @@ class StaffController {
 			model["username"] = Util.strRight(_user.username, "-")
 			
 		}else{
-//			model["user"] = new User()
+			model["user"] = new User()
+			
 		}
 		if(params.companyId){
 			def company = Company.get(params.companyId)
 			model["company"] = company
 			model["userTypeList"] = UserType.findAllByCompany(company)
 		}
-		
 		
 		model["userType"] = "normal"
 		
@@ -233,14 +237,20 @@ class StaffController {
 		def model =[:]
 		def entity
 		
+		def depart = Depart.get(params.departId)
+		
 		def currentUser = springSecurityService.getCurrentUser()
 		def user = User.get(params.userId)
 		if(user){
 			entity = PersonInfor.findByUser(user)
+			model["departName"] = user.getDepartName()
+			model["departId"] = user.getDepartEntity?.id
 		}else{
 			entity = new PersonInfor()
+			model["departName"] = depart.departName
+			model["departId"] = depart.id
 		}
-		
+		model["company"] = currentUser.company
 		model["personInforEntity"] = entity
 		
 		FieldAcl fa = new FieldAcl()

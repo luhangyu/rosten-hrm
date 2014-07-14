@@ -31,7 +31,7 @@
 			user_add_check = function(){
 				var username = registry.byId("username");
 				if(!username.isValid()){
-					rosten.alert("人员名称不正确！").queryDlgClose = function(){
+					rosten.alert("账号不正确！").queryDlgClose = function(){
 						username.focus();
 					};
 					return false;
@@ -58,24 +58,15 @@
 					};
 					return false;
 				}
-				<g:if test='${userType.equals("super") }'>
-					var company = registry.byId("companyName");
-					if(company && !company.isValid()){
-						rosten.alert("所属机构不正确！");
-						return false;
-					}
-					return true
-				</g:if>
-				<g:elseif test='${userType.equals("admin")}'>
+				<g:if test='${userType.equals("admin") }'>
 					var allowdepartsName = registry.byId("allowdepartsName");
 					if(allowdepartsName && !allowdepartsName.isValid()){
 						rosten.alert("所属部门不正确！");
 						return false;
 					}
-					return true
-				
-				</g:elseif>
-			}
+				</g:if>
+				return true;
+			};
 			user_add = function(){
 				if(user_add_check()==false) return;
 				var content = {};
@@ -94,13 +85,20 @@
 						rosten.alert("保存失败!");
 					}
 				},null,"rosten_form");
-			}
+			};
+			page_quit = function(){
+				if(window.opener.dom_rostenGrid){
+					window.opener.dom_rostenGrid.refresh();
+		    	}
+		        window.close();
+			};
 	});
     </script>
 </head>
 <body>
 	<div class="rosten_action">
-		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'systemAction',action:'administratorForm',params:[userId:loginUser?.id])}"'></div>
+		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" 
+			data-dojo-props='actionBarSrc:"${createLink(controller:'systemAction',action:'administratorForm',params:[userId:loginUser?.id])}"'></div>
 	</div>
 	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;">
 	<div>
@@ -121,28 +119,27 @@
 					    	<g:if test='${userType.equals("admin") }'>
 					    		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
                                 	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
-                                		trim:true,
-                                		required:true,
+                                		trim:true,required:true,
                                 		promptMessage:"请正确输入账号...",
-                                		style:{width:"100px"},
+                                		style:{width:"125px"},
                                 		<g:if test="${username && !"".equals(username)}">disabled:true,</g:if>
               							value:"${username}"
                                 '/>
 					    	</g:if>
 					    	<g:else>
                            		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
+                                	data-dojo-props='name:"username",readOnly:true,
                                 		trim:true,
                                 		required:true,
                                 		promptMessage:"请正确输入账号...",
-              							value:"${user?.username}"
+              							value:"${username}"
                                 '/>
                            	</g:else>	
 					    </td>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>具有角色：</div></td>
 					    <td width="250">
 					    	<input id="allowrolesName" data-dojo-type="dijit/form/ValidationTextBox"
-                					data-dojo-props='trim:true,${fieldAcl.isReadOnly("allowrolesName")},
+                					data-dojo-props='trim:true,readOnly:true,
                 						value:"${allowrolesName }"
                 				'/>
                  				<g:if test='${userType.equals("admin") }'>
@@ -158,7 +155,7 @@
 						    <td><div align="right"><span style="color:red">*&nbsp;</span>密码：</div></td>
 						    <td>
 						    	<input id="password" data-dojo-type="dijit/form/ValidationTextBox" 
-	                               	data-dojo-props='name:"password",${fieldAcl.isReadOnly("password")},
+	                               	data-dojo-props='name:"password",
 	                               		type:"password",
 	                               		trim:true,
 	                               		required:true,
@@ -169,7 +166,7 @@
 						    <td><div align="right"><span style="color:red">*&nbsp;</span>密码确认：</div></td>
 						    <td>
 						    	<input id="passwordcheck" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"passwordcheck",${fieldAcl.isReadOnly("password")},
+                                	data-dojo-props='name:"passwordcheck",
                                 		type:"password",
                                 		trim:true,
                                 		required:true,
@@ -206,12 +203,12 @@
 					
 				</table>
 			</div>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况",toggleable:false,moreText:"",height:"300px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getPersonInfor',id:user?.id)}"
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
+				href:"${createLink(controller:'staff',action:'getPersonInfor',id:user?.id,params:[departId:departId])}"
 			'>
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"160px",marginBottom:"2px",
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"130px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getContactInfor',id:user?.id)}"'>
 			</div>
 			
@@ -219,7 +216,7 @@
 				href:"${createLink(controller:'staff',action:'getDegree',id:user?.id)}"'>
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"工作经历",toggleable:false,moreText:"",height:"250px",marginBottom:"2px",
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"工作经历",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getWorkResume',id:user?.id)}"'>
 			</div>
 			

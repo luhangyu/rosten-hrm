@@ -38,6 +38,7 @@
 						model: treeModel,
 						onClick:function(item){
 							if(item && !item.root){
+								rosten.variable.currentDeartId = item.id;
 								var w = registry.byId("departEditPane");
 								var href = "${createLink(controller:'staff',action:'personInforView')}";
 								var href = href+"/"+item.id;
@@ -79,6 +80,7 @@
 				autoExpand:true, onLoad:function(){treeOnLoad()}'>
 				<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="item">
 					if(item && !item.root){
+						rosten.variable.currentDeartId = item.id;
 						var w = dijit.byId("departEditPane");
 						var href = "${createLink(controller:'staff',action:'personInforView')}";
 						var href = href+"/"+item.id;

@@ -19,7 +19,8 @@ define(["dojo/_base/connect",
 	add_personInfor = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("user", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid);
+        var currentDepartId = rosten.variable.currentDeartId;
+        rosten.openNewWindow("user", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&currentDepartId=" + currentDepartId);
     };
     read_personInfor = function() {
         change_user();

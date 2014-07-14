@@ -18,7 +18,7 @@ class PersonInfor {
 	Date birthday
 	
 	def getFormatteBirthday(){
-		if(trainDate!=null){
+		if(birthday!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(birthday)
 		}else{

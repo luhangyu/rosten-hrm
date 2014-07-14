@@ -20,12 +20,12 @@
 		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>所属部门：</div></td>
 		    <td width="250">
 		    	<input id="allowdepartsName" data-dojo-type="dijit/form/ValidationTextBox" 
-	               	data-dojo-props='name:"allowdepartsName",${fieldAcl.isReadOnly("allowdepartsName")},
+	               	data-dojo-props='name:"allowdepartsName",readOnly:true,
 	               		trim:true,
 	               		required:true,
-						value:"${personInforEntity?.user?.getDepartName()}"
+						value:"${departName}"
 	          	'/>
-	         	<g:hiddenField name="allowdepartsId" value="${personInforEntity?.user?.getDepartEntity()?.id }" />
+	         	<g:hiddenField name="allowdepartsId" value="${departId}" />
 				<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
            </td>
 		</tr>
@@ -42,7 +42,7 @@
 		  <td width="250">
 		    	<input id="birthday" data-dojo-type="dijit/form/DateTextBox" 
 	                 	data-dojo-props='name:"birthday",trim:true,${fieldAcl.isReadOnly("birthday")},
-							value:"${personInforEntity?.user?.getFormatteBirthday()}"
+							value:"${personInforEntity?.getFormatteBirthday()}"
 	                '/>
 		    </td>
 		</tr>
@@ -51,7 +51,7 @@
 		  <td width="250">
 		    	<input id="usedName" data-dojo-type="dijit/form/ValidationTextBox" 
 	                 	data-dojo-props='name:"usedName",trim:true,${fieldAcl.isReadOnly("usedName")},
-							value:"${personInforEntity?.user?.usedName}"
+							value:"${personInforEntity?.usedName}"
 	                '/>
 		    </td>
 		    
