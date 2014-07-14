@@ -662,7 +662,22 @@ define(["dojo/_base/connect",
                 var rostenGrid = rosten.kernel.getGrid();
                 rostenGrid.onRowDblClick = change_service;
                 break;
-                
+            case "systemModelInit":
+            	var _1 = rosten.confirm("系统初始化后将无法恢复，是否继续?");
+                _1.callback = function() {
+                	//初始化人事系统相关模块
+                	var companyId = rosten.kernel.getUserInforByKey("companyid");
+                	rosten.readSync(rosten.webPath + "/hrm/modelInit/" + companyId, {}, function(data){
+                		if (data.result == "true" || data.result == true) {
+                            rosten.alert("成功!").queryDlgClose = function(){
+                            	refreshSystem();
+                            }
+                        } else {
+                            rosten.alert("失败!");
+                        }
+                	});
+                };
+                break;     
         }
 
     };
