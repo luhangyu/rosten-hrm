@@ -6,10 +6,13 @@ class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
     def userView ={
-		def actionList = createCommonAction(null,"user",true)
-		actionList << createAction("更改密码",imgPath + "changePassword.gif","changePassword")
-		actionList << createAction("搜索",imgPath + "search.gif","searchGrid")
-		actionList << createAction("取消搜索",imgPath + "search_cancel.gif","cancelSearch")
+		def actionList =[]
+		def strname = "personInfor"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("添加",imgPath + "add.png","add_" + strname)
+		actionList << createAction("查看",imgPath + "read.gif","read_" + strname)
+		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		actionList << createAction("更改密码",imgPath + "changePassword.gif",strname + "_changePassword" )
 		render actionList as JSON
 	}
 	private def createCommonAction={actionList,strname,args->

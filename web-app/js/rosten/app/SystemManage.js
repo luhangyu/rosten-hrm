@@ -4,283 +4,62 @@
 define(["dojo/_base/connect",
         "dijit/registry",
         "rosten/kernel/behavior"], function(connect,registry) {
-
-    searchGridSubmit = function() {
-        var url = "jsproot/sysmanage/";
-        var content = {};
-        switch(rosten.kernel.navigationEntity) {
-            case "modelManage":
-
-                var modelcode = registry.byId("modelcode");
-                if (!modelcode.isValid()) {
-                    rosten.alert("当前模块编号不正确！").queryDlgClose = function() {
-                        modelcode.focus();
-                    };
-
-                    return;
-                }
-
-                var modelname = registry.byId("modelname");
-                if (!modelname.isValid()) {
-                    rosten.alert("当前模块名称不正确！").queryDlgClose = function() {
-                        modelname.focus();
-                    };
-
-                    return;
-                }
-                if (modelcode.getValue() == "" && modelname.getValue() == "") {
-                    rosten.alert("请正确填写搜索条件！").queryDlgClose = function() {
-                        modelcode.focus();
-                    };
-                    return;
-                }
-                if (modelcode.attr("value") != "") {
-                    content.modelcode = modelcode.attr("value");
-                }
-                if (modelname.attr("value") != "") {
-                    content.modelname = modelname.attr("value");
-                }
-                url += "Model_Search.jsp";
-                break;
-            case "departManage":
-
-                var departcode = registry.byId("departcode");
-                if (!departcode.isValid()) {
-                    rosten.alert("当前部门编号不正确！").queryDlgClose = function() {
-                        departcode.focus();
-                    };
-
-                    return;
-                }
-
-                var departname = registry.byId("departname");
-                if (!departname.isValid()) {
-                    rosten.alert("当前部门名称不正确！").queryDlgClose = function() {
-                        departname.focus();
-                    };
-
-                    return;
-                }
-                if (departcode.getValue() == "" && departname.getValue() == "") {
-                    rosten.alert("请正确填写搜索条件！").queryDlgClose = function() {
-                        departcode.focus();
-                    };
-                    return;
-                }
-                if (departcode.getValue() != "") {
-                    content.departcode = departcode.getValue();
-                }
-                if (departname.getValue() != "") {
-                    content.departname = departname.getValue();
-                }
-
-                url += "Depart_Search.jsp";
-
-                break;
-            case "groupManage":
-                var groupcode = registry.byId("groupcode");
-                if (!groupcode.isValid()) {
-                    rosten.alert("当前群组编号不正确！").queryDlgClose = function() {
-                        groupcode.focus();
-                    };
-
-                    return;
-                }
-
-                var groupname = registry.byId("groupname");
-                if (!groupname.isValid()) {
-                    rosten.alert("当前群组名称不正确！").queryDlgClose = function() {
-                        groupname.focus();
-                    };
-
-                    return;
-                }
-                if (groupcode.getValue() == "" && groupname.getValue() == "") {
-                    rosten.alert("请正确填写搜索条件！").queryDlgClose = function() {
-                        groupcode.focus();
-                    };
-                    return;
-                }
-                if (groupcode.getValue() != "") {
-                    content.groupcode = groupcode.getValue();
-                }
-                if (groupname.getValue() != "") {
-                    content.groupname = groupname.getValue();
-                }
-                url += "Group_Search.jsp";
-                break;
-
-            case "userManage":
-                var usercode = registry.byId("usercode");
-                if (!usercode.isValid()) {
-                    rosten.alert("当前用户编号不正确！").queryDlgClose = function() {
-                        usercode.focus();
-                    };
-
-                    return;
-                }
-
-                var username = registry.byId("username");
-                if (!username.isValid()) {
-                    rosten.alert("当前用户名称不正确！").queryDlgClose = function() {
-                        username.focus();
-                    };
-
-                    return;
-                }
-                if (usercode.getValue() == "" && username.getValue() == "") {
-                    rosten.alert("请正确填写搜索条件！").queryDlgClose = function() {
-                        usercode.focus();
-                    };
-                    return;
-                }
-                if (usercode.getValue() != "") {
-                    content.usercode = usercode.getValue();
-                }
-                if (username.getValue() != "") {
-                    content.username = username.getValue();
-                }
-                url += "User_Search.jsp";
-                break;
-            case "roleManage":
-                var rolecode = registry.byId("rolecode");
-                if (!rolecode.isValid()) {
-                    rosten.alert("当前角色编号不正确！").queryDlgClose = function() {
-                        rolecode.focus();
-                    };
-
-                    return;
-                }
-
-                var rolename = registry.byId("rolename");
-                if (!rolename.isValid()) {
-                    rosten.alert("当前角色名称不正确！").queryDlgClose = function() {
-                        rolename.focus();
-                    };
-
-                    return;
-                }
-                if (rolecode.getValue() == "" && rolename.getValue() == "") {
-                    rosten.alert("请正确填写搜索条件！").queryDlgClose = function() {
-                        rolecode.focus();
-                    };
-                    return;
-                }
-                if (rolecode.getValue() != "") {
-                    content.rolecode = rolecode.getValue();
-                }
-                if (rolename.getValue() != "") {
-                    content.rolename = rolename.getValue();
-                }
-                url += "Role_Search.jsp";
-                break;
-            case "permissionManage":
-                var permissioncode = registry.byId("permissioncode");
-                if (!permissioncode.isValid()) {
-                    rosten.alert("当前权限编号不正确！").queryDlgClose = function() {
-                        permissioncode.focus();
-                    };
-
-                    return;
-                }
-
-                var permissionname = registry.byId("permissionname");
-                if (!permissionname.isValid()) {
-                    rosten.alert("当前权限名称不正确！").queryDlgClose = function() {
-                        permissionname.focus();
-                    };
-
-                    return;
-                }
-                if (permissioncode.getValue() == "" && permissionname.getValue() == "") {
-                    rosten.alert("请正确填写搜索条件！").queryDlgClose = function() {
-                        permissioncode.focus();
-                    };
-                    return;
-                }
-                if (permissioncode.getValue() != "") {
-                    content.permissioncode = permissioncode.getValue();
-                }
-                if (permissionname.getValue() != "") {
-                    content.permissionname = permissionname.getValue();
-                }
-                url += "Permission_Search.jsp";
-                break;
-            case "resourceManage":
-                var resourcecode = registry.byId("resourcecode");
-                if (!resourcecode.isValid()) {
-                    rosten.alert("当前资源编号不正确！").queryDlgClose = function() {
-                        resourcecode.focus();
-                    };
-
-                    return;
-                }
-
-                var resourcename = registry.byId("resourcename");
-                if (!resourcename.isValid()) {
-                    rosten.alert("当前资源名称不正确！").queryDlgClose = function() {
-                        resourcename.focus();
-                    };
-
-                    return;
-                }
-                if (resourcecode.getValue() == "" && resourcename.getValue() == "") {
-                    rosten.alert("请正确填写搜索条件！").queryDlgClose = function() {
-                        resourcecode.focus();
-                    };
-                    return;
-                }
-                if (resourcecode.getValue() != "") {
-                    content.resourcecode = resourcecode.getValue();
-                }
-                if (resourcename.getValue() != "") {
-                    content.resourcename = resourcename.getValue();
-                }
-                url += "Resource_Search.jsp";
-                break;
-        }
-
-        //先关闭当前窗口，然后刷新数据
-        rosten.kernel.hideRostenShowDialog();
-        rosten.kernel.refreshGrid(url, content);
-
+	
+	personInfor_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:personInfor_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	personInfor_onMessageOpen = function(rowIndex){
+		var rostenGrid = registry.byId("rosten_rostenGrid");
+        var unid = _getGridItemValue(rostenGrid,rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("personInfor", rosten.webPath + "/system/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rostenGrid.clearSelected();
+	};
+	add_personInfor = function() {
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("user", rosten.webPath + "/system/userAdd?companyId=" + companyId + "&userid=" + userid);
     };
-    searchGrid = function() {
-
-        console.log(rosten.kernel.navigationEntity);
-        var url = "jslib/rosten/html/sysmanage/";
-        switch(rosten.kernel.navigationEntity) {
-            case "modelManage":
-                url += "Model_Search.html";
-                break;
-            case "departManage":
-                url += "Depart_Search.html";
-                break;
-            case "groupManage":
-                url += "Group_Search.html";
-                break;
-            case "userManage":
-                url += "User_Search.html";
-                break;
-            case "roleManage":
-                url += "Role_Search.html";
-                break;
-            case "permissionManage":
-                url += "Permission_Search.html";
-                break;
-            case "resourceManage":
-                url += "Resource_Search.html";
-                break;
-        }
-
-        rosten.kernel.createRostenShowDialog(url);
-
+    read_personInfor = function() {
+        change_user();
     };
-    cancelSearch = function() {
-        console.log(rosten.kernel.getGrid().defaultUrl);
-        rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl);
+    change_personInfor = function() {
+        var unid = rosten.getGridUnid("single");
+        if (unid == "")
+            return;
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("user", rosten.webPath + "/system/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+        rosten.kernel.getGrid().clearSelected();
     };
-    //------------------------------------------------------------------------------------------------------------------------
+    delete_personInfor = function() {
+        var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+        _1.callback = function() {
+            var unids = rosten.getGridUnid("multi");
+            if (unids == "")
+                return;
+            var content = {};
+            content.id = unids;
+            rosten.read(rosten.webPath + "/system/userDelete", content, delete_callback);
+        };
+    };
+    personInfor_changePassword = function(){
+    	var unid = rosten.getGridUnid("single");
+        if (unid == "")
+            return;
+    	rosten.kernel.createRostenShowDialog(rosten.webPath + "/system/passwordChangeShow1/"+ unid, {
+            onLoadFunction : function() {
+
+            }
+        });
+    };
+	_getGridItemValue=function(rostenGrid,index,name){
+    	var grid = rostenGrid.getGrid();
+    	var item = grid.getItem(index);
+    	var store = rostenGrid.getStore();
+    	return store.getValue(item, name);
+    };
     changePassword = function(){
     	var unid = rosten.getGridUnid("single");
         if (unid == "")
@@ -331,7 +110,7 @@ define(["dojo/_base/connect",
     add_user = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("depart", rosten.webPath + "/system/userAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("user", rosten.webPath + "/system/userAdd?companyId=" + companyId + "&userid=" + userid);
     };
     read_user = function() {
         change_user();
