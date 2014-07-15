@@ -29,27 +29,12 @@
 					rosten.cssinit();
 				});
 			user_add_check = function(){
-				var username = registry.byId("username");
-				if(!username.isValid()){
-					rosten.alert("账号不正确！").queryDlgClose = function(){
-						username.focus();
-					};
-					return false;
-				}
+				if(check_common("username","账号不正确！",true)==false) return false;
+				if(check_common("password","密码不正确！",true)==false) return false;
+				if(check_common("passwordcheck","确认密码不正确！",true)==false) return false;
+
 				var password = registry.byId("password");
-				if(!password.isValid()){
-					rosten.alert("密码不正确！").queryDlgClose = function(){
-						password.focus();
-					};
-					return false;
-				}
 				var passwordcheck = registry.byId("passwordcheck");
-				if(!passwordcheck.isValid()){
-					rosten.alert("确认密码不正确！").queryDlgClose = function(){
-						passwordcheck.focus();
-					};
-					return false;
-				}
 				if(password.attr("value")!=passwordcheck.attr("value")){
 					rosten.alert("密码不一致！").queryDlgClose = function(){
 						password.attr("value","");
@@ -58,13 +43,15 @@
 					};
 					return false;
 				}
-				<g:if test='${userType.equals("admin") }'>
-					var allowdepartsName = registry.byId("allowdepartsName");
-					if(allowdepartsName && !allowdepartsName.isValid()){
-						rosten.alert("所属部门不正确！");
-						return false;
-					}
-				</g:if>
+
+				//个人概况检查
+				if(check_common("chinaName","姓名不正确！",true)==false) return false;
+				if(check_common("userTypeName","用户类型不正确！",true)==false) return false;
+				if(check_common("allowdepartsName","所属部门不正确！")==false) return false;
+				if(check_common("idCard","身份证号不正确！",true)==false) return false;
+
+				//通讯方式
+				
 				return true;
 			};
 			user_add = function(){
@@ -74,13 +61,13 @@
 					content.companyId = "${company?.id}";
 					content.userNameFront = registry.byId("userNameFront").attr("value");
 				</g:if>
-				rosten.readSync(rosten.webPath + "/system/userSave",content,function(data){
+				rosten.readSync(rosten.webPath + "/staff/userSave",content,function(data){
 					if(data.result=="true"){
 						rosten.alert("保存成功！").queryDlgClose= function(){
 							page_quit();	
 						};
 					}else if(data.result=="repeat"){
-						rosten.alert("人员名称冲突，保存失败!");
+						rosten.alert("账号冲突，保存失败!");
 					}else{
 						rosten.alert("保存失败!");
 					}
@@ -91,6 +78,20 @@
 					window.opener.dom_rostenGrid.refresh();
 		    	}
 		        window.close();
+			};
+			check_common = function(fieldStr,alertStr,isFocus){
+				var _dom = registry.byId(fieldStr);
+				if(_dom && !_dom.isValid()){
+					if(isFocus){
+						rosten.alert(alertStr).queryDlgClose = function(){
+							_dom.focus();
+						};
+					}else{
+						rosten.alert(alertStr);
+					}
+					return false;
+				}
+				return true;
 			};
 	});
     </script>
@@ -182,8 +183,7 @@
 					    <td>
 					    	<select id="cssStyle" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"cssStyle",
-                           			autoComplete:false,
-                           			${fieldAcl.isReadOnly("cssStyle")},
+                           			autoComplete:false,${fieldAcl.isReadOnly("cssStyle")},
             						value:"${(user!=null && user.cssStyle!=null)?user.cssStyle:"normal" }"
                             '>
 	                            <option value="normal">标准样式</option>

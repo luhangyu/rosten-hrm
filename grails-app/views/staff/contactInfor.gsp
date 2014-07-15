@@ -8,6 +8,7 @@
 </style>
 
 <body>
+	<input  data-dojo-type="dijit/form/ValidationTextBox" id="contactInforId"  data-dojo-props='name:"contactInforId",style:{display:"none"},value:"${contactInforEntity?.id }"' />
 	<table border="0" width="740" align="left">
 		<tr>
 			<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>移动电话：</div></td>

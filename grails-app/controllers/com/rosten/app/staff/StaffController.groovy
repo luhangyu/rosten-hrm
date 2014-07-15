@@ -10,6 +10,7 @@ import grails.converters.JSON
 import com.rosten.app.system.UserRole
 import com.rosten.app.system.UserType
 import com.rosten.app.system.SystemService
+import com.rosten.app.system.Role
 
 class StaffController {
 	def springSecurityService
@@ -22,6 +23,8 @@ class StaffController {
 			ids.each{
 				def user = User.get(it)
 				if(user){
+					//先刪除关联信息
+					PersonInfor.findByUser(user)?.delete(flush:true)
 					user.delete(flush: true)
 				}
 			}
@@ -41,7 +44,7 @@ class StaffController {
 			user = User.get(params.id)
 		}else{
 			user.enabled = true
-			if(!params.sysFlag && params.userNameFront){
+			if(params.userNameFront){
 				params.username = params.userNameFront + params.username
 			}
 		}
@@ -76,6 +79,20 @@ class StaffController {
 					UserRole.create(user, role)
 				}
 			}
+			
+			//添加个人概况信息
+			def personInfor = new PersonInfor()
+			if(params.personInforId){
+				personInfor = PersonInfor.get(params.personInforId)
+			}else{
+				personInfor.user = user
+			}
+			personInfor.properties = params
+			personInfor.clearErrors()
+			
+			personInfor.birthday = Util.convertToTimestamp(params.birthday)
+			
+			personInfor.save(flush:true)
 			
 			model["result"] = "true"
 		}else{
@@ -236,11 +253,11 @@ class StaffController {
 		def depart = Depart.get(params.departId)
 		
 		def currentUser = springSecurityService.getCurrentUser()
-		def user = User.get(params.userId)
+		def user = User.get(params.id)
 		if(user){
 			entity = PersonInfor.findByUser(user)
 			model["departName"] = user.getDepartName()
-			model["departId"] = user.getDepartEntity?.id
+			model["departId"] = user.getDepartEntity()?.id
 		}else{
 			entity = new PersonInfor()
 			model["departName"] = depart.departName
@@ -264,7 +281,7 @@ class StaffController {
 		def model =[:]
 		def entity
 		
-		def user = User.get(params.userId)
+		def user = User.get(params.id)
 		if(user){
 			entity = ContactInfor.findByUser(user)
 		}else{
@@ -281,7 +298,7 @@ class StaffController {
 		def model =[:]
 		def entity
 		
-		def user = User.get(params.userId)
+		def user = User.get(params.id)
 		if(user){
 			entity = Degree.findByUser(user)
 		}else{
@@ -297,7 +314,7 @@ class StaffController {
 		def model =[:]
 		def entity
 		
-		def user = User.get(params.userId)
+		def user = User.get(params.id)
 		if(user){
 			entity = WorkResume.findByUser(user)
 		}else{

@@ -44,8 +44,13 @@ define(["dojo/_base/connect",
                 return;
             var content = {};
             content.id = unids;
-            rosten.read(rosten.webPath + "/staff/userDelete", content, delete_callback);
+            rosten.read(rosten.webPath + "/staff/userDelete", content, function(data){
+            	delete_callback(data,dom_rostenGrid);
+            });
         };
+    };
+    personInfor_freshGrid = function(){
+    	dom_rostenGrid.refresh();
     };
     personInfor_changePassword = function(){
     	var unid = rosten._getGridUnid(dom_rostenGrid,"single");
@@ -101,7 +106,9 @@ define(["dojo/_base/connect",
         rosten.read(rosten.webPath + "/system/passwordChangeSubmit1", content, function(data) {
             if (data.result == "true") {
                 rosten.kernel.hideRostenShowDialog();
-                rosten.kernel.getGrid().clearSelected();
+                //2014-7-15修改为按部门方式查询并修改
+//                rosten.kernel.getGrid().clearSelected();
+                dom_rostenGrid.clearSelected();
                 rosten.alert("修改密码成功!");
             } else if (data.result == "error") {
                 rosten.alert("当前密码错误,修改密码失败!");
@@ -471,10 +478,15 @@ define(["dojo/_base/connect",
             rosten.alert("上传成功后，请使用<重新登录系统>查看变化！");
         }));
     };
-    delete_callback = function(data) {
+    delete_callback = function(data,gridDom) {
         if (data.result == "true" || data.result == true) {
             rosten.alert("成功删除!");
-            rosten.kernel.refreshGrid();
+            if(gridDom){
+            	gridDom.refresh();
+            }else{
+            	rosten.kernel.refreshGrid();
+            }
+            
         } else {
             rosten.alert("删除失败!");
         }
