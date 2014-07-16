@@ -94,6 +94,11 @@ define(["dojo/_base/kernel"
             	require(["rosten/app/TrainManage"],function(){
             		show_trainNaviEntity("trainCourse");
             	});
+            }else if (oString == "static") {
+            	deleteMailNavigation();
+            	require(["rosten/app/StaticManage"],function(){
+            		show_staticNaviEntity("static");
+            	});
             }else if(oString=="personconfig"){
                 deleteMailNavigation();
                 require(["rosten/app/SmsManage"],function(){
