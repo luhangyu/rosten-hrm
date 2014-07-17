@@ -24,13 +24,23 @@
 	
 	.chart-area-pie {
 		/*border: 1px solid #ccc;*/
-        height: 210px;
+        height: 190px;
         width:400px;
         margin:0 auto;
 	}
 	.chart-pie {
 		width:400px;
-		height: 180px;
+		height: 190px;
+	}
+	.chart-area-cols {
+		/*border: 1px solid #ccc;*/
+        height: 200px;
+        width:500px;
+        float:left;
+	}
+	.chart-cols {
+		width:500px;
+		height: 190px;
 	}
 	
 </style>
@@ -55,10 +65,13 @@
      	"dojox/charting/action2d/Magnify",
      	"dojox/charting/plot2d/Grid",
      	"dojox/charting/action2d/MoveSlice",
-     	"dojox/charting/plot2d/Pie"
+     	"dojox/charting/plot2d/Pie",
+     	"dojox/charting/action2d/Shake",
+     	"dojox/charting/plot2d/ClusteredColumns",
+     	"dojox/charting/plot2d/Columns"
      	],
 	function( kernel,JSON,lang,query,domStyle,domClass,domConstruct,registry,ItemFileWriteStore,
-		Chart,DataSeries,ThreeD,Legend,Default,Markers,Tooltip,Magnify,Grid,MoveSlice,Pie
+		Chart,DataSeries,ThreeD,Legend,Default,Markers,Tooltip,Magnify,Grid,MoveSlice,Pie,Shake,ClusteredColumns,Columns
 		) {
 		kernel.addOnLoad(function() {
 			makeCharts();
@@ -132,6 +145,61 @@
     		new MoveSlice(chartP);
             
    		 	addLegend(chartP, "pie_legend");
+
+			//添加员工编制统计
+			
+   			//柱状图
+   			var groupList = JSON.parse('${groupList}');
+   			var departList = JSON.parse('${departList}');
+   			
+   			var store1 = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getDepartUsersByType',id:company?.id,params:[departIds:departIds,groupNames:groupNames])}"});
+   			
+	        var chartC = new Chart("cols");
+            chartC.setTheme(ThreeD);
+            chartC.addAxis("x", {
+            	natural: true,
+            	labelFunc: function(value){
+            		return departList[value-1];
+				}
+            });
+            chartC.addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", includeZero: true,
+                title: "员工人数",
+	        	titleGap: 20,
+	        	titleFontColor: "green",
+	            titleOrientation: "axis"
+	        });
+            chartC.addPlot("default", {type: ClusteredColumns,gap: 30, labels: true});
+
+            for (var i = 0; i < groupList.length; i++) {
+            	chartC.addSeries(groupList[i], new DataSeries(store1, {query: {group: groupList[i]}}, dojo.hitch(null, valTrans, "number")));
+            }
+            
+            new Shake(chartC, "default", {shiftY: 0});
+    		new Tooltip(chartC);
+            
+            chartC.render();
+    		addLegend(chartC, "cols_legend");
+
+			//增加员工职称统计
+    		var pieChart3 = new Chart("pie1");
+	        pieChart3.setTheme(ThreeD);
+	        pieChart3.addPlot("default", {
+	            type:       "Pie",
+	        	labelStyle: "columns",
+	        	omitLabels: true,
+	        	radius:     80
+	        });
+	        pieChart3.addSeries("test",new DataSeries(store, {query: {id: "*"}}, "number"));
+	        pieChart3.render();
+
+
+    		
+	    };
+	    function valTrans(value, store, item){
+	        return {
+	            y: store.getValue(item, value),
+	            tooltip: "员工人数:" + store.getValue(item, value)
+	        };
 	    };
 		function addLegend(chart, node){
 	        var legend = new Legend({chart: chart}, node);
@@ -154,7 +222,7 @@
 	</div>
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"员工部门人数分布",toggleable:false,
+			data-dojo-props='region:"left",title:"员工部门人数分布    (2014年度)",toggleable:false,
 				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
 			<div class="charts">
 				<div id="pie_legend"></div>
@@ -165,19 +233,31 @@
 				
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"员工编制统计",toggleable:false,
+			data-dojo-props='region:"center",title:"部门员工类型统计    (2014年度)",toggleable:false,
 				height:"210px",moreText:""'>
+			<div class="charts">
+				<div id="cols_legend"></div>
+				<div class="chart-area-cols">
+					<div id="cols" class="chart-cols"></div>
+				</div>
+			</div>	
 		</div>						
 	</div>
 	
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"员工职称统计",toggleable:false,
-				height:"157px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+			data-dojo-props='region:"left",title:"员工职称统计    (2014年度)",toggleable:false,
+				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+			<div class="charts">	
+				<div class="chart-area-pie">
+		            <div id="pie_legend1"></div>
+					<div id="pie1" class="chart-pie"></div>
+				</div>
+			</div>	
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"部门请假统计",toggleable:false,
-				height:"157px",moreText:""'>
+			data-dojo-props='region:"center",title:"部门请假统计    (2014年度)",toggleable:false,
+				height:"210px",moreText:""'>
 		</div>						
 	</div>
 	
