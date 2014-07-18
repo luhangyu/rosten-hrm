@@ -22,6 +22,16 @@
 		height: 168px;
 	}
 	
+	.chart-area-lines1 {
+        height: 200px;
+        width:520px;
+        float:left;
+	}
+	.chart-lines1 {
+		width:520px;
+		height: 190px;
+	}
+	
 	.chart-area-pie {
 		/*border: 1px solid #ccc;*/
         height: 190px;
@@ -32,14 +42,15 @@
 		width:400px;
 		height: 190px;
 	}
+	
 	.chart-area-cols {
 		/*border: 1px solid #ccc;*/
         height: 200px;
-        width:500px;
+        width:520px;
         float:left;
 	}
 	.chart-cols {
-		width:500px;
+		width:520px;
 		height: 190px;
 	}
 	
@@ -68,10 +79,11 @@
      	"dojox/charting/plot2d/Pie",
      	"dojox/charting/action2d/Shake",
      	"dojox/charting/plot2d/ClusteredColumns",
-     	"dojox/charting/plot2d/Columns"
+     	"dojox/charting/plot2d/Columns",
+     	"dojox/charting/plot2d/StackedAreas"
      	],
 	function( kernel,JSON,lang,query,domStyle,domClass,domConstruct,registry,ItemFileWriteStore,
-		Chart,DataSeries,ThreeD,Legend,Default,Markers,Tooltip,Magnify,Grid,MoveSlice,Pie,Shake,ClusteredColumns,Columns
+		Chart,DataSeries,ThreeD,Legend,Default,Markers,Tooltip,Magnify,Grid,MoveSlice,Pie,Shake,ClusteredColumns,Columns,StackedAreas
 		) {
 		kernel.addOnLoad(function() {
 			makeCharts();
@@ -133,12 +145,50 @@
 	        
 	        addLegend(chartL, "lines_legend");
 
+			//近10年部门工资统计
+			var chart1 = new Chart("lines1");
+            chart1.setTheme(ThreeD);
+            chart1.addAxis("x", {fixLower: "major", fixUpper: "major",max:9,
+             	labels: [
+					{ value: 0, text: "" },
+					{ value: 1, text: "2010年" },
+					{ value: 2, text: "2011年" },
+					{ value: 3, text: "2012年" },
+					{ value: 4, text: "2013年" },
+					{ value: 5, text: "2014年" },
+					{ value: 6, text: "2015年" },
+					{ value: 7, text: "2016年" },
+					{ value: 8, text: "2017年" },
+					{ value: 9, text: "2018年" }
+				]
+            });
+            chart1.addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", min: 0,
+             	title: "金额(万元)",
+		       	titleGap: 20, 
+		       	max:400,
+		       	titleFontColor: "orange",
+		        titleOrientation: "axis"
+            });
+            chart1.addPlot("default", { type: "StackedAreas", tension:"X" });
+             
+            chart1.addSeries("技术中心",
+				[150, 160,150,155, 130,150,168,180],
+				{ stroke: {color: "red", width: 2}, fill: "lightpink" }
+			);
+			chart1.addSeries("财务部",
+				[ 50, 60, 30, 50, 100,30,30,200],
+				{ stroke: {color: "blue", width: 2}, fill: "lightblue" }
+			);
+            chart1.render();
+             
+    		addLegend(chart1, "lines1_legend");
+
 			//添加员工部门人数分布图
 			var store = new ItemFileWriteStore({url: "${createLink(controller:'statistics',action:'getDepartUsers',id:company?.id)}"});
 	        var chartP = new Chart("pie");
             chartP.setTheme(ThreeD);
             chartP.addPlot("default", {type: Pie, radius: 80});
-            chartP.addSeries("Price", new DataSeries(store, {query: {id: "*"}}, {y: "number", text: "name", tooltip: "number"}));
+            chartP.addSeries("Price", new DataSeries(store, {query: {id: "*"}},dojo.hitch(null, valTrans, "number")));
             chartP.render();
             
             new Tooltip(chartP);
@@ -180,7 +230,7 @@
             chartC.render();
     		addLegend(chartC, "cols_legend");
 
-			//增加员工职称统计
+			//增加年龄统计
     		var pieChart3 = new Chart("pie1");
 	        pieChart3.setTheme(ThreeD);
 	        pieChart3.addPlot("default", {
@@ -189,15 +239,18 @@
 	        	omitLabels: true,
 	        	radius:     80
 	        });
-	        pieChart3.addSeries("test",new DataSeries(store, {query: {id: "*"}}, "number"));
+
+	        var chartData = [{y:18.78,text:"30以下   (18.78%)"},{y:25.31,text:"31-40 (25.31%)"},
+	             	        {y:24.94,text:"41-50 (24.94%)"},{y:20.61,text:"51-60 (20.61%)"},{y:10.32,text:"61以上  (10.32%)"}];
+	        
+	        pieChart3.addSeries("ageStatic",chartData);
 	        pieChart3.render();
-
-
     		
 	    };
 	    function valTrans(value, store, item){
 	        return {
 	            y: store.getValue(item, value),
+	            text:store.getValue(item,"name"),
 	            tooltip: "员工人数:" + store.getValue(item, value)
 	        };
 	    };
@@ -222,8 +275,20 @@
 	</div>
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"员工部门人数分布    (2014年度)",toggleable:false,
+			data-dojo-props='region:"left",title:"近几年度部门支出金额统计趋势",toggleable:false,
 				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+			<div class="charts">
+				<div id="lines1_legend"></div>
+				<div class="chart-area-lines1">
+					<div id="lines1" class="chart-lines1"></div>
+				</div>
+			</div>
+				
+		</div>
+		<div data-dojo-type="rosten/widget/TitlePane"
+			data-dojo-props='region:"center",title:"部门员工人数分布统计   (2014年度)",toggleable:false,
+				height:"210px",moreText:""'>
+				
 			<div class="charts">
 				<div id="pie_legend"></div>
 				<div class="chart-area-pie">
@@ -231,33 +296,33 @@
 				</div>
 			</div>	
 				
-		</div>
-		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"部门员工类型统计    (2014年度)",toggleable:false,
-				height:"210px",moreText:""'>
+		</div>						
+	</div>
+	
+	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
+		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
+			data-dojo-props='region:"left",title:"部门员工类型统计    (2014年度)",toggleable:false,
+				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+				
 			<div class="charts">
 				<div id="cols_legend"></div>
 				<div class="chart-area-cols">
 					<div id="cols" class="chart-cols"></div>
 				</div>
 			</div>	
-		</div>						
-	</div>
-	
-	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
-		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"员工职称统计    (2014年度)",toggleable:false,
-				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+			
+		</div>
+		<div data-dojo-type="rosten/widget/TitlePane"
+			data-dojo-props='region:"center",title:"员工按年龄段统计    (2014年度)",toggleable:false,
+				height:"210px",moreText:""'>
+				
 			<div class="charts">	
 				<div class="chart-area-pie">
 		            <div id="pie_legend1"></div>
 					<div id="pie1" class="chart-pie"></div>
 				</div>
 			</div>	
-		</div>
-		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"部门请假统计    (2014年度)",toggleable:false,
-				height:"210px",moreText:""'>
+				
 		</div>						
 	</div>
 	

@@ -62,12 +62,26 @@ class HrmController {
 			model.save()
 			
 			model = new Model(company:company)
+			model.modelName = "培训管理"
+			model.modelUrl = path + "/system/navigation"
+			model.modelCode = "trainManage"
+			model.description ="培训管理"
+			
+			def resource = new Resource()
+			resource.resourceName = "培训班管理"
+			resource.url = "trainCourse"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			model.save()
+			
+			model = new Model(company:company)
 			model.modelName = "统计分析"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "static"
 			model.description ="统计分析"
 			
-			def resource = new Resource()
+			resource = new Resource()
 			resource.resourceName = "统计分析"
 			resource.url = "static"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
