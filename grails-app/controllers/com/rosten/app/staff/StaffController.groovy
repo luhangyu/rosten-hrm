@@ -34,6 +34,7 @@ class StaffController {
 			json = [result:'error']
 		}
 		render json as JSON
+		
 	}
 	
 	def userSave ={
