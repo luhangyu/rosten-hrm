@@ -188,7 +188,7 @@
 	        var chartP = new Chart("pie");
             chartP.setTheme(ThreeD);
             chartP.addPlot("default", {type: Pie, radius: 80});
-            chartP.addSeries("Price", new DataSeries(store, {query: {id: "*"}},dojo.hitch(null, valTrans, "number")));
+            chartP.addSeries("number", new DataSeries(store, {query: {id: "*"}},dojo.hitch(null, valTrans, "number")));
             chartP.render();
             
             new Tooltip(chartP);
