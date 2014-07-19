@@ -26,11 +26,14 @@ class StatisticsController {
 						_number += 1
 					}
 				}
-				def sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
 				
-				index += 1
-				
-				json.items+=sMap
+				if(_number!=0){
+					def sMap = ["id":lastIndex,"name":depart.departName,"group":item,"number":_number]
+					
+					index += 1
+					
+					json.items+=sMap
+				}
 			}
 		}
 		render json as JSON

@@ -102,8 +102,8 @@ define(["dojo/_base/kernel"
             }else if(oString=="personconfig"){
                 deleteMailNavigation();
                 require(["rosten/app/SmsManage"],function(){
-//                	show_smsNaviEntity("gtaskManage");
-                	returnToMain();
+                	show_smsNaviEntity("personInformation");
+//                	returnToMain();
                 });
             }else if (oString == "workflow") {
             	deleteMailNavigation();
@@ -117,6 +117,8 @@ define(["dojo/_base/kernel"
 //            		show_publicNaviEntity("downloadFileManage");
             		returnToMain();
             	});
+            }else{
+            	returnToMain();
             }
         });
 		
@@ -536,6 +538,7 @@ define(["dojo/_base/kernel"
     	}
     };
     returnToMain = function() {
+    	if(!rosten.kernel) return;
         var showInformation = rosten.kernel.getUserInforByKey("logoname");
         if (showInformation == "")
             showInformation = rosten.variable.logoname;

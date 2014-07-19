@@ -125,11 +125,11 @@
 	        	});
 	        
 	        // chartL.addSeries("技术中心", new DataSeries(store, {query: {depart :"a"}}, "price"));      
-	        chartL.addSeries("技术中心",[
+	        chartL.addSeries("信息部",[
 				{ x: 1, y: 20},{ x: 2, y: 30},{ x: 3, y: 40},{ x: 4, y: 35},{ x: 5, y: 30},{ x: 6, y: 26},
 	        	{ x: 7, y: 29},{ x: 8, y: 30},{ x: 9, y: 35},{ x: 10, y: 20},{ x: 11, y: 25},{ x: 12, y: 40}
 	        ]); 
-	        chartL.addSeries("网络中心",[
+	        chartL.addSeries("承保运营部",[
 	        	{ x: 1, y: 10},{ x: 2, y: 20},{ x: 3, y: 30},{ x: 4, y: 25},{ x: 5, y: 36},{ x: 6, y: 16},
 	        	{ x: 7, y: 19},{ x: 8, y: 20},{ x: 9, y: 25},{ x: 10, y: 30},{ x: 11, y: 35},{ x: 12, y: 20}
 	        ]);
@@ -171,7 +171,7 @@
             });
             chart1.addPlot("default", { type: "StackedAreas", tension:"X" });
              
-            chart1.addSeries("技术中心",
+            chart1.addSeries("信息部",
 				[150, 160,150,155, 130,150,168,180],
 				{ stroke: {color: "red", width: 2}, fill: "lightpink" }
 			);

@@ -6,7 +6,7 @@ class HrmController {
 	def systemService
 	
 	def modelInit ={
-		def json
+		def json,model,resource
 		def company = Company.get(params.id)
 		def path = request.contextPath
 		
@@ -19,57 +19,165 @@ class HrmController {
 				}
 			}
 			//增加人事系统特有的功能模块
-			def model = new Model(company:company)
+			model = new Model(company:company)
 			model.modelName = "人事异动"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "staffChange"
-			model.description ="人事异动"
+			model.serialNo = 4
+			
+			resource = new Resource()
+			resource.resourceName = "新进员工登记"
+			resource.url = "newStaffAdd"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "员工部门调动"
+			resource.url = "staffDepartChange"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "人才招聘"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "staffEmploy"
-			model.description ="人才招聘"
+			model.serialNo = 5
+			
+			resource = new Resource()
+			resource.resourceName = "招聘计划管理"
+			resource.url = "staffEmployPlan"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "招聘岗位发布"
+			resource.url = "staffEmployPublic"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "招聘人员审核"
+			resource.url = "staffEmployAudit"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "人才报到"
+			resource.url = "staffEmployCheck"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "人才培养"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "staffDevelop"
-			model.description ="人才培养"
+			model.serialNo = 6
+			
+			resource = new Resource()
+			resource.resourceName = "学历学位进修"
+			resource.url = "degreeStudy"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "出国进修"
+			resource.url = "forgeinStudy"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "合同管理"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "bargain"
-			model.description ="合同管理"
+			model.serialNo = 7
+			
+			resource = new Resource()
+			resource.resourceName = "合同档案管理"
+			resource.url = "bargainManage"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "劳资福利"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "payweal"
-			model.description ="劳资福利"
+			model.serialNo = 8
+			
+			resource = new Resource()
+			resource.resourceName = "岗位工资标准"
+			resource.url = "positionPayweal"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "薪级工资标准"
+			resource.url = "salaryPayweal"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "绩效工资标准"
+			resource.url = "perforPayweal"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "员工工资管理"
+			resource.url = "staffPayweal"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "考勤管理"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "workAttendance"
-			model.description ="考勤管理"
+			model.serialNo = 9
+			
+			resource = new Resource()
+			resource.resourceName = "员工请假"
+			resource.url = "staffAskFor"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "请假审核"
+			resource.url = "askForCheck"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "部门请假汇总"
+			resource.url = "askForStatic"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "培训管理"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "trainManage"
-			model.description ="培训管理"
+			model.serialNo = 10
 			
-			def resource = new Resource()
+			resource = new Resource()
 			resource.resourceName = "培训班管理"
 			resource.url = "trainCourse"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "培训管理"
+			resource.url = "trainMessage"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
@@ -79,7 +187,7 @@ class HrmController {
 			model.modelName = "统计分析"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "static"
-			model.description ="统计分析"
+			model.serialNo = 11
 			
 			resource = new Resource()
 			resource.resourceName = "统计分析"
