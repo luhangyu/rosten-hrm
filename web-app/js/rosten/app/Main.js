@@ -102,17 +102,20 @@ define(["dojo/_base/kernel"
             }else if(oString=="personconfig"){
                 deleteMailNavigation();
                 require(["rosten/app/SmsManage"],function(){
-                	show_smsNaviEntity("gtaskManage");
+//                	show_smsNaviEntity("gtaskManage");
+                	returnToMain();
                 });
             }else if (oString == "workflow") {
             	deleteMailNavigation();
             	require(["rosten/app/WorkFlowManage"],function(){
-            		show_workFlowNaviEntity("flowDefinedManage");
+//            		show_workFlowNaviEntity("flowDefinedManage");
+            		returnToMain();
             	});
             }else if (oString == "public") {
             	deleteMailNavigation();
             	require(["rosten/app/PublicManage"],function(){
-            		show_publicNaviEntity("downloadFileManage");
+//            		show_publicNaviEntity("downloadFileManage");
+            		returnToMain();
             	});
             }
         });

@@ -40,8 +40,15 @@ class StatisticsController {
 		def company = Company.get(params.id)
 		def json = [identifier:'id',label:'name',items:[]]
 		Depart.findAllByCompany(company).each{
-			def sMap = ["id":it.id,"name":it.departName,"parentId":it.parent?.id,"number":it.getAllUser().size()]
-			json.items+=sMap
+			
+			if(it.parent){
+				def number = it.getAllUser().size()
+				if(number && number > 0){
+					def sMap = ["id":it.id,"name":it.departName,"parentId":it.parent?.id,"number":it.getAllUser().size()]
+					json.items+=sMap
+				}
+			}
+			
 		}
 		render json as JSON
 	}
