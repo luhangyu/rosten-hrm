@@ -21,7 +21,6 @@
 		width:  800px;
 		height: 168px;
 	}
-	
 	.chart-area-lines1 {
         height: 200px;
         width:520px;
