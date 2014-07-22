@@ -90,8 +90,10 @@
 		});
 		
 		makeCharts = function(){
+			var dom = document.getElementById("lines");
+			if(dom==undefined) return;
+			
 	        var chartL = new Chart("lines");
-	        
 	        chartL.addPlot("default", {type: Markers});
 	        chartL.addPlot("grid", { type: "Grid" ,hMajorLines: true, vMajorLines: false});
 	        
