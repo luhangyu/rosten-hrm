@@ -108,8 +108,7 @@ define(["dojo/_base/kernel"
             }else if (oString == "workflow") {
             	deleteMailNavigation();
             	require(["rosten/app/WorkFlowManage"],function(){
-//            		show_workFlowNaviEntity("flowDefinedManage");
-            		returnToMain();
+            		show_workFlowNaviEntity("flowDefinedManage");
             	});
             }else if (oString == "public") {
             	deleteMailNavigation();

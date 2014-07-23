@@ -105,3 +105,61 @@ grails.plugin.springsecurity.interceptUrlMap = [
 ]
 
 grails.plugin.springsecurity.useSecurityEventListener = true
+
+
+//------------------ Added by the Grails Activiti plugin:start------------------------------------
+activiti {
+	processEngineName = "activiti-engine-default"
+	  databaseType = "mysql"
+	  deploymentName = appName
+	  deploymentResources = ["file:./grails-app/conf/**/*.bpmn*.xml",
+							 "file:./grails-app/conf/**/*.png",
+							 "file:./src/taskforms/**/*.form"]
+	  jobExecutorActivate = false
+	  mailServerHost = "smtp.yourserver.com"
+	  mailServerPort = "25"
+	  mailServerUsername = ""
+	  mailServerPassword = ""
+	  mailServerDefaultFrom = "username@yourserver.com"
+	  history = "audit" // "none", "activity", "audit" or "full"
+	  sessionUsernameKey = "username"
+	  useFormKey = true
+	  activityFontName = "微软雅黑"
+}
+environments {
+	development {
+		activiti {
+			  processEngineName = "activiti-engine-dev"
+			  databaseSchemaUpdate = true // true, false or "create-drop"
+		}
+	}
+	test {
+		activiti {
+			  processEngineName = "activiti-engine-test"
+			  databaseSchemaUpdate = true
+		  mailServerPort = "5025"
+		}
+	}
+	production {
+		activiti {
+			  processEngineName = "activiti-engine-prod"
+			  databaseSchemaUpdate = true
+			  jobExecutorActivate = true
+		}
+	}
+}
+//----------------------activiti config end ----------------------------------
+
+grails {
+	mail {
+		host = "<changeme>"
+		port = 465
+		username = "<changeme>"
+		password = "<changeme>"
+		defaultEncoding="UTF-8"
+		props = ["mail.smtp.auth":"true",
+//			"mail.smtp.socketFactory.port":"465",
+			"mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+			"mail.smtp.socketFactory.fallback":"false"]
+	}
+}
