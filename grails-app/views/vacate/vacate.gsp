@@ -39,7 +39,11 @@
 					rosten.readSync(rosten.webPath + "/vacate/vacateSave",{},function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("保存成功！").queryDlgClose= function(){
-								page_quit();
+								if(window.location.href.indexOf(data.id)==-1){
+									window.location.replace(window.location.href + "&id=" + data.id);
+								}else{
+									window.location.reload();
+								}
 							};
 						}else{
 							rosten.alert("保存失败!");
@@ -176,7 +180,7 @@
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>请假时长：</div></td>
 					    <td>
 					    	<input id="number" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='trim:true,readOnly:true,
+			                 	data-dojo-props='trim:true,required:true,
 									value:"${vacate?.number}"
 			                '/>
 			            </td>
