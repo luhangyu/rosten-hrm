@@ -6,10 +6,20 @@ import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.Util
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
+import com.rosten.app.system.Model
+
+import com.rosten.app.workflow.WorkFlowService
+import org.activiti.engine.runtime.ProcessInstance
+import org.activiti.engine.runtime.ProcessInstanceQuery
+import org.activiti.engine.task.Task
+import org.activiti.engine.task.TaskQuery
 
 class VacateController {
 	def vacateService
 	def springSecurityService
+	
+	def workFlowService
+	def taskService
 	
 	def getCommentLog ={
 		def model =[:]
@@ -93,10 +103,13 @@ class VacateController {
 		def json=[:]
 		def vacate = new Vacate()
 		def currentUser = springSecurityService.getCurrentUser()
+		def _status = "new"
+		
 		if(params.id && !"".equals(params.id)){
 			vacate = Vacate.get(params.id)
 			vacate.startDate = Util.convertToTimestamp(params.startDate)
 			vacate.endDate = Util.convertToTimestamp(params.endDate)
+			_status = "old"
 		}else{
 			if(params.companyId){
 				vacate.company = Company.get(params.companyId)
@@ -111,10 +124,44 @@ class VacateController {
 		vacate.properties = params
 		vacate.clearErrors()
 		
+		//增加读者域信息
+		if(!vacate.readers.find{ it.id.equals(currentUser.id) }){
+			vacate.addToReaders(currentUser)
+		}
+		
+		//流程引擎相关信息处理-------------------------------------------------------------------------------------
+		if(!vacate.processInstanceId){
+			//启动流程实例
+			def _model = Model.findByModelCodeAndCompany("workAttendance",vacate.company)
+			def _processInstance = workFlowService.getProcessDefinition(_model.relationFlow)
+			Map<String, Object> variables = new HashMap<String, Object>();
+			ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,vacate.id, variables);
+			vacate.processInstanceId = processInstance.getProcessInstanceId()
+			vacate.processDefinitionId = processInstance.getProcessDefinitionId()
+			
+			//获取下一节点任务
+			def task = workFlowService.getTasksByFlow(processInstance.getProcessInstanceId())[0]
+			vacate.taskId = task.getId()
+			
+			//任务指派给当前拟稿人
+			//taskService.claim(task.getId(), user.username)
+		}
+		//-------------------------------------------------------------------------------------------------
+		
 		if(vacate.save(flush:true)){
 			json["id"] = vacate.id
 			json["companyId"]=vacate.company.id
 			json["result"] = "true"
+			
+			if("new".equals(_status)){
+				//添加日志
+				def _log = new VacateLog()
+				_log.user = currentUser
+				_log.vacate = vacate
+				_log.content = "新建请假申请"
+				_log.save(flush:true)
+			}
+			
 		}else{
 			vacate.errors.each{
 				println it
