@@ -179,9 +179,9 @@
 			            <tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>请假时长：</div></td>
 					    <td>
-					    	<input id="number" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='trim:true,required:true,
-									value:"${vacate?.number}"
+					    	<input id="numbers" data-dojo-type="dijit/form/ValidationTextBox" 
+			                 	data-dojo-props='trim:true,required:true,name:"numbers",
+									value:"${vacate?.numbers}"
 			                '/>
 			            </td>
 					<td><div align="right"><span style="color:red">*&nbsp;</span>单位：</div></td>
@@ -205,10 +205,10 @@
 					<tr>
 					    <td><div align="right">备注：</div></td>
 					    <td  colspan=3>
-					    	<textarea id="description" data-dojo-type="dijit/form/SimpleTextarea" 
+					    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
     							data-dojo-props='name:"remark","class":"input",
                                		style:{width:"550px"},rows:"10",
-                               		trim:true
+                               		trim:true,value:"${vacate?.remark}"
                            '>
     						</textarea>
 					    </td>

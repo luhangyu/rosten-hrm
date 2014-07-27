@@ -32,22 +32,22 @@ class VacateActionController {
 				//当前处理人
 				switch (true){
 					case vacate.status.contains("新建"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
 					case vacate.status.contains("审核") || vacate.status.contains("审批"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
 						actionList << createAction("不同意",webPath +imgPath + "back.png",strname + "_submit")
 						break;
 					case vacate.status.contains("归档"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("归档",webPath +imgPath + "gd.png",strname +"_submit")
 						break;
 					default :
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
 				}

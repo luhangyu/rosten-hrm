@@ -9,6 +9,7 @@ import com.rosten.app.system.User
 
 class VacateController {
 	def vacateService
+	def springSecurityService
 	
 	def getCommentLog ={
 		def model =[:]
@@ -91,17 +92,28 @@ class VacateController {
 	def vacateSave ={
 		def json=[:]
 		def vacate = new Vacate()
+		def currentUser = springSecurityService.getCurrentUser()
 		if(params.id && !"".equals(params.id)){
 			vacate = Vacate.get(params.id)
+			vacate.startDate = Util.convertToTimestamp(params.startDate)
+			vacate.endDate = Util.convertToTimestamp(params.endDate)
 		}else{
 			if(params.companyId){
 				vacate.company = Company.get(params.companyId)
 			}
+			vacate.user = currentUser
+			vacate.currentUser = currentUser
+			vacate.currentDepart = currentUser.getDepartName()
+			vacate.currentDealDate = new Date()
+			vacate.startDate = Util.convertToTimestamp(params.startDate)
+			vacate.endDate = Util.convertToTimestamp(params.endDate)
 		}
 		vacate.properties = params
 		vacate.clearErrors()
 		
 		if(vacate.save(flush:true)){
+			json["id"] = vacate.id
+			json["companyId"]=vacate.company.id
 			json["result"] = "true"
 		}else{
 			vacate.errors.each{

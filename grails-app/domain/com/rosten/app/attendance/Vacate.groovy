@@ -17,7 +17,7 @@ class Vacate {
 
 	String id
 	
-	@GridColumn(name="拟稿人",colIdx=1)
+	@GridColumn(name="拟稿人",formatter="vacate_formatTopic",colIdx=1)
 	def getFormattedDrafter(){
 		if(user!=null){
 			return user.getFormattedName()
@@ -53,7 +53,7 @@ class Vacate {
 	}
 	
 	//请假数量
-	double number
+	double numbers
 	
 	String unitType = "天"//小时或者天
 	
@@ -135,7 +135,7 @@ class Vacate {
 	
     static constraints = {
 		remark nullable:true,blank:true
-		number nullable:true,blank:true
+		numbers nullable:true,blank:true
 		
 		frontUser nullable:true,blank:true
 		frontDepart nullable:true,blank:true
