@@ -46,6 +46,19 @@
 						}
 					},null,"rosten_form");
 				};
+				vacate_addComment = function(){
+					var id = registry.byId("id").get("value");
+					var commentDialog = rosten.addCommentDialog({type:"vacate"});
+					commentDialog.callback = function(_data){
+						rosten.readSync(rosten.webPath + "/vacate/addComment/" + id,{dataStr:_data.content,userId:"${user?.id}"},function(data){
+							if(data.result=="true" || data.result == true){
+								rosten.alert("成功！");
+							}else{
+								rosten.alert("失败!");
+							}	
+						});
+					};
+				};
 				page_quit = function(){
 					rosten.pagequit();
 				};
@@ -156,11 +169,11 @@
 		</form>
 	</div>
 	<div data-dojo-type="dijit/layout/ContentPane" id="Comment" title="流转意见" data-dojo-props='refreshOnShow:true,
-		href:"${createLink(controller:'vacate',action:'getCommentLog',id:bbs?.id)}"
+		href:"${createLink(controller:'vacate',action:'getCommentLog',id:vacate?.id)}"
 	'>	
 	</div>
 	<div data-dojo-type="dijit/layout/ContentPane" id="FlowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
-		href:"${createLink(controller:'vacate',action:'getFlowLog',id:bbs?.id)}"
+		href:"${createLink(controller:'vacate',action:'getFlowLog',id:vacate?.id)}"
 	'>	
 	</div>
 </div>
