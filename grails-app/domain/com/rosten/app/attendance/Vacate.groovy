@@ -150,7 +150,7 @@ class Vacate {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_ATTENDANCE_VACATE"
+		table "ROSTEN_VACATE"
 		remark sqlType:"text"
 	}
 	

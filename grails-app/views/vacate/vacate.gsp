@@ -155,5 +155,13 @@
 			
 		</form>
 	</div>
+	<div data-dojo-type="dijit/layout/ContentPane" id="Comment" title="流转意见" data-dojo-props='refreshOnShow:true,
+		href:"${createLink(controller:'vacate',action:'getCommentLog',id:bbs?.id)}"
+	'>	
+	</div>
+	<div data-dojo-type="dijit/layout/ContentPane" id="FlowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+		href:"${createLink(controller:'vacate',action:'getFlowLog',id:bbs?.id)}"
+	'>	
+	</div>
 </div>
 </body>
