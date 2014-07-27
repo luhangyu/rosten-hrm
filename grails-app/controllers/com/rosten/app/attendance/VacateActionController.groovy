@@ -24,7 +24,37 @@ class VacateActionController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+		
+		def user = User.get(params.userid)
+		if(params.id){
+			def vacate = Vacate.get(params.id)
+			if(user.equals(vacate.currentUser)){
+				//当前处理人
+				switch (true){
+					case vacate.status.contains("新建"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+					case vacate.status.contains("审核") || vacate.status.contains("审批"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("不同意",webPath +imgPath + "back.png",strname + "_submit")
+						break;
+					case vacate.status.contains("归档"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("归档",webPath +imgPath + "gd.png",strname +"_submit")
+						break;
+					default :
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+				}
+			}
+		}else{
+			actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+		}
 		
 		render actionList as JSON
 	}

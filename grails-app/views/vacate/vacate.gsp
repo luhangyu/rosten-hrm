@@ -59,6 +59,53 @@
 						});
 					};
 				};
+				vacate_deal = function(type,readArray){
+					var content = {};
+					content.id = registry.byId("id").attr("value");
+					content.deal = type;
+					if(readArray){
+						content.dealUser = readArray.join(",");
+					}
+					rosten.readSync(rosten.webPath + "/vacate/vacateFlowDeal",content,function(data){
+						if(data.result=="true" || data.result == true){
+							rosten.alert("成功！").queryDlgClose= function(){
+								//刷新首页内容
+								window.opener.showStartBbs("${user?.id}","${company?.id }");
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
+								
+								if(data.refresh=="true" || data.refresh==true){
+									window.location.reload();
+								}else{
+									rosten.pagequit();
+								}
+							}
+						}else{
+							rosten.alert("失败!");
+						}	
+					});
+				};
+				vacate_submit = function(){
+					var rostenShowDialog = rosten.selectFlowUser("${createLink(controller:'vacate',action:'getDealWithUser',params:[companyId:company?.id,id:bbs?.id])}","single");
+		            rostenShowDialog.callback = function(data) {
+		            	var _data = [];
+		            	for (var k = 0; k < data.length; k++) {
+		            		var item = data[k];
+		            		_data.push(item.value + ":" + item.departId);
+		            	};
+		            	vacate_deal("submit",_data);	
+		            }
+					rostenShowDialog.afterLoad = function(){
+						var _data = rostenShowDialog.getData();
+			            if(_data && _data.length==1){
+				            //直接调用
+			            	rostenShowDialog.doAction();
+				        }else{
+							//显示对话框
+							rostenShowDialog.open();
+					    }
+					}   
+				};
 				page_quit = function(){
 					rosten.pagequit();
 				};
