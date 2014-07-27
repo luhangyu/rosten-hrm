@@ -17,7 +17,7 @@ class Vacate {
 
 	String id
 	
-	@GridColumn(name="拟稿人",width="50px",colIdx=1)
+	@GridColumn(name="拟稿人",colIdx=1)
 	def getFormattedDrafter(){
 		if(user!=null){
 			return user.getFormattedName()
@@ -58,13 +58,13 @@ class Vacate {
 	String unitType = "天"//小时或者天
 	
 	//请假类型
-	@GridColumn(name="类型",width="60px",colIdx=4)
+	@GridColumn(name="类型",colIdx=4)
 	String vacateType = "事假"
 	
 	//请假内容
 	String remark
 	
-	@GridColumn(name="状态",width="60px",colIdx=6)
+	@GridColumn(name="状态",colIdx=6)
 	String status = "新建"
 	
 	//创建时间
@@ -92,7 +92,7 @@ class Vacate {
 	//当前处理人
 	User currentUser
 
-	@GridColumn(name="当前处理人",width="60px",colIdx=5)
+	@GridColumn(name="当前处理人",colIdx=5)
 	def getCurrentUserName(){
 		if(currentUser!=null){
 			return currentUser.getFormattedName()

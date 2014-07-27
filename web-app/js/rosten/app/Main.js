@@ -116,6 +116,11 @@ define(["dojo/_base/kernel"
 //            		show_publicNaviEntity("downloadFileManage");
             		returnToMain();
             	});
+            }else if (oString == "workAttendance") {
+            	deleteMailNavigation();
+            	require(["rosten/app/WorkAttendance"],function(){
+            		show_attEndanceNaviEntity("staffAskFor");
+            	});
             }else{
             	returnToMain();
             }
