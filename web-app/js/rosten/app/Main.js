@@ -103,7 +103,6 @@ define(["dojo/_base/kernel"
                 deleteMailNavigation();
                 require(["rosten/app/SmsManage"],function(){
                 	show_smsNaviEntity("personInformation");
-//                	returnToMain();
                 });
             }else if (oString == "workflow") {
             	deleteMailNavigation();

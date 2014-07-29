@@ -73,8 +73,6 @@
 					rosten.readSync(rosten.webPath + "/vacate/vacateFlowDeal",content,function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("成功！").queryDlgClose= function(){
-								//刷新首页内容
-								window.opener.showStartBbs("${user?.id}","${company?.id }");
 								//刷新待办事项内容
 								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								
@@ -90,7 +88,7 @@
 					});
 				};
 				vacate_submit = function(){
-					var rostenShowDialog = rosten.selectFlowUser("${createLink(controller:'vacate',action:'getDealWithUser',params:[companyId:company?.id,id:bbs?.id])}","single");
+					var rostenShowDialog = rosten.selectFlowUser("${createLink(controller:'vacate',action:'getDealWithUser',params:[companyId:company?.id,id:vacate?.id])}","single");
 		            rostenShowDialog.callback = function(data) {
 		            	var _data = [];
 		            	for (var k = 0; k < data.length; k++) {

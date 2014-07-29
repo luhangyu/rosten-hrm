@@ -3,7 +3,16 @@ package com.rosten.app.attendance
 import com.rosten.app.util.GridUtil
 
 class VacateService {
-
+	
+	//增加流程日志
+	def addFlowLog ={ entity,currentUser,content ->
+		def _log = new VacateLog()
+		_log.user = currentUser
+		_log.vacate = entity
+		_log.content = content
+		_log.save(flush:true)
+	}
+	
 	def getVacateListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new Vacate())
