@@ -126,7 +126,7 @@ class VacateController {
 					taskService.claim(vacate.taskId, nextUser.username)
 					
 					def args = [:]
-					args["type"] = "【公告】"
+					args["type"] = "【请假】"
 					args["content"] = "请您审核名称为  【" + vacate.getFormattedDrafter() +  "】 的请假申请"
 					args["contentStatus"] = vacate.status
 					args["contentId"] = vacate.id
