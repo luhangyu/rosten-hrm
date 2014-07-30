@@ -141,6 +141,10 @@ class Vacate {
 		frontDepart nullable:true,blank:true
 		frontDealDate nullable:true,blank:true
 		
+		currentUser nullable:true,blank:true
+		currentDepart nullable:true,blank:true
+		currentDealDate nullable:true,blank:true
+		
 		processDefinitionId nullable:true,blank:true
 		processInstanceId nullable:true,blank:true
 		taskId nullable:true,blank:true

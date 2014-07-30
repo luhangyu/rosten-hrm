@@ -120,6 +120,11 @@ define(["dojo/_base/kernel"
             	require(["rosten/app/WorkAttendance"],function(){
             		show_attEndanceNaviEntity("staffAskFor");
             	});
+            }else if(oString=="staffManage"){
+                deleteMailNavigation();
+                require(["rosten/app/SystemManage"],function(){
+                	returnToMain();
+                });
             }else{
             	returnToMain();
             }

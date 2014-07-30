@@ -88,7 +88,40 @@
 					});
 				};
 				vacate_submit = function(){
-					var rostenShowDialog = rosten.selectFlowUser("${createLink(controller:'vacate',action:'getDealWithUser',params:[companyId:company?.id,id:vacate?.id])}","single");
+					var content = {};
+					rosten.readSync("${createLink(controller:'vacate',action:'getSelectFlowUser',params:[companyId:company?.id,id:vacate?.id])}",content,function(data){
+						
+						if(data.dealFlow==false){
+							//流程无下一节点
+							vacate_deal("submit");
+							return;
+						}
+
+						var url = "${createLink(controller:'vacate',action:'getDealWithUser',params:[companyId:company?.id,id:vacate?.id])}";
+						if(data.dealType=="user"){
+							//人员处理
+							if(data.showDialog==false){
+								//单一处理人
+								var _data = [];
+								_data.push(data.userId + ":" + data.userDepart);
+								vacate_deal("submit",_data);
+							}else{
+								//多人，多部门处理
+								url += "&type=user&user=" + data.user;
+								vacate_submit_select(url);
+							}
+						}else{
+							//群组处理
+							url += "&type=group&groupIds=" + data.groupIds;
+							if(data.limitDepart){
+								url += "&limitDepart="+data.limitDepart;
+							}
+							vacate_submit_select(url);
+						}
+					});
+				};
+				vacate_submit_select = function(url){
+					var rostenShowDialog = rosten.selectFlowUser(url,"single");
 		            rostenShowDialog.callback = function(data) {
 		            	var _data = [];
 		            	for (var k = 0; k < data.length; k++) {
@@ -106,7 +139,7 @@
 							//显示对话框
 							rostenShowDialog.open();
 					    }
-					}   
+					}
 				};
 				page_quit = function(){
 					rosten.pagequit();
