@@ -20,7 +20,33 @@ class HrmController {
 			}
 			//增加人事系统特有的功能模块
 			model = new Model(company:company)
-			model.modelName = "人事异动"
+			model.modelName = "通知公告"
+			model.modelUrl = path + "/system/navigation"
+			model.modelCode = "bbs"
+			model.serialNo = 5
+			
+			resource = new Resource()
+			resource.resourceName = "配置文档"
+			resource.url = "bbsConfigManage"
+			resource.imgUrl = "images/rosten/navigation/config.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "各人待办"
+			resource.url = "mybbsManage"
+			resource.imgUrl = "images/rosten/navigation/bbs_my.gif"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "最新公告"
+			resource.url = "newbbsManage"
+			resource.imgUrl = "images/rosten/navigation/bbs_new.gif"
+			model.addToResources(resource)
+			
+			model.save()
+			
+			model = new Model(company:company)
+			model.modelName = "员工管理"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "staffChange"
 			model.serialNo = 4
@@ -43,7 +69,7 @@ class HrmController {
 			model.modelName = "人才招聘"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "staffEmploy"
-			model.serialNo = 5
+			model.serialNo = 6
 			
 			resource = new Resource()
 			resource.resourceName = "招聘计划管理"
@@ -75,7 +101,7 @@ class HrmController {
 			model.modelName = "人才培养"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "staffDevelop"
-			model.serialNo = 6
+			model.serialNo = 7
 			
 			resource = new Resource()
 			resource.resourceName = "学历学位进修"
@@ -95,7 +121,7 @@ class HrmController {
 			model.modelName = "合同管理"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "bargain"
-			model.serialNo = 7
+			model.serialNo = 8
 			
 			resource = new Resource()
 			resource.resourceName = "合同档案管理"
@@ -109,7 +135,7 @@ class HrmController {
 			model.modelName = "劳资福利"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "payweal"
-			model.serialNo = 8
+			model.serialNo = 9
 			
 			resource = new Resource()
 			resource.resourceName = "岗位工资标准"
@@ -141,7 +167,7 @@ class HrmController {
 			model.modelName = "考勤管理"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "workAttendance"
-			model.serialNo = 9
+			model.serialNo = 10
 			
 			resource = new Resource()
 			resource.resourceName = "员工请假"
@@ -167,7 +193,7 @@ class HrmController {
 			model.modelName = "培训管理"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "trainManage"
-			model.serialNo = 10
+			model.serialNo = 11
 			
 			resource = new Resource()
 			resource.resourceName = "培训班管理"
@@ -187,7 +213,7 @@ class HrmController {
 			model.modelName = "统计分析"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "static"
-			model.serialNo = 11
+			model.serialNo = 12
 			
 			resource = new Resource()
 			resource.resourceName = "统计分析"

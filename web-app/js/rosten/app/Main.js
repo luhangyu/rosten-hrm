@@ -77,56 +77,65 @@ define(["dojo/_base/kernel"
              * 用于加载对应的js文件,此方法在后续开发过程中需要修改
              */
             console.log("loadjs file is :" + oString);
-            if (oString == "plat" || oString == "system") {
-            	deleteMailNavigation();
-             	require(["rosten/app/SystemManage"],function(){
+            
+            switch(oString){
+        	case "plat":
+        	case "system":
+        		require(["rosten/app/SystemManage"],function(){
              		if(oString=="plat"){
              			show_systemNaviEntity("companyManage");
              		}else{
-//             			show_systemNaviEntity("userManage");
              			returnToMain();
              		}
              	});
-            }else if (oString == "person") {
-            	addMailNavigation();
-            }else if (oString == "trainManage") {
-            	deleteMailNavigation();
-            	require(["rosten/app/TrainManage"],function(){
+        		break;
+        		
+        	case "trainManage":
+        		require(["rosten/app/TrainManage"],function(){
             		show_trainNaviEntity("trainCourse");
             	});
-            }else if (oString == "static") {
-            	deleteMailNavigation();
-            	require(["rosten/app/StaticManage"],function(){
-            		show_staticNaviEntity("static");
+        		break;
+        	
+        	case "bbs":
+        		require(["rosten/app/BbsManage"],function(){
+            		if(rosten.variable.showStartBbs==undefined || rosten.variable.showStartBbs!=true){
+            			show_bbsNaviEntity("mybbsManage");
+            		}
             	});
-            }else if(oString=="personconfig"){
-                deleteMailNavigation();
-                require(["rosten/app/SmsManage"],function(){
+        		break;
+        	case "personconfig":
+        		require(["rosten/app/SmsManage"],function(){
                 	show_smsNaviEntity("personInformation");
                 });
-            }else if (oString == "workflow") {
-            	deleteMailNavigation();
-            	require(["rosten/app/WorkFlowManage"],function(){
+        		break;	
+        	case "workflow":
+        		require(["rosten/app/WorkFlowManage"],function(){
             		show_workFlowNaviEntity("flowDefinedManage");
             	});
-            }else if (oString == "public") {
-            	deleteMailNavigation();
-            	require(["rosten/app/PublicManage"],function(){
-//            		show_publicNaviEntity("downloadFileManage");
-            		returnToMain();
+        		break;	
+        	case "public":
+        		require(["rosten/app/PublicManage"],function(){
+            		show_publicNaviEntity("downloadFileManage");
             	});
-            }else if (oString == "workAttendance") {
-            	deleteMailNavigation();
-            	require(["rosten/app/WorkAttendance"],function(){
+        		break;	
+        	case "workAttendance":
+        		require(["rosten/app/WorkAttendance"],function(){
             		show_attEndanceNaviEntity("staffAskFor");
             	});
-            }else if(oString=="staffManage"){
-                deleteMailNavigation();
-                require(["rosten/app/SystemManage"],function(){
+        		break;
+			case "staffManage":
+				require(["rosten/app/SystemManage"],function(){
                 	returnToMain();
                 });
-            }else{
-            	returnToMain();
+				break;
+        	case "static":
+        		require(["rosten/app/StaticManage"],function(){
+            		show_staticNaviEntity("static");
+            	});
+        		break;
+        	default:
+        		returnToMain();
+        		break;
             }
         });
 		
