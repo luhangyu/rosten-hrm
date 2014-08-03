@@ -43,7 +43,7 @@ class DownLoadFile {
 	int number
 	
 	//是否显示首页
-	boolean isShow = false
+	boolean isShow = true
 	
 	@GridColumn(name="显示首页",width="50px")
 	def getFormattedIsShow(){

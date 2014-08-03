@@ -229,12 +229,37 @@ class BbsController {
 		
 	}
 	def getDealWithUser ={
+		if("user".equals(params.type)){
+			//选择人员，默认获取选择人员人数为大于一人，params中必须具备参数params.user：用户登录名
+			redirect controller: "system",action:'userTreeDataStore', params: params
+			return
+		}else if("group".equals(params.type)){
+			/*
+			 * 通过群组选择人员
+			 * 默认有一组group的方式为true，则整组均为true;true:严格控制本部门权限
+			 * 参数格式为：params.groupIds(depart-leader),params.limitDepart
+			 */
+			redirect controller: "system",action:'userTreeDataStore', params: params
+			return
+		}
+	}
+	def getSelectFlowUser ={
+		def json=[:]
+		json.dealFlow = true
+		
 		def currentUser = springSecurityService.getCurrentUser()
 		
 		def bbs = Bbs.get(params.id)
-		def bbsDefEntity = workFlowService.getNextTaskDefinition(bbs.taskId);
+		def defEntity = workFlowService.getNextTaskDefinition(bbs.taskId);
 		
-		def expEntity = bbsDefEntity.getAssigneeExpression()
+		if(!defEntity){
+			//流程处于最后一个节点
+			json.dealFlow = false
+			render json as JSON
+			return
+		}
+		
+		def expEntity = defEntity.getAssigneeExpression()
 		if(expEntity){
 			def expEntityText = expEntity.getExpressionText()
 			if(expEntityText.contains("{")){
@@ -243,11 +268,23 @@ class BbsController {
 				params.user = expEntity.getExpressionText()
 			}
 			
-			redirect controller: "system",action:'userTreeDataStore', params: params
+			//判断下一处理人是否有多部门情况，如果有，则弹出对话框选择，如果没有，直接进入下一步
+			def userEntity = User.findByUsername(json.user)
+			def userDeparts = userEntity.getAllDepartEntity()
+			if(userDeparts && userDeparts.size()>1){
+				json.showDialog = true
+			}else{
+				json.showDialog = false
+				json.userDepart = userDeparts[0].departName
+				json.userId = userEntity.id
+			}
+			
+			json.dealType = "user"
+			render json as JSON
 			return
 		}
 		
-		def groupEntity = bbsDefEntity.getCandidateGroupIdExpressions()
+		def groupEntity = defEntity.getCandidateGroupIdExpressions()
 		if(groupEntity.size()>0){
 			//默认有一组group的方式为true，则整组均为true;true:严格控制本部门权限
 			def groupIds = []
@@ -258,12 +295,13 @@ class BbsController {
 					limit = true
 				}
 			}
-			params.groupIds = groupIds.unique().join("-")
+			json.groupIds = groupIds.unique().join("-")
 			if(limit){
-				params.limitDepart = currentUser.getDepartEntityTrueName()
+				json.limitDepart = currentUser.getDepartEntityTrueName()
 			}
 			
-			redirect controller: "system",action:'userTreeDataStore', params: params
+			json.dealType = "group"
+			render json as JSON
 			return
 		}
 		

@@ -270,10 +270,10 @@ class StaffController {
 		
 		
 		FieldAcl fa = new FieldAcl()
-		if( user && "normal".equals(user.getUserType()) && !currentUser.equals(user)){
-			//非管理员并且不是本人时，不允许修改所有相关字段
-			fa.readOnly += ["chinaName"]
-		}
+//		if( user && "normal".equals(user.getUserType()) && !currentUser.equals(user)){
+//			//非管理员并且不是本人时，不允许修改所有相关字段
+//			fa.readOnly += ["chinaName"]
+//		}
 		model["fieldAcl"] = fa
 		
 		render(view:'/staff/personInfor',model:model)

@@ -139,6 +139,9 @@ define(["dojo/_base/kernel"
             }
         });
 		
+        var userId = data["idnumber"];
+		var companyId = data["companyid"];
+		
         connect.subscribe("loadspecmenu", null, function(oString) {
         	switch(oString){
         	case "home":
@@ -146,6 +149,11 @@ define(["dojo/_base/kernel"
         		domStyle.set(registry.byId("modelMain").domNode,"display","none");
         		registry.byId("home").resize();
         		rosten.kernel.navigationMenu = "";
+        		
+        		/*
+        		 * 添加刷先首页相关信息
+        		 */
+        		showStartInformation(userId,companyId);
         		break;
         	case "sms":
         	    require(["rosten/app/SmsManage"],function(){
@@ -169,8 +177,6 @@ define(["dojo/_base/kernel"
 		rosten.kernel.onDownloadError(refreshSystem);
 		
 		//获取首页显示信息
-		var userId = data["idnumber"];
-		var companyId = data["companyid"];
 		showStartInformation(userId,companyId);
 		
         if (rosten.kernel.getMenuName() == "") {
@@ -252,10 +258,10 @@ define(["dojo/_base/kernel"
     		userId = rosten.kernel.getUserInforByKey("idnumber");
     		companyId = rosten.kernel.getUserInforByKey("companyid");
     	}
-    	//showStartBbs(userId,companyId);
-    	//showStartGtask(userId,companyId);
+    	showStartBbs(userId,companyId);
+    	showStartGtask(userId,companyId);
     	//showStartMail(userId,companyId);
-    	//showStartDownloadFile(userId,companyId);
+    	showStartDownloadFile(userId,companyId);
     };
     showStartGtask = function(userId,companyId){
     	rosten.readNoTime(rosten.webPath + "/start/getGtask", {userId:userId,companyId:companyId}, function(data) {

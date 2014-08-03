@@ -43,6 +43,12 @@ class HrmController {
 			resource.imgUrl = "images/rosten/navigation/bbs_new.gif"
 			model.addToResources(resource)
 			
+			resource = new Resource()
+			resource.resourceName = "所有公告"
+			resource.url = "allbbsManage"
+			resource.imgUrl = "images/rosten/navigation/bbs_all.gif"
+			model.addToResources(resource)
+			
 			model.save()
 			
 			model = new Model(company:company)

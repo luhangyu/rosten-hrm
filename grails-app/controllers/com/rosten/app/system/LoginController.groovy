@@ -191,7 +191,7 @@ class LoginController {
 			model["nowDay"] = calendar.get(Calendar.DAY_OF_WEEK)
 			calendar.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY)
 			
-			model["firstDay"] = calendar.getTime()
+			model["firstDay"] = calendar.getTime() -7
 			model["weekNum"] = calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)
 			
 			if(params.version && "old".equals(params.version)){
