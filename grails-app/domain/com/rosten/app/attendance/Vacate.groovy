@@ -26,6 +26,15 @@ class Vacate {
 		}
 	}
 	
+	//部门名称
+	def getFormattedDepartName(){
+		if(user!=null){
+			return user.getDepartName()
+		}else{
+			return ""
+		}
+	}
+	
 	//开始时间
 	Date startDate = new Date()
 	
@@ -46,14 +55,16 @@ class Vacate {
 	def getFormatteEndDate(){
 		if(endDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
-			return sd.format(endDate)
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.DAY_OF_MONTH, 1);
+			return sd.format(c.getTime())
 		}else{
 			return ""
 		}
 	}
 	
 	//请假数量
-	double numbers
+	int numbers
 	
 	String unitType = "天"//小时或者天
 	

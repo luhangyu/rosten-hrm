@@ -23,6 +23,7 @@
 		 		"dijit/form/RadioButton",
 		 		"dijit/form/DateTextBox",
 		 		"dijit/form/SimpleTextarea",
+		 		"dijit/form/NumberTextBox",
 		 		"dijit/form/Button",
 		     	"rosten/widget/ActionBar",
 		     	"rosten/widget/TitlePane",
@@ -35,20 +36,22 @@
 				});
 				vacate_save = function(){
 					var courseName = registry.byId("courseName");
-					
-					rosten.readSync(rosten.webPath + "/vacate/vacateSave",{},function(data){
-						if(data.result=="true" || data.result == true){
-							rosten.alert("保存成功！").queryDlgClose= function(){
-								if(window.location.href.indexOf(data.id)==-1){
-									window.location.replace(window.location.href + "&id=" + data.id);
-								}else{
-									window.location.reload();
-								}
-							};
-						}else{
-							rosten.alert("保存失败!");
-						}
-					},null,"rosten_form");
+					var chenkids = ["startDate","endDate","numbers"];
+					if(rosten.checkData(chenkids)){
+						rosten.readSync(rosten.webPath + "/vacate/vacateSave",{},function(data){
+							if(data.result=="true" || data.result == true){
+								rosten.alert("保存成功！").queryDlgClose= function(){
+									if(window.location.href.indexOf(data.id)==-1){
+										window.location.replace(window.location.href + "&id=" + data.id);
+									}else{
+										window.location.reload();
+									}
+								};
+							}else{
+								rosten.alert("保存失败!");
+							}
+						},null,"rosten_form");
+					}
 				};
 				vacate_addComment = function(){
 					var id = registry.byId("id").get("value");
@@ -144,6 +147,8 @@
 				page_quit = function(){
 					rosten.pagequit();
 				};
+
+			
 		});
     </script>
 </head>
@@ -159,6 +164,7 @@
 		<form id="rosten_form" name="rosten_form" url='[controller:"assetConfig",action:"assetCategorySave"]' onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${vacate?.id }"' />
         	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
+        	<input  data-dojo-type="dijit/form/ValidationTextBox" id="unitType"  data-dojo-props='name:"unitType",style:{display:"none"},value:"天"' />
         	
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"请假申请",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
@@ -171,7 +177,38 @@
 									value:"${vacate?.getFormattedDrafter()}"
 			                '/>
 					    </td>
-					      <td><div align="right">请假类型：</div></td>
+					    <td><div align="right">拟稿人部门：</div></td>
+					    <td >
+					    	<input id="userDepa" data-dojo-type="dijit/form/ValidationTextBox" 
+			                 	data-dojo-props='trim:true,readOnly:true,
+									value:"${vacate?.getFormattedDepartName()}"
+			                '/>
+					    </td>
+					     
+					</tr>
+
+					<tr>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>开始时间：</div></td>
+					    <td>
+					    	<input id="startDate" data-dojo-type="dijit/form/DateTextBox" 
+			                	data-dojo-props='name:"startDate",${fieldAcl.isReadOnly("startDate")},
+			                	trim:true,required:true,missingMessage:"请正确填写开始时间！",invalidMessage:"请正确填写开始时间！",
+			                	value:"${vacate?.getFormatteStartDate()}"
+			               '/>
+			            </td>
+					<td><div align="right"><span style="color:red">*&nbsp;</span>结束时间：</div></td>
+					    <td>
+					    	<input id="endDate" data-dojo-type="dijit/form/DateTextBox" 
+			                	data-dojo-props='name:"endDate",${fieldAcl.isReadOnly("endDate")},
+			                	trim:true,required:true,missingMessage:"请正确填写结束时间！",invalidMessage:"请正确填写结束时间！",
+			                	value:"${vacate?.getFormatteEndDate()}"
+			               '/>
+			            </td>
+			            </tr>
+			            
+			            <tr>
+			            
+			             <td><div align="right">请假类型：</div></td>
 					   <td>
 					    	<select id="vacateType" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"vacateType",
@@ -186,55 +223,34 @@
                               	<option value="其他">其他</option>
                            	</select>
 			            </td>
-					</tr>
-
-					<tr>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>开始时间：</div></td>
-					    <td>
-					    	<input id="startDate" data-dojo-type="dijit/form/DateTextBox" 
-			                	data-dojo-props='name:"startDate",${fieldAcl.isReadOnly("startDate")},
-			                	trim:true,required:true,missingMessage:"请正确填写开始时间！",invalidMessage:"请正确填写培训时间！",
-			                	value:"${vacate?.getFormatteStartDate()}"
-			               '/>
-			            </td>
-					<td><div align="right"><span style="color:red">*&nbsp;</span>结束时间：</div></td>
-					    <td>
-					    	<input id="endDate" data-dojo-type="dijit/form/DateTextBox" 
-			                	data-dojo-props='name:"endDate",${fieldAcl.isReadOnly("endDate")},
-			                	trim:true,required:true,missingMessage:"请正确填写结束时间！",invalidMessage:"请正确填写培训时间！",
-			                	value:"${vacate?.getFormatteEndDate()}"
-			               '/>
-			            </td>
-			            </tr>
 			            
-			            <tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>请假时长：</div></td>
 					    <td>
-					    	<input id="numbers" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='trim:true,required:true,name:"numbers",
+					    	<input id="numbers" data-dojo-type="dijit/form/NumberTextBox" 
+			                 	data-dojo-props='trim:true,required:true,name:"numbers",missingMessage:"请正确填写请假时长！",invalidMessage:"请正确填写请假时长！",
 									value:"${vacate?.numbers}"
-			                '/>
+			                '/>天
 			            </td>
-					<td><div align="right"><span style="color:red">*&nbsp;</span>单位：</div></td>
-					   <td width="250">
-					  		<input id="unitType1" data-dojo-type="dijit/form/RadioButton"
-				           		data-dojo-props='name:"unitType",type:"radio",
-				           			<g:if test="${vacate?.unitType=="小时" }">checked:true,</g:if>
-									value:"小时"
-			              	'/>
-							<label for="unitType1">小时</label>
-						
-			              	<input id="unitType2" data-dojo-type="dijit/form/RadioButton"
-			           			data-dojo-props='name:"unitType",type:"radio",
-			           			<g:if test="${vacate?.unitType=="天" }">checked:true,</g:if>
-								value:"天"
-			              	'/>
-							<label for="unitType2">天</label>
-					    </td>
+<%--					<td><div align="right"><span style="color:red">*&nbsp;</span>单位：</div></td>--%>
+<%--					   <td width="250">--%>
+<%--					  		<input id="unitType1" data-dojo-type="dijit/form/RadioButton"--%>
+<%--				           		data-dojo-props='name:"unitType",type:"radio",--%>
+<%--				           			<g:if test="${vacate?.unitType=="小时" }">checked:true,</g:if>--%>
+<%--									value:"小时"--%>
+<%--			              	'/>--%>
+<%--							<label for="unitType1">小时</label>--%>
+<%--						--%>
+<%--			              	<input id="unitType2" data-dojo-type="dijit/form/RadioButton"--%>
+<%--			           			data-dojo-props='name:"unitType",type:"radio",--%>
+<%--			           			<g:if test="${vacate?.unitType=="天" }">checked:true,</g:if>--%>
+<%--								value:"天"--%>
+<%--			              	'/>--%>
+<%--							<label for="unitType2">天</label>--%>
+<%--					    </td>--%>
 			            </tr>
 			            
 					<tr>
-					    <td><div align="right">备注：</div></td>
+					    <td><div align="right">请假理由：</div></td>
 					    <td  colspan=3>
 					    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
     							data-dojo-props='name:"remark","class":"input",

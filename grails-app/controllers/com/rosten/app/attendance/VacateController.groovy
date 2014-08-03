@@ -1,6 +1,7 @@
 package com.rosten.app.attendance
 
 import grails.converters.JSON
+import groovy.sql.Sql
 
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.Util
@@ -27,6 +28,7 @@ class VacateController {
 	def workFlowService
 	def taskService
 	def startService
+	def dataSource
 	
 	def getDealWithUser ={
 		if("user".equals(params.type)){
@@ -445,4 +447,38 @@ class VacateController {
 		}
 		render json as JSON
 	}
+	
+	def askForStatic = {
+	
+		def model = [:]
+		def user = springSecurityService.getCurrentUser()
+		model["user"]=user
+		FieldAcl fa = new FieldAcl()
+		if("normal".equals(user.getUserType())){
+		}
+		model["fieldAcl"] = fa
+		
+		def items = []
+		Sql sql = new Sql(dataSource)
+		def seleSql = " select a.*,b.china_name,c.depart_id,c.depart_name from ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.user_id,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.user_id) a left join  ";
+		seleSql+=" ( select a.user_id,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.user_id) b on a.user_id = b.user_id left join "
+		seleSql+=" ( select a.user_id,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.user_id) c on a.user_id = b.user_id left join  "
+		seleSql+=" ( select a.user_id,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.user_id) d on a.user_id = b.user_id left join  "
+		seleSql+=" ( select a.user_id,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.user_id) e on a.user_id = b.user_id left join "
+		seleSql+=" ( select a.user_id,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.user_id) f on a.user_id = b.user_id ) a left join rosten_user b on a.user_id = b.id left join  "
+		seleSql+=" (select  a.* ,b.depart_name from rosten_user_depart  a  left join  rosten_depart  b on a.depart_id = b.id ) c on a.user_id = c.user_id "
+		def vacateList = sql.eachRow(seleSql){
+			def item = ["departName":it["depart_name"],"name":it["china_name"],
+				"sjnums":it["sjnums"],"bjnums":it["bjnums"],"nxjnums":it["nxjnums"],
+				"hjnums":it["hjnums"],"sajnums":it["sajnums"],"qtjnums":it["qtjnums"]]
+			items<<item
+		}
+		
+		println items
+		
+		model["tableItem"] = items
+		
+		render(view:'/vacate/askForStatic',model:model)
+	}
+	
 }

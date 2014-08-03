@@ -59,6 +59,16 @@ class VacateActionController {
 		render actionList as JSON
 	}
 	
+	def askForStatic ={
+		def actionList =[]
+		def strname = "vacate"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("打印",imgPath + "add.png",strname + "_print")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		
+		render actionList as JSON
+	}
+	
 	private def createAction={name,img,action->
 		def model =[:]
 		model["name"] = name

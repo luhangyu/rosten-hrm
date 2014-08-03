@@ -26,6 +26,21 @@ define(["dojo/_base/lang",
         rosten.replaceDojoTheme(dojocss, false);
         rosten.replaceRostenTheme(rostencss);
     };
+    
+    application.checkData = function(chenkids){
+		var flag=true;
+		for(var i = 0 ;i<chenkids.length;i++){
+			var obj = registry.byId(chenkids[i]);
+			if(!obj.isValid()){
+				rosten.alert("请正确填写信息！").queryDlgClose = function(){
+					obj.focus();
+				};
+				flag=false;
+			}
+			}
+		return flag;
+		}
+    
     /*
      * 关闭当前窗口，并刷新父文档视图
      */

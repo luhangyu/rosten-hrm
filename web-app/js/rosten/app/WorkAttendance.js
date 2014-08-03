@@ -49,7 +49,11 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 
             var rostenGrid = rosten.kernel.getGrid();
             break;
+		case "askForStatic":
+			rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic", oString);
+            break;
 		}
+       
 		
 	}
 	connect.connect("show_naviEntity", show_attEndanceNaviEntity);
