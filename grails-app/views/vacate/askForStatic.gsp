@@ -31,6 +31,20 @@
 			line-height:20px;
 			/*background-color: #ffffff;*/
 		}
+		.charts {
+			clear: both;
+		}
+		.chart-area-pie {
+			/*border: 1px solid #ccc;*/
+	        height: 240px;
+	        width:520px;
+	        margin:0 auto;
+		}
+		.chart-pie {
+			width:520px;
+			height: 230px;
+		}
+		
    	</style>
 	<script type="text/javascript">
 		require(["dijit/registry",
@@ -49,9 +63,16 @@
 	</div>
 </div>
 <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px"}' class="static">
+	<div class="charts">
+		<div id="askFor_pie_legend"></div>
+		<div class="chart-area-pie">
+			<div id="askFor_pie" class="chart-pie"></div>
+		</div>
+	</div>
+	
 	<table width="100%" class="tab_css">
 		<THEAD> 
-			<tr>
+			<tr class="tableBackGround">
 				<th >部门</th>
 				<th >姓名</th>
 				<th>事假(天)</th>

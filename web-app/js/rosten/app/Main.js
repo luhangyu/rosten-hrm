@@ -124,8 +124,8 @@ define(["dojo/_base/kernel"
             	});
         		break;
 			case "staffManage":
-				require(["rosten/app/SystemManage"],function(){
-                	returnToMain();
+				require(["rosten/app/SystemManage","rosten/app/StaffManage"],function(){
+					show_naviEntity("newStaffAdd");
                 });
 				break;
         	case "static":

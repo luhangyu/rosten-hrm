@@ -5,6 +5,14 @@ import grails.converters.JSON
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def staffView ={
+		def actionList =[]
+		def strname = "personInfor"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("员工登记",imgPath + "add.png","add_" + strname)
+		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		render actionList as JSON
+	}
     def userView ={
 		def actionList =[]
 		def strname = "personInfor"

@@ -54,7 +54,7 @@ class HrmController {
 			model = new Model(company:company)
 			model.modelName = "员工管理"
 			model.modelUrl = path + "/system/navigation"
-			model.modelCode = "staffChange"
+			model.modelCode = "staffManage"
 			model.serialNo = 4
 			
 			resource = new Resource()

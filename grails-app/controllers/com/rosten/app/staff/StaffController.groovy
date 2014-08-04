@@ -233,7 +233,74 @@ class StaffController {
 		}
 		render json as JSON
 	}
-	
+	def staffGrid ={
+		def company = Company.get(params.companyId)
+		def json=[:]
+		if(params.refreshHeader){
+			def _gridHeader =[]
+
+			_gridHeader << ["name":"序号","width":"26px","colIdx":0,"field":"rowIndex"]
+			_gridHeader << ["name":"登录名","width":"auto","colIdx":1,"field":"username","formatter":"personInfor_formatTopic"]
+			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName"]
+			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
+			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
+			_gridHeader << ["name":"性别","width":"auto","colIdx":5,"field":"sex"]
+			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
+			_gridHeader << ["name":"身份证号","width":"auto","colIdx":7,"field":"idCard"]
+			_gridHeader << ["name":"手机号码","width":"auto","colIdx":8,"field":"mobile"]
+			_gridHeader << ["name":"民族","width":"auto","colIdx":9,"field":"nationality"]
+			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":10,"field":"politicsStatus"]
+			_gridHeader << ["name":"状态","width":"auto","colIdx":11,"field":"status"]
+
+			json["gridHeader"] = _gridHeader
+		}
+		def totalNum = 0
+		if(params.refreshData){
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+
+			def offset = (nowPage-1) * perPageNum
+			def max  = perPageNum
+
+			def _json = [identifier:'id',label:'name',items:[]]
+			
+			def userList = User.findAllByCompanyAndSysFlag(company,false,[max: max, sort: "createdDate", order: "desc", offset: offset])
+			totalNum = userList.size()
+			
+			def idx = 0
+			userList.each{
+				def _user = it
+				def personInfor = PersonInfor.findByUser(_user)
+				def contactInfor = ContactInfor.findByUser(_user)
+				
+				def sMap =[:]
+				sMap["rowIndex"] = idx+1
+				sMap["id"] = _user.id
+				sMap["username"] = _user.username
+				sMap["chinaName"] = _user.getFormattedName()
+				sMap["departName"] = _user.getDepartName()
+				sMap["type"] = _user.getUserTypeName()
+				sMap["sex"] = personInfor?.sex
+				sMap["birthday"] = personInfor?.getFormatteBirthday()
+				sMap["idCard"] = personInfor?.idCard
+				sMap["mobile"] = contactInfor?.mobile
+				sMap["nationality"] = personInfor?.nativeAddress
+				sMap["politicsStatus"] = personInfor?.politicsStatus
+				sMap["status"] = "正常"
+				
+				_json.items+=sMap
+				
+				idx += 1
+			}
+
+			json["gridData"] = _json
+		}
+		
+		if(params.refreshPageControl){
+			json["pageControl"] = ["total":totalNum.toString()]
+		}
+		render json as JSON
+	}
 	def personInforView ={
 		def model =[:]
 //		model["depart"] = Depart.get(params.id)
@@ -261,8 +328,10 @@ class StaffController {
 			model["departId"] = user.getDepartEntity()?.id
 		}else{
 			entity = new PersonInfor()
-			model["departName"] = depart.departName
-			model["departId"] = depart.id
+			if(depart){
+				model["departName"] = depart.departName
+				model["departId"] = depart.id
+			}
 		}
 		model["company"] = currentUser.company
 		model["personInforEntity"] = entity

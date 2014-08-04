@@ -50,7 +50,10 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             var rostenGrid = rosten.kernel.getGrid();
             break;
 		case "askForStatic":
-			rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic", oString);
+			require(["rosten/app/ChartManage"],function(ChartManage){
+				rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic", oString , ChartManage.addAskForChart);
+        	});
+			
             break;
 		}
        

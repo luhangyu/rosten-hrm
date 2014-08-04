@@ -486,5 +486,21 @@ class VacateController {
 		
 		render(view:'/vacate/askForStatic',model:model)
 	}
+	def getAskForChartData ={
+		def company = Company.get(params.id)
+		def json = [identifier:'id',label:'name',items:[]]
+		
+		def sMap = ["id":001,"name":"事假","number":40]
+		json.items+=sMap
+		
+		sMap = ["id":002,"name":"病假","number":60]
+		json.items+=sMap
+		
+		/*
+		 * 后去相关数据
+		 */
+		
+		render json as JSON
+	}
 	
 }
