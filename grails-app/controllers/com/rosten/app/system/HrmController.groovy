@@ -58,13 +58,13 @@ class HrmController {
 			model.serialNo = 4
 			
 			resource = new Resource()
-			resource.resourceName = "新进员工登记"
+			resource.resourceName = "员工登记"
 			resource.url = "newStaffAdd"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "员工部门调动"
+			resource.resourceName = "部门调动"
 			resource.url = "staffDepartChange"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
@@ -182,13 +182,7 @@ class HrmController {
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "请假审核"
-			resource.url = "askForCheck"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
-			
-			resource = new Resource()
-			resource.resourceName = "部门请假汇总"
+			resource.resourceName = "请假汇总"
 			resource.url = "askForStatic"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
@@ -228,6 +222,19 @@ class HrmController {
 			model.addToResources(resource)
 			
 			model.save()
+			
+			//完善个人配置中的个人工作日志
+			model = Model.findByModelCodeAndCompany("personconfig",company)
+			resource = Resource.findByUrlAndModel("personWorkLog",model)
+			if(!resource){
+				resource = new Resource()
+				resource.resourceName = "工作日志"
+				resource.url = "personWorkLog"
+				resource.imgUrl = "images/rosten/navigation/rosten.png"
+				model.addToResources(resource)
+				
+				model.save()
+			}
 			
 			//增加人事系统特有的服务列表信息
 			NormalService.findAllByCompany(company).each{

@@ -348,7 +348,15 @@ class VacateController {
 		render json as JSON
 	}
 	def vacateAdd ={
-		redirect(action:"vacateShow",params:params)
+		//判断是否关联流程引擎
+		def company = Company.get(params.companyId)
+		def model = Model.findByModelCodeAndCompany("workAttendance",company)
+		if(model.relationFlow && !"".equals(model.relationFlow)){
+			redirect(action:"vacateShow",params:params)
+		}else{
+			//不存在流程引擎关联数据
+			render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前模块不存在流程设置，无法创建，请联系管理员！</h2>'
+		}
 	}
 		
 	def vacateShow ={
@@ -473,8 +481,6 @@ class VacateController {
 				"hjnums":it["hjnums"],"sajnums":it["sajnums"],"qtjnums":it["qtjnums"]]
 			items<<item
 		}
-		
-		println items
 		
 		model["tableItem"] = items
 		

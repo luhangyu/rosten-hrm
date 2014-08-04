@@ -83,7 +83,7 @@ define(["dojo/_base/kernel"
         	case "system":
         		require(["rosten/app/SystemManage"],function(){
              		if(oString=="plat"){
-             			show_systemNaviEntity("companyManage");
+             			show_naviEntity("companyManage");
              		}else{
              			returnToMain();
              		}
@@ -92,35 +92,35 @@ define(["dojo/_base/kernel"
         		
         	case "trainManage":
         		require(["rosten/app/TrainManage"],function(){
-            		show_trainNaviEntity("trainCourse");
+        			show_naviEntity("trainCourse");
             	});
         		break;
         	
         	case "bbs":
         		require(["rosten/app/BbsManage"],function(){
             		if(rosten.variable.showStartBbs==undefined || rosten.variable.showStartBbs!=true){
-            			show_bbsNaviEntity("mybbsManage");
+            			show_naviEntity("mybbsManage");
             		}
             	});
         		break;
         	case "personconfig":
         		require(["rosten/app/SmsManage"],function(){
-                	show_smsNaviEntity("personInformation");
+        			show_naviEntity("personInformation");
                 });
         		break;	
         	case "workflow":
         		require(["rosten/app/WorkFlowManage"],function(){
-            		show_workFlowNaviEntity("flowDefinedManage");
+        			show_naviEntity("flowDefinedManage");
             	});
         		break;	
         	case "public":
         		require(["rosten/app/PublicManage"],function(){
-            		show_publicNaviEntity("downloadFileManage");
+        			show_naviEntity("downloadFileManage");
             	});
         		break;	
         	case "workAttendance":
         		require(["rosten/app/WorkAttendance"],function(){
-            		show_attEndanceNaviEntity("staffAskFor");
+        			show_naviEntity("staffAskFor");
             	});
         		break;
 			case "staffManage":
@@ -130,7 +130,7 @@ define(["dojo/_base/kernel"
 				break;
         	case "static":
         		require(["rosten/app/StaticManage"],function(){
-            		show_staticNaviEntity("static");
+        			show_naviEntity("static");
             	});
         		break;
         	default:

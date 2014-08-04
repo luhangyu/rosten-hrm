@@ -3,6 +3,35 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>请假申请</title>
+    <style type="text/css">
+    	.static table.tab_css {
+			font-size:11px;
+			color:#333333;
+			border-width: 1px;
+			border-color: #b5bcc7;
+			border-collapse: collapse;
+		}
+		.static table.tab_css th {
+			border-width: 1px;
+			padding: 4px;
+			border-style: solid;
+			border-color: #b5bcc7;
+			font-weight:blod;
+			height:20px;
+			line-height:20px;
+			color:black;
+			/*background-color: #cad9ea;*/
+		}
+		.static table.tab_css td{
+			border-width: 1px;
+			padding: 4px;
+			border-style: solid;
+			border-color: #b5bcc7;
+			height:20px;
+			line-height:20px;
+			/*background-color: #ffffff;*/
+		}
+   	</style>
 	<script type="text/javascript">
 		require(["dijit/registry",
 		     "rosten/widget/ActionBar"],
@@ -19,7 +48,7 @@
 		data-dojo-props='actionBarSrc:"${createLink(controller:'vacateAction',action:'askForStatic',id:vacate?.id,params:[userid:user?.id])}"'>
 	</div>
 </div>
-<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props=''>
+<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px"}' class="static">
 	<table width="100%" class="tab_css">
 		<THEAD> 
 			<tr>
