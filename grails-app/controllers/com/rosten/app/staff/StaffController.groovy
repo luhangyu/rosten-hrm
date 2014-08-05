@@ -38,38 +38,41 @@ class StaffController {
 		def company = Company.get(params.companyId)
 		
 		def c = User.createCriteria()
-		def _user = c.get{
+		def _userList = c.list({
 			eq("company",company)
 			or{
 				like("username","%" + params.serchInput +  "%")
 				like("chinaName","%" + params.serchInput +  "%")
 				like("telephone","%" + params.serchInput +  "%")
 			}
-		}
+		})
 		def smap =[:]
-		smap["userId"] = _user.id
-		smap["username"] = _user.username
-		smap["phone"] = _user.telephone
-		smap["mobile"] = _user.telephone
-		smap["email"] = _user.email
-		
-		smap["userDepartId"] = _user.getDepartEntity()?.id
-		smap["userDepart"] = _user.getDepartEntity()?.departName
-		
-		def personInfor = PersonInfor.findByUser(_user)
-		if(personInfor){
-			smap["sex"] = personInfor.sex
-			smap["idCard"] = personInfor.idCard
-			smap["birthday"] = personInfor.birthday
-			smap["city"] = personInfor.city
-			smap["nationality"] = personInfor.nationality
-			smap["birthAddress"] = personInfor.birthAddress
-			smap["nativeAddress"] = personInfor.nativeAddress
-			smap["politicsStatus"] = personInfor.politicsStatus
-			smap["marriage"] = personInfor.marriage
-			smap["religion"] = personInfor.religion
+		if(_userList && _userList.size()>0){
+			def _user = _userList[0]
+			
+			smap["userId"] = _user.id
+			smap["username"] = _user.username
+			smap["phone"] = _user.telephone
+			smap["mobile"] = _user.telephone
+			smap["email"] = _user.email
+			
+			smap["userDepartId"] = _user.getDepartEntity()?.id
+			smap["userDepart"] = _user.getDepartEntity()?.departName
+			
+			def personInfor = PersonInfor.findByUser(_user)
+			if(personInfor){
+				smap["sex"] = personInfor.sex
+				smap["idCard"] = personInfor.idCard
+				smap["birthday"] = personInfor.birthday
+				smap["city"] = personInfor.city
+				smap["nationality"] = personInfor.nationality
+				smap["birthAddress"] = personInfor.birthAddress
+				smap["nativeAddress"] = personInfor.nativeAddress
+				smap["politicsStatus"] = personInfor.politicsStatus
+				smap["marriage"] = personInfor.marriage
+				smap["religion"] = personInfor.religion
+			}
 		}
-		
 		render smap as JSON
 	}
 	def staffDepartChange ={
@@ -301,7 +304,11 @@ class StaffController {
 			def _gridHeader =[]
 
 			_gridHeader << ["name":"序号","width":"26px","colIdx":0,"field":"rowIndex"]
-			_gridHeader << ["name":"登录名","width":"auto","colIdx":1,"field":"username","formatter":"personInfor_formatTopic"]
+			if(params.type && "normal".equals(params.type)){
+				_gridHeader << ["name":"登录名","width":"auto","colIdx":1,"field":"username","formatter":"personInfor_formatTopic_normal"]
+			}else{
+				_gridHeader << ["name":"登录名","width":"auto","colIdx":1,"field":"username","formatter":"personInfor_formatTopic"]
+			}
 			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName"]
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
 			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]

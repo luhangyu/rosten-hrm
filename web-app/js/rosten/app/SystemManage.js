@@ -4,7 +4,16 @@
 define(["dojo/_base/connect",
         "dijit/registry",
         "rosten/kernel/behavior"], function(connect,registry) {
-	
+	personInfor_formatTopic_normal =function(value,rowIndex){
+		return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	personInfor_normal_onMessageOpen =function(rowIndex){
+		var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.kernel.getGrid().clearSelected();
+	};
 	personInfor_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:personInfor_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};
@@ -40,7 +49,7 @@ define(["dojo/_base/connect",
         var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
         _1.callback = function() {
         	var unids;
-        	if(typeof dom_rostenGrid === 'undefined'){
+        	if(rosten.kernel.navigationEntity=="newStaffAdd"){
         		unids = rosten.getGridUnid("multi");
         	}else{
         		unids = rosten._getGridUnid(dom_rostenGrid,"multi");
@@ -50,7 +59,7 @@ define(["dojo/_base/connect",
             var content = {};
             content.id = unids;
             rosten.read(rosten.webPath + "/staff/userDelete", content, function(data){
-            	if(typeof dom_rostenGrid === 'undefined'){
+            	if(rosten.kernel.navigationEntity=="newStaffAdd"){
             		delete_callback(data);
             	}else{
             		delete_callback(data,dom_rostenGrid);

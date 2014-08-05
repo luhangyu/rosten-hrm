@@ -21,7 +21,7 @@ define([ "dijit/registry",
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		var store = new ItemFileWriteStore({url:rosten.webPath + "/vacate/getAskForChartData/" + companyId});
 		
-        var chartP = new Chart("askFor_pie",{title: "部门名称"});
+        var chartP = new Chart("askFor_pie",{title: "承保运营部"});
         chartP.setTheme(ThreeD);
         chartP.addPlot("default", {type: Pie, radius: 80});
         chartP.addSeries("number", new DataSeries(store, {query: {id: "*"}},lang.hitch(null, chartObject.valTrans, "number")));

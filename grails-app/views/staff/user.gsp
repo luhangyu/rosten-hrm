@@ -74,13 +74,11 @@
 				},null,"rosten_form");
 			};
 			page_quit = function(){
-				if(window.opener.dom_rostenGrid){
+				if(window.opener.rosten.kernel.navigationEntity=="newStaffAdd"){
+					window.opener.rosten.kernel.refreshGrid();
+				}else{
 					window.opener.dom_rostenGrid.refresh();
-		    	}else{
-		    		if(window.opener.rosten.kernel){
-		        		window.opener.rosten.kernel.refreshGrid();
-		        	}
-			    }
+				}
 		        window.close();
 			};
 			check_common = function(fieldStr,alertStr,isFocus){

@@ -51,7 +51,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffView?userId=" + userid,
-				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid
+				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=normal"
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;
