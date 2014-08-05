@@ -16,6 +16,67 @@ class StaffController {
 	def springSecurityService
 	def systemService
 	
+	def staffChangeDepart ={
+		def json
+		try{
+			def user = User.get(params.userId)
+			def departEntity = Depart.get(params.newDepartId)
+			
+			UserDepart.removeAll(user)
+			if(departEntity){
+				UserDepart.create(user, departEntity)
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+		
+		
+	}
+	def serachPerson ={
+		def company = Company.get(params.companyId)
+		
+		def c = User.createCriteria()
+		def _user = c.get{
+			eq("company",company)
+			or{
+				like("username","%" + params.serchInput +  "%")
+				like("chinaName","%" + params.serchInput +  "%")
+				like("telephone","%" + params.serchInput +  "%")
+			}
+		}
+		def smap =[:]
+		smap["userId"] = _user.id
+		smap["username"] = _user.username
+		smap["phone"] = _user.telephone
+		smap["mobile"] = _user.telephone
+		smap["email"] = _user.email
+		
+		smap["userDepartId"] = _user.getDepartEntity()?.id
+		smap["userDepart"] = _user.getDepartEntity()?.departName
+		
+		def personInfor = PersonInfor.findByUser(_user)
+		if(personInfor){
+			smap["sex"] = personInfor.sex
+			smap["idCard"] = personInfor.idCard
+			smap["birthday"] = personInfor.birthday
+			smap["city"] = personInfor.city
+			smap["nationality"] = personInfor.nationality
+			smap["birthAddress"] = personInfor.birthAddress
+			smap["nativeAddress"] = personInfor.nativeAddress
+			smap["politicsStatus"] = personInfor.politicsStatus
+			smap["marriage"] = personInfor.marriage
+			smap["religion"] = personInfor.religion
+		}
+		
+		render smap as JSON
+	}
+	def staffDepartChange ={
+		def model = [:]
+		model.companyId = params.companyId
+		render(view:'/staff/changeDepart',model:model)
+	}
 	def userDelete ={
 		def ids = params.id.split(",")
 		def json

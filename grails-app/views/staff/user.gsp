@@ -76,7 +76,11 @@
 			page_quit = function(){
 				if(window.opener.dom_rostenGrid){
 					window.opener.dom_rostenGrid.refresh();
-		    	}
+		    	}else{
+		    		if(window.opener.rosten.kernel){
+		        		window.opener.rosten.kernel.refreshGrid();
+		        	}
+			    }
 		        window.close();
 			};
 			check_common = function(fieldStr,alertStr,isFocus){

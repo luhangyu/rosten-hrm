@@ -39,13 +39,22 @@ define(["dojo/_base/connect",
     delete_personInfor = function() {
         var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
         _1.callback = function() {
-            var unids = rosten._getGridUnid(dom_rostenGrid,"multi");
-            if (unids == "")
-                return;
+        	var unids;
+        	if(typeof dom_rostenGrid === 'undefined'){
+        		unids = rosten.getGridUnid("multi");
+        	}else{
+        		unids = rosten._getGridUnid(dom_rostenGrid,"multi");
+        	}
+            
+            if (unids == "") return;
             var content = {};
             content.id = unids;
             rosten.read(rosten.webPath + "/staff/userDelete", content, function(data){
-            	delete_callback(data,dom_rostenGrid);
+            	if(typeof dom_rostenGrid === 'undefined'){
+            		delete_callback(data);
+            	}else{
+            		delete_callback(data,dom_rostenGrid);
+            	}
             });
         };
     };
