@@ -4,7 +4,12 @@
 define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/kernel/behavior"], function(
 		connect, registry,General) {
 	
-	
+	staffLeave = function(){
+		
+	};
+	staffRetire = function(){
+		
+	};
 	staffChangeDepart = function(){
 		var userId = registry.byId("userId");
 		var userDepartId = registry.byId("userDepartId");

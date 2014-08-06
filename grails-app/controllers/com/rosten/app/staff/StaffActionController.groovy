@@ -8,7 +8,9 @@ class StaffActionController {
 	def staffChangeDepartForm ={
 		def actionList =[]
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("变更",imgPath + "add.png","staffChangeDepart")
+		actionList << createAction("部门变更",imgPath + "add.png","staffChangeDepart")
+		actionList << createAction("离职",imgPath + "add.png","staffLeave")
+		actionList << createAction("退休",imgPath + "add.png","staffRetire")
 		render actionList as JSON
 	}
 	
