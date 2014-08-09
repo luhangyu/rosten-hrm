@@ -48,11 +48,16 @@
    	</style>
 	<script type="text/javascript">
 		require(["dijit/registry",
+		         "dojo/json",
+		         "rosten/app/Application",
 		     "rosten/widget/ActionBar"],
-			function(registry){
+			function(registry,JSON){
 				vacate_print = function(){
 					
 				};
+				
+				rosten.variable.tempAskFor = JSON.parse('${json}');
+				console.log(rosten.variable.tempAskFor);
 		});
     </script>
 </head>
@@ -63,6 +68,27 @@
 	</div>
 </div>
 <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px"}' class="static">
+
+<table border="0" align="left" style="margin:0 auto;width:740px">
+				<tr>
+				    <td width="120"><div align="right">选择部门：</div></td>
+				    <td width="260">
+		                <input id="departName" data-dojo-type="dijit/form/ValidationTextBox" 
+			               	data-dojo-props='name:"departName",readOnly:true,
+			               		trim:true,required:true,value:"${departName}"
+			          	'/>
+			         	<input id="departId" data-dojo-type="dijit/form/ValidationTextBox"  data-dojo-props='style:{display:"none"},trim:true,required:true' />
+						<button data-dojo-type="dijit/form/Button" 
+							data-dojo-props='onClick:function(){
+								selecWorktDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:companyId])}",false)}'>选择</button>
+		           </td>
+		           <td width="120"><div align="right"></div></td>
+				   <td width="250">
+				    	
+		           </td>
+				</tr>
+			</table>
+
 	<div class="charts">
 		<div id="askFor_pie_legend"></div>
 		<div class="chart-area-pie">

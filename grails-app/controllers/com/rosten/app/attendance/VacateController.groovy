@@ -6,15 +6,15 @@ import groovy.sql.Sql
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.Util
 import com.rosten.app.system.Company
+import com.rosten.app.system.Depart;
 import com.rosten.app.system.User
 import com.rosten.app.system.Model
 import com.rosten.app.system.Authorize
 import com.rosten.app.gtask.Gtask
-
 import com.rosten.app.system.SystemService
 import com.rosten.app.start.StartService
-
 import com.rosten.app.workflow.WorkFlowService
+
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.runtime.ProcessInstanceQuery
 import org.activiti.engine.task.Task
@@ -461,6 +461,9 @@ class VacateController {
 		def model = [:]
 		def user = springSecurityService.getCurrentUser()
 		model["user"]=user
+		model.companyId = params.companyId
+		model["departId"] = params.departId
+		
 		FieldAcl fa = new FieldAcl()
 		if("normal".equals(user.getUserType())){
 		}
@@ -470,11 +473,33 @@ class VacateController {
 		Sql sql = new Sql(dataSource)
 		def seleSql = " select a.*,b.china_name,c.depart_id,c.depart_name from ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.user_id,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.user_id) a left join  ";
 		seleSql+=" ( select a.user_id,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.user_id) b on a.user_id = b.user_id left join "
-		seleSql+=" ( select a.user_id,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.user_id) c on a.user_id = b.user_id left join  "
-		seleSql+=" ( select a.user_id,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.user_id) d on a.user_id = b.user_id left join  "
-		seleSql+=" ( select a.user_id,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.user_id) e on a.user_id = b.user_id left join "
-		seleSql+=" ( select a.user_id,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.user_id) f on a.user_id = b.user_id ) a left join rosten_user b on a.user_id = b.id left join  "
+		seleSql+=" ( select a.user_id,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.user_id) c on a.user_id = c.user_id left join  "
+		seleSql+=" ( select a.user_id,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.user_id) d on a.user_id = d.user_id left join  "
+		seleSql+=" ( select a.user_id,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.user_id) e on a.user_id = e.user_id left join "
+		seleSql+=" ( select a.user_id,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.user_id) f on a.user_id = f.user_id ) a left join rosten_user b on a.user_id = b.id left join  "
 		seleSql+=" (select  a.* ,b.depart_name from rosten_user_depart  a  left join  rosten_depart  b on a.depart_id = b.id ) c on a.user_id = c.user_id "
+		if(params.departId){
+			def depart = Depart.get(params.departId)
+			model["departName"] = depart.departName
+			seleSql+=" where depart_id='"+params.departId+"'"
+		}
+		seleSql+=" union all ( "
+		seleSql+="  select '' user_id, sum(sjnums),sum(bjnums),sum(nxjnums),sum(hjnums),sum(sajnums),sum(qtjnums),'合计' china_name,'' depart_id, '' depart_name from  "
+		seleSql+=" ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.user_id,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.user_id) a  "
+		seleSql+=" left join   ( select a.user_id,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.user_id) b on a.user_id = b.user_id left join  "
+		seleSql+="  ( select a.user_id,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.user_id) c on a.user_id = c.user_id left join  "
+		seleSql+="  ( select a.user_id,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.user_id) d on a.user_id = d.user_id left join  "
+		seleSql+=" ( select a.user_id,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.user_id) e on a.user_id = e.user_id left join  "
+		seleSql+=" ( select a.user_id,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.user_id) f on a.user_id = f.user_id ) a "
+		seleSql+=" left join rosten_user b on a.user_id = b.id left join   (select  a.* ,b.depart_name from rosten_user_depart  a  left join  rosten_depart  b on a.depart_id = b.id ) c on a.user_id = c.user_id  "
+		
+		if(params.departId){
+			def depart = Depart.get(params.departId)
+			model["departName"] = depart.departName
+			seleSql+=" where depart_id='"+params.departId+"'"
+		}
+		
+		seleSql+=" ) "
 		def vacateList = sql.eachRow(seleSql){
 			def item = ["departName":it["depart_name"],"name":it["china_name"],
 				"sjnums":it["sjnums"],"bjnums":it["bjnums"],"nxjnums":it["nxjnums"],
@@ -484,8 +509,31 @@ class VacateController {
 		
 		model["tableItem"] = items
 		
+		def json = [identifier:'id',label:'name',items:[]]
+		
+		if(null!=items&&items.size()>0){
+			def maps = items[items.size()-1];
+			def sMap = ["id":001,"name":"事假","number":maps.sjnums]
+			json.items+=sMap
+			sMap = ["id":002,"name":"病假","number":maps.bjnums]
+			json.items+=sMap
+			sMap = ["id":003,"name":"年休假","number":maps.nxjnums]
+			json.items+=sMap
+			sMap = ["id":004,"name":"婚假","number":maps.hjnums]
+			json.items+=sMap
+			sMap = ["id":005,"name":"丧假","number":maps.sajnums]
+			json.items+=sMap
+			sMap = ["id":006,"name":"其他","number":maps.qtjnums]
+			json.items+=sMap
+			model["json"] = json as JSON
+			println model["json"]
+			
+		}
+		
 		render(view:'/vacate/askForStatic',model:model)
 	}
+	
+	
 	def getAskForChartData ={
 		def company = Company.get(params.id)
 		def json = [identifier:'id',label:'name',items:[]]

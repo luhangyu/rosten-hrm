@@ -19,7 +19,9 @@ define([ "dijit/registry",
 	
 	chartObject.addAskForChart = function(){
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		var store = new ItemFileWriteStore({url:rosten.webPath + "/vacate/getAskForChartData/" + companyId});
+//		var store = new ItemFileWriteStore({url:rosten.webPath + "/vacate/getAskForChartData/" + companyId});
+		
+		var store = new ItemFileWriteStore({data:rosten.variable.tempAskFor});
 		
         var chartP = new Chart("askFor_pie",{title: "承保运营部"});
         chartP.setTheme(ThreeD);

@@ -1,8 +1,33 @@
 /**
  * @author rosten
  */
-define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/kernel/behavior" ], function(
-		connect, lang,registry,kernel) {
+define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/app/ChartManage","rosten/widget/PickTreeDialog","rosten/kernel/behavior" ], function(
+		connect, lang,registry,kernel,ChartManage,PickTreeDialog) {
+	
+	
+	//考勤管理选择部门统计
+	selecWorktDepart = function(url,type) {
+        var id = "work_departDialog";
+        if (rosten[id] && registry.byId(id)) {
+            rosten[id].open();
+            rosten[id].refresh();
+        } else {
+            var args = {
+                url : url,
+                rootLabel : "部门层级",
+                showCheckBox : type,
+                folderClass : "departTree"
+            };
+            rosten[id] = new PickTreeDialog(args);
+            rosten[id].open();
+        }
+        rosten[id].callback = function(data) {
+        	var companyId = rosten.kernel.getUserInforByKey("companyid");
+            var item = data[0];
+			rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic?companyId=" + companyId+"&departId="+item.id, "askForStatic" ,ChartManage.addAskForChart);
+        };
+    };
+	
 	
 	vacate_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -50,10 +75,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             var rostenGrid = rosten.kernel.getGrid();
             break;
 		case "askForStatic":
-			require(["rosten/app/ChartManage"],function(ChartManage){
-				rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic", oString , ChartManage.addAskForChart);
-        	});
-			
+			rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic?companyId=" + companyId, oString , ChartManage.addAskForChart);
             break;
 		}
        
