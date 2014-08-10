@@ -182,6 +182,12 @@ class HrmController {
 			model.addToResources(resource)
 			
 			resource = new Resource()
+			resource.resourceName = "所有请假"
+			resource.url = "allAskFor"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
 			resource.resourceName = "请假汇总"
 			resource.url = "askForStatic"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
