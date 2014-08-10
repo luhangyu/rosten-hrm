@@ -57,7 +57,7 @@
 				};
 				
 				rosten.variable.tempAskFor = JSON.parse('${json}');
-				console.log(rosten.variable.tempAskFor);
+				rosten.variable.titleName = '${titleName}';
 		});
     </script>
 </head>

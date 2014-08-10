@@ -305,6 +305,7 @@ class VacateController {
 	
     def vacateGrid ={
 		def json=[:]
+		def user = User.get(params.userId)
 		def company = Company.get(params.companyId)
 		if(params.refreshHeader){
 			json["gridHeader"] = vacateService.getVacateListLayout()
@@ -317,6 +318,8 @@ class VacateController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
+			args["user"] = user
+			
 			json["gridData"] = vacateService.getVacateDataStore(args)
 			
 		}
@@ -496,7 +499,11 @@ class VacateController {
 		if(params.departId){
 			def depart = Depart.get(params.departId)
 			model["departName"] = depart.departName
+			model["titleName"] = depart.departName
 			seleSql+=" where depart_id='"+params.departId+"'"
+		}else{
+		def company = Company.get(params.companyId)
+		model["titleName"] = company.companyName
 		}
 		
 		seleSql+=" ) "
@@ -526,7 +533,6 @@ class VacateController {
 			sMap = ["id":006,"name":"其他","number":maps.qtjnums]
 			json.items+=sMap
 			model["json"] = json as JSON
-			println model["json"]
 			
 		}
 		

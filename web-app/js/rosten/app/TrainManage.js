@@ -86,6 +86,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 
             var rostenGrid = rosten.kernel.getGrid();
             break;
+		case "trainMessage":
+            var naviJson = {
+                identifier : oString,
+                actionBarSrc : rosten.webPath + "/trainAction/trainMessageView?userId=" + userid,
+                gridSrc : rosten.webPath + "/train/trainMessageGrid?companyId=" + companyId
+            };
+            rosten.kernel.addRightContent(naviJson);
+
+            var rostenGrid = rosten.kernel.getGrid();
+            break;
 		}
 		
 	}

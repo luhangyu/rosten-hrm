@@ -23,7 +23,7 @@ define([ "dijit/registry",
 		
 		var store = new ItemFileWriteStore({data:rosten.variable.tempAskFor});
 		
-        var chartP = new Chart("askFor_pie",{title: "承保运营部"});
+        var chartP = new Chart("askFor_pie",{title: rosten.variable.titleName});
         chartP.setTheme(ThreeD);
         chartP.addPlot("default", {type: Pie, radius: 80});
         chartP.addSeries("number", new DataSeries(store, {query: {id: "*"}},lang.hitch(null, chartObject.valTrans, "number")));

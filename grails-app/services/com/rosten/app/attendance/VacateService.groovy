@@ -21,17 +21,29 @@ class VacateService {
 	def getVacateDataStore ={params->
 		Integer offset = (params.offset)?params.offset.toInteger():0
 		Integer max = (params.max)?params.max.toInteger():15
-		def propertyList = getAllVacate(offset,max,params.company)
+		def propertyList = getAllVacate(offset,max,params.company,params.user)
 
 		def gridUtil = new GridUtil()
 		return gridUtil.buildDataList("id","title",propertyList,offset)
 	}
 	
-	def getAllVacate ={offset,max,company->
+	def getAllVacate ={offset,max,company,user->
 		def c = Vacate.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
+			or{
+				readers{
+					eq("id",user.id)
+				}
+			}
+			or{
+				notEqual("status","已结束")
+			}
+			or{
+				notEqual("status","结束")
+			}
+			 
 		}
 		return c.list(pa,query)
 	}
