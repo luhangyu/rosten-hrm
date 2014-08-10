@@ -76,4 +76,13 @@ class VacateActionController {
 		model["action"] = action
 		return model
 	}
+	
+	def allAskForView ={
+		def actionList =[]
+		def strname = "vacate"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		
+		render actionList as JSON
+	}
 }

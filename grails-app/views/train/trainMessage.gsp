@@ -108,7 +108,7 @@
 					    <td >
 					    			<input id="courseName" data-dojo-type="dijit/form/ValidationTextBox" 
 	                                	data-dojo-props='name:"courseName",${fieldAcl.isReadOnly("courseName")},
-	                                		"class":"input",
+	                                		
 	                                		trim:true,
 	                                		required:true,
 	                                		style:{width:"400px"},
@@ -147,7 +147,7 @@
 					    <td><div align="right">培训结果：</div></td>
 					    <td >
 					    		<input id="trainResult" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"trainResult","class":"input",style:{width:"550px"},
+                                	data-dojo-props='name:"trainResult",style:{width:"550px"},
               							value:"${trainMessage?.trainResult}"
                                 	'/>
 					    </td>

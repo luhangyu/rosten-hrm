@@ -97,7 +97,7 @@
 					    <td width="250">
 					    	<input id="courseName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='name:"courseName",${fieldAcl.isReadOnly("courseName")},
-			                 		trim:true,required:true,"class":"input",
+			                 		trim:true,required:true,
 			                 		missingMessage:"请正确填写培训班名称！",invalidMessage:"请正确填写培训班名称！",
 									value:"${trainCourse?.courseName}"
 			                '/>
@@ -106,7 +106,7 @@
 					    <td width="250">
 					    	<input id="organizeName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='name:"organizeName",${fieldAcl.isReadOnly("organizeName")},
-			                 		trim:true,required:true,"class":"input",
+			                 		trim:true,required:true,
 			                 		missingMessage:"请正确填写组织者名称！",invalidMessage:"请正确填写组织者名称！",
 									value:"${trainCourse?.organizeName}"
 			                '/>
@@ -125,7 +125,7 @@
 					    <td>
 					    	<input id="trainAddress" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='name:"trainAddress",${fieldAcl.isReadOnly("trainAddress")},
-			                 		trim:true,required:true,"class":"input",
+			                 		trim:true,required:true,
 			                 		missingMessage:"请正确填写培训地点！",invalidMessage:"请正确填写培训地点！",
 									value:"${trainCourse?.trainAddress}"
 			                '/>

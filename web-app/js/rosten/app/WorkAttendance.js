@@ -77,6 +77,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		case "askForStatic":
 			rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic?companyId=" + companyId, oString , ChartManage.addAskForChart);
             break;
+            
+		case "allAskFor":
+            var naviJson = {
+                identifier : oString,
+                actionBarSrc : rosten.webPath + "/vacateAction/allAskForView?userId=" + userid,
+                gridSrc : rosten.webPath + "/vacate/allAskForGrid?companyId=" + companyId+"&userId=" + userid
+            };
+            rosten.kernel.addRightContent(naviJson);
+
+            var rostenGrid = rosten.kernel.getGrid();
+            break;
+            
 		}
        
 		

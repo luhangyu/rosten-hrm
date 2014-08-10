@@ -14,6 +14,7 @@ import com.rosten.app.gtask.Gtask
 import com.rosten.app.system.SystemService
 import com.rosten.app.start.StartService
 import com.rosten.app.workflow.WorkFlowService
+import com.rosten.app.share.ShareService
 
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.runtime.ProcessInstanceQuery
@@ -29,7 +30,7 @@ class VacateController {
 	def taskService
 	def startService
 	def dataSource
-	
+	def shareService
 	def getDealWithUser ={
 		if("user".equals(params.type)){
 			//选择人员，默认获取选择人员人数为大于一人，params中必须具备参数params.user：用户登录名
@@ -484,7 +485,20 @@ class VacateController {
 		if(params.departId){
 			def depart = Depart.get(params.departId)
 			model["departName"] = depart.departName
-			seleSql+=" where depart_id='"+params.departId+"'"
+			seleSql+=" where 1= 1"
+			seleSql+=" and ("
+			
+			def searchDepart =[]
+			shareService.getAllDepartByChild(searchDepart,depart)
+			searchDepart.unique()
+			for(def index=0;index<searchDepart.size();index++){
+				if(index ==0){
+					seleSql+=" depart_id ='"+searchDepart[index].id+"'"
+				}else{
+					seleSql+=" or depart_id ='"+searchDepart[index].id+"'"
+				}
+			}
+			seleSql+=" )"
 		}
 		seleSql+=" union all ( "
 		seleSql+="  select '' user_id, sum(sjnums),sum(bjnums),sum(nxjnums),sum(hjnums),sum(sajnums),sum(qtjnums),'合计' china_name,'' depart_id, '' depart_name from  "
@@ -500,7 +514,19 @@ class VacateController {
 			def depart = Depart.get(params.departId)
 			model["departName"] = depart.departName
 			model["titleName"] = depart.departName
-			seleSql+=" where depart_id='"+params.departId+"'"
+				seleSql+=" where 1= 1"
+			seleSql+=" and ("
+			def searchDepart =[]
+			shareService.getAllDepartByChild(searchDepart,depart)
+			searchDepart.unique()
+			for(def index=0;index<searchDepart.size();index++){
+				if(index ==0){
+					seleSql+=" depart_id ='"+searchDepart[index].id+"'"
+				}else{
+				seleSql+=" or depart_id ='"+searchDepart[index].id+"'"
+				}
+			}
+			seleSql+=" )"
 		}else{
 		def company = Company.get(params.companyId)
 		model["titleName"] = company.companyName
@@ -554,6 +580,33 @@ class VacateController {
 		 * 后去相关数据
 		 */
 		
+		render json as JSON
+	}
+	
+	def allAskForGrid ={
+		def json=[:]
+		def user = User.get(params.userId)
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			json["gridHeader"] = vacateService.getVacateListLayout()
+		}
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			args["user"] = user
+			
+			json["gridData"] = vacateService.getAllAskForDataStore(args)
+			
+		}
+		if(params.refreshPageControl){
+			def total = vacateService.getVacateCount(company)
+			json["pageControl"] = ["total":total.toString()]
+		}
 		render json as JSON
 	}
 	
