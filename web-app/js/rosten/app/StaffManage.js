@@ -5,7 +5,24 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		connect, registry,General) {
 	
 	staffLeave = function(){
-		
+		var userId = registry.byId("userId");
+		var userDepartId = registry.byId("userDepartId");
+    	if(!userDepartId.isValid()){
+    		rosten.alert("请单击<查询验证>按钮进行员工信息验证！");
+			return;
+    	}
+    	
+		var commentDialog = rosten.addCommentDialog({});
+		commentDialog.title = "离职原因";
+		commentDialog.callback = function(_data){
+			rosten.readSync(rosten.webPath + "/staff/staffLeave/" + userId.attr("value"),{dataStr:_data.content,userId:userId},function(data){
+				if(data.result=="true" || data.result == true){
+					rosten.alert("成功！");
+				}else{
+					rosten.alert("失败!");
+				}	
+			});
+		};
 	};
 	staffRetire = function(){
 		
