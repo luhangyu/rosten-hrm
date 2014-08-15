@@ -25,7 +25,25 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		};
 	};
 	staffRetire = function(){
-		
+		//退休
+		var userId = registry.byId("userId");
+		var userDepartId = registry.byId("userDepartId");
+    	if(!userDepartId.isValid()){
+    		rosten.alert("请单击<查询验证>按钮进行员工信息验证！");
+			return;
+    	}
+    	
+		var commentDialog = rosten.addCommentDialog({});
+		commentDialog.title = "退休原因";
+		commentDialog.callback = function(_data){
+			rosten.readSync(rosten.webPath + "/staff/staffRetire/" + userId.attr("value"),{dataStr:_data.content,userId:userId},function(data){
+				if(data.result=="true" || data.result == true){
+					rosten.alert("成功！");
+				}else{
+					rosten.alert("失败!");
+				}	
+			});
+		};
 	};
 	staffChangeDepart = function(){
 		var userId = registry.byId("userId");

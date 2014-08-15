@@ -56,6 +56,9 @@ class PersonInfor {
 	//血型
 	String blood
 	
+	//状态
+	String status = "在职"
+	
     static constraints = {
 		birthday nullable:true,blank:true
 		birthAddress nullable:true,blank:true

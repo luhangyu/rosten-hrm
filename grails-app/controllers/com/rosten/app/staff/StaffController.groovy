@@ -16,22 +16,86 @@ class StaffController {
 	def springSecurityService
 	def systemService
 	
-	def staffChangeDepart ={
+	def staffRetire ={
+		//退休
 		def json
 		try{
 			def user = User.get(params.userId)
-			def departEntity = Depart.get(params.newDepartId)
-			
-			UserDepart.removeAll(user)
-			if(departEntity){
-				UserDepart.create(user, departEntity)
+			def personInfor = PersonInfor.findByUser(user)
+			if(personInfor){
+				personInfor.status = "已退休"
+				personInfor.save()
+				
+				//增加处理日志
+				def staffLog = new StaffLog()
+				staffLog.type = "退休"
+				staffLog.dealUser = springSecurityService.getCurrentUser()
+				staffLog.user = user
+				staffLog.reson = params.dataStr
+				
+				staffLog.save(flush:true)
+			}
+				
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
+	def staffLeave ={
+		//离职
+		def json
+		try{
+			def user = User.get(params.userId)
+			def personInfor = PersonInfor.findByUser(user)
+			if(personInfor){
+				personInfor.status = "已离职"
+				personInfor.save()
+				
+				//增加处理日志
+				def staffLog = new StaffLog()
+				staffLog.type = "离职"
+				staffLog.dealUser = springSecurityService.getCurrentUser()
+				staffLog.user = user
+				staffLog.reson = params.dataStr
+				
+				staffLog.save(flush:true)
 			}
 			json = [result:'true']
 		}catch(Exception e){
 			json = [result:'error']
 		}
 		render json as JSON
-		
+	}
+	
+	def staffChangeDepart ={
+		def json,oldDepartName
+		try{
+			def user = User.get(params.userId)
+			def departEntity = Depart.get(params.newDepartId)
+			oldDepartName = user.getDepartName()
+			
+			if(departEntity){
+				UserDepart.removeAll(user)
+				UserDepart.create(user, departEntity)
+				
+				//增加处理日志
+				def staffLog = new StaffLog()
+				staffLog.type = "部门调动"
+				staffLog.oldDepart = oldDepartName
+				staffLog.nowDepart = departEntity.departName
+				staffLog.dealUser = springSecurityService.getCurrentUser()
+				staffLog.user = user
+				
+				staffLog.save(flush:true)
+				
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
 		
 	}
 	def serachPerson ={
@@ -282,7 +346,9 @@ class StaffController {
 				sMap["mobile"] = contactInfor?.mobile
 				sMap["nationality"] = personInfor?.nativeAddress
 				sMap["politicsStatus"] = personInfor?.politicsStatus
-				sMap["status"] = "正常"
+				
+				
+				sMap["status"] = personInfor.status
 				
 				_json.items+=sMap
 				
@@ -354,7 +420,7 @@ class StaffController {
 				sMap["mobile"] = contactInfor?.mobile
 				sMap["nationality"] = personInfor?.nativeAddress
 				sMap["politicsStatus"] = personInfor?.politicsStatus
-				sMap["status"] = "正常"
+				sMap["status"] = personInfor.status
 				
 				_json.items+=sMap
 				

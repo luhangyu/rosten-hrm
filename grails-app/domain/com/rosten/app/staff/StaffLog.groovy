@@ -19,6 +19,11 @@ class StaffLog {
 	//现在部门
 	String nowDepart
 	
+	User dealUser
+	
+	//实际处理时间
+	Date dealDate
+	
 	//创建时间
 	Date createDate = new Date()
 	
@@ -37,6 +42,7 @@ class StaffLog {
 		reson nullable:true,blank:true
 		oldDepart nullable:true,blank:true
 		nowDepart nullable:true,blank:true
+		dealDate nullable:true,blank:true
     }
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
