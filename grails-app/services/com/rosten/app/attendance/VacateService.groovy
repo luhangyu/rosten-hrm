@@ -43,7 +43,7 @@ class VacateService {
 			or{
 				notEqual("status","结束")
 			}
-			 
+			order("id", "desc")
 		}
 		return c.list(pa,query)
 	}
