@@ -348,7 +348,7 @@ class StaffController {
 				sMap["politicsStatus"] = personInfor?.politicsStatus
 				
 				
-				sMap["status"] = personInfor.status
+				sMap["status"] = personInfor?.status
 				
 				_json.items+=sMap
 				
@@ -420,7 +420,7 @@ class StaffController {
 				sMap["mobile"] = contactInfor?.mobile
 				sMap["nationality"] = personInfor?.nativeAddress
 				sMap["politicsStatus"] = personInfor?.politicsStatus
-				sMap["status"] = personInfor.status
+				sMap["status"] = personInfor?.status
 				
 				_json.items+=sMap
 				

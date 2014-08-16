@@ -325,7 +325,7 @@ class VacateController {
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getVacateCount(company)
+			def total = vacateService.getVacateCount(company,user)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -604,7 +604,7 @@ class VacateController {
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getVacateCount(company)
+			def total = vacateService.getAllVacateCount(company)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
