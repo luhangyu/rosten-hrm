@@ -5,13 +5,6 @@
 <title>${logoname}</title>
 <meta name="layout" content="rosten" />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content=" initial-scale=1.0,user-scalable=no" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-<meta content="black" name="apple-mobile-web-app-status-bar-style" />
-
 <style type="text/css">
 	.personSearch table.tab_css {
 		font-size:11px;
