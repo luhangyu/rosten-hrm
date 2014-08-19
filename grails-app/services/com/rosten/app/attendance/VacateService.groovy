@@ -43,14 +43,26 @@ class VacateService {
 			or{
 				notEqual("status","结束")
 			}
-			 
+			order("id", "desc")
 		}
 		return c.list(pa,query)
 	}
 	
-	def getVacateCount ={company->
+	def getVacateCount ={company,user->
 		def c = Vacate.createCriteria()
-		def query = { eq("company",company) }
+		def query = {
+			 eq("company",company)
+			or{
+				readers{
+					eq("id",user.id)
+				}
+			}
+			or{
+				notEqual("status","已结束")
+			}
+			or{
+				notEqual("status","结束")
+			} }
 		return c.count(query)
 	}
 	
@@ -62,6 +74,14 @@ class VacateService {
 
 		def gridUtil = new GridUtil()
 		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	
+	def getAllVacateCount ={company->
+		def c = Vacate.createCriteria()
+		def query = {
+			 eq("company",company)
+			 }
+		return c.count(query)
 	}
 	
 	def getAllAskFor ={offset,max,company,user->

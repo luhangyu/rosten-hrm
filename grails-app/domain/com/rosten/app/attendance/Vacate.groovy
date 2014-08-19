@@ -5,7 +5,7 @@ import java.util.Date;
 import com.rosten.app.system.User
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
-
+import com.rosten.app.gtask.Gtask
 import java.text.SimpleDateFormat
 
 /**
@@ -64,7 +64,7 @@ class Vacate {
 	}
 	
 	//请假数量
-	int numbers
+	int numbers = 1
 	
 	String unitType = "天"//小时或者天
 	
@@ -167,6 +167,20 @@ class Vacate {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_VACATE"
 		remark sqlType:"text"
+	}
+	def beforeDelete(){
+		Vacate.withNewSession{session ->
+			Gtask.findAllByContentId(this.id).each{item->
+				item.delete()
+			}
+			VacateLog.findAllByVacate(this).each{item->
+				item.delete()
+			}
+			VacateComment.findAllByVacate(this).each{item->
+				item.delete()
+			}
+			session.flush()
+		}
 	}
 	
 }

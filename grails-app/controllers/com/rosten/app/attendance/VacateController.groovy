@@ -128,7 +128,7 @@ class VacateController {
 		ProcessInstance processInstance = workFlowService.getProcessIntance(vacate.processInstanceId)
 		if(!processInstance || processInstance.isEnded()){
 			//流程已结束
-			nextStatus = "已归档"
+			nextStatus = "已结束"
 			vacate.currentUser = null
 			vacate.currentDepart = null
 			vacate.taskId = null
@@ -325,7 +325,7 @@ class VacateController {
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getVacateCount(company)
+			def total = vacateService.getVacateCount(company,user)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -338,10 +338,6 @@ class VacateController {
 			ids.each{
 				def vacate = Vacate.get(it)
 				if(vacate){
-					//删除相关的gtask待办事项
-					Gtask.findAllByContentId(it).each{item->
-						item.delete()
-					}
 					vacate.delete(flush: true)
 				}
 			}
@@ -604,7 +600,7 @@ class VacateController {
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getVacateCount(company)
+			def total = vacateService.getAllVacateCount(company)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
