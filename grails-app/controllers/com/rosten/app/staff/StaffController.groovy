@@ -16,11 +16,16 @@ class StaffController {
 	def springSecurityService
 	def systemService
 	
+	def importStaff ={
+		def model =[:]
+		model["company"] = Company.get(params.id)
+		render(view:'/staff/importStaff',model:model)
+	}
 	def staffRetire ={
 		//退休
 		def json
 		try{
-			def user = User.get(params.userId)
+			def user = User.get(params.id)
 			def personInfor = PersonInfor.findByUser(user)
 			if(personInfor){
 				personInfor.status = "已退休"
@@ -47,7 +52,7 @@ class StaffController {
 		//离职
 		def json
 		try{
-			def user = User.get(params.userId)
+			def user = User.get(params.id)
 			def personInfor = PersonInfor.findByUser(user)
 			if(personInfor){
 				personInfor.status = "已离职"

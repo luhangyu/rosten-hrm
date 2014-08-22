@@ -26,6 +26,17 @@ define(["dojo/_base/connect",
 		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&currentDepartId=" + currentDepartId);
 		rostenGrid.clearSelected();
 	};
+	export_personInfor = function(){
+		
+	};
+	import_personInfor = function(){
+		 var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.kernel.createRostenShowDialog(rosten.webPath + "/staff/importStaff/"+ companyId, {
+            onLoadFunction : function() {
+
+            }
+        });
+	};
 	add_personInfor = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");

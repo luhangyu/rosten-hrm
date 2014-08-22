@@ -265,7 +265,7 @@
 </script>
 <body>
 	<div data-dojo-type="rosten/widget/TitlePane" style="padding:0px"
-		data-dojo-props='title:"年度部门工资金额统计    (2014年度)",toggleable:false,moreText:"",height:"200px",marginBottom:"2px"'>
+		data-dojo-props='title:"年度部门工资金额统计    (2014年度)",toggleable:false,height:"200px",marginBottom:"2px",_moreClick:more_demo,moreText:"详情"'>
 		<div class="charts">
 			<div class="chart-area">
 	            <div id="lines_legend"></div>
@@ -277,7 +277,7 @@
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
 			data-dojo-props='region:"left",title:"近几年度部门支出金额统计趋势",toggleable:false,
-				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+				height:"210px",width:"50%",style:{marginRight:"1px"},_moreClick:more_demo,moreText:"详情"'>
 			<div class="charts">
 				<div id="lines1_legend"></div>
 				<div class="chart-area-lines1">
@@ -288,7 +288,7 @@
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
 			data-dojo-props='region:"center",title:"部门员工人数分布统计   (2014年度)",toggleable:false,
-				height:"210px",moreText:""'>
+				height:"210px",_moreClick:more_demo,moreText:"详情"'>
 				
 			<div class="charts">
 				<div id="pie_legend"></div>
@@ -303,7 +303,7 @@
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
 			data-dojo-props='region:"left",title:"部门员工类型统计    (2014年度)",toggleable:false,
-				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+				height:"210px",width:"50%",style:{marginRight:"1px"},_moreClick:more_demo,moreText:"详情"'>
 				
 			<div class="charts">
 				<div id="cols_legend"></div>
@@ -315,7 +315,7 @@
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
 			data-dojo-props='region:"center",title:"员工按年龄段统计    (2014年度)",toggleable:false,
-				height:"210px",moreText:""'>
+				height:"210px",_moreClick:more_demo,moreText:"详情"'>
 				
 			<div class="charts">	
 				<div class="chart-area-pie">

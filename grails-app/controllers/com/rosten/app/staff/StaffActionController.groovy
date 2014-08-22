@@ -19,6 +19,8 @@ class StaffActionController {
 		def strname = "personInfor"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("员工登记",imgPath + "add.png","add_" + strname)
+		actionList << createAction("批量导入",imgPath + "add.png","import_" + strname)
+		actionList << createAction("导出",imgPath + "add.png","export_" + strname)
 		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		render actionList as JSON

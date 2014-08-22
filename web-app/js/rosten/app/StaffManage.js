@@ -15,7 +15,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		var commentDialog = rosten.addCommentDialog({});
 		commentDialog.title = "离职原因";
 		commentDialog.callback = function(_data){
-			rosten.readSync(rosten.webPath + "/staff/staffLeave/" + userId.attr("value"),{dataStr:_data.content,userId:userId},function(data){
+			rosten.readSync(rosten.webPath + "/staff/staffLeave/" + userId.attr("value"),{dataStr:_data.content},function(data){
 				if(data.result=="true" || data.result == true){
 					rosten.alert("成功！");
 				}else{
@@ -36,7 +36,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		var commentDialog = rosten.addCommentDialog({});
 		commentDialog.title = "退休原因";
 		commentDialog.callback = function(_data){
-			rosten.readSync(rosten.webPath + "/staff/staffRetire/" + userId.attr("value"),{dataStr:_data.content,userId:userId},function(data){
+			rosten.readSync(rosten.webPath + "/staff/staffRetire/" + userId.attr("value"),{dataStr:_data.content},function(data){
 				if(data.result=="true" || data.result == true){
 					rosten.alert("成功！");
 				}else{

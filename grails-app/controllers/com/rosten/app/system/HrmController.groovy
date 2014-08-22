@@ -64,7 +64,7 @@ class HrmController {
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "部门调动"
+			resource.resourceName = "人事异动"
 			resource.url = "staffDepartChange"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
@@ -221,6 +221,13 @@ class HrmController {
 			model.modelCode = "static"
 			model.serialNo = 12
 			
+			
+			resource = new Resource()
+			resource.resourceName = "报表设计"
+			resource.url = "staticDesign"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
 			resource = new Resource()
 			resource.resourceName = "统计分析"
 			resource.url = "static"
@@ -248,6 +255,20 @@ class HrmController {
 			}
 			
 			systemService.initData_service(path,company)
+			
+			def _service = new NormalService()
+			_service.serviceName = "协同办公系统"
+			_service.company = company
+			_service.functionUrl = "http://oa.html"
+			_service.imgUrl = "images/rosten/service/oa.gif"
+			_service.save(flush:true)
+			
+			_service = new NormalService()
+			_service.serviceName = "资产管理系统"
+			_service.company = company
+			_service.functionUrl = "http://zcxt.html"
+			_service.imgUrl = "images/rosten/service/zcxt.gif"
+			_service.save(flush:true)
 			
 			json = [result:'true']
 		}catch(Exception e){
