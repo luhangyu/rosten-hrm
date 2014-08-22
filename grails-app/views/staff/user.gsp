@@ -101,7 +101,7 @@
 <body>
 	<div class="rosten_action">
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" 
-			data-dojo-props='actionBarSrc:"${createLink(controller:'systemAction',action:'administratorForm',params:[userId:loginUser?.id])}"'></div>
+			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'staffForm',params:[userId:loginUser?.id])}"'></div>
 	</div>
 	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;">
 	<div>
@@ -119,25 +119,16 @@
                                	data-dojo-props='name:"userNameFront",style:{width:"50px"},
              						value:"${company?.shortName}-",disabled:true
                             '/>
-					    	<g:if test='${userType.equals("admin") }'>
-					    		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
-                                		trim:true,required:true,
-                                		promptMessage:"请正确输入账号...",
-                                		style:{width:"125px"},
-                                		<g:if test="${username && !"".equals(username)}">disabled:true,</g:if>
-              							value:"${username}"
-                                '/>
-					    	</g:if>
-					    	<g:else>
-                           		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"username",readOnly:true,
-                                		trim:true,
-                                		required:true,
-                                		promptMessage:"请正确输入账号...",
-              							value:"${username}"
-                                '/>
-                           	</g:else>	
+					    	
+				    		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
+                               	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
+                               		trim:true,required:true,
+                               		promptMessage:"请正确输入账号...",
+                               		style:{width:"125px"},
+                               		<g:if test="${username && !"".equals(username)}">disabled:true,</g:if>
+             							value:"${username}"
+                               '/>
+					    	
 					    </td>
 					    <td width="120"><div align="right">具有角色：</div></td>
 					    <td width="250">
@@ -145,15 +136,14 @@
                 					data-dojo-props='trim:true,readOnly:true,
                 						value:"${allowrolesName }"
                 				'/>
-                 				<g:if test='${userType.equals("admin") }'>
+                 				
                  					<g:hiddenField name="allowrolesId" value="${allowrolesId }" />
 									<button data-dojo-type="dijit.form.Button" 
 										data-dojo-props = 'onClick:function(){selectRole("${createLink(controller:'system',action:'roleSelect',params:[companyId:company?.id])}")}'
 									>选择</button>
-                 				</g:if>
+                 				
 			           </td>
 					</tr>
-					<g:if test='${userType.equals("admin") }'>
 						<tr>
 						    <td><div align="right"><span style="color:red">*&nbsp;</span>密码：</div></td>
 						    <td>
@@ -179,7 +169,6 @@
 				            </td>    
 						</tr>
 					
-					</g:if>
 					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>CSS样式表：</div></td>
 					    <td>

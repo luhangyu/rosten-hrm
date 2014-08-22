@@ -403,7 +403,7 @@ class StaffController {
 
 			def _json = [identifier:'id',label:'name',items:[]]
 			
-			def userList = User.findAllByCompanyAndSysFlag(company,false,[max: max, sort: "createdDate", order: "desc", offset: offset])
+			def userList = User.findAllByCompanyAndSysFlag(company,false,[max: max, sort: "username", order: "asc", offset: offset])
 			totalNum = userList.size()
 			
 			def idx = 0

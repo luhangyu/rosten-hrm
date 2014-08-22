@@ -5,6 +5,13 @@ import grails.converters.JSON
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def staffForm ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("保存",webPath + imgPath + "Save.gif","user_add")
+		render actionList as JSON
+	}
 	def staffChangeDepartForm ={
 		def actionList =[]
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
