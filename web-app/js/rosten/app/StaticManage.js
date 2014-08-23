@@ -5,20 +5,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
          "rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel) {
 	
-	demo_static = function(oString){
-		rosten.kernel.setHref(rosten.webPath + "/demo/demo?type=" + oString, oString);
-	};
-	demo_staticDesign = function(){
-		//报表设计
-		demo_static("design");
-	}; 
-	demo = function(){
-		
-	};
 	
-	more_demo = function(){
-		demo_static("designMore");
-	};
 	/*
 	 * 此功能默认必须存在
 	 */

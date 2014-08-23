@@ -3,26 +3,43 @@
 <head>
 <title>图表</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-</head>
+<meta name="layout" content="rosten" />
 
-<script>
-	require([
-     	"dojo/_base/kernel"
-     					
-     	],
-	function( kernel
-		) {
+
+<script type="text/javascript">
+require(["dojo/parser",
+	 		"dojo/_base/kernel",
+	 		"dijit/registry",
+	 		"dojo/_base/xhr",
+	 		
+	 		
+	     	"rosten/widget/ActionBar",
+	     	"rosten/app/Application",
+	     	"rosten/kernel/behavior"],
+		function(parser,kernel,registry,xhr){
+			kernel.addOnLoad(function(){
+				rosten.init({webpath:"${request.getContextPath()}"});
+				rosten.cssinit();
+			});
+
+
+
 		
+		page_quit = function(){
+			window.close();
+		};
 	
 	});
 	
 </script>
+</head>
 <body>
-	<div data-dojo-type="rosten/widget/ActionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'demo',action:'desgine')}"'>
+	<div class="rosten_action">
+		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'demo',action:'staticShow')}"'></div>
 	</div>
+	
 	<div style="margin:0 auto;text-align:center;margin-top:10px">
-		<img src="${resource(dir:'images/rosten/demo',file:'rosten.png')}">
+		<img src="${resource(dir:'images/rosten/demo',file:'designMore.jpg')}">
 	</div>
 	
 </body>
