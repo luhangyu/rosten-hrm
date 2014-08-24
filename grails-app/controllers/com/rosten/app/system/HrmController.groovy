@@ -229,6 +229,12 @@ class HrmController {
 			model.addToResources(resource)
 			
 			resource = new Resource()
+			resource.resourceName = "花名册"
+			resource.url = "hmc"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
 			resource.resourceName = "统计分析"
 			resource.url = "static"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
