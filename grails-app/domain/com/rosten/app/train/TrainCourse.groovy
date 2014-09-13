@@ -24,7 +24,7 @@ class TrainCourse {
 	@GridColumn(name="培训时间")
 	def getFormatteTrainDate(){
 		if(trainDate!=null){
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(trainDate)
 		}else{
 			return ""

@@ -59,4 +59,34 @@ class TrainService {
 		return c.count(query)
 	}
 	
+	
+	def getDegreeStudyListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new DegreeStudy())
+	}
+	
+	def getDegreeStudyDataStore ={params->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllDegreeStudy(offset,max,params.company)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	
+	def getAllDegreeStudy ={offset,max,company->
+		def c = DegreeStudy.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("company",company)
+		}
+		return c.list(pa,query)
+	}
+	
+	def getDegreeStudyCount ={company->
+		def c = DegreeStudy.createCriteria()
+		def query = { eq("company",company) }
+		return c.count(query)
+	}
+	
 }

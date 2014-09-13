@@ -225,5 +225,116 @@ class TrainController {
 		}
 		render json as JSON
 	}
+	
+	/**
+	 * 学历学位进修信息
+	 */
+	def degreeStudyGrid ={
+		def json=[:]
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			json["gridHeader"] = trainService.getDegreeStudyListLayout()
+		}
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			json["gridData"] = trainService.getDegreeStudyDataStore(args)
+			
+		}
+		if(params.refreshPageControl){
+			def total = trainService.getDegreeStudyCount(company)
+			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+		
+	}
+	
+	/**
+	 * 增加
+	 */
+	def degreeStudyAdd ={
+		redirect(action:"degreeStudyShow",params:params)
+	}
+	
+	def degreeStudyShow ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def user = User.get(params.userid)
+		def company = Company.get(params.companyId)
+		def degreeStudy = new DegreeStudy()
+		if(params.id){
+			degreeStudy = DegreeStudy.get(params.id)
+		}else{
+			degreeStudy.user = currentUser
+		}
+		
+		model["company"] = company
+		model["degreeStudy"] = degreeStudy
+		
+		FieldAcl fa = new FieldAcl()
+		if("normal".equals(user.getUserType())){
+
+		}
+		model["fieldAcl"] = fa
+		
+		render(view:'/train/degreeStudy',model:model)
+	}
+	
+	/**
+	 * 保存
+	 */
+	def degreeStudySave ={
+		def json=[:]
+		def degreeStudy = new DegreeStudy()
+		def currentUser = springSecurityService.getCurrentUser()
+		if(params.id && !"".equals(params.id)){
+			degreeStudy = DegreeStudy.get(params.id)
+		}else{
+			if(params.companyId){
+				degreeStudy.company = Company.get(params.companyId)
+			}
+			degreeStudy.user = currentUser
+			
+			degreeStudy.startDate = Util.convertToTimestamp(params.startDate)
+			degreeStudy.endDate = Util.convertToTimestamp(params.endDate)
+		}
+		degreeStudy.properties = params
+		degreeStudy.clearErrors()
+		
+		if(degreeStudy.save(flush:true)){
+			json["result"] = "true"
+		}else{
+			degreeStudy.errors.each{
+				println it
+			}
+			json["result"] = "false"
+		}
+		render json as JSON
+	}
+	
+	/**
+	 * 删除
+	 */
+	def degreeStudyDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def degreeStudy = DegreeStudy.get(it)
+				if(degreeStudy){
+					degreeStudy.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
     
 }

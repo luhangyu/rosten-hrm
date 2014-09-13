@@ -103,25 +103,25 @@ class HrmController {
 			
 			model.save()
 			
-			model = new Model(company:company)
-			model.modelName = "人才培养"
-			model.modelUrl = path + "/system/navigation"
-			model.modelCode = "staffDevelop"
-			model.serialNo = 7
-			
-			resource = new Resource()
-			resource.resourceName = "学历学位进修"
-			resource.url = "degreeStudy"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
-			
-			resource = new Resource()
-			resource.resourceName = "出国进修"
-			resource.url = "forgeinStudy"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
-			
-			model.save()
+//			model = new Model(company:company)
+//			model.modelName = "人才培养"
+//			model.modelUrl = path + "/system/navigation"
+//			model.modelCode = "staffDevelop"
+//			model.serialNo = 7
+//			
+//			resource = new Resource()
+//			resource.resourceName = "学历学位进修"
+//			resource.url = "degreeStudy"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
+//			
+//			resource = new Resource()
+//			resource.resourceName = "出国进修"
+//			resource.url = "forgeinStudy"
+//			resource.imgUrl = "images/rosten/navigation/rosten.png"
+//			model.addToResources(resource)
+//			
+//			model.save()
 			
 			model = new Model(company:company)
 			model.modelName = "合同管理"
@@ -196,7 +196,7 @@ class HrmController {
 			model.save()
 			
 			model = new Model(company:company)
-			model.modelName = "培训管理"
+			model.modelName = "人才培养"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "trainManage"
 			model.serialNo = 11
@@ -210,6 +210,18 @@ class HrmController {
 			resource = new Resource()
 			resource.resourceName = "培训管理"
 			resource.url = "trainMessage"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "学历学位进修"
+			resource.url = "degreeStudy"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "出国进修"
+			resource.url = "forgeinStudy"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			model.addToResources(resource)
 			
