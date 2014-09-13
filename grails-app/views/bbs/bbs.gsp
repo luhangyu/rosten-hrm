@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>公告栏</title>
+    <title>通知公告</title>
     <style type="text/css">
 		body{
 			overflow:auto;
@@ -51,43 +51,18 @@
 					</g:if>
 				});
 				
-			bbs_add = function(){
-				var level = registry.byId("level");
-				if(!level.isValid()){
-					rosten.alert("紧急程度不正确！").queryDlgClose = function(){
-						level.focus();
-					};
-					return;
-				}
-				var category = registry.byId("category");
-				if(!category.isValid()){
-					rosten.alert("类别不正确！").queryDlgClose = function(){
-						category.focus();
-					};
-					return;
-				}
-				var publishDate = registry.byId("publishDate");
-				if(!publishDate.isValid()){
-					rosten.alert("发布时间不正确！").queryDlgClose = function(){
-						publishDate.focus();
-					};
-					return;
-				}
-				var topic = registry.byId("topic");
-				if(!topic.isValid()){
-					rosten.alert("标题不正确！").queryDlgClose = function(){
-						topic.focus();
-					};
-					return;
-				}
+			bbs_add = function(object){
+				var chenkids = ["level","category","publishDate","topic"];
+				if(!rosten.checkData(chenkids)) return;
+				
 				var content = {};
-				content.level = level.attr("value");
-				content.category = category.attr("value");
+				var publishDate = registry.byId("publishDate");
 				content.publishDate = datestamp.toISOString(publishDate.attr("value"),{selector: "date"});
-				content.topic = topic.attr("value");
-				content.content = registry.byId("content").attr("value");
-				content.companyId = "${company?.id }";
-				content.id = registry.byId("id").attr("value");
+				content.content = registry.byId("content").get("value");
+
+				//增加对多次单击的次数----2014-9-4
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
 				
 				rosten.readSync(rosten.webPath + "/bbs/bbsSave",content,function(data){
 					if(data.result=="true" || data.result == true){
@@ -97,44 +72,49 @@
 							}else{
 								window.location.reload();
 							}
-							
-							/*
-							//刷新当前操作条信息以及表单隐藏字段信息以及流水号信息
-							if(data.serialNo){
-								registry.byId("serialNo").set("value",data.serialNo);
-							}
-							var actionBar = registry.byId("rosten_actionBar");
-							if(actionBar.actionBarSrc.indexOf(data.id)!=-1){
-								actionBar.refresh(actionBar.actionBarSrc);
-							}else{
-								actionBar.refresh(actionBar.actionBarSrc + "&id=" + data.id);
-								
-							}
-							var bbsFlowLog = registry.byId("bbsFlowLog");
-							if(bbsFlowLog.get("href").indexOf(data.id)==-1){
-								bbsFlowLog.set("href",bbsFlowLog.get("href") + "/" + data.id)
-							}
-
-							var bbsComment = registry.byId("bbsComment");
-							if(bbsComment.get("href").indexOf(data.id)==-1){
-								bbsComment.set("href",bbsComment.get("href") + "/" + data.id)
-							}
-							
-							registry.byId("id").attr("value",data.id);
-							registry.byId("companyId").attr("value",data.companyId);	
-
-							*/						
-
 						};
 					}else if(data.result=="noConfig"){
 						rosten.alert("系统不存在配置文档，请通知管理员！");
 					}else{
 						rosten.alert("保存失败!");
 					}
+					rosten.toggleAction(buttonWidget,false);
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				},"rosten_form");
+			};
+			bbs_back = function(object){
+				//增加对多次单击的次数----2014-9-4
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
+				
+				var content = {};
+				rosten.readSync("${createLink(controller:'bbs',action:'bbsFlowBack',params:[id:bbs?.id])}",content,function(data){
+					if(data.result=="true" || data.result == true){
+						rosten.alert("成功！").queryDlgClose= function(){
+							//刷新首页bbs内容
+							window.opener.showStartBbs("${user?.id}","${company?.id }");
+							//刷新待办事项内容
+							window.opener.showStartGtask("${user?.id}","${company?.id }");
+							
+							if(data.refresh=="true" || data.refresh==true){
+								window.location.reload();
+							}else{
+								rosten.pagequit();
+							}
+						}
+					}else{
+						rosten.alert("失败!");
+						rosten.toggleAction(buttonWidget,false);
+					}
+					
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
 				});
 			};
-			
-			bbs_deal = function(type,readArray){
+			bbs_deal = function(type,readArray,buttonWidget){
 				var content = {};
 				content.id = registry.byId("id").attr("value");
 				content.deal = type;
@@ -157,52 +137,28 @@
 						}
 					}else{
 						rosten.alert("失败!");
+						rosten.toggleAction(buttonWidget,false);
 					}	
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
 				});
 			};
-			bbs_submit = function(){
-				var content = {};
-				rosten.readSync("${createLink(controller:'bbs',action:'getSelectFlowUser',params:[companyId:company?.id,id:bbs?.id])}",content,function(data){
-					
-					if(data.dealFlow==false){
-						//流程无下一节点
-						bbs_deal("submit");
-						return;
-					}
-
-					var url = "${createLink(controller:'bbs',action:'getDealWithUser',params:[companyId:company?.id,id:bbs?.id])}";
-					if(data.dealType=="user"){
-						//人员处理
-						if(data.showDialog==false){
-							//单一处理人
-							var _data = [];
-							_data.push(data.userId + ":" + data.userDepart);
-							bbs_deal("submit",_data);
-						}else{
-							//多人，多部门处理
-							url += "&type=user&user=" + data.user;
-							bbs_submit_select(url);
-						}
-					}else{
-						//群组处理
-						url += "&type=group&groupIds=" + data.groupIds;
-						if(data.limitDepart){
-							url += "&limitDepart="+data.limitDepart;
-						}
-						bbs_submit_select(url);
-					}
-				});
-			};
-			bbs_submit_select = function(url){
+			bbs_submit_select = function(url,buttonWidget){
 				var rostenShowDialog = rosten.selectFlowUser(url,"single");
 	            rostenShowDialog.callback = function(data) {
-	            	var _data = [];
-	            	for (var k = 0; k < data.length; k++) {
-	            		var item = data[k];
-	            		_data.push(item.value + ":" + item.departId);
-	            	};
-	            	bbs_deal("submit",_data);	
-	            }
+	            	if(data.length==0){
+		            	rosten.alert("请正确选择人员！");
+	            		rosten.toggleAction(buttonWidget,false);
+		            }else{
+		            	var _data = [];
+		            	for (var k = 0; k < data.length; k++) {
+		            		var item = data[k];
+		            		_data.push(item.value + ":" + item.departId);
+		            	};
+		            	bbs_deal("submit",_data,buttonWidget);
+		            }
+	            };
 				rostenShowDialog.afterLoad = function(){
 					var _data = rostenShowDialog.getData();
 		            if(_data && _data.length==1){
@@ -212,7 +168,51 @@
 						//显示对话框
 						rostenShowDialog.open();
 				    }
-				}
+				};
+				rostenShowDialog.queryDlgClose = function(){
+					rosten.toggleAction(buttonWidget,false);
+				};	
+			};
+			bbs_submit = function(object){
+				//从后台获取下一处理人
+				
+				//增加对多次单击的次数----2014-9-4
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
+				
+				var content = {};
+				rosten.readSync("${createLink(controller:'bbs',action:'getSelectFlowUser',params:[companyId:company?.id,id:bbs?.id])}",content,function(data){
+					if(data.dealFlow==false){
+						//流程无下一节点
+						bbs_deal("submit",null,buttonWidget);
+						return;
+					}
+					var url = "${createLink(controller:'system',action:'userTreeDataStore',params:[companyId:company?.id])}";
+					if(data.dealType=="user"){
+						//人员处理
+						if(data.showDialog==false){
+							//单一处理人
+							var _data = [];
+							_data.push(data.userId + ":" + data.userDepart);
+							bbs_deal("submit",_data,buttonWidget);
+						}else{
+							//多人，多部门处理
+							url += "&type=user&user=" + data.user;
+							bbs_submit_select(url,buttonWidget);
+						}
+					}else{
+						//群组处理
+						url += "&type=group&groupIds=" + data.groupIds;
+						if(data.limitDepart){
+							url += "&limitDepart="+data.limitDepart;
+						}
+						bbs_submit_select(encodeURI(url),buttonWidget);
+					}
+
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				});
 			};
 			bbs_addComment = function(){
 				var bbsId = registry.byId("id").get("value");
@@ -240,7 +240,7 @@
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'bbsAction',action:'bbsForm',id:bbs?.id,params:[userid:user?.id])}"'></div>
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
+	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"590px"}'>
         	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="padding:0px">
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${bbs?.id }"' />
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
@@ -252,8 +252,7 @@
 						    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>流水号：</div></td>
 						    <td width="250">
 						    	<input id="serialNo" data-dojo-type="dijit/form/ValidationTextBox" 
-				                 	data-dojo-props='name:"serialNo",readOnly:true,
-				                 		trim:true,placeHolder:"领导发布后自动生成",
+				                 	data-dojo-props='readOnly:true,trim:true,placeHolder:"领导发布后自动生成",
 										value:"${bbs?.serialNo}"
 				                '/>
 						    </td>

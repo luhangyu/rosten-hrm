@@ -27,7 +27,7 @@ class BbsActionController {
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
-						actionList << createAction("不同意",webPath +imgPath + "back.png",strname + "_submit")
+						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					case bbs.status.contains("已发布"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
@@ -48,7 +48,7 @@ class BbsActionController {
 				
 			}
 		}else{
-			//新建公告
+			//新增公告
 			actionList << createAction("保存",webPath + imgPath + "Save.gif","bbs_add")
 		}
 		render actionList as JSON
@@ -93,7 +93,7 @@ class BbsActionController {
 		def actionList =[]
 		def strname = "bbs"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("新建公告",imgPath + "add.png","add_"+ strname)
+		actionList << createAction("新增公告",imgPath + "add.png","add_"+ strname)
 		actionList << createAction("查看公告",imgPath + "read.gif","read_" + strname)
 		
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")

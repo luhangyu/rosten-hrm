@@ -28,6 +28,12 @@ class BbsController {
 	def taskService
 	def systemService
 	
+	
+	def bbsSearchView ={
+		def model =[:]
+		render(view:'/bbs/bbsSearch',model:model)
+	}
+	
 	def getFileUpload ={
 		def model =[:]
 		model["docEntity"] = "bbs"
@@ -179,7 +185,12 @@ class BbsController {
 					eq("id",user?.id)
 				}
 			}
-			eq("status","已发布")
+			or{
+				eq("status","已发布")
+				eq("status","已归档")
+				eq("status","已结束")
+			}
+			
 			order("publishDate", "desc")
 		}
 		
@@ -228,21 +239,9 @@ class BbsController {
 		response.outputStream.close()
 		
 	}
-	def getDealWithUser ={
-		if("user".equals(params.type)){
-			//选择人员，默认获取选择人员人数为大于一人，params中必须具备参数params.user：用户登录名
-			redirect controller: "system",action:'userTreeDataStore', params: params
-			return
-		}else if("group".equals(params.type)){
-			/*
-			 * 通过群组选择人员
-			 * 默认有一组group的方式为true，则整组均为true;true:严格控制本部门权限
-			 * 参数格式为：params.groupIds(depart-leader),params.limitDepart
-			 */
-			redirect controller: "system",action:'userTreeDataStore', params: params
-			return
-		}
-	}
+	/*
+	 * 获取下个处理人员----2014-9-2
+	 */
 	def getSelectFlowUser ={
 		def json=[:]
 		json.dealFlow = true
@@ -259,19 +258,21 @@ class BbsController {
 			return
 		}
 		
+		//存在处理人员的情况
 		def expEntity = defEntity.getAssigneeExpression()
 		if(expEntity){
 			def expEntityText = expEntity.getExpressionText()
 			if(expEntityText.contains("{")){
-				params.user = bbs.drafter.username
+				json.user = bbs.drafter.username
 			}else{
-				params.user = expEntity.getExpressionText()
+				json.user = expEntity.getExpressionText()
 			}
 			
 			//判断下一处理人是否有多部门情况，如果有，则弹出对话框选择，如果没有，直接进入下一步
 			def userEntity = User.findByUsername(json.user)
 			def userDeparts = userEntity.getAllDepartEntity()
 			if(userDeparts && userDeparts.size()>1){
+				//一个人存在多个部门的情况，这种情况比较少
 				json.showDialog = true
 			}else{
 				json.showDialog = false
@@ -284,6 +285,7 @@ class BbsController {
 			return
 		}
 		
+		//处理部门群组的情况
 		def groupEntity = defEntity.getCandidateGroupIdExpressions()
 		if(groupEntity.size()>0){
 			//默认有一组group的方式为true，则整组均为true;true:严格控制本部门权限
@@ -306,6 +308,99 @@ class BbsController {
 		}
 		
 	}
+	def bbsFlowBack ={
+		def json=[:]
+		def bbs = Bbs.get(params.id)
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = bbs.status
+		
+		try{
+			//获取上一处理任务
+			def frontTaskList = workFlowService.findBackAvtivity(bbs.taskId)
+			if(frontTaskList && frontTaskList.size()>0){
+				//简单的取最近的一个节点
+				def activityEntity = frontTaskList[frontTaskList.size()-1]
+				def activityId = activityEntity.getId();
+				
+				//流程跳转
+				workFlowService.backProcess(bbs.taskId, activityId, null)
+				
+				//获取下一节点任务，目前处理串行情况
+				def nextStatus
+				def tasks = workFlowService.getTasksByFlow(bbs.processInstanceId)
+				def task = tasks[0]
+				if(task.getDescription() && !"".equals(task.getDescription())){
+					nextStatus = task.getDescription()
+				}else{
+					nextStatus = task.getName()
+				}
+				bbs.taskId = task.getId()
+				
+				//获取对应节点的处理人员以及相关状态
+				def historyActivity = workFlowService.getHistrotyActivityByActivity(bbs.taskId,activityId)
+				def user = User.findByUsername(historyActivity.getAssignee())
+				
+				/*
+				def taskEntity = workFlowService.getTaskEntityByActivity(activityEntity)
+				def nextStatus = historyActivity.getActivityName()
+				
+				*/
+				
+				//任务指派给当前拟稿人
+				taskService.claim(bbs.taskId, user.username)
+				
+				//增加待办事项
+				def args = [:]
+				args["type"] = "【公告】"
+				args["content"] = "名称为  【" + bbs.topic +  "】 的公告被退回，请查看！"
+				args["contentStatus"] = nextStatus
+				args["contentId"] = bbs.id
+				args["user"] = user
+				args["company"] = user.company
+				
+				startService.addGtask(args)
+					
+				//修改当前公告信息
+				bbs.currentUser = user
+				bbs.currentDepart = user.getDepartName()
+				bbs.currentDealDate = new Date()
+				bbs.status = nextStatus
+				
+				//判断下一处理人是否与当前处理人员为同一人
+				if(currentUser.equals(bbs.currentUser)){
+					json["refresh"] = true
+				}
+				
+				//----------------------------------------------------------------------------------------------------
+				
+				//修改代办事项状态
+				def gtask = Gtask.findWhere(
+					user:currentUser,
+					company:currentUser.company,
+					contentId:bbs.id,
+					contentStatus:frontStatus,
+					status:"0"
+				)
+				if(gtask!=null){
+					gtask.dealDate = new Date()
+					gtask.status = "1"
+					gtask.save(flush:true)
+				}
+				
+				bbs.save(flush:true)
+				
+				//添加日志
+				def logContent = "退回【" + user.getFormattedName() + "】"
+				
+				bbsService.addFlowLog(bbs,currentUser,logContent)
+			}
+				
+			json["result"] = true
+		}catch(Exception e){
+			json["result"] = false
+		}
+		render json as JSON
+	}
 	def bbsFlowDeal = {
 		def json=[:]
 		
@@ -327,7 +422,7 @@ class BbsController {
 		ProcessInstance processInstance = workFlowService.getProcessIntance(bbs.processInstanceId)
 		if(!processInstance || processInstance.isEnded()){
 			//流程已结束
-			nextStatus = "已归档"
+			nextStatus = "已结束"
 			bbs.currentUser = null
 			bbs.currentDepart = null
 			bbs.taskId = null
@@ -369,7 +464,7 @@ class BbsController {
 					def args = [:]
 					args["type"] = "【公告】"
 					args["content"] = "请您审核名称为  【" + bbs.topic +  "】 的公告"
-					args["contentStatus"] = bbs.status
+					args["contentStatus"] = nextStatus
 					args["contentId"] = bbs.id
 					args["user"] = nextUser
 					args["company"] = nextUser.company
@@ -403,16 +498,18 @@ class BbsController {
 			user:currentUser,
 			company:currentUser.company,
 			contentId:bbs.id,
-			contentStatus:frontStatus
+			contentStatus:frontStatus,
+			status:"0"
 		)
 		if(gtask!=null){
 			gtask.dealDate = new Date()
 			gtask.status = "1"
-			gtask.save()
+			gtask.save(flush:true)
 		}
 		
 		//当前文档特殊字段处理
-		if(nextStatus.equals("已发布")){
+		def isPublish = false	//判断是否发布公告，此状态只存在状态为已结束的情况
+		if((nextStatus.equals("已发布") || nextStatus.equals("已结束")) && bbs.serialNo==null){
 			bbs.publisher = currentUser
 			bbs.publisherDepart = currentUser.getDepartName()
 			
@@ -420,19 +517,27 @@ class BbsController {
 			bbs.addDefaultReader("all")
 			
 			bbs.serialNo = bbsConfig.nowYear + bbsConfig.nowSN.toString().padLeft(4,"0")
+			
+			//修改配置文档中的流水号
+			bbsConfig.nowSN += 1
+			bbsConfig.save()
+			
+			isPublish = true
 		}
 		
 		if(bbs.save(flush:true)){
 			//添加日志
 			def logContent
 			switch (true){
-				case bbs.status.contains("已签发"):
-					logContent = "签发文件【" + nextUsers.join("、") + "】"
-					
-					//修改配置文档中的流水号
-					bbsConfig.nowSN += 1
-					bbsConfig.save(flush:true)
-					
+				case bbs.status.contains("已发布"):
+					logContent = "发布公告【" + nextUsers.join("、") + "】"
+					break
+				case bbs.status.contains("已结束"):
+					if(isPublish){
+						logContent = "发布公告"
+					}else{
+						logContent = "结束流程"
+					}
 					break
 				case bbs.status.contains("归档"):
 					logContent = "归档"
@@ -494,6 +599,8 @@ class BbsController {
 			bbs = Bbs.get(params.id)
 			bbs.properties = params
 			bbs.clearErrors()
+			bbs.publishDate = Util.convertToTimestamp(params.publishDate)
+			
 			bbsStatus = "old"
 		}else{
 			bbs = new Bbs()
@@ -670,6 +777,13 @@ class BbsController {
 			json["gridHeader"] = bbsService.getBbsListLayout()
 		}
 		
+		//2014-9-1 增加搜索功能
+		def searchArgs =[:]
+		
+		if(params.serialNo && !"".equals(params.serialNo)) searchArgs["serialNo"] = params.serialNo
+		if(params.topic && !"".equals(params.topic)) searchArgs["topic"] = params.topic
+		if(params.status && !"".equals(params.status)) searchArgs["status"] = params.status
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -683,15 +797,15 @@ class BbsController {
 			if("person".equals(params.type)){
 				//个人待办
 				args["user"] = user
-				gridData = bbsService.getBbsListDataStoreByUser(args)
+				gridData = bbsService.getBbsListDataStoreByUser(args,searchArgs)
 			}else if("all".equals(params.type)){
 				//所有文档
-				gridData = bbsService.getBbsListDataStore(args)
+				gridData = bbsService.getBbsListDataStore(args,searchArgs)
 			}else if("new".equals(params.type)){
 				//最新文档
 				args["user"] = user
 				args["showDays"] = bbsConfig.showDays;
-				gridData = bbsService.getBbsListDataStoreByNew(args)
+				gridData = bbsService.getBbsListDataStoreByNew(args,searchArgs)
 			}
 			
 			//处理format中的内容
@@ -717,13 +831,13 @@ class BbsController {
 			def total
 			if("person".equals(params.type)){
 				//个人待办
-				total = bbsService.getBbsCountByUser(company,user)
+				total = bbsService.getBbsCountByUser(company,user,searchArgs)
 			}else if("all".equals(params.type)){
 				//所有文档
-				total = bbsService.getBbsCount(company)
+				total = bbsService.getBbsCount(company,searchArgs)
 			}else if("new".equals(params.type)){
 				//最新文档
-				total = bbsService.getBbsCountByNew(company,user,bbsConfig.showDays)
+				total = bbsService.getBbsCountByNew(company,user,bbsConfig.showDays,searchArgs)
 			}
 			json["pageControl"] = ["total":total.toString()]
 		}
@@ -750,7 +864,7 @@ class BbsController {
 		FieldAcl fa = new FieldAcl()
 		if("normal".equals(user.getUserType())){
 			//普通用户
-			fa.readOnly = ["nowYear","nowSN","nowCancel","frontYear","frontSN","frontCancel"]
+			//fa.readOnly = ["nowYear","nowSN","nowCancel","frontYear","frontSN","frontCancel"]
 		}else{
 //			fa.readOnly = ["nowCancel","frontCancel"]
 		}

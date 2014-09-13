@@ -6,6 +6,45 @@ define([ "dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/k
 	
 	var general = new General();
 	
+	bbs_search = function(){
+		var content = {};
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			var serialNo = registry.byId("s_serialno");
+			if(serialNo.get("value")!=""){
+				content.serialNo = serialNo.get("value");
+			}
+			
+			var topic = registry.byId("s_topic");
+			if(topic.get("value")!=""){
+				content.topic = topic.get("value");
+			}
+			
+			var status = registry.byId("s_status");
+			if(status.get("value")!=""){
+				content.status = status.get("value");
+			}
+			break;
+		}
+
+//		var count = Object.keys(content).length
+//		if(count==0) return ;
+		
+		rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+	};
+	bbs_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("s_serialno").set("value","");
+			registry.byId("s_topic").set("value","");
+			registry.byId("s_status").set("value","");
+			break;
+		}	
+		
+		rosten.kernel.refreshGrid();
+	};
+	
 	bbs_changeStatus = function(){
 			
 			
@@ -63,7 +102,7 @@ define([ "dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/k
 				return;
 			var content = {};
 			content.id = unids;
-			rosten.read(rosten.webPath + "/bbs/bbsDelete", content,
+			rosten.readNoTime(rosten.webPath + "/bbs/bbsDelete", content,
 					rosten.deleteCallback);
 		};
 	};
@@ -81,6 +120,7 @@ define([ "dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/k
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/bbsAction/allbbsView?userId=" + userid,
+				searchSrc:rosten.webPath + "/bbs/bbsSearchView",
 				gridSrc : rosten.webPath + "/bbs/bbsGrid?companyId=" + companyId + "&userId=" + userid + "&type=all"
 			};
 			rosten.kernel.addRightContent(naviJson);
@@ -89,6 +129,7 @@ define([ "dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/k
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/bbsAction/newbbsView",
+				searchSrc:rosten.webPath + "/bbs/bbsSearchView",
 				gridSrc : rosten.webPath + "/bbs/bbsGrid?companyId=" + companyId + "&userId=" + userid + "&type=new"
 			};
 			rosten.kernel.addRightContent(naviJson);
@@ -97,6 +138,7 @@ define([ "dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/k
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/bbsAction/bbsView",
+				searchSrc:rosten.webPath + "/bbs/bbsSearchView",
 				gridSrc : rosten.webPath + "/bbs/bbsGrid?companyId=" + companyId + "&userId=" + userid + "&type=person"
 			};
 			rosten.kernel.addRightContent(naviJson);

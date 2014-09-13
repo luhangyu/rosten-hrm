@@ -174,6 +174,9 @@ class Bbs {
 		attachment nullable:true,blank:true
 		defaultReaders nullable:true,blank:true
 		
+		currentUser nullable:true,blank:true
+		currentDepart nullable:true,blank:true
+		
 		processInstanceId nullable:true,blank:true
 		taskId nullable:true,blank:true
 		processDefinitionId nullable:true,blank:true
@@ -184,13 +187,14 @@ class Bbs {
 		content sqlType:"longtext"
 	}
 	def beforeDelete(){
-		Bbs.withNewSession{
+		Bbs.withNewSession{session ->
 			BbsComment.findAllByBbs(this).each{item->
-				item.delete(flush:true)
+				item.delete()
 			}
 			BbsLog.findAllByBbs(this).each{item->
-				item.delete(flush:true)
+				item.delete()
 			}
+			session.flush()
 		}
 		
 	}

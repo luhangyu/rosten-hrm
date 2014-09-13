@@ -82,7 +82,7 @@
 </div>
 <div style="text-Align:center">
 	
-<g:form id="bbsConfig_form" name="bbsConfig_form" url='[controller:"bbs",action:"bbsConfigSave"]' onsubmit="return false;" class="rosten_form" style="text-align:left">
+<g:form id="bbsConfig_form" name="bbsConfig_form" url='[controller:"bbs",action:"bbsConfigSave"]' onsubmit="return false;" class="rosten_form" style="text-align:left;margin:10px">
 	<fieldset class="fieldset-form">
 	<legend class="tableHeader">配置文档</legend>
 		<input id="id" data-dojo-type="dijit/form/ValidationTextBox"  data-dojo-props='name:"id",style:{display:"none"},value:"${bbsConfig?.id }"' />
@@ -93,8 +93,8 @@
 			    <td width="240">
 			    	<input id="nowYear" data-dojo-type="dijit/form/ValidationTextBox" 
 	                 	data-dojo-props='name:"nowYear",${fieldAcl.isReadOnly("nowYear")},
-	                 		trim:true,
 	                 		"class":"input",
+	                 		trim:true,
 	                 		required:true,
 							value:"${bbsConfig?.nowYear}"
 	                '/>
@@ -128,9 +128,9 @@
 			    <td>
 			    	<input id="frontYear" data-dojo-type="dijit/form/ValidationTextBox" 
 	                 	data-dojo-props='name:"frontYear",${fieldAcl.isReadOnly("frontYear")},
+	                 		"class":"input",
 	                 		trim:true,
 	                 		required:true,
-	                 		"class":"input",
 							value:"${bbsConfig?.frontYear}"
 	                '/>
 			    </td>
