@@ -1,5 +1,5 @@
 define(["dojo/_base/declare","dojo/_base/kernel","dojo/_base/lang","dojo/_base/xhr","dojo/dom-style","dijit/_WidgetBase","dijit/_TemplatedMixin","dijit/form/Button","dijit/Toolbar","dojo/_base/connect","rosten/util/general","rosten/kernel/_kernel"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c){
-return _1("rosten.widget.ActionBar",[_6,_7],{id:"",actionBarSrc:"",actionTextHeight:12,templateString:"<div data-dojo-attach-point=\"containerNode\" class=\"ActionBarOuter\">actionBar is Loading...</div>",constructor:function(){
+return _1("rosten.widget.ActionBar",[_6,_7],{id:"",actionBarSrc:"",actionTextHeight:12,templateString:"<div data-dojo-attach-point=\"containerNode\" class=\"ActionBarOuter\">actionBar is Loading...</div>",connectArray:[],constructor:function(){
 },postCreate:function(){
 this.id=this.id!=""?this.id:this.widgetId;
 this.containerNode.innerHTML="";
@@ -28,6 +28,8 @@ this.onDownloadError(_11);
 })};
 _4.get(_f);
 },onDownloadError:function(_12){
+},destroyConnect:function(){
+_2.forEach(this.connectArray,_a.disconnect);
 },_setListData:function(_13){
 for(var i=0;i<_13.length;i++){
 var _14=_13[i];
@@ -35,9 +37,9 @@ var _15=new _8({label:_14.name,iconClass:"actionBarIcon"});
 _5.set(_15.domNode,"fontSize",this.actionTextHeight+"px");
 _5.set(_15.iconNode,{backgroundImage:"url('"+(_14.img)+"')"});
 if(_14.action.indexOf(".")!=-1){
-_a.connect(_15,"onClick",rosten,_b.stringRight(_14.action,"."));
+this.connectArray.push(_a.connect(_15,"onClick",rosten,_b.stringRight(_14.action,".")));
 }else{
-_a.connect(_15,"onClick",_14.action);
+this.connectArray.push(_a.connect(_15,"onClick",_14.action));
 }
 this.toolBar.addChild(_15);
 }

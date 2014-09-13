@@ -35,6 +35,13 @@ define(["dojo/_base/kernel"
 	//-------------------------------------------
 	
 	var main = {};
+	main.getGridSelectedValue = function(ostr){
+	    var rostenGrid = rosten.kernel.getGrid();
+	    var selectitems = rostenGrid.getSelected();
+	    var item = selectitems[0];
+	    var gridStore = rostenGrid.getStore();
+	    return gridStore.getValue(item, ostr);
+	};
 	main._getGridUnid = function(rostenGrid,type){
 		/*
 		 * type:single ---单个
@@ -87,7 +94,7 @@ define(["dojo/_base/kernel"
         }
         rosten.replaceRostenTheme(rostencss);
 
-        connect.subscribe("loadjsfile", null, function(oString) {
+        connect.subscribe("loadjsfile", null, function(obj) {
         	domStyle.set(registry.byId("home").domNode,"display","none");
     		domStyle.set(registry.byId("modelMain").domNode,"display","");
     		registry.byId("modelMain").resize();
@@ -95,6 +102,9 @@ define(["dojo/_base/kernel"
             /*
              * 用于加载对应的js文件,此方法在后续开发过程中需要修改
              */
+    		var oString = obj.naviMenu;
+    		var oRight = "";
+    		if(obj.naviRight) oRight = obj.naviRight;
             console.log("loadjs file is :" + oString);
             
             switch(oString){
@@ -104,52 +114,52 @@ define(["dojo/_base/kernel"
              		if(oString=="plat"){
              			show_naviEntity("companyManage");
              		}else{
-             			returnToMain();
+             			show_naviEntity(oRight);
              		}
              	});
         		break;
         		
         	case "trainManage":
         		require(["rosten/app/TrainManage"],function(){
-        			show_naviEntity("trainCourse");
+        			show_naviEntity(oRight);
             	});
         		break;
         	
         	case "bbs":
         		require(["rosten/app/BbsManage"],function(){
             		if(rosten.variable.showStartBbs==undefined || rosten.variable.showStartBbs!=true){
-            			show_naviEntity("mybbsManage");
+            			show_naviEntity(oRight);
             		}
             	});
         		break;
         	case "personconfig":
         		require(["rosten/app/SmsManage"],function(){
-        			show_naviEntity("personInformation");
+        			show_naviEntity(oRight);
                 });
         		break;	
         	case "workflow":
         		require(["rosten/app/WorkFlowManage"],function(){
-        			show_naviEntity("flowDefinedManage");
+        			show_naviEntity(oRight);
             	});
         		break;	
         	case "public":
         		require(["rosten/app/PublicManage"],function(){
-        			show_naviEntity("downloadFileManage");
+        			show_naviEntity(oRight);
             	});
         		break;	
         	case "workAttendance":
         		require(["rosten/app/WorkAttendance"],function(){
-        			show_naviEntity("staffAskFor");
+        			show_naviEntity(oRight);
             	});
         		break;
 			case "staffManage":
 				require(["rosten/app/SystemManage","rosten/app/StaffManage"],function(){
-					show_naviEntity("newStaffAdd");
+					show_naviEntity(oRight);
                 });
 				break;
         	case "static":
         		require(["rosten/app/StaticManage"],function(){
-        			show_naviEntity("static");
+        			show_naviEntity(oRight);
             	});
         		break;
         	default:
@@ -193,7 +203,8 @@ define(["dojo/_base/kernel"
 		rosten.kernel.addUserInfo(data);
 		
 		//增加页面失效控制
-		rosten.kernel.onDownloadError(refreshSystem);
+		rosten.kernel.onDownloadError = function(){
+		};
 		
 		//获取首页显示信息
 		showStartInformation(userId,companyId);
@@ -703,6 +714,16 @@ define(["dojo/_base/kernel"
             rosten.kernel.refreshGrid();
         } else {
             rosten.alert("删除失败!");
+        }
+    };
+    main.commonCallback = function(data){
+		var sucessStr = "成功!";
+		var failureStr = "失败!";
+    	if (data.result == "true" || data.result == true) {
+            rosten.alert(sucessStr);
+            rosten.kernel.refreshGrid();
+        } else {
+            rosten.alert(failureStr);
         }
     };
     lang.mixin(rosten,main);

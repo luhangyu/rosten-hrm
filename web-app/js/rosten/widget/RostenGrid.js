@@ -1,5 +1,5 @@
 define(["dojo/_base/declare","dojo/_base/kernel","dojo/_base/lang","dojo/_base/xhr","dojo/dom-style","dojo/dom-class","dojo/data/ItemFileWriteStore","dojo/_base/connect","dojo/number","dijit/_WidgetBase","dijit/_TemplatedMixin","dojo/text!./templates/RostenGrid.html","dijit/form/TextBox","dojox/collections/SortedList","dojox/grid/_CheckBoxSelector","dojox/grid/DataGrid","rosten/kernel/_kernel","rosten/kernel/behavior","rosten/util/gen-dialog","rosten/util/general"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f,_10,_11,_12,_13,_14){
-return _1("rosten.widget.RostenGrid",[_a,_b],{templateString:_c,id:"",url:"",defaultUrl:"",urlContent:null,store:null,structure:null,grid:null,query:"",sortStatus:false,showRowSelector:"false",rowSelector:"20px",gridHeight:-1,autoGridRow:-1,pageSize:15,showPageControl:true,emptymsg:"目前暂无数据！",pageControl:{page:1,total:0,totalpages:0,start:0,count:0},_gridUtil:null,constructor:function(){
+return _1("rosten.widget.RostenGrid",[_a,_b],{templateString:_c,id:"",url:"",defaultUrl:"",urlContent:null,store:null,structure:null,grid:null,query:"",sortStatus:false,showRowSelector:"false",rowSelector:"20px",gridHeight:-1,autoGridRow:-1,pageSize:15,showPageControl:true,emptymsg:"目前暂无数据！",pageControl:{page:1,total:0,totalpages:0,start:0,count:0},connectArray:[],_gridUtil:null,constructor:function(){
 this.refreshHeader=true;
 this.refreshPageControl=true;
 this.refreshData=true;
@@ -82,7 +82,6 @@ var _1b={url:this.url,handleAs:"json",preventCache:true,content:_19,encoding:"ut
 this._parseData(_1c);
 _8.publish("closeUnderlay",[this]);
 }),error:_3.hitch(this,function(_1e,_1f){
-this._closeLoading();
 _11.errordeal(this.containerNode,"无法初始化表格内容数据...");
 this.onDownloadError(_1e);
 })};
@@ -155,14 +154,15 @@ _29.autoHeight=this.autoGridRow;
 }
 this.grid=new _10(_29,this._gridNode);
 this.grid.startup();
-_8.connect(this.grid,"onRowDblClick",this,"onRowDblClick");
-_8.connect(this.grid,"onCellClick",this,"onCellClick");
+this.connectArray.push(_8.connect(this.grid,"onRowDblClick",this,"onRowDblClick"));
+this.connectArray.push(_8.connect(this.grid,"onCellClick",this,"onCellClick"));
 }else{
 this.grid.setStore(this.store);
 this.grid.selection.clear();
-this._closeLoading();
 this.resize();
 }
+},destroyConnect:function(){
+_2.forEach(this.connectArray,_8.disconnect);
 },_openLoading:function(){
 _5.set(this._gridData,"display","none");
 if(this._gridUtil==null){

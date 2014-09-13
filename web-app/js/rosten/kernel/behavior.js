@@ -53,6 +53,12 @@ return _7.sys_alertDialog;
 _e.getStoreItem=function(_17,_18,_19){
 _17.fetch({query:_18,queryOptions:{deep:true},onComplete:_19});
 };
+_e.toggleAction=function(obj,_1a){
+var _1b=_6.getEnclosingWidget(obj);
+if(_1b){
+_1b.set("disabled",_1a);
+}
+};
 _5.mixin(_7,_e);
 return _e;
 });

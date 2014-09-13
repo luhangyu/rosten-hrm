@@ -84,10 +84,6 @@ td.errors textarea {
 	vertical-align:middle;
 }
 
-.rosten .tableBackGround{
-	background: url(../images/header_menu_bg.png) repeat-x;
-}
-
 /*
  * 界面侧边栏样式
  * dojo1.4.0样式隐藏

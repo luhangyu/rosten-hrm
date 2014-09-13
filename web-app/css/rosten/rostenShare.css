@@ -396,6 +396,20 @@ a.jh-today { background:url(../../images/rosten/share/tab_btn01.gif); width:66px
 .rosten .attachFile ul li p {text-align:left; }
 .rosten .attachFile ul li .xtname{ color:#155FBE; padding:0; width:100%; display:inline-block; }
 
+/*
+ * 搜索区域样式
+ */
+.rosten .searchtab { width:100%; margin-bottom:2px; }
+.rosten .searchtab table { border-collapse:collapse; width: 100%; border:#dbdbdb 1px solid; border-bottom:none; text-align:left; }
+.rosten .searchtab table tr { background:#fff; }
+.rosten .searchtab table td, .searchtab table th { border-bottom: 1px solid #CED2D6; color: #000; vertical-align:middle; word-break: keep-all; }
+.rosten .searchtab table td { padding:4px 3px 4px 5px; }
+.rosten .searchtab table th { font-weight:normal; text-align:right; padding:4px 5px 4px 5px; }
+.rosten .searchtab tbody input { border:1px solid #B9CDE7; }
+.rosten .searchtab table tfoot tr { background:#EFEFEF; }
+.rosten .searchtab table .bz { float:left; }
+.rosten .searchtab table .btn { float:left; }
+
 
 
 

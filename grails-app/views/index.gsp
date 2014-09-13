@@ -161,6 +161,11 @@
 			lang.extend(ContentPane,{
 	   			onDownloadError:function(error){
 	   				if(error.status=="401"){
+	   					//2014-9-8修改为重新登录
+						rosten.alert("您已超时！");
+						rosten.logout();
+						return;
+						
 	   					var dlg
 	   					var nl = query(".logindlg",win.body())
 	   					if(nl.length>0){

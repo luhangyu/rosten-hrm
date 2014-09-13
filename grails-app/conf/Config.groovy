@@ -89,10 +89,27 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+rostenFileConfig {
+	fileUpload = "rostenFileUpload"
+	fileSize = 10 //单位为M
+	sizeLimit = false
+}
+
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.rosten.app.system.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.rosten.app.system.UserRole'
 grails.plugin.springsecurity.authority.className = 'com.rosten.app.system.Role'
+
+//grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+//	'/':                              ['IS_AUTHENTICATED_FULLY'],
+//	'/index':                         ['IS_AUTHENTICATED_FULLY'],
+//	'/index.gsp':                     ['IS_AUTHENTICATED_FULLY'],
+//	'/**/js/**':                      ['permitAll'],
+//	'/**/css/**':                     ['permitAll'],
+//	'/**/images/**':                  ['permitAll'],
+//	'/**/favicon.ico':                ['permitAll']
+//]
 
 grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
 grails.plugin.springsecurity.interceptUrlMap = [
@@ -105,7 +122,6 @@ grails.plugin.springsecurity.interceptUrlMap = [
 ]
 
 grails.plugin.springsecurity.useSecurityEventListener = true
-
 
 //------------------ Added by the Grails Activiti plugin:start------------------------------------
 activiti {

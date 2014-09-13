@@ -1,5 +1,5 @@
 define(["dojo/_base/declare","dojo/_base/lang","dojo/_base/xhr","dijit/_WidgetBase","dijit/_TemplatedMixin","dojox/collections/SortedList","rosten/util/general"],function(_1,_2,_3,_4,_5,_6,_7){
-return _1("rosten.widget.SimpleNavigation",[_4,_5],{general:new _7(),id:"",url:"",urlArgs:null,templateString:"<div class=\"simpleNavigation\""+"\t><div  data-dojo-attach-point=\"containerNode\""+"\t>Loading...</div>"+"</div>",navigationData:null,constructor:function(){
+return _1("rosten.widget.SimpleNavigation",[_4,_5],{general:new _7(),id:"",url:"",urlArgs:null,templateString:"<div class=\"simpleNavigation\""+"\t><div  data-dojo-attach-point=\"containerNode\""+"\t>Loading...</div>"+"</div>",navigationData:null,defaultentry:"",constructor:function(){
 },postCreate:function(){
 this.id=this.id!=""?this.id:this.widgetId;
 this.navigationData=new _6();
@@ -31,6 +31,12 @@ this.navigationData=new _6();
 }
 var _e=document.createElement("ul");
 for(var i=0;i<_d.length;i++){
+if(i==0){
+this.defaultEntity=_d[i].url;
+}
+if(_d[i].isDefault==true||_d[i].isDefault=="true"){
+this.defaultEntity=_d[i].url;
+}
 var _f=_d[i]["name"];
 var img=_d[i]["img"];
 var _10=_d[i]["href"];
