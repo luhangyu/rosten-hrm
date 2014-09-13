@@ -336,5 +336,117 @@ class TrainController {
 		}
 		render json as JSON
 	}
+	
+	
+	/**
+	 * 出国进修信息
+	 */
+	def forgeinStudyGrid ={
+		def json=[:]
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			json["gridHeader"] = trainService.getForgeinStudyListLayout()
+		}
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			json["gridData"] = trainService.getForgeinStudyDataStore(args)
+			
+		}
+		if(params.refreshPageControl){
+			def total = trainService.getForgeinStudyCount(company)
+			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+		
+	}
+	
+	/**
+	 * 增加
+	 */
+	def forgeinStudyAdd ={
+		redirect(action:"forgeinStudyShow",params:params)
+	}
+	
+	def forgeinStudyShow ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def user = User.get(params.userid)
+		def company = Company.get(params.companyId)
+		def forgeinStudy = new ForgeinStudy()
+		if(params.id){
+			forgeinStudy = ForgeinStudy.get(params.id)
+		}else{
+			forgeinStudy.user = currentUser
+		}
+		
+		model["company"] = company
+		model["forgeinStudy"] = forgeinStudy
+		
+		FieldAcl fa = new FieldAcl()
+		if("normal".equals(user.getUserType())){
+
+		}
+		model["fieldAcl"] = fa
+		
+		render(view:'/train/forgeinStudy',model:model)
+	}
+	
+	/**
+	 * 保存
+	 */
+	def forgeinStudySave ={
+		def json=[:]
+		def forgeinStudy = new ForgeinStudy()
+		def currentUser = springSecurityService.getCurrentUser()
+		if(params.id && !"".equals(params.id)){
+			forgeinStudy = ForgeinStudy.get(params.id)
+		}else{
+			if(params.companyId){
+				forgeinStudy.company = Company.get(params.companyId)
+			}
+			forgeinStudy.user = currentUser
+			
+			forgeinStudy.abroadDate = Util.convertToTimestamp(params.abroadDate)
+			forgeinStudy.returneDate = Util.convertToTimestamp(params.returneDate)
+		}
+		forgeinStudy.properties = params
+		forgeinStudy.clearErrors()
+		
+		if(forgeinStudy.save(flush:true)){
+			json["result"] = "true"
+		}else{
+			forgeinStudy.errors.each{
+				println it
+			}
+			json["result"] = "false"
+		}
+		render json as JSON
+	}
+	
+	/**
+	 * 删除
+	 */
+	def forgeinStudyDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def forgeinStudy = ForgeinStudy.get(it)
+				if(forgeinStudy){
+					forgeinStudy.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
     
 }

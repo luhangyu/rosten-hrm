@@ -15,7 +15,7 @@ class DegreeStudy {
 	//用户
 	User user
 	
-	@GridColumn(name="用户名称",formatter="degreeStudy_formatTopic",colIdx=1,width="60px")
+	@GridColumn(name="姓名",formatter="degreeStudy_formatTopic",colIdx=1,width="60px")
 	def getUserName(){
 		return user?.getFormattedName()
 	}

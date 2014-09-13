@@ -97,6 +97,38 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
+	
+	forgeinStudy_add = function(){
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("forgeinStudy", rosten.webPath + "/train/forgeinStudyAdd?companyId=" + companyId + "&userid=" + userid);
+	};
+	
+	forgeinStudy_delete = function(){
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.read(rosten.webPath + "/train/forgeinStudyDelete", content,rosten.deleteCallback);
+		};
+	};
+	
+	forgeinStudy_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:forgeinStudy_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	
+	forgeinStudy_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("forgeinStudy", rosten.webPath + "/train/forgeinStudyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.kernel.getGrid().clearSelected();
+	};
+	
+	
 	/*
 	 * 此功能默认必须存在
 	 */
@@ -135,6 +167,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 
             var rostenGrid = rosten.kernel.getGrid();
             break;
+		case "forgeinStudy":
+	        var naviJson = {
+	            identifier : oString,
+	            actionBarSrc : rosten.webPath + "/trainAction/forgeinStudyView?userId=" + userid,
+	            gridSrc : rosten.webPath + "/train/forgeinStudyGrid?companyId=" + companyId
+	        };
+	        rosten.kernel.addRightContent(naviJson);
+	
+	        var rostenGrid = rosten.kernel.getGrid();
+	        break;
 		}
 		
 	}

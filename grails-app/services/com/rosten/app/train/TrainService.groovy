@@ -89,4 +89,34 @@ class TrainService {
 		return c.count(query)
 	}
 	
+	
+	def getForgeinStudyListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new ForgeinStudy())
+	}
+	
+	def getForgeinStudyDataStore ={params->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllForgeinStudy(offset,max,params.company)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	
+	def getAllForgeinStudy ={offset,max,company->
+		def c = ForgeinStudy.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("company",company)
+		}
+		return c.list(pa,query)
+	}
+	
+	def getForgeinStudyCount ={company->
+		def c = ForgeinStudy.createCriteria()
+		def query = { eq("company",company) }
+		return c.count(query)
+	}
+	
 }
