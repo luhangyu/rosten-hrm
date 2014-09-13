@@ -218,6 +218,10 @@ define(["dojo/_base/kernel"
         //setInterval("session_checkTimeOut()",60000*120 + 2000);
     };
     excuteService = function(args){
+    	if(new general().isInArray(args,"http:")){
+            window.open(args);
+            return;
+        }
     	switch(args){
     	case "sms" :
     		require(["rosten/app/SmsManage"],function(){
