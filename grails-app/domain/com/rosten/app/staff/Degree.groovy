@@ -41,7 +41,7 @@ class Degree {
     static constraints = {
 		
     }
-	static belongsTo = [user:User]
+	static belongsTo = [personInfor:PersonInfor]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

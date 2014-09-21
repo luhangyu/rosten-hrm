@@ -31,6 +31,12 @@ class ContactInfor {
 	//电子邮件
 	String email
 	
+	//qq
+	String qq
+	
+	//微信
+	String wechat
+	
     static constraints = {
 		phone nullable:true,blank:true
 		mobile nullable:true,blank:true
@@ -42,7 +48,7 @@ class ContactInfor {
 		email nullable:true,blank:true
     }
 	
-	static belongsTo = [user:User]
+	static belongsTo = [personInfor:PersonInfor]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

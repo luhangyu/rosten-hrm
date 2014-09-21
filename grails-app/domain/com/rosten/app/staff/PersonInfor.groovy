@@ -1,12 +1,19 @@
 package com.rosten.app.staff
 
 import com.rosten.app.system.User
+import com.rosten.app.system.UserType;
+import com.rosten.app.system.Depart
+import com.rosten.app.system.Company
+
 import java.text.SimpleDateFormat
+import java.util.List;
 
 //个人概况
 class PersonInfor {
 	
 	String id
+	
+	String chinaName
 	
 	//身份证号
 	String idCard
@@ -59,16 +66,29 @@ class PersonInfor {
 	//状态
 	String status = "在职"
 	
+	//用户类型
+	UserType userTypeEntity
+	
+	User user
+	
+	List departs
+	static hasMany=[departs:Depart]
+	
+	//所属单位
+	static belongsTo = [company:Company]
+	
     static constraints = {
 		birthday nullable:true,blank:true
 		birthAddress nullable:true,blank:true
 		nativeAddress nullable:true,blank:true
 		usedName nullable:true,blank:true
 		blood nullable:true,blank:true
+		user nullable:true,blank:true
     }
 	
-	static belongsTo = [user:User]
-	
+	def beforeDelete(){
+		
+	}
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_STAFF_PERSONINFOR"

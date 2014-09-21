@@ -128,6 +128,58 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
+	//培训班
+	trainCourse_search = function(){
+		var content = {};
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			var courseName = registry.byId("s_courseName");
+			if(courseName.get("value")!=""){
+				content.courseName = courseName.get("value");
+			}
+			break;
+		}
+		
+		rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+	};
+	
+	trainCourse_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("s_courseName").set("value","");
+			break;
+		}	
+		
+		rosten.kernel.refreshGrid();
+	};
+	
+	//出国进修
+	forgeinStudy_search = function(){
+		var content = {};
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			var appYear = registry.byId("s_appYear");
+			if(appYear.get("value")!=""){
+				content.appYear = appYear.get("value");
+			}
+			break;
+		}
+		
+		rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+	};
+	
+	forgeinStudy_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("s_appYear").set("value","");
+			break;
+		}	
+		
+		rosten.kernel.refreshGrid();
+	};
+	
 	
 	/*
 	 * 此功能默认必须存在
@@ -141,6 +193,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             var naviJson = {
                 identifier : oString,
                 actionBarSrc : rosten.webPath + "/trainAction/trainCourseView?userId=" + userid,
+                searchSrc:rosten.webPath + "/train/trainCourseSearchView",
                 gridSrc : rosten.webPath + "/train/trainCourseGrid?companyId=" + companyId
             };
             rosten.kernel.addRightContent(naviJson);
@@ -171,6 +224,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	        var naviJson = {
 	            identifier : oString,
 	            actionBarSrc : rosten.webPath + "/trainAction/forgeinStudyView?userId=" + userid,
+	            searchSrc:rosten.webPath + "/train/forgeinStudySearchView",
 	            gridSrc : rosten.webPath + "/train/forgeinStudyGrid?companyId=" + companyId
 	        };
 	        rosten.kernel.addRightContent(naviJson);

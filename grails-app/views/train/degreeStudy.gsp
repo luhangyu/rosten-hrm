@@ -54,7 +54,7 @@
 <body>
 <div class="rosten_action">
 	<div data-dojo-type="rosten/widget/ActionBar" data-dojo-id="rosten_actionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'trainAction',action:'degreeStudyForm',id:trainCourse?.id,params:[userid:user?.id])}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'trainAction',action:'degreeStudyForm',id:degreeStudy?.id,params:[userid:user?.id])}"'>
 	</div>
 </div>
 

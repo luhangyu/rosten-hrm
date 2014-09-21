@@ -72,7 +72,7 @@ class Political {
 		outDate nullable:true,blank:true
 		outReson nullable:true,blank:true
     }
-	static belongsTo = [user:User]
+	static belongsTo = [personInfor:PersonInfor]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

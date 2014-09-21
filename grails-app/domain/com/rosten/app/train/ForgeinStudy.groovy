@@ -29,27 +29,27 @@ class ForgeinStudy {
 	}
 	
 	@GridColumn(name="留学项目",colIdx=7)
-	def program//留学项目
+	String program//留学项目
 	
 	@GridColumn(name="申请年份",colIdx=3)
-	def appYear//申请年份
+	String appYear//申请年份
 	
 	@GridColumn(name="留学层次",colIdx=4)
-	def studyLevel//留学层次
+	String studyLevel//留学层次
 	
 	@GridColumn(name="留学身份",colIdx=5)
-	def studyIdentity//学习身份
+	String studyIdentity//学习身份
 	
 	@GridColumn(name="学历层次",colIdx=6)
-	def educationLevel//学历层次
+	String educationLevel//学历层次
 	
 	@GridColumn(name="学科",colIdx=8)
-	def discipline//学科
+	String discipline//学科
 	
 	@GridColumn(name="专业",colIdx=9)
-	def major//专业
+	String major//专业
 	
-	def abroadDate //出国时间
+	Date abroadDate =new Date()//出国时间
 	
 	@GridColumn(name="出国时间",width="106px",colIdx=7)
 	def getFormatteAbroadDate(){
@@ -61,7 +61,7 @@ class ForgeinStudy {
 		}
 	}
 	
-	def returneDate//回国时间
+	Date returneDate=new Date()//回国时间
 	
 	@GridColumn(name="回国时间",width="106px",colIdx=7)
 	def getFormatteReturneDate(){
@@ -74,22 +74,22 @@ class ForgeinStudy {
 	}
 	
 	@GridColumn(name="留学国家",colIdx=10)
-	def country//留学国家
+	String country//留学国家
 	
-	def cumulativeTime//出国累计时间
+	String cumulativeTime//出国累计时间
 	
-	def researchStatus//科研情况
+	String researchStatus//科研情况
 	
-	def patentStatus//专利情况
+	String patentStatus//专利情况
 	
-	def paperStatus//论文情况
+	String paperStatus//论文情况
 	
-	def remark//备注
+	String remark//备注
 	
-     static belongsTo = [user:User,company:Company]
+    static belongsTo = [user:User,company:Company]
 	
     static constraints = {
-		
+		cumulativeTime nullable:true,blank:true
     }
 	
 	static mapping = {

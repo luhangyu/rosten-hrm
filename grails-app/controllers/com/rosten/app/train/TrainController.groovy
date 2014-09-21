@@ -11,6 +11,18 @@ class TrainController {
 	def trainService
 	def springSecurityService
 	
+	//培训班查询条件
+	def trainCourseSearchView ={
+		def model =[:]
+		render(view:'/train/trainCourseSearch',model:model)
+	}
+	
+	//出国进修查询条件
+	def forgeinStudySearchView ={
+		def model =[:]
+		render(view:'/train/forgeinStudySearch',model:model)
+	}
+	
 	def trainCourseDelete ={
 		def ids = params.id.split(",")
 		def json
@@ -81,6 +93,12 @@ class TrainController {
 		if(params.refreshHeader){
 			json["gridHeader"] = trainService.getTrainCourseListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.courseName && !"".equals(params.courseName)) searchArgs["courseName"] = params.courseName
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -89,11 +107,11 @@ class TrainController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = trainService.getTrainCourseListDataStore(args)
+			json["gridData"] = trainService.getTrainCourseListDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = trainService.getTrainCourseCount(company)
+			def total = trainService.getTrainCourseCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -347,6 +365,12 @@ class TrainController {
 		if(params.refreshHeader){
 			json["gridHeader"] = trainService.getForgeinStudyListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.appYear && !"".equals(params.appYear)) searchArgs["appYear"] = params.appYear
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -355,11 +379,11 @@ class TrainController {
 			args["offset"] = (nowPage-1) * perPageNum
 			args["max"] = perPageNum
 			args["company"] = company
-			json["gridData"] = trainService.getForgeinStudyDataStore(args)
+			json["gridData"] = trainService.getForgeinStudyDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = trainService.getForgeinStudyCount(company)
+			def total = trainService.getForgeinStudyCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

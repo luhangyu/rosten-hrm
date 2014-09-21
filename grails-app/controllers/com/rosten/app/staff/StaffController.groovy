@@ -173,64 +173,89 @@ class StaffController {
 	def userSave ={
 		def model=[:]
 		
-		def user = new User()
-		if(params.id && !"".equals(params.id)){
-			user = User.get(params.id)
-		}else{
-			user.enabled = true
-			if(params.userNameFront){
-				params.username = params.userNameFront + params.username
-			}
-		}
-		user.properties = params
-		user.clearErrors()
-		
-		if(params.userTypeName && !params.userTypeName.equals(user.getUserTypeName())){
-			def userType = UserType.findByTypeName(params.userTypeName)
-			if(userType){
-				user.userTypeEntity = userType
-			}
+		def userType
+		if(params.userTypeName){
+			userType = UserType.findByTypeName(params.userTypeName)
 		}
 		
+		def company
 		if(params.companyId){
-			def company = Company.get(params.companyId)
-			user.company = company
+			company = Company.get(params.companyId)
 		}
-		if(user.save(flush:true)){
-			
-			UserDepart.removeAll(user)
-			if(params.allowdepartsId){
-				def depart = Depart.get(params.allowdepartsId)
-				if(depart){
-					UserDepart.create(user, depart)
-				}
-			}
-			
-			UserRole.removeAll(user)
-			if(params.allowrolesId){
-				params.allowrolesId.split(",").each{
-					def role = Role.get(it)
-					UserRole.create(user, role)
-				}
-			}
-			
-			//添加个人概况信息
-			def personInfor = new PersonInfor()
-			if(params.personInforId){
-				personInfor = PersonInfor.get(params.personInforId)
+		
+		
+		def user
+		if(params.id){
+			//保存登录用户账号信息
+			user = new User()
+			if(params.id && !"".equals(params.id)){
+				user = User.get(params.id)
 			}else{
-				personInfor.user = user
+				user.enabled = true
+				if(params.userNameFront){
+					params.username = params.userNameFront + params.username
+				}
 			}
-			personInfor.properties = params
-			personInfor.clearErrors()
+			user.properties = params
+			user.clearErrors()
 			
-			personInfor.birthday = Util.convertToTimestamp(params.birthday)
+			if(params.userTypeName && !params.userTypeName.equals(user.getUserTypeName())){
+				if(userType){
+					user.userTypeEntity = userType
+				}
+			}
 			
-			personInfor.save(flush:true)
+			if(params.companyId){
+				user.company = company
+			}
+			user.save()
+		}
+		
+		//添加个人概况信息
+		def personInfor = new PersonInfor()
+		if(params.personInforId){
+			personInfor = PersonInfor.get(params.personInforId)
+		}else{
+			personInfor.user = user
+		}
+		personInfor.properties = params
+		personInfor.clearErrors()
+		
+		personInfor.birthday = Util.convertToTimestamp(params.birthday)
+		
+		if(userType && !userType.equals(personInfor.userTypeEntity)){
+			personInfor.userTypeEntity = userType
+		}
+		personInfor.company = company
+		
+		def depart
+		if(params.allowdepartsId){
+			depart = Depart.get(params.allowdepartsId)
+			if(depart){
+				personInfor.addToDeparts(depart)
+			}
+		}
+		if(personInfor.save(flush:true)){
+			if(user){
+				UserDepart.removeAll(user)
+				if(params.allowdepartsId){
+					if(depart){
+						UserDepart.create(user, depart)
+					}
+				}
+				
+				UserRole.removeAll(user)
+				if(params.allowrolesId){
+					params.allowrolesId.split(",").each{
+						def role = Role.get(it)
+						UserRole.create(user, role)
+					}
+				}
+			}
 			
 			model["result"] = "true"
 		}else{
-			user.errors.each{
+			personInfor.errors.each{
 				println it
 			}
 			model["result"] = "false"
@@ -336,7 +361,7 @@ class StaffController {
 			userList.each{
 				def _user = it.user
 				def personInfor = PersonInfor.findByUser(_user)
-				def contactInfor = ContactInfor.findByUser(_user)
+				def contactInfor = ContactInfor.findByPersonInfor(personInfor)
 				
 				def sMap =[:]
 				sMap["rowIndex"] = idx+1
@@ -403,22 +428,22 @@ class StaffController {
 
 			def _json = [identifier:'id',label:'name',items:[]]
 			
-			def userList = User.findAllByCompanyAndSysFlag(company,false,[max: max, sort: "username", order: "asc", offset: offset])
-			totalNum = userList.size()
+			def personList = PersonInfor.findAllByCompany(company,[max: max, sort: "chinaName", order: "asc", offset: offset])
+			totalNum = personList.size()
 			
 			def idx = 0
-			userList.each{
-				def _user = it
-				def personInfor = PersonInfor.findByUser(_user)
-				def contactInfor = ContactInfor.findByUser(_user)
+			personList.each{
+				def _user = it.user
+				def personInfor = it
+				def contactInfor = ContactInfor.findByPersonInfor(personInfor)
 				
 				def sMap =[:]
 				sMap["rowIndex"] = idx+1
-				sMap["id"] = _user.id
-				sMap["username"] = _user.username
-				sMap["chinaName"] = _user.getFormattedName()
-				sMap["departName"] = _user.getDepartName()
-				sMap["type"] = _user.getUserTypeName()
+				sMap["id"] = _user?_user.id:""
+				sMap["username"] = _user?_user.username:""
+				sMap["chinaName"] = personInfor?.chinaName
+				sMap["departName"] = ""
+				sMap["type"] = ""
 				sMap["sex"] = personInfor?.sex
 				sMap["birthday"] = personInfor?.getFormatteBirthday()
 				sMap["idCard"] = personInfor?.idCard
@@ -455,25 +480,26 @@ class StaffController {
 	
 	def getPersonInfor ={
 		def model =[:]
-		def entity
-		
-		def depart = Depart.get(params.departId)
-		
 		def currentUser = springSecurityService.getCurrentUser()
-		def user = User.get(params.id)
-		if(user){
-			entity = PersonInfor.findByUser(user)
-			model["departName"] = user.getDepartName()
-			model["departId"] = user.getDepartEntity()?.id
-		}else{
-			entity = new PersonInfor()
-			if(depart){
-				model["departName"] = depart.departName
-				model["departId"] = depart.id
+		
+		def depart
+		def personInfor = PersonInfor.get(params.id)
+		if(!personInfor){
+			personInfor = new PersonInfor()
+			if(params.departId){
+				depart = Depart.get(params.departId)
 			}
+		}else{
+			depart = personInfor.departs[0]
 		}
+		
+		if(depart){
+			model["departName"] = depart.departName
+			model["departId"] = depart.id
+		}
+		
 		model["company"] = currentUser.company
-		model["personInforEntity"] = entity
+		model["personInforEntity"] = personInfor
 		model["userTypeList"] = UserType.findAllByCompany(currentUser.company)
 		
 		
@@ -490,9 +516,9 @@ class StaffController {
 		def model =[:]
 		def entity
 		
-		def user = User.get(params.id)
+		def user = PersonInfor.get(params.id)
 		if(user){
-			entity = ContactInfor.findByUser(user)
+			entity = ContactInfor.findByPersonInfor(user)
 		}else{
 			entity = new ContactInfor()
 		}
@@ -507,9 +533,9 @@ class StaffController {
 		def model =[:]
 		def entity
 		
-		def user = User.get(params.id)
+		def user = PersonInfor.get(params.id)
 		if(user){
-			entity = Degree.findByUser(user)
+			entity = Degree.findByPersonInfor(user)
 		}else{
 			entity = new Degree()
 		}
@@ -523,9 +549,9 @@ class StaffController {
 		def model =[:]
 		def entity
 		
-		def user = User.get(params.id)
+		def user = PersonInfor.get(params.id)
 		if(user){
-			entity = WorkResume.findByUser(user)
+			entity = WorkResume.findByPersonInfor(user)
 		}else{
 			entity = new WorkResume()
 		}
@@ -534,4 +560,51 @@ class StaffController {
 		model["fieldAcl"] = fa
 		render(view:'/staff/workResume',model:model)
 	}
+	
+	def getFamily ={
+		def departEntity = Depart.get(params.departId)
+		def json=[:]
+		if(params.refreshHeader){
+			def _gridHeader =[]
+			_gridHeader << ["name":"序号","width":"26px","colIdx":0,"field":"rowIndex"]
+			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"name"]
+			_gridHeader << ["name":"关系","width":"auto","colIdx":2,"field":"relation"]
+			_gridHeader << ["name":"工作单位","width":"auto","colIdx":3,"field":"workUnit"]
+			_gridHeader << ["name":"联系方式","width":"auto","colIdx":4,"field":"mobile"]
+			json["gridHeader"] = _gridHeader
+		}
+		if(params.refreshData){
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+
+			def offset = (nowPage-1) * perPageNum
+			def max  = perPageNum
+
+			def _json = [identifier:'id',label:'name',items:[]]
+			
+			def userList = UserDepart.findAllByDepart(departEntity,[max: max, sort: "user", order: "desc", offset: offset])
+			
+			def idx = 0
+			userList.each{
+				def _user = it.user
+				def personInfor = PersonInfor.findByUser(_user)
+				def contactInfor = ContactInfor.findByUser(_user)
+				
+				def sMap =[:]
+				sMap["rowIndex"] = idx+1
+				sMap["id"] = _user.id
+				sMap["name"] = _user.name
+				sMap["mobile"] = contactInfor?.mobile
+				
+				_json.items+=sMap
+				
+				idx += 1
+			}
+
+			json["gridData"] = _json
+		}
+		
+		render json as JSON
+	}
+	
 }

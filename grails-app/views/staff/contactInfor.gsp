@@ -63,13 +63,30 @@
 		</tr>
 		<tr>
 		 <td width="120"><div align="right">电子邮箱：</div></td>
-		  <td width="250" colspan="3">
+		  <td width="250" >
 		    	<input id="email" data-dojo-type="dijit/form/ValidationTextBox" 
 	                 	data-dojo-props='name:"email",trim:true,${fieldAcl.isReadOnly("email")},
 							value:"${contactInforEntity?.email}"
 	                '/>
 		    </td>
-
+		    
+		     <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>QQ：</div></td>
+		 	 <td width="250" >
+		    	<input id="qq" data-dojo-type="dijit/form/ValidationTextBox" 
+	                 	data-dojo-props='name:"qq",trim:true,${fieldAcl.isReadOnly("qq")},
+							value:"${contactInforEntity?.qq}"
+	                '/>
+		    </td>
+		</tr>
+		
+		<tr>
+		     <td width="120" ><div align="right">微信：</div></td>
+		 	 <td width="250" colspan="3" >
+		    	<input id="wechat" data-dojo-type="dijit/form/ValidationTextBox" 
+	                 	data-dojo-props='name:"wechat",trim:true,${fieldAcl.isReadOnly("wechat")},
+							value:"${contactInforEntity?.wechat}"
+	                '/>
+		    </td>
 		</tr>
 		
 	</table>

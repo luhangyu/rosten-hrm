@@ -13,12 +13,17 @@
 	require(["dojo/parser",
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
+		 		"dijit/form/Button",
 		     	"rosten/widget/ActionBar",
+		     	"dijit/layout/TabContainer",
+				"dijit/layout/ContentPane",
 		     	"dijit/form/TextBox",
 		     	"dijit/form/RadioButton",
 		     	"dijit/form/ValidationTextBox",
 		     	"dijit/form/SimpleTextarea",
 		     	"dijit/form/Button",
+		     	"dijit/Dialog",
+				"dojox/grid/DataGrid",
 		     	"dijit/form/RadioButton",
 		     	"dijit/form/FilteringSelect",
 		     	"dijit/form/ComboBox",
@@ -29,20 +34,22 @@
 					rosten.cssinit();
 				});
 			user_add_check = function(){
-				if(check_common("username","账号不正确！",true)==false) return false;
-				if(check_common("password","密码不正确！",true)==false) return false;
-				if(check_common("passwordcheck","确认密码不正确！",true)==false) return false;
-
-				var password = registry.byId("password");
-				var passwordcheck = registry.byId("passwordcheck");
-				if(password.attr("value")!=passwordcheck.attr("value")){
-					rosten.alert("密码不一致！").queryDlgClose = function(){
-						password.attr("value","");
-						passwordcheck.attr("value","");
-						password.focus();
-					};
-					return false;
-				}
+				<g:if test='${departId}'>
+					if(check_common("username","账号不正确！",true)==false) return false;
+					if(check_common("password","密码不正确！",true)==false) return false;
+					if(check_common("passwordcheck","确认密码不正确！",true)==false) return false;
+	
+					var password = registry.byId("password");
+					var passwordcheck = registry.byId("passwordcheck");
+					if(password.attr("value")!=passwordcheck.attr("value")){
+						rosten.alert("密码不一致！").queryDlgClose = function(){
+							password.attr("value","");
+							passwordcheck.attr("value","");
+							password.focus();
+						};
+						return false;
+					}
+				</g:if>
 
 				//个人概况检查
 				if(check_common("chinaName","姓名不正确！",true)==false) return false;
@@ -57,9 +64,9 @@
 			user_add = function(){
 				if(user_add_check()==false) return;
 				var content = {};
-				<g:if test='${!userType.equals("super") }'>
+				<g:if test='${!userType.equals("super")  }'>
 					content.companyId = "${company?.id}";
-					content.userNameFront = registry.byId("userNameFront").attr("value");
+					//content.userNameFront = registry.byId("userNameFront").attr("value");
 				</g:if>
 				rosten.readSync(rosten.webPath + "/staff/userSave",content,function(data){
 					if(data.result=="true"){
@@ -105,11 +112,16 @@
 	</div>
 	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;">
 	<div>
+	<g:if test='${departId}'>
 		<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${user?.id }"' />
+	</g:if>
         <input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
         <div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
+			
+			
+			<g:if test='${departId}'>
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"账号信息 <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"100px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
@@ -194,13 +206,33 @@
 					
 				</table>
 			</div>
+			</g:if>
+			
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getPersonInfor',id:user?.id,params:[departId:departId])}"
+				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId])}"
 			'>
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"130px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getContactInfor',id:user?.id)}"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"150px",marginBottom:"2px",
+				href:"${createLink(controller:'staff',action:'getContactInfor',id:personInfor?.id)}"'>
+			</div>
+			
+
+			<div id="assetScrapList" data-dojo-type="rosten/widget/TitlePane"data-dojo-props='title:"家庭成员",toggleable:false,moreText:"",marginBottom:"2px"'>
+					<button data-dojo-type='dijit.form.Button' 
+				data-dojo-props="label:'添加',iconClass:'docCloseIcon'">
+				<script type="dojo/method" data-dojo-event="onClick">
+					addAsset();
+				</script>
+			</button>
+			<button data-dojo-type='dijit.form.Button' 
+				data-dojo-props="label:'删除',iconClass:'docCloseIcon'">
+				<script type="dojo/method" data-dojo-event="onClick">
+					deleteAsset();
+				</script>
+			</button>
+				<div data-dojo-type="rosten/widget/RostenGrid" id="assetScrapListGrid" data-dojo-id="assetScrapListGrid"
+					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:user?.id)}"'></div>
 			</div>
 			
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"学历学位",toggleable:false,moreText:"",height:"100px",marginBottom:"2px",

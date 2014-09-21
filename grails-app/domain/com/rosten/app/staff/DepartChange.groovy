@@ -49,7 +49,7 @@ class DepartChange {
 		inDuty nullable:true,blank:true
 		inPersonType nullable:true,blank:true
 	}
-	static belongsTo = [user:User]
+	static belongsTo = [personInfor:PersonInfor]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

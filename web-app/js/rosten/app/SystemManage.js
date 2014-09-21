@@ -92,7 +92,12 @@ define(["dojo/_base/connect",
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
         var currentDepartId = rosten.variable.currentDeartId;
-        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&currentDepartId=" + currentDepartId);
+        if(currentDepartId){
+        	rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&currentDepartId=" + currentDepartId);
+        }else{
+        	rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid);
+        }
+        
     };
     read_personInfor = function() {
     	change_personInfor();

@@ -36,7 +36,7 @@ class StaffLog {
 		}
 	}
 	
-	static belongsTo = [user:User]
+	static belongsTo = [personInfor:PersonInfor]
 	
     static constraints = {
 		reson nullable:true,blank:true
