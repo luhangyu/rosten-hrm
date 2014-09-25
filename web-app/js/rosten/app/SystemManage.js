@@ -78,8 +78,9 @@ define(["dojo/_base/connect",
 		rostenGrid.clearSelected();
 	};
 	export_personInfor = function(){
-		
+		rosten.openNewWindow("export", rosten.webPath + "/staff/exportPerson");
 	};
+	
 	import_personInfor = function(){
 		 var companyId = rosten.kernel.getUserInforByKey("companyid");
 		rosten.kernel.createRostenShowDialog(rosten.webPath + "/staff/importStaff/"+ companyId, {

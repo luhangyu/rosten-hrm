@@ -67,6 +67,29 @@ define([ "dojo/_base/connect", "dijit/registry", "dojo/has", "rosten/kernel/beha
     };
 	
 	//-----------增加流程引擎部分------------------------------------------------
+    import_modeler = function(){
+    	var companyId = rosten.kernel.getUserInforByKey("companyid");
+    	rosten.kernel.createRostenShowDialog(rosten.webPath + "/modeler/addModelUpload?companyId=" + companyId, {
+            onLoadFunction : function() {
+            }
+        });
+    };
+    upload_modeler = function(){
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+    	var content = {
+    		companyId:companyId	
+    	};
+    	rosten.readSync(rosten.webPath + "/modeler/uploadModel",content,function(data){
+			if(data.result=="true"|| data.result == true){
+				rosten.alert("导入成功！").queryDlgClose= function(){
+					rosten.kernel.hideRostenShowDialog();
+					rosten.kernel.refreshGrid();
+				};
+			}else{
+				rosten.alert("导入失败!");
+			}
+		},null,"file_form");
+    };
     deploy_modeler = function(){
     	var companyId = rosten.kernel.getUserInforByKey("companyid");
     	var unid = rosten.getGridUnid("single");

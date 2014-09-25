@@ -11,6 +11,8 @@ import com.rosten.app.system.UserRole
 import com.rosten.app.system.UserType
 import com.rosten.app.system.SystemService
 import com.rosten.app.system.Role
+import java.io.OutputStream
+import com.rosten.app.export.ExcelExport;
 
 class StaffController {
 	def springSecurityService
@@ -605,6 +607,12 @@ class StaffController {
 		}
 		
 		render json as JSON
+	}
+	
+	def exportPerson={
+		OutputStream os = response.outputStream
+		def excel = new ExcelExport()
+		excel.mbxz(os)
 	}
 	
 }
