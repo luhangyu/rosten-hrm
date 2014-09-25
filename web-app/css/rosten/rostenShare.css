@@ -410,7 +410,69 @@ a.jh-today { background:url(../../images/rosten/share/tab_btn01.gif); width:66px
 .rosten .searchtab table .bz { float:left; }
 .rosten .searchtab table .btn { float:left; }
 
+/*
+ * 附件上传css样式
+ */
+.dijitFileInput {
+	position:relative;
+	height:1.3em;
+}
+.dijitFileInputReal {
+	position:absolute;
+	z-index:2;
+	filter:alpha(opacity:0);
+	opacity:0;
+	cursor:pointer;
+	width:350px;
+}
+.dijitFileInputRealBlind {
+	right:0;
+}
+.dijitFileInputReal:hover { cursor:pointer; } 
 
+.dijitFileInputButton,
+.dijitFileInputText {
+	border:1px solid #333;
+	padding:2px 12px 2px 12px; 
+	cursor:pointer;
+}
+
+.dijitFileInputButton {
+	z-index:3;
+	visibility:hidden;
+}
+.dijitFakeInput { position:absolute; top:0; left:0; z-index:1; white-space: nowrap; }
+
+.rosten .upload .dijitFakeInput input {
+	border: 1px solid #bcc8dd;
+	background-color: #fff;
+	background-repeat: repeat-x;
+	background-position: top left;
+	background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	line-height:normal;
+	padding:0.2em 0.3em;
+	width:280px;
+}
+
+.rosten .upload .dijitFileInputButton,
+.rosten .upload .dijitFileInputText {
+	background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-color: #cde3f6;
+	border: 1px solid #799ab7;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow:0px 1px 1px rgba(0,0,0,0.2);
+	-webkit-box-shadow:0px 1px 1px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+	font-size:12px;
+	padding:2px 10px 2px 10px; 
+}
 
 
 

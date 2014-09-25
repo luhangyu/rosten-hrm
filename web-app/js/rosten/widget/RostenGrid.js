@@ -42,7 +42,7 @@ console.log("onRowDblClick");
 console.log("onCellClick");
 },_gotoPage:function(_16){
 var _17={refreshHeader:false,refreshPageControl:false,refreshData:true};
-this.gotoPage(_16,_17);
+this.gotoPage(_16,false,_17);
 },gotoPage:function(_18){
 var _19={};
 if(this.showPageControl){
@@ -57,14 +57,14 @@ this._renderLink();
 _5.set(this.pageControl,"display","none");
 _19.showAllData=true;
 }
-if(arguments[1]==undefined){
+if(arguments[1]!=false){
+this.urlContent=arguments[1];
+}
+if(arguments[2]==undefined){
 _19.refreshHeader=this.refreshHeader;
 _19.refreshData=this.refreshData;
 _19.refreshPageControl=this.refreshPageControl;
 }else{
-for(var _1a in arguments[1]){
-_19[_1a]=arguments[1][_1a];
-}
 if(_19.refreshHeader==undefined){
 _19.refreshHeader=this.refreshHeader;
 }
@@ -78,30 +78,30 @@ _19.refreshPageControl=this.refreshPageControl;
 if(this.urlContent!=null){
 _3.mixin(_19,this.urlContent);
 }
-var _1b={url:this.url,handleAs:"json",preventCache:true,content:_19,encoding:"utf-8",load:_3.hitch(this,function(_1c,_1d){
-this._parseData(_1c);
+var _1a={url:this.url,handleAs:"json",preventCache:true,content:_19,encoding:"utf-8",load:_3.hitch(this,function(_1b,_1c){
+this._parseData(_1b);
 _8.publish("closeUnderlay",[this]);
-}),error:_3.hitch(this,function(_1e,_1f){
+}),error:_3.hitch(this,function(_1d,_1e){
 _11.errordeal(this.containerNode,"无法初始化表格内容数据...");
-this.onDownloadError(_1e);
+this.onDownloadError(_1d);
 })};
-_4.post(_1b);
-},onDownloadError:function(_20){
-},_parseData:function(_21){
-if(_21.gridHeader){
-this._parseGridHeader(_21.gridHeader);
+_4.post(_1a);
+},onDownloadError:function(_1f){
+},_parseData:function(_20){
+if(_20.gridHeader){
+this._parseGridHeader(_20.gridHeader);
 }
-if(_21.gridData){
-this._praseGridData(_21.gridData);
+if(_20.gridData){
+this._praseGridData(_20.gridData);
 }
-if(_21.pageControl){
-this._prasePageControl(_21.pageControl);
+if(_20.pageControl){
+this._prasePageControl(_20.pageControl);
 }
-},_prasePageControl:function(_22){
-if(!_22||!_22.total){
+},_prasePageControl:function(_21){
+if(!_21||!_21.total){
 return;
 }
-this.pageControl.total=parseInt(_22.total);
+this.pageControl.total=parseInt(_21.total);
 if(this.pageControl.total%this.pageControl.count==0){
 this.pageControl.totalpages=this.pageControl.total/this.pageControl.count;
 }else{
@@ -121,38 +121,38 @@ return false;
 }else{
 return true;
 }
-},_parseGridHeader:function(_23){
-var _24=this._checkMobile();
-_2.forEach(_23,function(_25){
-if(_25.formatter){
-_25.formatter=eval(_25.formatter);
+},_parseGridHeader:function(_22){
+var _23=this._checkMobile();
+_2.forEach(_22,function(_24){
+if(_24.formatter){
+_24.formatter=eval(_24.formatter);
 }
-if(_24&&_25.width=="auto"){
-_25.width="180px";
+if(_23&&_24.width=="auto"){
+_24.width="180px";
 }
 });
 if(this.showRowSelector=="new"){
-var _26=[];
-_26.push({type:"dojox.grid._CheckBoxSelector"});
-var _27={};
-_27.cells=[];
-_27.cells.push(_23);
-_26.push(_27);
-this.structure=_26;
+var _25=[];
+_25.push({type:"dojox.grid._CheckBoxSelector"});
+var _26={};
+_26.cells=[];
+_26.cells.push(_22);
+_25.push(_26);
+this.structure=_25;
 }else{
-this.structure=_23;
+this.structure=_22;
 }
-},_praseGridData:function(_28){
-this.store=new _7({data:_28});
+},_praseGridData:function(_27){
+this.store=new _7({data:_27});
 if(this.grid==null){
-var _29={store:this.store,structure:this.structure,query:this.query,canSort:_3.hitch(this,this.sortFunc),autoRender:true,autoHeight:true,loadingMessage:"系统正在载入数据，请稍候！"};
+var _28={store:this.store,structure:this.structure,query:this.query,canSort:_3.hitch(this,this.sortFunc),autoRender:true,autoHeight:true,loadingMessage:"系统正在载入数据，请稍候！"};
 if(this.showRowSelector=="true"){
-_29.rowSelector=this.rowSelector;
+_28.rowSelector=this.rowSelector;
 }
 if(this.autoGridRow!=-1){
-_29.autoHeight=this.autoGridRow;
+_28.autoHeight=this.autoGridRow;
 }
-this.grid=new _10(_29,this._gridNode);
+this.grid=new _10(_28,this._gridNode);
 this.grid.startup();
 this.connectArray.push(_8.connect(this.grid,"onRowDblClick",this,"onRowDblClick"));
 this.connectArray.push(_8.connect(this.grid,"onCellClick",this,"onCellClick"));
@@ -190,17 +190,17 @@ _5.set(this._gridNode,"height",this.gridHeight+"px");
 if(this.grid){
 this.grid.resize();
 }
-},pageKeyPress:function(_2a){
-if(_2a.keyCode==13){
-var _2b=_9.format(this.gotopage.setAttribute("value"));
-if(_2b!=null){
-if(_2b>this.pageControl.totalpages){
-_2b=this.pageControl.totalpages;
+},pageKeyPress:function(_29){
+if(_29.keyCode==13){
+var _2a=_9.format(this.gotopage.setAttribute("value"));
+if(_2a!=null){
+if(_2a>this.pageControl.totalpages){
+_2a=this.pageControl.totalpages;
 }
-if(_2b<1){
-_2b=1;
+if(_2a<1){
+_2a=1;
 }
-this.pageControl.page=parseInt(_2b);
+this.pageControl.page=parseInt(_2a);
 this._gotoPage(this.pageControl.page);
 }else{
 this.gotopage.setAttribute("value",this.pageControl.page);
