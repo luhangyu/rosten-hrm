@@ -611,8 +611,10 @@ class StaffController {
 	
 	def exportPerson={
 		OutputStream os = response.outputStream
+		
+		response.setContentType('application/vnd.ms-excel')
 		response.setHeader("Content-disposition", "attachment; filename=" + new String("张三.xls".getBytes("GB2312"), "ISO_8859_1"))
-		response.contentType = ""
+		
 		def excel = new ExcelExport()
 		excel.mbxz(os)
 	}
