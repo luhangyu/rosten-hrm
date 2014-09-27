@@ -43,6 +43,7 @@ grails.project.dependency.resolution = {
     dependencies {
         runtime 'mysql:mysql-connector-java:5.1.26'
 		compile ":jxl:0.1"
+		compile ":freemarker:2.3.8"
     }
 
     plugins {

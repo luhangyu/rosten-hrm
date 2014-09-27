@@ -12,7 +12,8 @@ import com.rosten.app.system.UserType
 import com.rosten.app.system.SystemService
 import com.rosten.app.system.Role
 import java.io.OutputStream
-import com.rosten.app.export.ExcelExport;
+import com.rosten.app.export.ExcelExport
+import com.rosten.app.export.WordExport;
 
 class StaffController {
 	def springSecurityService
@@ -617,6 +618,11 @@ class StaffController {
 		
 		def excel = new ExcelExport()
 		excel.mbxz(os)
+	}
+	
+	def printPerson={
+		def word = new WordExport()
+		word.downloadZip(response)
 	}
 	
 }

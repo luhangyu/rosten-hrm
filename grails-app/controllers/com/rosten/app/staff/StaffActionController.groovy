@@ -28,6 +28,7 @@ class StaffActionController {
 		actionList << createAction("员工登记",imgPath + "add.png","add_" + strname)
 		actionList << createAction("批量导入",imgPath + "add.png","import_" + strname)
 		actionList << createAction("导出",imgPath + "add.png","export_" + strname)
+		actionList << createAction("打印",imgPath + "add.png","print_" + strname)
 		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		render actionList as JSON
