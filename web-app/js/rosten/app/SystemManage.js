@@ -89,6 +89,11 @@ define(["dojo/_base/connect",
             }
         });
 	};
+	//打印
+	print_personInfor = function(){
+		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");
+	};
+	
 	add_personInfor = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
