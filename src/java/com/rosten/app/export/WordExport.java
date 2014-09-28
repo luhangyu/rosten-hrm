@@ -17,7 +17,7 @@ public class WordExport {
 		Map<String, Object> data = new HashMap<String, Object>();
 			
 		File wordFile = FreeMarkerUtil.getWordFile(data,
-				"com/rosten/app/export", "rxbdd.xml","wenj");
+				"classpath:com/rosten/app/template", "rxbdd.xml","wenj");
 		return wordFile;
 	}
 	
