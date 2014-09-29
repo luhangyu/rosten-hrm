@@ -34,7 +34,7 @@ class HrmController {
 			
 			resource = new Resource()
 			resource.resourceName = "代码配置"
-			resource.url = "staffCode"
+			resource.url = "systemCodeManage"
 			resource.imgUrl = "images/rosten/navigation/config.png"
 			resource.serialNo = 1
 			model.addToResources(resource)
