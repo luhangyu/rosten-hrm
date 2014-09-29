@@ -1,8 +1,94 @@
 /**
  * @author rosten
  */
-define([ "dojo/_base/connect", "dijit/registry", "dojo/has", "rosten/kernel/behavior" ], function(
+define([ "dojo/_base/connect", "dijit/registry", "dojo/has", "rosten/app/Application","rosten/kernel/behavior" ], function(
 		connect, registry,has) {
+	
+	flowBusiness_deleteFlow = function(){
+   	 var unids = rosten.getGridUnid("multi");
+        if (unids == "")
+            return;
+        rosten.readNoTime(rosten.webPath + "/modeler/flowBusinessDeleteFlow1/" + unids, {}, function(data){
+       	 if (data.result == "true" || data.result == true) {
+                rosten.alert("成功!");
+                rosten.kernel.refreshGrid();
+            } else {
+                rosten.alert("失败!");
+            }
+        });
+        
+   };
+   flowBusiness_addFlow = function(){
+   	 var unids = rosten.getGridUnid("multi");
+        if (unids == "")
+            return;
+        
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        var id = "sys_relationFlowDialog";
+        var initValue = [];
+        initValue.push(rosten.getGridSelectedValue("relationFlowName"));
+        
+        rosten.selectDialog("关联流程选择", id, rosten.webPath + "/modeler/flowSelect?companyId="+companyId, false, initValue);
+        rosten[id].callback = function(data) {
+       	 var content = {flowId:data[0].id,flowName:data[0].name};
+            rosten.read(rosten.webPath + "/modeler/flowBusinessAddFlow1/" + unids, content, function(_data){
+           	 if (_data.result == "true" || _data.result == true) {
+                    rosten.alert("成功!");
+                    rosten.kernel.refreshGrid();
+                } else {
+                    rosten.alert("失败!");
+                }
+            });
+        };
+        
+   };
+   
+	flowBusiness_formatTopic = function(value,rowIndex){
+    	return "<a href=\"javascript:flowBusiness_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+    };
+    flowBusiness_onMessageOpen = function(rowIndex){
+    	var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("flowBusiness", rosten.webPath + "/modeler/flowBusinessShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.kernel.getGrid().clearSelected();
+    };
+    add_flowBusiness = function() {
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("flowBusiness", rosten.webPath + "/modeler/flowBusinessAdd1?companyId=" + companyId + "&userid=" + userid);
+    };
+    read_flowBusiness = function() {
+        change_flowBusiness();
+    };
+    change_flowBusiness = function() {
+        var unid = rosten.getGridUnid("single");
+        if (unid == "")
+            return;
+
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("flowBusiness", rosten.webPath + "/modeler/flowBusinessShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+        rosten.kernel.getGrid().clearSelected();
+    };
+    delete_flowBusiness = function() {
+        var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+        _1.callback = function() {
+            var unids = rosten.getGridUnid("multi");
+            if (unids == "")
+                return;
+            var content = {};
+            content.id = unids;
+            rosten._readNoTime(rosten.webPath + "/modeler/flowBusinessDelete", content, function(data){
+            	if (data.result == "true" || data.result == true) {
+                    rosten.alert("成功!");
+                    rosten.kernel.refreshGrid();
+                } else {
+                    rosten.alert("失败!");
+                }
+            });
+        };
+    };
 	
 	//增加已部署流程功能
 	read_flow = function() {
@@ -235,6 +321,14 @@ define([ "dojo/_base/connect", "dijit/registry", "dojo/has", "rosten/kernel/beha
             var rostenGrid = rosten.kernel.getGrid();
             rostenGrid.onRowDblClick = read_modeler;
             break;
+		case "flowBusinessManage":
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/modelerAction/flowBusinessView",
+				gridSrc : rosten.webPath + "/modeler/flowBusinessGrid?userid=" + userid + "&companyId=" + companyId
+			};
+			rosten.kernel.addRightContent(naviJson);
+			break;
 		}
 	}
 	connect.connect("show_naviEntity", show_workFlowNaviEntity);

@@ -55,7 +55,7 @@ class HrmController {
 			
 			resource = new Resource()
 			resource.resourceName = "员工登记"
-			resource.url = "newStaffRegi"
+			resource.url = "staffRegi"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			resource.serialNo = 4
 			model.addToResources(resource)

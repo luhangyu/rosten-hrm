@@ -87,7 +87,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		
 		switch (oString) {
-		case "newStaffAdd":
+		case "staffRegi":
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffView?userId=" + userid,

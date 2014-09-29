@@ -267,24 +267,30 @@
 								_moreClick:more_gtask,moreText:"更多"'>
 						</div>
 							
-						<div data-dojo-type="rosten/widget/TitlePane" id="home_bbs"
-							data-dojo-props='region:"center",title:"最新公告",toggleable:false,
-								height:"157px",
-								_moreClick:more_bbs,moreText:"更多"'>
+						<div data-dojo-type="rosten/widget/TitlePane" id="home_staffInfor"
+							data-dojo-props='region:"center",title:"员工信息",toggleable:false,
+								height:"157px",moreText:""'>
 						</div>	
 						
 					</div>
 				
 					<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"207px"}' >
+						<!--
 						<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" id ="home_personMail"
 							data-dojo-props='region:"left",title:"新收邮件",toggleable:false,
 								height:"157px",width:"50%",style:{marginRight:"1px"},
 								_moreClick:more_mail,moreText:"更多"'>
+						</div>  -->
+						<div data-dojo-type="rosten/widget/TitlePane" id="home_bbs"
+							data-dojo-props='region:"left",title:"最新公告",toggleable:false,
+								height:"157px",width:"50%",style:{marginRight:"1px"},
+								_moreClick:more_bbs,moreText:"更多"'>
 						</div>
+						
 						<div data-dojo-type="rosten/widget/TitlePane"
 							data-dojo-props='region:"center",title:"工作日志",toggleable:false,
 								height:"157px",
-								_moreClick:more_bbs,moreText:"更多"'>
+								_moreClick:more_worklog,moreText:"更多"'>
 								
 							<div class="por-mod"> 
 							<!--计划-->
