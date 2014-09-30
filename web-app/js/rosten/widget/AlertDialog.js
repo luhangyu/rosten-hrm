@@ -1,5 +1,5 @@
 define(["dojo/_base/declare","dojo/_base/kernel","dojo/dom-style","rosten/widget/_Dialog"],function(_1,_2,_3,_4){
-return _1("rosten.widget.AlertDialog",rosten.widget._Dialog,{height:"90px",width:"300px",title:"RostenDialog",mode:"CLOSE",message:"",msgNode:null,buildContent:function(_5){
+return _1("rosten.widget.AlertDialog",rosten.widget._Dialog,{height:"100px",width:"300px",title:"RostenDialog",mode:"CLOSE",message:"",msgNode:null,buildContent:function(_5){
 var _6=document.createElement("div");
 _3.set(_6,{"height":"24px","fontSize":"12px"});
 _5.appendChild(_6);

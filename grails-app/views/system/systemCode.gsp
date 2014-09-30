@@ -17,6 +17,7 @@
 		require(["dojo/parser",
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
+		 		"dojo/json",
 		 		"dijit/form/ValidationTextBox",
 		 		"dijit/form/Button",
 		 		"dijit/form/Form",
@@ -25,7 +26,7 @@
 		     	"rosten/widget/ActionBar",
 		     	"rosten/app/Application",
 		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry){
+			function(parser,kernel,registry,JSON){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 					rosten.cssinit();
@@ -36,6 +37,21 @@
 				if(!rosten.checkData(chenkids)) return;
 				
 				var content = {};
+				
+				//获取表格中的数据-------------------------------------
+				var gridContent=[]
+				
+				var store = systemCodeItemGrid.getStore();
+				store.fetch({
+					query:{id:"*"},onComplete:function(items){
+						for(var i=0;i < items.length;i++){
+							var _item = items[i];
+							gridContent.push({code:store.getValue(_item, "code"),name:store.getValue(_item, "name")});
+						}
+					},queryOptions:{deep:true}
+				});
+				content.systemCodeItems = JSON.stringify(gridContent);
+				//-----------------------------------------------
 				
 				//增加对多次单击的次数----2014-9-4
 				var buttonWidget = object.target;
@@ -64,20 +80,52 @@
 		        });
 			};
 			systemCodeItem_Submit = function(){
-				systemCodeItemGrid.getStore().newItem({id:"001",rowIndex:01,code:"001",name:"hahaha",systemCodeItemId:"00222"});
+				var chenkids = ["itemCode","itemName"];
+				if(!rosten.checkData(chenkids)) return;
+
+				function gotAll(items,request){
+					var randId = Math.random();
+					store.newItem({id:randId,systemCodeItemId:randId,rowIndex:items.length+1,code:registry.byId("itemCode").get("value"),name:registry.byId("itemName").get("value")});
+				}
+				
+				var store = systemCodeItemGrid.getStore();
+				store.fetch({
+					query:{id:"*"},onComplete:gotAll,queryOptions:{deep:true}
+				});
+				rosten.hideRostenShowDialog();
 			};
 			systemCodeItem_formatTopic = function(value,rowIndex){
-				return "<a href=\"javascript:systemCodeItem_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+				return "<a href=\"javascript:systemCodeItem_onMessageOpen(" + rowIndex + ");\">" + value+ "</a>";
 			};
 			systemCodeItem_onMessageOpen = function(rowIndex){
-		    	var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
-		        var userid = rosten.kernel.getUserInforByKey("idnumber");
-				var companyId = rosten.kernel.getUserInforByKey("companyid");
-				rosten.openNewWindow("user", rosten.webPath + "/system/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
-				rosten.kernel.getGrid().clearSelected();
+				//打开systemCodeItem信息
+		    	rosten.createRostenShowDialog(rosten.webPath + "/systemExtend/systemCodeItemShow", {
+		            onLoadFunction : function() {
+		            	var code = rosten.getGridItemValue(systemCodeItemGrid,rowIndex,"code");
+		            	var name = rosten.getGridItemValue(systemCodeItemGrid,rowIndex,"name");
+		            	
+		            	registry.byId("itemCode").set("value",code)
+		            	registry.byId("itemName").set("value",name)
+			        }
+		        });
 		    };
 		    systemCodeItem_action = function(value,rowIndex){
-		    	return "<a href=\"" + rosten.webPath + "/system/downloadFile/" + value + "\">删除</a>";
+		    	return "<a href=\"javascript:systemCodeItem_onDelete(" + rowIndex + ");\">" + "删除" + "</a>";
+			};
+			systemCodeItem_onDelete = function(rowIndex){
+				//删除item信息
+				var store = systemCodeItemGrid.getStore();
+			    var item = rosten.getGridItem(systemCodeItemGrid,rowIndex);
+				store.deleteItem(item);
+				//更新store中的rowIndex号
+				store.fetch({
+					query:{id:"*"},onComplete:function(items){
+						for(var i=0;i < items.length;i++){
+							var _item = items[i];
+							store.setValue(_item,"rowIndex",i+1);
+						}
+					},queryOptions:{deep:true}
+				});
 			};
 		});
 		
@@ -99,7 +147,7 @@
 					    	<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>代码编号：</div></td>
 					    	<td width="250">
 						    	<input id="code" data-dojo-type="dijit/form/ValidationTextBox" 
-				                 	data-dojo-props='name:"name",trim:true,required:true,missingMessage:"请填写代码编号！",invalidMessage:"请填写代码编号！",
+				                 	data-dojo-props='name:"code",trim:true,required:true,missingMessage:"请填写代码编号！",invalidMessage:"请填写代码编号！",
 										value:"${systemCode?.code}"
 				                '/>
 						    </td>

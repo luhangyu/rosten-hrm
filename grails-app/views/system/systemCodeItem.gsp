@@ -17,8 +17,8 @@
                                 <div align="right"><span style="color:red">*&nbsp;</span>条目编号：</div>
                             </td>
                            <td  width="220">
-                                <input id="password" data-dojo-type="dijit/form/ValidationTextBox"
-                                	data-dojo-props='name:"password",
+                                <input id="itemCode" data-dojo-type="dijit/form/ValidationTextBox"
+                                	data-dojo-props='name:"itemCode",
                                 		"class":"input",
                                 		trim:true,
                                 		required:true,
@@ -31,8 +31,8 @@
                                 <div align="right"><span style="color:red">*&nbsp;</span>条目名称：</div>
                             </td>
                             <td>
-                            	<input id="newpassword" data-dojo-type="dijit/form/ValidationTextBox"
-                                	data-dojo-props='name:"newpassword",
+                            	<input id="itemName" data-dojo-type="dijit/form/ValidationTextBox"
+                                	data-dojo-props='name:"itemName",
                                 		"class":"input",
                                 		trim:true,
                                 		required:true,

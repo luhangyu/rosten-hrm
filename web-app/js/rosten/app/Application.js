@@ -37,6 +37,7 @@ define(["dojo/_base/lang",
 					obj.focus();
 				};
 				flag=false;
+				break;
 			}
 			}
 		return flag;
@@ -197,6 +198,17 @@ define(["dojo/_base/lang",
         	application.rostenShowDialog.hide();
         	application.rostenShowDialog.destroy();
         }
+    },
+    application.getGridItemValue = function(rostenGrid,index,name){
+    	var grid = rostenGrid.getGrid();
+    	var item = grid.getItem(index);
+    	var store = rostenGrid.getStore();
+    	return store.getValue(item, name);
+    },
+    application.getGridItem = function(rostenGrid,index){
+    	var grid = rostenGrid.getGrid();
+    	var item = grid.getItem(index);
+    	return item;
     },
     lang.mixin(rosten,application);
     

@@ -29,32 +29,35 @@ class SystemExtendController {
 			systemCode = SystemCode.get(params.id)
 			systemCode.properties = params
 			systemCode.clearErrors()
-			
-			if(systemCode.save(flush:true)){
-				json["result"] = "true"
-			}else{
-				systemCode.errors.each{
-					println it
-				}
-				json["result"] = "false"
-			}
-			render json as JSON
-			
 		}else{
 			systemCode.properties = params
 			systemCode.clearErrors()
 			systemCode.company = Company.get(params.companyId)
-			if(systemCode.save(flush:true)){
-				json["result"] = "true"
-			}else{
-				systemCode.errors.each{
-					println it
-				}
-				json["result"] = "false"
+		}
+		//删除systemCodeItem所有数据
+		if(systemCode.items){
+			def _list = []
+			_list += systemCode.items
+			systemCode.items.clear()
+			_list.each{
+				it.delete()
 			}
-			render json as JSON
 		}
 		
+		JSON.parse(params.systemCodeItems).eachWithIndex{elem, i ->
+			def systemCodeItem = new SystemCodeItem(serialNo:i+1,code:elem.code,name:elem.name)
+			systemCode.addToItems(systemCodeItem)
+		}
+		
+		if(systemCode.save(flush:true)){
+			json["result"] = "true"
+		}else{
+			systemCode.errors.each{
+				println it
+			}
+			json["result"] = "false"
+		}
+		render json as JSON
 	}
 	def systemCodeAdd ={
 		redirect(action:"systemCodeShow",params:params)
@@ -116,21 +119,29 @@ class SystemExtendController {
 		def searchArgs =[:]
 		
 		if(params.refreshData){
-			def args =[:]
-			int perPageNum = Util.str2int(params.perPageNum)
-			int nowPage =  Util.str2int(params.showPageNum)
-			
-			args["offset"] = (nowPage-1) * perPageNum
-			args["max"] = perPageNum
-			args["systemCode"] = systemCode
-			
-			def gridData = systemExtendService.getSystemCodeItemListDataStore(args,searchArgs)
-			json["gridData"] = gridData
-			
+			if(!systemCode){
+				json["gridData"] = ["identifier":"id","label":"name","items":[]]
+			}else{
+				def args =[:]
+				int perPageNum = Util.str2int(params.perPageNum)
+				int nowPage =  Util.str2int(params.showPageNum)
+				
+				args["offset"] = (nowPage-1) * perPageNum
+				args["max"] = perPageNum
+				args["systemCode"] = systemCode
+				
+				def gridData = systemExtendService.getSystemCodeItemListDataStore(args,searchArgs)
+				json["gridData"] = gridData
+			}
 		}
 		if(params.refreshPageControl){
-			def total = systemExtendService.getSystemCodeItemCount(systemCode,searchArgs)
-			json["pageControl"] = ["total":total.toString()]
+			if(!systemCode){
+				json["pageControl"] = ["total":"0"]
+			}else{
+				def total = systemExtendService.getSystemCodeItemCount(systemCode,searchArgs)
+				json["pageControl"] = ["total":total.toString()]
+			}
+			
 		}
 		render json as JSON
 	}
