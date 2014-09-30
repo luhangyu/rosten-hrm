@@ -5,6 +5,14 @@ import grails.converters.JSON
 class SystemExtendActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def systemCodeForm ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("保存",webPath + imgPath + "Save.gif","systemCode_add")
+		render actionList as JSON
+	}
+	
 	def systemCodeView ={
 		render createCommonAction(null,"systemCode",true) as JSON
 	}

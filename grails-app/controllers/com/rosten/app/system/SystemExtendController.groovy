@@ -104,4 +104,43 @@ class SystemExtendController {
 		}
 		render json as JSON
 	}
+	def systemCodeItemGrid ={
+		def json=[:]
+		
+		def systemCode = SystemCode.get(params.id)
+		if(params.refreshHeader){
+			json["gridHeader"] = systemExtendService.getSystemCodeItemListLayout()
+		}
+		
+		//2014-9-1 增加搜索功能
+		def searchArgs =[:]
+		
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["systemCode"] = systemCode
+			
+			def gridData = systemExtendService.getSystemCodeItemListDataStore(args,searchArgs)
+			json["gridData"] = gridData
+			
+		}
+		if(params.refreshPageControl){
+			def total = systemExtendService.getSystemCodeItemCount(systemCode,searchArgs)
+			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+	}
+	def systemCodeItemShow ={
+		def model =[:]
+		if(params.id){
+			model["systemCodeItem"] = SystemCodeItem.get(params.id)
+		}else{
+			model["systemCodeItem"] = new SystemCodeItem()
+		}
+		render(view:'/system/systemCodeItem',model:model)
+	}
 }

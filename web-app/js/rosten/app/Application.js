@@ -6,7 +6,8 @@ define(["dojo/_base/lang",
 		"rosten/widget/MultiSelectDialog",
 		"rosten/widget/PickTreeDialog",
 		"rosten/widget/DepartUserDialog",
-		"rosten/kernel/_kernel"], function(lang,registry,MultiSelectDialog,PickTreeDialog,DepartUserDialog) {
+		"rosten/widget/ShowDialog",
+		"rosten/kernel/_kernel"], function(lang,registry,MultiSelectDialog,PickTreeDialog,DepartUserDialog,ShowDialog) {
 			
 	var application = {};
     application.cssinitcommon = function() {
@@ -181,7 +182,22 @@ define(["dojo/_base/lang",
             }
         };
     };
-    
+    application.createRostenShowDialog = function(src,args){
+        var obj = {src:src};
+        if(args){
+            if(args.callback)obj.callback = args.callback;
+            if(args.callbackargs) obj.callbackargs = args.callbackargs;
+            if(args.onLoadFunction) obj.onLoadFunction = args.onLoadFunction;
+        }
+        if(application.rostenShowDialog) application.rostenShowDialog.destroy();
+        application.rostenShowDialog = new ShowDialog(obj);
+    },
+    application.hideRostenShowDialog = function(){
+        if (application.rostenShowDialog){
+        	application.rostenShowDialog.hide();
+        	application.rostenShowDialog.destroy();
+        }
+    },
     lang.mixin(rosten,application);
     
     return application;
