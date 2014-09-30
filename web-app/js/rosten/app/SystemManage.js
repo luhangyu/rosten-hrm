@@ -46,7 +46,7 @@ define(["dojo/_base/connect",
                 return;
             var content = {};
             content.id = unids;
-            rosten.readNoTime(rosten.webPath + "/systemExtend/systemCodeDelete", content, delete_callback);
+            rosten.readSync(rosten.webPath + "/systemExtend/systemCodeDelete", content,delete_callback);
         };
     };
 	
@@ -131,11 +131,23 @@ define(["dojo/_base/connect",
         });
 	};
 	//打印
-	print_personInfor = function(){
+	personInfor_print = function(){
 		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");
 	};
-	
-	add_personInfor = function() {
+	personInfor_print_rzqd = function(){
+		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");
+	};
+	personInfor_print_rztzs = function(){
+		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");
+	};
+	personInfor_rz = function() {
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        var currentDepartId = rosten.variable.currentDeartId;
+        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&type=rz");
+        
+    };
+	personInfor_dj = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
         var currentDepartId = rosten.variable.currentDeartId;
@@ -172,11 +184,11 @@ define(["dojo/_base/connect",
             if (unids == "") return;
             var content = {};
             content.id = unids;
-            rosten.read(rosten.webPath + "/staff/userDelete", content, function(data){
+            rosten.read(rosten.webPath + "/staff/userDelete", content, function(data,ioArgs){
             	if(rosten.kernel.navigationEntity=="newStaffAdd"){
             		delete_callback(data);
             	}else{
-            		delete_callback(data,dom_rostenGrid);
+            		delete_callback(data,ioArgs,dom_rostenGrid);
             	}
             });
         };
@@ -740,15 +752,15 @@ define(["dojo/_base/connect",
             rosten.alert("上传成功后，请使用<重新登录系统>查看变化！");
         }));
     };
-    delete_callback = function(data,gridDom) {
+    delete_callback = function(data,ioArgs,gridDom) {
         if (data.result == "true" || data.result == true) {
-            rosten.alert("成功删除!");
-            if(gridDom){
-            	gridDom.refresh();
-            }else{
-            	rosten.kernel.refreshGrid();
-            }
-            
+            rosten.alert("成功删除!").queryDlgClose = function(){
+            	if(gridDom){
+                	gridDom.refresh();
+                }else{
+                	rosten.kernel.refreshGrid();
+                }
+            };
         } else {
             rosten.alert("删除失败!");
         }

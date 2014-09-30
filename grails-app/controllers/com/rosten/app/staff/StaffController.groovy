@@ -278,6 +278,9 @@ class StaffController {
 		//当前选中的部门
 		model["departId"] = params.currentDepartId;
 		
+		//显示类型
+		model["type"] = params.type
+		
 		if(params.id){
 			def _user = User.get(params.id)
 			model["user"] = _user

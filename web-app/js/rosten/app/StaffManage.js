@@ -87,6 +87,14 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		
 		switch (oString) {
+		case "staffAdd":
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/staffAction/staffAddView?userId=" + userid,
+				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=normal"
+			};
+			rosten.kernel.addRightContent(naviJson);
+			break;
 		case "staffRegi":
 			var naviJson = {
 				identifier : oString,

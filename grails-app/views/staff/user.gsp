@@ -8,6 +8,10 @@
     	body{
 			overflow:auto;
 		}
+		.rosten .rostenTitleGrid .dijitTitlePaneContentInner{
+			padding:2px 1px 1px 1px;
+			height:200px;
+		}
     </style>
 	<script type="text/javascript">
 	require(["dojo/parser",
@@ -27,10 +31,11 @@
 		     	"dijit/form/RadioButton",
 		     	"dijit/form/FilteringSelect",
 		     	"dijit/form/ComboBox",
-		     	"rosten/app/SystemApplication"],
+		     	"rosten/app/SystemApplication",
+		     	"rosten/app/StaffApplication"],
 			function(parser,kernel,registry,ActionBar){
 				kernel.addOnLoad(function(){
-					rosten.init({webpath:"${request.getContextPath()}"});
+					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 					rosten.cssinit();
 				});
 			user_add_check = function(){
@@ -216,23 +221,11 @@
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"150px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getContactInfor',id:personInfor?.id)}"'>
 			</div>
-			
 
-			<div id="assetScrapList" data-dojo-type="rosten/widget/TitlePane"data-dojo-props='title:"家庭成员",toggleable:false,moreText:"",marginBottom:"2px"'>
-					<button data-dojo-type='dijit.form.Button' 
-				data-dojo-props="label:'添加',iconClass:'docCloseIcon'">
-				<script type="dojo/method" data-dojo-event="onClick">
-					addAsset();
-				</script>
-			</button>
-			<button data-dojo-type='dijit.form.Button' 
-				data-dojo-props="label:'删除',iconClass:'docCloseIcon'">
-				<script type="dojo/method" data-dojo-event="onClick">
-					deleteAsset();
-				</script>
-			</button>
-				<div data-dojo-type="rosten/widget/RostenGrid" id="assetScrapListGrid" data-dojo-id="assetScrapListGrid"
-					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:user?.id)}"'></div>
+			<div data-dojo-type="rosten/widget/TitlePane" 
+				data-dojo-props='"class":"rostenTitleGrid",title:"家庭成员",toggleable:true,_moreClick:staff_addFamily,moreText:"<span style=\"color:#108ac6\">增加成员</span>",marginBottom:"2px"'>
+				<div data-dojo-type="rosten/widget/RostenGrid" id="staffFamilyGrid" data-dojo-id="staffFamilyGrid"
+					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:personInfor?.id)}"'></div>
 			</div>
 			
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"学历学位",toggleable:false,moreText:"",height:"100px",marginBottom:"2px",
@@ -244,15 +237,20 @@
 			</div>
 			
         </div>
-		<div data-dojo-type="dijit/layout/ContentPane" title="合同信息" data-dojo-props=''>
-	
-		</div>
-		<div data-dojo-type="dijit/layout/ContentPane" title="劳资福利" data-dojo-props=''>
+        
+        <g:if test='${"rz".equals(type)}'>
+			<div data-dojo-type="dijit/layout/ContentPane" title="面试结果" data-dojo-props=''>
 		
-		</div>
-		<div data-dojo-type="dijit/layout/ContentPane" title="......" data-dojo-props=''>
+			</div>
+		</g:if>
+		<g:else>
+			<div data-dojo-type="dijit/layout/ContentPane" title="合同信息" data-dojo-props=''>
 		
-		</div>
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane" title="劳资福利" data-dojo-props=''>
+			
+			</div>
+		</g:else>
 	</div>
 	
 	</form>

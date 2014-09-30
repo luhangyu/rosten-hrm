@@ -5,6 +5,18 @@ import grails.converters.JSON
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def staffAddView ={
+		def actionList =[]
+		def strname = "personInfor"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("员工入职",imgPath + "add.png",strname + "_rz")
+		actionList << createAction("打印登记表",imgPath + "word_print.png",strname + "_print")
+		actionList << createAction("打印入职清单",imgPath + "word_print.png",strname + "_print_rzqd")
+		actionList << createAction("打印入职通知书",imgPath + "word_print.png",strname + "_print_rztzs")
+		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		render actionList as JSON
+	}
 	def staffForm ={
 		def webPath = request.getContextPath() + "/"
 		def actionList = []
@@ -25,10 +37,10 @@ class StaffActionController {
 		def actionList =[]
 		def strname = "personInfor"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("员工登记",imgPath + "add.png","add_" + strname)
+		actionList << createAction("员工登记",imgPath + "add.png",strname + "_dj")
 		actionList << createAction("批量导入",imgPath + "add.png","import_" + strname)
-		actionList << createAction("导出",imgPath + "add.png","export_" + strname)
-		actionList << createAction("打印",imgPath + "add.png","print_" + strname)
+		actionList << createAction("导出员工信息",imgPath + "send.png","export_" + strname)
+		actionList << createAction("打印登记表",imgPath + "word_print.png",strname + "_print")
 		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		render actionList as JSON
