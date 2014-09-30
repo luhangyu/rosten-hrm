@@ -17,13 +17,11 @@ class SystemExtendService {
 		return gridUtil.buildDataList("id","title",propertyList,offset)
 	}
 	private def getAllSystemCodeItem={offset,max,systemCode,searchArgs->
-		def c = SystemCode.createCriteria()
+		def c = SystemCodeItem.createCriteria()
 		def pa=[max:max,offset:offset]
 		def query = {
-			if(systemCode){
-				eq("systemCode",systemCode)
-			}
-			order("code", "desc")
+			eq("systemCode",systemCode)
+			order("serialNo", "asc")
 			
 			searchArgs.each{k,v->
 				like(k,"%" + v + "%")
@@ -34,9 +32,7 @@ class SystemExtendService {
 	def getSystemCodeItemCount ={systemCode,searchArgs->
 		def c = SystemCodeItem.createCriteria()
 		def query = {
-			if(systemCode){
-				eq("systemCode",systemCode)
-			}
+			eq("systemCode",systemCode)
 			searchArgs.each{k,v->
 				like(k,"%" + v + "%")
 			}
