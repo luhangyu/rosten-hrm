@@ -3,13 +3,42 @@
  */
 define(["dojo/_base/lang",
 		"dijit/registry",
+		"dojo/json",
 		"rosten/widget/MultiSelectDialog",
 		"rosten/widget/PickTreeDialog",
 		"rosten/widget/DepartUserDialog",
 		"rosten/widget/ShowDialog",
-		"rosten/kernel/_kernel"], function(lang,registry,MultiSelectDialog,PickTreeDialog,DepartUserDialog,ShowDialog) {
+		"rosten/kernel/_kernel"], function(lang,registry,JSON,MultiSelectDialog,PickTreeDialog,DepartUserDialog,ShowDialog) {
 			
 	var application = {};
+	
+	/*
+	 * 获取表格中的数据集合，并返回jsonString类型
+	 * grid:表格widget;dealArray:需要处理的字段名称集合;query:查询参数json类型
+	 */
+	application.getGridDataCollect =function(grid,dealArray,query){
+		var gridContent=[]
+		
+		var searchQuery = {id:"*"};
+		if(query) searchQuery = query;
+		
+		var store = grid.getStore();
+		store.fetch({
+			query:searchQuery,onComplete:function(items){
+				for(var i=0;i < items.length;i++){
+					var _item = items[i];
+					var jsonObj = {};
+					
+					for(var j = 0 ;j<dealArray.length;j++){
+						jsonObj[dealArray[j]] = store.getValue(_item, dealArray[j]);
+					}
+					gridContent.push(jsonObj);
+				}
+			},queryOptions:{deep:true}
+		});
+		return JSON.stringify(gridContent);
+	};
+	
     application.cssinitcommon = function() {
         //此功能只添加css文件
         var _rosten = window.opener.rosten;
@@ -39,9 +68,24 @@ define(["dojo/_base/lang",
 				flag=false;
 				break;
 			}
-			}
-		return flag;
 		}
+		return flag;
+	};
+    
+    application.check_common = function(fieldStr,alertStr,isFocus){
+		var _dom = registry.byId(fieldStr);
+		if(_dom && !_dom.isValid()){
+			if(isFocus){
+				rosten.alert(alertStr).queryDlgClose = function(){
+					_dom.focus();
+				};
+			}else{
+				rosten.alert(alertStr);
+			}
+			return false;
+		}
+		return true;
+	};
     
     /*
      * 关闭当前窗口，并刷新父文档视图

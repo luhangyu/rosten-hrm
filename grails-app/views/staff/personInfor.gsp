@@ -15,7 +15,7 @@
 		    <td width="250">
 		    	<input id="chinaName" data-dojo-type="dijit/form/ValidationTextBox" 
 	                 	data-dojo-props='name:"chinaName",trim:true,required:true,${fieldAcl.isReadOnly("chinaName")},
-							value:"${personInforEntity?.user?.getFormattedName()}"
+							value:"${personInforEntity?.chinaName}"
 	                '/>
 		    </td>
 		    <td width="120"><div align="right">曾用名：</div></td>
@@ -33,7 +33,7 @@
              		data-dojo-props='name:"userTypeName",
              			autoComplete:true,required:true,
              			${fieldAcl.isReadOnly("userTypeName")},
-						value:"${personInforEntity?.user?.userTypeEntity?.typeName }"
+						value:"${userTypeEntity?userTypeEntity.typeName:personInforEntity?.userTypeEntity?.typeName }"
                 '>
                 <g:each in="${userTypeList}" var="item">
                 	<option value="${item.id }">${item.typeName }</option>
@@ -121,10 +121,14 @@
 			</td>
 			<td width="120"><div align="right">政治面貌：</div></td>
 		 	<td width="250">
-		    	<input id="politicsStatus" data-dojo-type="dijit/form/ValidationTextBox" 
+		    	<select id="politicsStatus" data-dojo-type="dijit/form/ComboBox" 
                  	data-dojo-props='name:"politicsStatus",trim:true,${fieldAcl.isReadOnly("politicsStatus")},
 						value:"${personInforEntity?.politicsStatus}"
-                '/>
+                '>
+                	<g:each in="${politicsStatusList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>
+                </select>
 		    </td>
 		</tr>
 		
@@ -166,17 +170,65 @@
 		<tr>
 		 	<td width="120"><div align="right">血型：</div></td>
 		  	<td width="250">
-		    	<input id="blood" data-dojo-type="dijit/form/ValidationTextBox" 
+		    	<select id="blood" data-dojo-type="dijit/form/ComboBox" 
                  	data-dojo-props='name:"blood",trim:true,${fieldAcl.isReadOnly("blood")},
 						value:"${personInforEntity?.blood}"
-                '/>
+                '>
+	                <g:each in="${bloodList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>
+                </select>
+                
 		    </td>
 	     	<td width="120"><div align="right">健康状况：</div></td>
 		  	<td width="250">
-		    	<input id="health" data-dojo-type="dijit/form/ValidationTextBox" 
-	                	data-dojo-props='name:"health",trim:true,${fieldAcl.isReadOnly("health")},
-						value:"${personInforEntity?.health}"
-	               '/>
+		    	<select id="health" data-dojo-type="dijit/form/ComboBox" 
+                	data-dojo-props='name:"health",trim:true,${fieldAcl.isReadOnly("health")},
+					value:"${personInforEntity?.health}"
+               '>
+              	 	<g:each in="${healthList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>
+	            </select>
+		    </td>
+		</tr>
+		
+		<tr>
+		 	<td width="120"><div align="right">户口所在地：</div></td>
+		  	<td width="250">
+		    	<input id="householdRegi" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"householdRegi",trim:true,${fieldAcl.isReadOnly("householdRegi")},
+						value:"${personInforEntity?.householdRegi}"
+                '/>
+                
+		    </td>
+	     	<td width="120"><div align="right">人事转入时间：</div></td>
+		  	<td width="250">
+		    	<input id="intoday" data-dojo-type="dijit/form/DateTextBox" 
+                 	data-dojo-props='name:"intoday",trim:true,${fieldAcl.isReadOnly("intoday")},
+						value:"${personInforEntity?.getFormatteIntoday()}"
+                '/>
+		    </td>
+		</tr>
+		
+		<tr>
+		 	<td width="120"><div align="right">专业技术等级：</div></td>
+		  	<td width="250">
+		    	<select id="techGrade" data-dojo-type="dijit/form/ComboBox" 
+                	data-dojo-props='name:"techGrade",trim:true,${fieldAcl.isReadOnly("techGrade")},
+					value:"${personInforEntity?.techGrade}"
+               '>
+              	 	<g:each in="${techGradeList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>
+	            </select>
+		    </td>
+	     	<td width="120"><div align="right">入职时间：</div></td>
+		  	<td width="250">
+		    	<input id="staffOnDay" data-dojo-type="dijit/form/DateTextBox" 
+                 	data-dojo-props='name:"staffOnDay",trim:true,${fieldAcl.isReadOnly("staffOnDay")},
+						value:"${personInforEntity?.getFormatteStaffOnday()}"
+                '/>
 		    </td>
 		</tr>
 		

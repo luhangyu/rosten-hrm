@@ -49,7 +49,7 @@ class StaffActionController {
 		def actionList =[]
 		def strname = "personInfor"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("添加",imgPath + "add.png","add_" + strname)
+		actionList << createAction("添加",imgPath + "add.png",strname + "_dj")
 		actionList << createAction("查看",imgPath + "read.gif","read_" + strname)
 		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif",strname + "_freshGrid")

@@ -26,6 +26,25 @@
 	                '/>
 		    </td>
 		</tr>
+		
+		<tr>
+		 	<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>QQ号码：</div></td>
+		  	<td width="250" >
+		    	<input id="qq" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"qq",trim:true,required:true,${fieldAcl.isReadOnly("qq")},
+						value:"${contactInforEntity?.qq}"
+                '/>
+		    </td>
+		    
+		     <td width="120"><div align="right">微信号：</div></td>
+		 	 <td width="250" >
+		    	<input id="wechat" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"wechat",trim:true,${fieldAcl.isReadOnly("wechat")},
+						value:"${contactInforEntity?.wechat}"
+                '/>
+		    </td>
+		</tr>
+		
 		<tr>
 	 		<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>通讯地址：</div></td>
 	    	<td width="250">
@@ -38,7 +57,7 @@
 		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>邮编：</div></td>
 		    <td width="250">
 		    	<input id="addressPostcode" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"addressPostcode",trim:true,${fieldAcl.isReadOnly("addressPostcode")},
+	                 	data-dojo-props='name:"addressPostcode",trim:true,required:true,${fieldAcl.isReadOnly("addressPostcode")},
 							value:"${contactInforEntity?.addressPostcode}"
 	                '/>
 		    </td>
@@ -62,31 +81,15 @@
 		    </td>
 		</tr>
 		<tr>
-		 <td width="120"><div align="right">电子邮箱：</div></td>
-		  <td width="250" >
+		 	<td width="120"><div align="right">电子邮箱：</div></td>
+		  	<td width="250" >
 		    	<input id="email" data-dojo-type="dijit/form/ValidationTextBox" 
 	                 	data-dojo-props='name:"email",trim:true,${fieldAcl.isReadOnly("email")},
 							value:"${contactInforEntity?.email}"
 	                '/>
 		    </td>
-		    
-		     <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>QQ：</div></td>
-		 	 <td width="250" >
-		    	<input id="qq" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"qq",trim:true,${fieldAcl.isReadOnly("qq")},
-							value:"${contactInforEntity?.qq}"
-	                '/>
-		    </td>
-		</tr>
-		
-		<tr>
-		     <td width="120" ><div align="right">微信：</div></td>
-		 	 <td width="250" colspan="3" >
-		    	<input id="wechat" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"wechat",trim:true,${fieldAcl.isReadOnly("wechat")},
-							value:"${contactInforEntity?.wechat}"
-	                '/>
-		    </td>
+		    <td></td>
+		    <td></td>
 		</tr>
 		
 	</table>

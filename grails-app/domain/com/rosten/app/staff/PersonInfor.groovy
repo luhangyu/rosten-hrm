@@ -63,6 +63,35 @@ class PersonInfor {
 	//血型
 	String blood
 	
+	//户口所在地
+	String householdRegi
+	
+	//人事关系转入时间
+	Date intoday
+	
+	def getFormatteIntoday(){
+		if(intoday!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			return sd.format(intoday)
+		}else{
+			return ""
+		}
+	}
+	
+	//专业技术等级
+	String techGrade
+	
+	//入职时间
+	Date staffOnDay
+	def getFormatteStaffOnday(){
+		if(staffOnDay!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			return sd.format(staffOnDay)
+		}else{
+			return ""
+		}
+	}
+	
 	//状态
 	String status = "在职"
 	
@@ -83,6 +112,10 @@ class PersonInfor {
 		nativeAddress nullable:true,blank:true
 		usedName nullable:true,blank:true
 		blood nullable:true,blank:true
+		householdRegi nullable:true,blank:true
+		intoday nullable:true,blank:true
+		techGrade nullable:true,blank:true
+		staffOnDay nullable:true,blank:true
 		user nullable:true,blank:true
     }
 	

@@ -87,7 +87,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		
 		switch (oString) {
-		case "staffAdd":
+		case "staffAdd":	//员工入职
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffAddView?userId=" + userid,
@@ -95,7 +95,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;
-		case "staffRegi":
+		case "staffRegi":	//员工登记
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffView?userId=" + userid,
@@ -103,7 +103,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;
-		case "staffDepartChange":
+		case "staffDepartChange":	//员工调动
 			require(["rosten/app/Application"],function(){
 				rosten.kernel.setHref(rosten.webPath + "/staff/staffDepartChange?companyId=" + companyId, oString);
 			});

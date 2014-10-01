@@ -10,7 +10,7 @@
 		}
 		.rosten .rostenTitleGrid .dijitTitlePaneContentInner{
 			padding:2px 1px 1px 1px;
-			height:200px;
+			height:160px;
 		}
     </style>
 	<script type="text/javascript">
@@ -40,9 +40,9 @@
 				});
 			user_add_check = function(){
 				<g:if test='${departId}'>
-					if(check_common("username","账号不正确！",true)==false) return false;
-					if(check_common("password","密码不正确！",true)==false) return false;
-					if(check_common("passwordcheck","确认密码不正确！",true)==false) return false;
+					if(rosten.check_common("username","账号不正确！",true)==false) return false;
+					if(rosten.check_common("password","密码不正确！",true)==false) return false;
+					if(rosten.check_common("passwordcheck","确认密码不正确！",true)==false) return false;
 	
 					var password = registry.byId("password");
 					var passwordcheck = registry.byId("passwordcheck");
@@ -57,12 +57,16 @@
 				</g:if>
 
 				//个人概况检查
-				if(check_common("chinaName","姓名不正确！",true)==false) return false;
-				if(check_common("userTypeName","用户类型不正确！",true)==false) return false;
-				if(check_common("allowdepartsName","所属部门不正确！")==false) return false;
-				if(check_common("idCard","身份证号不正确！",true)==false) return false;
+				if(rosten.check_common("chinaName","姓名不正确！",true)==false) return false;
+				if(rosten.check_common("userTypeName","用户类型不正确！",true)==false) return false;
+				if(rosten.check_common("allowdepartsName","所属部门不正确！")==false) return false;
+				if(rosten.check_common("idCard","身份证号不正确！",true)==false) return false;
 
 				//通讯方式
+				if(rosten.check_common("mobile","移动电话不正确！",true)==false) return false;
+				if(rosten.check_common("qq","QQ号码不正确！",true)==false) return false;
+				if(rosten.check_common("address","通讯地址不正确！",true)==false) return false;
+				if(rosten.check_common("addressPostcode","邮编不正确！",true)==false) return false;
 				
 				return true;
 			};
@@ -71,8 +75,13 @@
 				var content = {};
 				<g:if test='${!userType.equals("super")  }'>
 					content.companyId = "${company?.id}";
-					//content.userNameFront = registry.byId("userNameFront").attr("value");
+					<g:if test='${departId}'>
+						content.userNameFront = registry.byId("userNameFront").attr("value");
+					</g:if>
 				</g:if>
+
+				content.staffFamily = rosten.getGridDataCollect(staffFamilyGrid,["name","relation","mobile","workUnit","duties","politicsStatus"]);
+				
 				rosten.readSync(rosten.webPath + "/staff/userSave",content,function(data){
 					if(data.result=="true"){
 						rosten.alert("保存成功！").queryDlgClose= function(){
@@ -86,26 +95,12 @@
 				},null,"rosten_form");
 			};
 			page_quit = function(){
-				if(window.opener.rosten.kernel.navigationEntity=="newStaffAdd"){
+				if(window.opener.rosten.kernel.navigationEntity!="userManage"){
 					window.opener.rosten.kernel.refreshGrid();
 				}else{
 					window.opener.dom_rostenGrid.refresh();
 				}
 		        window.close();
-			};
-			check_common = function(fieldStr,alertStr,isFocus){
-				var _dom = registry.byId(fieldStr);
-				if(_dom && !_dom.isValid()){
-					if(isFocus){
-						rosten.alert(alertStr).queryDlgClose = function(){
-							_dom.focus();
-						};
-					}else{
-						rosten.alert(alertStr);
-					}
-					return false;
-				}
-				return true;
 			};
 	});
     </script>
@@ -213,12 +208,12 @@
 			</div>
 			</g:if>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"315px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId])}"
 			'>
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式",toggleable:false,moreText:"",height:"150px",marginBottom:"2px",
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"通讯方式 <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"150px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getContactInfor',id:personInfor?.id)}"'>
 			</div>
 

@@ -7,6 +7,7 @@
   
 <body>
 	<div style="text-Align:center">
+		<input  data-dojo-type="dijit/form/ValidationTextBox" id="itemId"  data-dojo-props='name:"itemId",style:{display:"none"}' />
         <div class="rosten_form" style="width:400px;text-align:left">
             <fieldset class="fieldset-form">
                 <legend class="tableHeader">代码条目</legend>
