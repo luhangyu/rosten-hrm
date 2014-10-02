@@ -33,7 +33,7 @@
              		data-dojo-props='name:"userTypeName",
              			autoComplete:true,required:true,
              			${fieldAcl.isReadOnly("userTypeName")},
-						value:"${userTypeEntity?userTypeEntity.typeName:personInforEntity?.userTypeEntity?.typeName }"
+						value:"${personInforEntity?.getUserTypeName()?personInforEntity.getUserTypeName():userTypeEntity?.typeName }"
                 '>
                 <g:each in="${userTypeList}" var="item">
                 	<option value="${item.id }">${item.typeName }</option>

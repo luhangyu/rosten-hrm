@@ -4,6 +4,17 @@
 define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/kernel/behavior"], function(
 		connect, registry,General) {
 	
+	personInfor_formatTopic_normal =function(value,rowIndex){
+		return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	personInfor_normal_onMessageOpen =function(rowIndex){
+		var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&type=" + rosten.kernel.navigationEntity);
+		rosten.kernel.getGrid().clearSelected();
+	};
+	
 	staffLeave = function(){
 		var userId = registry.byId("userId");
 		var userDepartId = registry.byId("userDepartId");
@@ -91,7 +102,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffAddView?userId=" + userid,
-				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=normal"
+				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=" + oString
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;
@@ -99,7 +110,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffView?userId=" + userid,
-				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=normal"
+				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=" + oString
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;

@@ -54,6 +54,7 @@ class StaffActionController {
 		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif",strname + "_freshGrid")
 		actionList << createAction("更改密码",imgPath + "changePassword.gif",strname + "_changePassword" )
+		actionList << createAction("分配账号",imgPath + "asignAccount.gif",strname + "_asignAccount" )
 		render actionList as JSON
 	}
 	private def createCommonAction={actionList,strname,args->

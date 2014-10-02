@@ -42,7 +42,7 @@ define(["dojo/_base/kernel"
 	    var gridStore = rostenGrid.getStore();
 	    return gridStore.getValue(item, ostr);
 	};
-	main._getGridUnid = function(rostenGrid,type){
+	main._getGridUnid = function(rostenGrid,type,name){
 		/*
 		 * type:single ---单个
 		 * type:multi ---多个
@@ -56,14 +56,16 @@ define(["dojo/_base/kernel"
 		var gridStore = rostenGrid.getStore();
 		var item;
 		var idArgs;
+		var getName = "id";
+		if(name) getName = name;
 		if(type=="single"){
         	item = selectitems[0];
-        	idArgs = gridStore.getValue(item, "id");
+        	idArgs = gridStore.getValue(item, getName);
 		}else if(type=="multi"){
 			var unids = [];
 			for(var i=0;i<selectitems.length;i++){
 				item = selectitems[i];
-				var _1 = gridStore.getValue(item, "id");
+				var _1 = gridStore.getValue(item, getName);
 				unids.push(_1);
 			}
 			

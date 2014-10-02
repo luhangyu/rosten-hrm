@@ -67,7 +67,7 @@ class PersonInfor {
 	String householdRegi
 	
 	//人事关系转入时间
-	Date intoday
+	Date intoday = new Date()
 	
 	def getFormatteIntoday(){
 		if(intoday!=null){
@@ -82,7 +82,7 @@ class PersonInfor {
 	String techGrade
 	
 	//入职时间
-	Date staffOnDay
+	Date staffOnDay = new Date() + 90
 	def getFormatteStaffOnday(){
 		if(staffOnDay!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -98,10 +98,21 @@ class PersonInfor {
 	//用户类型
 	UserType userTypeEntity
 	
+	def getUserTypeName(){
+		return userTypeEntity?userTypeEntity.typeName:null
+	}
+	
 	User user
 	
 	List departs
 	static hasMany=[departs:Depart]
+	
+	def getUserDepartName(){
+		if(departs && departs.size()>0){
+			return departs[0].departName
+		}
+		return ""
+	}
 	
 	//所属单位
 	static belongsTo = [company:Company]

@@ -22,6 +22,69 @@ class StaffController {
 	def shareService
 	def staffService
 	
+	def asignAccount ={
+		def model =[:]
+		model["company"] = Company.get(params.companyId)
+		
+		def personInfor = PersonInfor.get(params.id)
+		def user = personInfor.user
+		model["user"] = user
+		model["personInforId"] = params.id
+		
+		if(user){
+			//具有角色
+			def allowrolesName=[]
+			def allowrolesId =[]
+			UserRole.findAllByUser(user).each{
+				allowrolesName << it.role.authority
+				allowrolesId << it.role.id
+			}
+			
+			model["allowrolesName"] = allowrolesName.join(',')
+			model["allowrolesId"] = allowrolesId.join(",")
+			model["username"] = Util.strRight(user.username, "-")
+		}
+		
+		
+		render(view:'/staff/asignAccount',model:model)
+	}
+	def asignAccountSubmit ={
+		def json
+		try{
+			//所属机构
+			def currentUser = springSecurityService.getCurrentUser()
+			def company = currentUser.company
+			
+			def user 
+			if(params.id && !"".equals(params.id)){
+				user = User.get(params.id)
+			}else{
+				user = new User()
+				user.enabled = true
+			}
+			if(params.userNameFront){
+				params.username = params.userNameFront + params.username
+			}
+			
+			user.properties = params
+			user.clearErrors()
+			
+			user.company = company
+			user.save()
+			
+			def personInfor = PersonInfor.get(params.personInforId)
+			personInfor.user = user
+			
+			if(personInfor.save(flush:true)){
+				json = [result:'true']
+			}else{
+				json = [result:'false']
+			}
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
 	def importStaff ={
 		def model =[:]
 		model["company"] = Company.get(params.id)
@@ -178,7 +241,6 @@ class StaffController {
 	
 	def userSave ={
 		def model=[:]
-		
 		//用户类型
 		def userType
 		if(params.userTypeName){
@@ -193,7 +255,7 @@ class StaffController {
 		
 		//账号信息
 		def user
-		if(params.id){
+		if(params.username || params.id){
 			/*
 			 *保存登录用户账号信息;如果账号已经存在则登录名不变
 			 */
@@ -201,6 +263,7 @@ class StaffController {
 			user = new User()
 			if(params.id && !"".equals(params.id)){
 				user = User.get(params.id)
+				username = user.username
 			}else{
 				user.enabled = true
 				if(params.userNameFront){
@@ -220,6 +283,7 @@ class StaffController {
 			if(params.companyId){
 				user.company = company
 			}
+			
 			user.save()
 		}
 		
@@ -227,10 +291,10 @@ class StaffController {
 		def personInfor = new PersonInfor()
 		if(params.personInforId){
 			personInfor = PersonInfor.get(params.personInforId)
-		}else{
-			personInfor.user = user
 		}
 		personInfor.properties = params
+		personInfor.user = user
+		
 		personInfor.clearErrors()
 		
 		personInfor.birthday = Util.convertToTimestamp(params.birthday)
@@ -245,6 +309,11 @@ class StaffController {
 		//部门信息
 		def depart
 		if(params.allowdepartsId){
+			//首先清空原有的departs
+			if(personInfor.departs && personInfor.size()>0){
+				personInfor.departs.clear()
+			}
+			
 			depart = Depart.get(params.allowdepartsId)
 			if(depart){
 				personInfor.addToDeparts(depart)
@@ -404,31 +473,40 @@ class StaffController {
 
 			def _json = [identifier:'id',label:'name',items:[]]
 			
-			def userList = UserDepart.findAllByDepart(departEntity,[max: max, sort: "user", order: "desc", offset: offset])
-			totalNum = userList.size()
+			//查询搜索主体为personInfor个人概况信息
+			def c = PersonInfor.createCriteria()
+			def pa=[max:max,offset:offset]
+			def query = {
+				createAlias('user', 'a')
+				departs{
+					eq("id",params.departId)
+				}
+				order("a.username", "asc")
+			}
+			def userList = c.list(pa,query)
+			
+			totalNum = userList.unique().size()
 			
 			def idx = 0
 			userList.each{
 				def _user = it.user
-				def personInfor = PersonInfor.findByUser(_user)
-				def contactInfor = ContactInfor.findByPersonInfor(personInfor)
+				def contactInfor = ContactInfor.findByPersonInfor(it)
 				
 				def sMap =[:]
 				sMap["rowIndex"] = idx+1
-				sMap["id"] = _user.id
-				sMap["username"] = _user.username
-				sMap["chinaName"] = _user.getFormattedName()
-				sMap["departName"] = _user.getDepartName()
-				sMap["type"] = _user.getUserTypeName()
-				sMap["sex"] = personInfor?.sex
-				sMap["birthday"] = personInfor?.getFormatteBirthday()
-				sMap["idCard"] = personInfor?.idCard
+				sMap["id"] = it?.id
+				sMap["username"] = _user?_user.username:""
+				sMap["userId"] = _user?_user.id:""
+				sMap["chinaName"] = it.chinaName
+				sMap["departName"] = departEntity.departName
+				sMap["type"] = it?.getUserTypeName()
+				sMap["sex"] = it?.sex
+				sMap["birthday"] = it?.getFormatteBirthday()
+				sMap["idCard"] = it?.idCard
 				sMap["mobile"] = contactInfor?.mobile
-				sMap["nationality"] = personInfor?.nativeAddress
-				sMap["politicsStatus"] = personInfor?.politicsStatus
-				
-				
-				sMap["status"] = personInfor?.status
+				sMap["nationality"] = it?.nationality
+				sMap["politicsStatus"] = it?.politicsStatus
+				sMap["status"] = it?.status
 				
 				_json.items+=sMap
 				
@@ -451,13 +529,7 @@ class StaffController {
 
 			_gridHeader << ["name":"序号","width":"26px","colIdx":0,"field":"rowIndex"]
 			_gridHeader << ["name":"登录名","width":"auto","colIdx":1,"field":"username"]
-			
-			if(params.type && "normal".equals(params.type)){
-				_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName","formatter":"personInfor_formatTopic_normal"]
-			}else{
-				_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName","formatter":"personInfor_formatTopic"]
-			}
-			
+			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName","formatter":"personInfor_formatTopic_normal"]
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
 			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
 			_gridHeader << ["name":"性别","width":"auto","colIdx":5,"field":"sex"]
@@ -480,7 +552,23 @@ class StaffController {
 
 			def _json = [identifier:'id',label:'name',items:[]]
 			
-			def personList = PersonInfor.findAllByCompany(company,[max: max, sort: "chinaName", order: "asc", offset: offset])
+//			def personList = PersonInfor.findAllByCompany(company,[max: max, sort: "chinaName", order: "asc", offset: offset])
+			
+			def c = PersonInfor.createCriteria()
+			def pa=[max:max,offset:offset]
+			def query = {
+				eq("company",company)
+				
+				if("staffAdd".equals(params.type)){
+					not {'in'("status",["在职","退休","离职"])}
+					order("chinaName", "asc")
+				}else{
+					'in'("status",["在职","退休","离职"])
+					createAlias('user', 'a')
+					order("a.username", "asc")
+				}
+			}
+			def personList = c.list(pa,query)
 			totalNum = personList.size()
 			
 			def idx = 0
@@ -493,14 +581,15 @@ class StaffController {
 				sMap["rowIndex"] = idx+1
 				sMap["id"] = it.id
 				sMap["username"] = _user?_user.username:""
+				sMap["userId"] = _user?_user.id:""
 				sMap["chinaName"] = personInfor?.chinaName
-				sMap["departName"] = ""
-				sMap["type"] = ""
+				sMap["departName"] = personInfor?.getUserDepartName()
+				sMap["type"] = personInfor?.getUserTypeName()
 				sMap["sex"] = personInfor?.sex
 				sMap["birthday"] = personInfor?.getFormatteBirthday()
 				sMap["idCard"] = personInfor?.idCard
 				sMap["mobile"] = contactInfor?.mobile
-				sMap["nationality"] = personInfor?.nativeAddress
+				sMap["nationality"] = personInfor?.nationality
 				sMap["politicsStatus"] = personInfor?.politicsStatus
 				sMap["status"] = personInfor?.status
 				
@@ -519,7 +608,6 @@ class StaffController {
 	}
 	def personInforView ={
 		def model =[:]
-//		model["depart"] = Depart.get(params.id)
 		model["departId"] = params.id
 		render(view:'/staff/personManageView',model:model)
 	}

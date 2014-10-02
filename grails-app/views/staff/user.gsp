@@ -73,13 +73,18 @@
 			user_add = function(){
 				if(user_add_check()==false) return;
 				var content = {};
+				
 				<g:if test='${!userType.equals("super")  }'>
 					content.companyId = "${company?.id}";
 					<g:if test='${departId}'>
 						content.userNameFront = registry.byId("userNameFront").attr("value");
 					</g:if>
 				</g:if>
-
+				
+				<g:if test='${"staffAdd".equals(type) && personInfor && personInfor.id==null}'>
+					content.status = "新增";
+				</g:if>
+				
 				content.staffFamily = rosten.getGridDataCollect(staffFamilyGrid,["name","relation","mobile","workUnit","duties","politicsStatus"]);
 				
 				rosten.readSync(rosten.webPath + "/staff/userSave",content,function(data){
@@ -233,7 +238,7 @@
 			
         </div>
         
-        <g:if test='${"rz".equals(type)}'>
+        <g:if test='${"staffAdd".equals(type)}'>
 			<div data-dojo-type="dijit/layout/ContentPane" title="面试结果" data-dojo-props=''>
 		
 			</div>

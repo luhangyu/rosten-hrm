@@ -4,7 +4,7 @@
 define(["dojo/_base/connect",
         "dijit/registry",
         "rosten/util/general",
-        "rosten/app/Application",
+        "rosten/app/SystemApplication",
         "rosten/kernel/behavior"], function(connect,registry,General) {
 	
 	var general = new General();
@@ -96,16 +96,51 @@ define(["dojo/_base/connect",
 		rosten.kernel.getGrid().clearSelected();
     };
 	
-	personInfor_formatTopic_normal =function(value,rowIndex){
-		return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
-	};
-	personInfor_normal_onMessageOpen =function(rowIndex){
-		var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
-        var userid = rosten.kernel.getUserInforByKey("idnumber");
-		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
-		rosten.kernel.getGrid().clearSelected();
-	};
+    personInfor_asignAccount = function(){
+    	var unid = rosten._getGridUnid(dom_rostenGrid,"single");
+        if (unid == "")
+            return;
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.kernel.createRostenShowDialog(rosten.webPath + "/staff/asignAccount/"+ unid + "?companyId=" + companyId, {
+            onLoadFunction : function() {
+
+            }
+        });
+    };
+    asignAccount_Submit = function(){
+    	if(rosten.check_common("username","账号不正确！",true)==false) return false;
+		if(rosten.check_common("password","密码不正确！",true)==false) return false;
+		if(rosten.check_common("passwordcheck","确认密码不正确！",true)==false) return false;
+
+		var password = registry.byId("password");
+		var passwordcheck = registry.byId("passwordcheck");
+		if(password.attr("value")!=passwordcheck.attr("value")){
+			rosten.alert("密码不一致！").queryDlgClose = function(){
+				password.attr("value","");
+				passwordcheck.attr("value","");
+				password.focus();
+			};
+			return false;
+		}
+		
+		var content = {};
+		content.userNameFront = registry.byId("userNameFront").attr("value");
+        rosten.readSync(rosten.webPath + "/staff/asignAccountSubmit", content, function(data) {
+            if (data.result == "true") {
+                rosten.kernel.hideRostenShowDialog();
+                dom_rostenGrid.refresh();
+                rosten.alert("成功!");
+            } else {
+                rosten.alert("失败!");
+            }
+        },null,"rosten_form");
+		
+		
+    };
+    
+	/*
+	 *系统管理模块中的员工管理模块使用 
+	 */
 	personInfor_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:personInfor_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};
@@ -118,6 +153,7 @@ define(["dojo/_base/connect",
 		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&currentDepartId=" + currentDepartId);
 		rostenGrid.clearSelected();
 	};
+	
 	export_personInfor = function(){
 		rosten.openNewWindow("export", rosten.webPath + "/staff/exportPerson");
 	};
@@ -143,8 +179,7 @@ define(["dojo/_base/connect",
 	personInfor_rz = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        var currentDepartId = rosten.variable.currentDeartId;
-        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&type=rz");
+        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&type=staffAdd");
         
     };
 	personInfor_dj = function() {
@@ -197,9 +232,11 @@ define(["dojo/_base/connect",
     	dom_rostenGrid.refresh();
     };
     personInfor_changePassword = function(){
-    	var unid = rosten._getGridUnid(dom_rostenGrid,"single");
-        if (unid == "")
-            return;
+    	var unid = rosten._getGridUnid(dom_rostenGrid,"single","userId");
+        if (unid == ""){
+        	rosten.alert("请先选择条目或当前不存在账号信息！");
+        	return;
+        }
     	rosten.kernel.createRostenShowDialog(rosten.webPath + "/system/passwordChangeShow1/"+ unid, {
             onLoadFunction : function() {
 
