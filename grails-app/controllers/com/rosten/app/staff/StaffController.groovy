@@ -76,6 +76,15 @@ class StaffController {
 			personInfor.user = user
 			
 			if(personInfor.save(flush:true)){
+				
+				UserRole.removeAll(user)
+				if(params.allowrolesId){
+					params.allowrolesId.split(",").each{
+						def role = Role.get(it)
+						UserRole.create(user, role)
+					}
+				}
+				
 				json = [result:'true']
 			}else{
 				json = [result:'false']
