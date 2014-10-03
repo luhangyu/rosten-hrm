@@ -16,11 +16,21 @@ import java.io.OutputStream
 import com.rosten.app.export.ExcelExport
 import com.rosten.app.export.WordExport;
 
+import com.rosten.app.workflow.FlowBusiness
+import com.rosten.app.workflow.WorkFlowService
+import org.activiti.engine.runtime.ProcessInstance
+import org.activiti.engine.runtime.ProcessInstanceQuery
+import org.activiti.engine.task.Task
+import org.activiti.engine.task.TaskQuery
+
+import com.rosten.app.share.FlowLog
+
 class StaffController {
 	def springSecurityService
 	def systemService
 	def shareService
 	def staffService
+	def workFlowService
 	
 	def asignAccount ={
 		def model =[:]
@@ -250,6 +260,8 @@ class StaffController {
 	
 	def userSave ={
 		def model=[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		
 		//用户类型
 		def userType
 		if(params.userTypeName){
@@ -319,7 +331,7 @@ class StaffController {
 		def depart
 		if(params.allowdepartsId){
 			//首先清空原有的departs
-			if(personInfor.departs && personInfor.size()>0){
+			if(personInfor.departs && personInfor.departs.size()>0){
 				personInfor.departs.clear()
 			}
 			
@@ -327,6 +339,40 @@ class StaffController {
 			if(depart){
 				personInfor.addToDeparts(depart)
 			}
+		}
+		
+		//判断是否需要走流程
+		def _status
+		if(params.relationFlow){
+			//需要走流程
+			if(params.personInforId){
+				_status = "old"
+			}else{
+				_status = "new"
+				personInfor.currentUser = currentUser
+				personInfor.currentDepart = currentUser.getDepartName()
+				personInfor.currentDealDate = new Date()
+			}
+			
+			//增加读者域
+			if(!personInfor.readers.find{ it.id.equals(currentUser.id) }){
+				personInfor.addToReaders(currentUser)
+			}
+			
+			//流程引擎相关信息处理-------------------------------------------------------------------------------------
+			if(!personInfor.processInstanceId){
+				//启动流程实例
+				def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,personInfor.id, variables);
+				personInfor.processInstanceId = processInstance.getProcessInstanceId()
+				personInfor.processDefinitionId = processInstance.getProcessDefinitionId()
+				
+				//获取下一节点任务
+				def task = workFlowService.getTasksByFlow(processInstance.getProcessInstanceId())[0]
+				personInfor.taskId = task.getId()
+			}
+			//-------------------------------------------------------------------------------------------------
 		}
 		
 		if(personInfor.save(flush:true)){
@@ -373,6 +419,19 @@ class StaffController {
 			}
 			//--------------------------------------------------------------
 			
+			//流程引擎相关日志信息
+			if("new".equals(_status)){
+				//添加日志
+				def _log = new FlowLog()
+				_log.user = currentUser
+				_log.belongToId = personInfor.id
+				_log.belongToObject = params.flowCode
+				_log.content = "新建"
+				_log.company = company
+				_log.save(flush:true)
+			}
+			
+			model["id"] = personInfor.id
 			model["result"] = "true"
 		}else{
 			personInfor.errors.each{
@@ -383,7 +442,20 @@ class StaffController {
 		render model as JSON
 	}
 	def userAdd ={
-		redirect(action:"userShow",params:params)
+		if(params.flowCode){
+			//需要走流程
+			def company = Company.get(params.companyId)
+			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
+			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+				params.relationFlow = flowBusiness.relationFlow
+				redirect(action:"userShow",params:params)
+			}else{
+				//不存在流程引擎关联数据
+				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
+			}
+		}else{
+			redirect(action:"userShow",params:params)
+		}
 	}
 	def userShow ={
 		/*
@@ -436,6 +508,11 @@ class StaffController {
 		
 		model["userType"] = "normal"
 		
+		//流程相关信息----------------------------------------------
+		model["relationFlow"] = params.relationFlow
+		model["flowCode"] = params.flowCode
+		//------------------------------------------------------
+		
 		FieldAcl fa = new FieldAcl()
 		fa.readOnly +=["allowdepartsName","allowrolesName"]
 		if(loginUser!=null){
@@ -452,6 +529,7 @@ class StaffController {
 	}
 	
 	def userGrid ={
+		def company = Company.get(params.companyId)
 		def departEntity = Depart.get(params.departId)
 		def json=[:]
 		if(params.refreshHeader){
@@ -486,11 +564,12 @@ class StaffController {
 			def c = PersonInfor.createCriteria()
 			def pa=[max:max,offset:offset]
 			def query = {
-				createAlias('user', 'a')
+				//createAlias('user', 'a')
 				departs{
 					eq("id",params.departId)
 				}
-				order("a.username", "asc")
+				order("chinaName", "asc")
+				
 			}
 			def userList = c.list(pa,query)
 			
@@ -573,8 +652,8 @@ class StaffController {
 					order("chinaName", "asc")
 				}else{
 					'in'("status",["在职","退休","离职"])
-					createAlias('user', 'a')
-					order("a.username", "asc")
+					//createAlias('user', 'a')
+					order("chinaName", "asc")
 				}
 			}
 			def personList = c.list(pa,query)

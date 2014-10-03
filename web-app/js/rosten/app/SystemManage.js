@@ -179,19 +179,19 @@ define(["dojo/_base/connect",
 	personInfor_rz = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&type=staffAdd");
+        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&type=staffAdd&flowCode=staffAdd");
         
     };
 	personInfor_dj = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid);
+    };
+    personInfor_add = function() {
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
         var currentDepartId = rosten.variable.currentDeartId;
-        if(currentDepartId){
-        	rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&currentDepartId=" + currentDepartId);
-        }else{
-        	rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid);
-        }
-        
+        rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&currentDepartId=" + currentDepartId);
     };
     read_personInfor = function() {
     	change_personInfor();

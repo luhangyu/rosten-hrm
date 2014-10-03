@@ -70,10 +70,14 @@
 				
 				return true;
 			};
-			user_add = function(){
+			user_add = function(object){
 				if(user_add_check()==false) return;
-				var content = {};
+
+				//增加对多次单击的次数----2014-9-4
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
 				
+				var content = {};
 				<g:if test='${!userType.equals("super")  }'>
 					content.companyId = "${company?.id}";
 					<g:if test='${departId}'>
@@ -86,18 +90,52 @@
 				</g:if>
 				
 				content.staffFamily = rosten.getGridDataCollect(staffFamilyGrid,["name","relation","mobile","workUnit","duties","politicsStatus"]);
+
+				//流程相关信息
+				<g:if test='${flowCode}'>
+					content.flowCode = "${flowCode}";
+					content.relationFlow = "${relationFlow}";
+				</g:if>
 				
 				rosten.readSync(rosten.webPath + "/staff/userSave",content,function(data){
 					if(data.result=="true"){
 						rosten.alert("保存成功！").queryDlgClose= function(){
-							page_quit();	
+							<g:if test='${flowCode}'>
+								if(window.location.href.indexOf(data.id)==-1){
+									window.location.replace(window.location.href + "&id=" + data.id);
+								}else{
+									window.location.reload();
+								}
+							</g:if>
+							<g:else>
+								page_quit();
+							</g:else>	
 						};
 					}else if(data.result=="repeat"){
 						rosten.alert("账号冲突，保存失败!");
 					}else{
 						rosten.alert("保存失败!");
 					}
-				},null,"rosten_form");
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				},"rosten_form");
+			};
+			user_addComment = function(){
+				var commentDialog = rosten.addCommentDialog({type:"user"});
+				commentDialog.callback = function(_data){
+					var content = {dataStr:_data.content,userId:"${loginUser?.id}",status:"${personInfor?.status}",flowCode:"${flowCode}"};
+					rosten.readSync(rosten.webPath + "/share/addComment/${personInfor?.id}",content,function(data){
+						if(data.result=="true" || data.result == true){
+							rosten.alert("成功！");
+						}else{
+							rosten.alert("失败!");
+						}	
+					});
+				};
+			};
+			user_submit = function(object){
+				
 			};
 			page_quit = function(){
 				if(window.opener.rosten.kernel.navigationEntity!="userManage"){
@@ -113,20 +151,18 @@
 <body>
 	<div class="rosten_action">
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" 
-			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'staffForm',params:[userId:loginUser?.id])}"'></div>
+			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'staffForm',id:personInfor?.id,params:[userId:loginUser?.id,type:type])}"'></div>
 	</div>
-	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;">
-	<div>
-	<g:if test='${departId}'>
-		<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${user?.id }"' />
-	</g:if>
-        <input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
-	</div>
+	
+	
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
         <div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
-			
-			
+		<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">
+		
+		    <input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
+		    
 			<g:if test='${departId}'>
+				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${user?.id }"' />
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"账号信息 <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"100px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
@@ -235,12 +271,36 @@
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"工作经历",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getWorkResume',id:user?.id)}"'>
 			</div>
-			
+		</form>
         </div>
         
         <g:if test='${"staffAdd".equals(type)}'>
-			<div data-dojo-type="dijit/layout/ContentPane" title="面试结果" data-dojo-props=''>
-		
+        	<div data-dojo-type="dijit/layout/ContentPane" title="面试结果" data-dojo-props=''>
+	        	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"面试结果",toggleable:false,moreText:"",height:"480px",marginBottom:"2px"'>
+	        		<table border="0" width="770" align="left">
+							<tr>
+							    <td width="70"><div align="right"><span style="color:red">*&nbsp;</span>面试结果：</div></td>
+						  		<td>
+							  		<textarea id="msResult" data-dojo-type="dijit/form/SimpleTextarea" 
+										data-dojo-props='name:"msResult",
+						                    style:{width:"680px",height:"470px"},
+						                    trim:true,value:"${}"
+						            '>
+									</textarea>
+						  			
+							    </td>
+							</tr>
+						</table>
+	        	
+				</div>
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
+				href:"${createLink(controller:'share',action:'getCommentLog',id:personInfor?.id)}"
+			'>	
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+				href:"${createLink(controller:'share',action:'getFlowLog',id:personInfor?.id,params:[processDefinitionId:personInfor?.processDefinitionId,taskId:personInfor?.taskId])}"
+			'>	
 			</div>
 		</g:if>
 		<g:else>
@@ -253,6 +313,6 @@
 		</g:else>
 	</div>
 	
-	</form>
+	
 </body>
 </html>

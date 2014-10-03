@@ -1,6 +1,7 @@
 package com.rosten.app.staff
 
 import grails.converters.JSON
+import com.rosten.app.system.User
 
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
@@ -20,8 +21,43 @@ class StaffActionController {
 	def staffForm ={
 		def webPath = request.getContextPath() + "/"
 		def actionList = []
+		def strname = "user"
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath + imgPath + "Save.gif","user_add")
+		
+		if(params.id && "staffAdd".equals(params.type)){
+			def entity = PersonInfor.get(params.id)
+			def user = User.get(params.userId)
+			if(user.equals(entity.currentUser)){
+				//当前处理人
+				switch (true){
+					case entity.status.contains("审核") || entity.status.contains("审批"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+						break;
+					case entity.status.contains("已签发"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("生成录用通知书",webPath +imgPath + "gd.png",strname +"_submit")
+						actionList << createAction("打印入职清单",webPath +imgPath + "gd.png",strname +"_submit")
+						actionList << createAction("结束流程",webPath +imgPath + "gd.png",strname +"_submit")
+						break;
+					case entity.status.contains("面试中"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "gd.png",strname +"_submit")
+						break;
+					default :
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+				}
+			}
+		}else{
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		}
 		render actionList as JSON
 	}
 	def staffChangeDepartForm ={
@@ -49,7 +85,7 @@ class StaffActionController {
 		def actionList =[]
 		def strname = "personInfor"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("添加",imgPath + "add.png",strname + "_dj")
+		actionList << createAction("添加",imgPath + "add.png",strname + "_add")
 		actionList << createAction("查看",imgPath + "read.gif","read_" + strname)
 		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif",strname + "_freshGrid")

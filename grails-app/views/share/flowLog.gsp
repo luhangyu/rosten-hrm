@@ -9,12 +9,12 @@
 
 <body>
 
-	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"流程图",toggleable:false,moreText:"",height:"300px",marginBottom:"2px",
+	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"流程图",open:false,toggleable:true,moreText:"",height:"480px",marginBottom:"2px",
 		style:{overflow:"auto"}
 	'>
 		<g:if test="${logEntityName}">
 			<div style="margin:0 auto;text-align:center">
-				<img src="${createLink(controller:logEntityName,action:'flowActiveExport',id:logEntityId)}" style="left:0px; top:0px;">
+				<img src="${createLink(controller:logEntityName,action:'flowActiveExport',params:[processDefinitionId:processDefinitionId,taskId:taskId])}" style="left:0px; top:0px;">
 			</div>
 		</g:if>
 	</div>

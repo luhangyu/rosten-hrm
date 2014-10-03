@@ -1,11 +1,13 @@
 package com.rosten.app.staff
 
+import com.rosten.app.system.Attachment;
 import com.rosten.app.system.User
 import com.rosten.app.system.UserType;
 import com.rosten.app.system.Depart
 import com.rosten.app.system.Company
 
 import java.text.SimpleDateFormat
+import java.util.Date;
 import java.util.List;
 
 //个人概况
@@ -102,10 +104,12 @@ class PersonInfor {
 		return userTypeEntity?userTypeEntity.typeName:null
 	}
 	
+	//关联的账号用户信息
 	User user
 	
+	//增加已阅读人员,读者
 	List departs
-	static hasMany=[departs:Depart]
+	static hasMany=[departs:Depart,hasReaders:User,readers:User]
 	
 	def getUserDepartName(){
 		if(departs && departs.size()>0){
@@ -114,8 +118,50 @@ class PersonInfor {
 		return ""
 	}
 	
+	//附件
+	Attachment attachment
+	
 	//所属单位
 	static belongsTo = [company:Company]
+	
+	//流程相关字段信息----------------------------------------------------------
+	//当前处理人
+	User currentUser
+
+	def getCurrentUserName(){
+		if(currentUser!=null){
+			return currentUser.getFormattedName()
+		}else{
+			return ""
+		}
+	}
+
+	//当前处理部门
+	String currentDepart
+
+	//当前处理时间
+	Date currentDealDate
+	
+	//缺省读者；*:允许所有人查看,[角色名称]:允许角色,user:普通人员查看
+	String defaultReaders="[应用管理员]"
+	def addDefaultReader(String userRole){
+		if(defaultReaders==null || "".equals(defaultReaders)){
+			defaultReaders = userRole
+		}else{
+			defaultReaders += "," + userRole
+		}
+	}
+	
+	//流程定义id
+	String processDefinitionId
+	
+	//流程id
+	String processInstanceId
+	
+	//任务id
+	String taskId
+	
+	//--------------------------------------------------------------------------
 	
     static constraints = {
 		birthday nullable:true,blank:true
@@ -128,6 +174,18 @@ class PersonInfor {
 		techGrade nullable:true,blank:true
 		staffOnDay nullable:true,blank:true
 		user nullable:true,blank:true
+		attachment nullable:true,blank:true
+		
+		//流程相关-------------------------------------------------------------
+		defaultReaders nullable:true,blank:true
+		currentUser nullable:true,blank:true
+		currentDepart nullable:true,blank:true
+		currentDealDate nullable:true,blank:true
+		
+		processInstanceId nullable:true,blank:true
+		taskId nullable:true,blank:true
+		processDefinitionId nullable:true,blank:true
+		//--------------------------------------------------------------------
     }
 	
 	def beforeDelete(){

@@ -11,7 +11,12 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&type=" + rosten.kernel.navigationEntity);
+		
+		var tmpArgs = "&type=" + rosten.kernel.navigationEntity;
+		if(rosten.kernel.navigationEntity=="staffAdd"){
+			tmpArgs +="&flowCode=" + rosten.kernel.navigationEntity;
+		}
+		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + tmpArgs);
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
