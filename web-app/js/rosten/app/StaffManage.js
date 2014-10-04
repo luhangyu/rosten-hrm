@@ -107,6 +107,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffAddView?userId=" + userid,
+				searchSrc:rosten.webPath + "/staff/searchView",
 				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=" + oString
 			};
 			rosten.kernel.addRightContent(naviJson);
@@ -115,6 +116,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffView?userId=" + userid,
+				searchSrc:rosten.webPath + "/staff/searchView",
 				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=" + oString
 			};
 			rosten.kernel.addRightContent(naviJson);

@@ -152,6 +152,32 @@ class PersonInfor {
 		}
 	}
 	
+	//起草人
+	User drafter
+
+	def getFormattedDrafter(){
+		if(drafter!=null){
+			return drafter.getFormattedName()
+		}else{
+			return ""
+		}
+	}
+
+	//起草部门
+	String drafterDepart
+
+	//创建时间
+	Date createDate = new Date()
+
+	def getFormattedCreatedDate(){
+		if(createDate!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			return sd.format(createDate)
+		}else{
+			return ""
+		}
+	}
+	
 	//流程定义id
 	String processDefinitionId
 	
@@ -162,6 +188,8 @@ class PersonInfor {
 	String taskId
 	
 	//--------------------------------------------------------------------------
+	
+	String msResult
 	
     static constraints = {
 		birthday nullable:true,blank:true
@@ -175,12 +203,15 @@ class PersonInfor {
 		staffOnDay nullable:true,blank:true
 		user nullable:true,blank:true
 		attachment nullable:true,blank:true
+		msResult nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true
 		currentUser nullable:true,blank:true
 		currentDepart nullable:true,blank:true
 		currentDealDate nullable:true,blank:true
+		drafter nullable:true,blank:true
+		drafterDepart nullable:true,blank:true
 		
 		processInstanceId nullable:true,blank:true
 		taskId nullable:true,blank:true
@@ -194,5 +225,6 @@ class PersonInfor {
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_STAFF_PERSONINFOR"
+		msResult sqlType:"text"
 	}
 }

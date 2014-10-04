@@ -181,6 +181,7 @@ define(["dojo/_base/kernel"
         		domStyle.set(registry.byId("modelMain").domNode,"display","none");
         		registry.byId("home").resize();
         		rosten.kernel.navigationMenu = "";
+        		rosten.kernel.navigationEntity ="";
         		
         		/*
         		 * 添加刷先首页相关信息
@@ -365,8 +366,8 @@ define(["dojo/_base/kernel"
     	case "【公告】":
     		rosten.openNewWindow("bbs", rosten.webPath + "/bbs/bbsShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
     		break;
-    	case "【发文】":
-    		rosten.openNewWindow("sendFile", rosten.webPath + "/sendFile/sendFileShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    	case "【员工入职】":
+    		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&type=staffAdd&flowCode=staffAdd");
     		break;
     	case "【大事记】":
     		rosten.openNewWindow("dsj", rosten.webPath + "/dsj/dsjShow/" + id + "?userid=" + userid + "&companyId=" + companyId);

@@ -9,6 +9,54 @@ define(["dojo/_base/connect",
 	
 	var general = new General();
 	
+	staff_search = function(){
+		var content = {};
+		
+		var username = registry.byId("s_username");
+		if(username.get("value")!=""){
+			content.username = username.get("value");
+		}
+		
+		var chinaName = registry.byId("s_chinaName");
+		if(chinaName.get("value")!=""){
+			content.chinaName = chinaName.get("value");
+		}
+		
+		var departName = registry.byId("s_departName");
+		if(departName.get("value")!=""){
+			content.departName = departName.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		
+		case "userManage":
+			dom_rostenGrid.refresh(null,content);
+			break;
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+		
+		
+	};
+	staff_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		case "userManage":
+			registry.byId("s_username").set("value","");
+			registry.byId("s_chinaName").set("value","");
+			registry.byId("s_departName").set("value","");
+			
+			dom_rostenGrid.refresh();
+			break;
+			
+		default:
+			registry.byId("s_username").set("value","");
+			registry.byId("s_chinaName").set("value","");
+			registry.byId("s_departName").set("value","");
+			rosten.kernel.refreshGrid();
+			break;
+		}	
+	};
 	
 	systemCode_formatTopic = function(value,rowIndex){
     	return "<a href=\"javascript:systemCode_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
@@ -49,41 +97,6 @@ define(["dojo/_base/connect",
             rosten.readSync(rosten.webPath + "/systemExtend/systemCodeDelete", content,delete_callback);
         };
     };
-	
-	user_search = function(){
-		var content = {};
-		
-		switch(rosten.kernel.navigationEntity) {
-		default:
-			var username = registry.byId("s_username");
-			if(username.get("value")!=""){
-				content.username = username.get("value");
-			}
-			
-			var chinaName = registry.byId("s_chinaName");
-			if(chinaName.get("value")!=""){
-				content.chinaName = chinaName.get("value");
-			}
-			
-			var telephone = registry.byId("s_telephone");
-			if(telephone.get("value")!=""){
-				content.telephone = telephone.get("value");
-			}
-			break;
-		}
-		rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
-	};
-	user_resetSearch = function(){
-		switch(rosten.kernel.navigationEntity) {
-		case "userManage":
-			registry.byId("s_username").set("value","");
-			registry.byId("s_chinaName").set("value","");
-			registry.byId("s_telephone").set("value","");
-			break;
-		}	
-		
-		rosten.kernel.refreshGrid();
-	};
 	
 	user_formatTopic = function(value,rowIndex){
     	return "<a href=\"javascript:user_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";

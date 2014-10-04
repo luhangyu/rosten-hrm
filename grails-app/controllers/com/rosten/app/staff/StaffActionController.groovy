@@ -39,14 +39,15 @@ class StaffActionController {
 					case entity.status.contains("已签发"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
-						actionList << createAction("生成录用通知书",webPath +imgPath + "gd.png",strname +"_submit")
-						actionList << createAction("打印入职清单",webPath +imgPath + "gd.png",strname +"_submit")
-						actionList << createAction("结束流程",webPath +imgPath + "gd.png",strname +"_submit")
+						actionList << createAction("生成录用通知书",webPath +imgPath + "word_print.png",strname +"_submit")
+						actionList << createAction("打印入职清单",webPath +imgPath + "word_print.png",strname +"_submit")
+						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_submit")
 						break;
 					case entity.status.contains("面试中"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
-						actionList << createAction("提交",webPath +imgPath + "gd.png",strname +"_submit")
+						actionList << createAction("提交领导审核",webPath +imgPath + "submit.png",strname +"_ok")
+						actionList << createAction("不通过",webPath +imgPath + "qx.png",strname +"_cancel")
 						break;
 					default :
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")

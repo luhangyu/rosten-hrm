@@ -15,6 +15,7 @@
     </style>
 	<script type="text/javascript">
 	require(["dojo/parser",
+	        	"dojo/_base/lang",
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
 		 		"dijit/form/Button",
@@ -33,7 +34,7 @@
 		     	"dijit/form/ComboBox",
 		     	"rosten/app/SystemApplication",
 		     	"rosten/app/StaffApplication"],
-			function(parser,kernel,registry,ActionBar){
+			function(parser,lang,kernel,registry,ActionBar){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 					rosten.cssinit();
@@ -90,6 +91,7 @@
 				</g:if>
 				
 				content.staffFamily = rosten.getGridDataCollect(staffFamilyGrid,["name","relation","mobile","workUnit","duties","politicsStatus"]);
+				if(registry.byId("msResult")) content.msResult = registry.byId("msResult").attr("value");
 
 				//流程相关信息
 				<g:if test='${flowCode}'>
@@ -134,8 +136,156 @@
 					});
 				};
 			};
-			user_submit = function(object){
+			submit_select = function(url,buttonWidget,conditionObj){
+				var rostenShowDialog = rosten.selectFlowUser(url,"single");
+	            rostenShowDialog.callback = function(data) {
+	            	if(data.length==0){
+		            	rosten.alert("请正确选择人员！");
+	            		rosten.toggleAction(buttonWidget,false);
+		            }else{
+		            	var _data = [];
+		            	for (var k = 0; k < data.length; k++) {
+		            		var item = data[k];
+		            		_data.push(item.value + ":" + item.departId);
+		            	};
+		            	user_deal("submit",_data,buttonWidget,conditionObj);
+		            }
+	            };
+				rostenShowDialog.afterLoad = function(){
+					var _data = rostenShowDialog.getData();
+		            if(_data && _data.length==1){
+			            //直接调用
+		            	rostenShowDialog.doAction();
+			        }else{
+						//显示对话框
+						rostenShowDialog.open();
+				    }
+				};
+				rostenShowDialog.queryDlgClose = function(){
+					rosten.toggleAction(buttonWidget,false);
+				};	
+			};
+			user_deal = function(type,readArray,buttonWidget,conditionObj){
+				var content = {};
+				content.id = "${personInfor?.id}";
+				content.deal = type;
+				if(readArray){
+					content.dealUser = readArray.join(",");
+				}
+				if(conditionObj){
+					lang.mixin(content,conditionObj);
+				}
+				rosten.readSync(rosten.webPath + "/staff/staffAddFlowDeal",content,function(data){
+					if(data.result=="true" || data.result == true){
+						rosten.alert("成功！").queryDlgClose= function(){
+							//刷新待办事项内容
+							window.opener.showStartGtask("${loginUser?.id}","${company?.id }");
+							
+							if(data.refresh=="true" || data.refresh==true){
+								window.location.reload();
+							}else{
+								rosten.pagequit();
+							}
+						}
+					}else{
+						rosten.alert("失败!");
+						rosten.toggleAction(buttonWidget,false);
+					}	
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				});
+			};
+			
+			user_submit = function(object,conditionObj){
+				//从后台获取下一处理人
 				
+				//增加对多次单击的控制
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
+				
+				var content = {};
+
+				//增加对排他分支的控制
+				if(conditionObj){
+					lang.mixin(content,conditionObj);
+				}
+				rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:loginUser?.id,taskId:personInfor?.taskId,drafterUsername:personInfor?.drafter?.username])}",content,function(data){
+					if(data.dealFlow==false){
+						//流程无下一节点
+						user_deal("submit",null,buttonWidget,conditionObj);
+						return;
+					}
+					var url = "${createLink(controller:'system',action:'userTreeDataStore',params:[companyId:company?.id])}";
+					if(data.dealType=="user"){
+						//人员处理
+						if(data.showDialog==false){
+							//单一处理人
+							var _data = [];
+							_data.push(data.userId + ":" + data.userDepart);
+							user_deal("submit",_data,buttonWidget,conditionObj);
+						}else{
+							//多人，多部门处理
+							url += "&type=user&user=" + data.user;
+							submit_select(url,buttonWidget,conditionObj);
+						}
+					}else{
+						//群组处理
+						url += "&type=group&groupIds=" + data.groupIds;
+						if(data.limitDepart){
+							url += "&limitDepart="+data.limitDepart;
+						}
+						submit_select(encodeURI(url),buttonWidget,conditionObj);
+					}
+
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				});
+			};
+			user_ok = function(object){
+				//填写面试结果
+				var msResultDom = registry.byId("msResult");
+				var msResult = msResultDom.get("value");
+				if(msResult==""){
+					rosten.alert("面试结果不能为空！").queryDlgClose = function(){
+						rostenTabContainer.selectChild(msResultContentPane); 
+						msResultDom.focus();
+					};
+					return false;
+				}
+				user_submit(object,{conditionName:"flow",conditionValue:"agree",msResult:msResult});
+			};
+			user_cancel = function(object){
+				user_submit(object,{conditionName:"flow",conditionValue:"notAgree"});
+			};
+			user_back = function(object){
+				//增加对多次单击的控制
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
+				
+				var content = {};
+				rosten.readSync("${createLink(controller:'staff',action:'staffAddFlowBack',params:[id:personInfor?.id])}",content,function(data){
+					if(data.result=="true" || data.result == true){
+						rosten.alert("成功！").queryDlgClose= function(){
+							//刷新待办事项内容
+							window.opener.showStartGtask("${loginUser}","${company?.id }");
+							
+							if(data.refresh=="true" || data.refresh==true){
+								window.location.reload();
+							}else{
+								rosten.pagequit();
+							}
+						}
+					}else{
+						rosten.alert("失败!");
+						rosten.toggleAction(buttonWidget,false);
+					}
+					
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				});
 			};
 			page_quit = function(){
 				if(window.opener.rosten.kernel.navigationEntity!="userManage"){
@@ -154,8 +304,7 @@
 			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'staffForm',id:personInfor?.id,params:[userId:loginUser?.id,type:type])}"'></div>
 	</div>
 	
-	
-	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' data-dojo-id="rostenTabContainer" >
         <div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">
 		
@@ -275,7 +424,7 @@
         </div>
         
         <g:if test='${"staffAdd".equals(type)}'>
-        	<div data-dojo-type="dijit/layout/ContentPane" title="面试结果" data-dojo-props=''>
+        	<div data-dojo-type="dijit/layout/ContentPane" title="面试结果" data-dojo-props='' data-dojo-id="msResultContentPane">
 	        	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"面试结果",toggleable:false,moreText:"",height:"480px",marginBottom:"2px"'>
 	        		<table border="0" width="770" align="left">
 							<tr>
@@ -284,7 +433,7 @@
 							  		<textarea id="msResult" data-dojo-type="dijit/form/SimpleTextarea" 
 										data-dojo-props='name:"msResult",
 						                    style:{width:"680px",height:"470px"},
-						                    trim:true,value:"${}"
+						                    trim:true,value:"${personInfor?.msResult}"
 						            '>
 									</textarea>
 						  			

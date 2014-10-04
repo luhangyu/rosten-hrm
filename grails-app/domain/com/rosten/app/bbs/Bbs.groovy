@@ -165,7 +165,6 @@ class Bbs {
 		publisherDepart nullable:true,blank:true
 		publishDate nullable:true,blank:true
 		dueDate nullable:true,blank:true
-		attachment nullable:true,blank:true
 		content nullable:true,blank:true
 		frontUser nullable:true,blank:true
 		frontDepart nullable:true,blank:true

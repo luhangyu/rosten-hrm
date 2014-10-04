@@ -2,6 +2,7 @@ package com.rosten.app.staff
 
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
+import com.rosten.app.system.Model
 import com.rosten.app.share.ShareService
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.system.Depart
@@ -24,6 +25,8 @@ import org.activiti.engine.task.Task
 import org.activiti.engine.task.TaskQuery
 
 import com.rosten.app.share.FlowLog
+import com.rosten.app.start.StartService
+import com.rosten.app.gtask.Gtask
 
 class StaffController {
 	def springSecurityService
@@ -31,6 +34,245 @@ class StaffController {
 	def shareService
 	def staffService
 	def workFlowService
+	def taskService
+	def startService
+	
+	def searchView ={
+		def model =[:]
+		render(view:'/staff/search',model:model)
+	}
+	def staffAddFlowBack ={
+		def json=[:]
+		def personInfor = PersonInfor.get(params.id)
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = personInfor.status
+		
+		try{
+			//获取上一处理任务
+			def frontTaskList = workFlowService.findBackAvtivity(personInfor.taskId)
+			if(frontTaskList && frontTaskList.size()>0){
+				//简单的取最近的一个节点
+				def activityEntity = frontTaskList[frontTaskList.size()-1]
+				def activityId = activityEntity.getId();
+				
+				//流程跳转
+				workFlowService.backProcess(personInfor.taskId, activityId, null)
+				
+				//获取下一节点任务，目前处理串行情况
+				def nextStatus
+				def tasks = workFlowService.getTasksByFlow(personInfor.processInstanceId)
+				def task = tasks[0]
+				if(task.getDescription() && !"".equals(task.getDescription())){
+					nextStatus = task.getDescription()
+				}else{
+					nextStatus = task.getName()
+				}
+				personInfor.taskId = task.getId()
+				
+				//获取对应节点的处理人员以及相关状态
+				def historyActivity = workFlowService.getHistrotyActivityByActivity(personInfor.taskId,activityId)
+				def user = User.findByUsername(historyActivity.getAssignee())
+				
+				//任务指派给当前拟稿人
+				taskService.claim(personInfor.taskId, user.username)
+				
+				//增加待办事项
+				def args = [:]
+				args["type"] = "【公告】"
+				args["content"] = "名称为  【" + personInfor.chinaName +  "】 的入职人员信息被退回，请查看！"
+				args["contentStatus"] = nextStatus
+				args["contentId"] = personInfor.id
+				args["user"] = user
+				args["company"] = user.company
+				
+				startService.addGtask(args)
+					
+				//修改当前公告信息
+				personInfor.currentUser = user
+				personInfor.currentDepart = user.getDepartName()
+				personInfor.currentDealDate = new Date()
+				personInfor.status = nextStatus
+				
+				//判断下一处理人是否与当前处理人员为同一人
+				if(currentUser.equals(personInfor.currentUser)){
+					json["refresh"] = true
+				}
+				
+				//----------------------------------------------------------------------------------------------------
+				
+				//修改代办事项状态
+				def gtask = Gtask.findWhere(
+					user:currentUser,
+					company:currentUser.company,
+					contentId:personInfor.id,
+					contentStatus:frontStatus,
+					status:"0"
+				)
+				if(gtask!=null){
+					gtask.dealDate = new Date()
+					gtask.status = "1"
+					gtask.save(flush:true)
+				}
+				
+				personInfor.save(flush:true)
+				
+				//添加日志
+				def logContent = "退回【" + user.getFormattedName() + "】"
+				
+				shareService.addFlowLog(personInfor.id,"staffAdd",currentUser,logContent)
+			}
+				
+			json["result"] = true
+		}catch(Exception e){
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	def staffAddFlowDeal ={
+		def json=[:]
+		
+		def personInfor = PersonInfor.get(params.id)
+		
+		//默认保存当前信息
+		if(params.msResult){
+			//面试结果
+			personInfor.msResult = params.msResult
+		}
+		
+		//处理当前人的待办事项
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = personInfor.status
+		def nextStatus,nextDepart,nextLogContent
+		def nextUsers=[]
+		
+		//流程引擎相关信息处理-------------------------------------------------------------------------------------
+		
+		//结束当前任务，并开启下一节点任务
+		def map =[:]
+		if(params.conditionName){
+			map[params.conditionName] = params.conditionValue
+		}
+		taskService.complete(personInfor.taskId,map)	//结束当前任务
+		
+		ProcessInstance processInstance = workFlowService.getProcessIntance(personInfor.processInstanceId)
+		if(!processInstance || processInstance.isEnded()){
+			//流程已结束
+			nextStatus = "试用"
+			if(params.conditionName){
+				nextStatus = "实习"	
+			}
+			personInfor.currentUser = null
+			personInfor.currentDepart = null
+			personInfor.taskId = null
+		}else{
+			//获取下一节点任务，目前处理串行情况
+			def tasks = workFlowService.getTasksByFlow(personInfor.processInstanceId)
+			def task = tasks[0]
+			if(task.getDescription() && !"".equals(task.getDescription())){
+				nextStatus = task.getDescription()
+			}else{
+				nextStatus = task.getName()
+			}
+			personInfor.taskId = task.getId()
+		
+			if(params.dealUser){
+				//下一步相关信息处理
+				def dealUsers = params.dealUser.split(",")
+				if(dealUsers.size() >1){
+					//并发
+				}else{
+					//串行
+					def nextUser = User.get(Util.strLeft(params.dealUser,":"))
+					nextDepart = Util.strRight(params.dealUser, ":")
+					
+					//判断是否有公务授权------------------------------------------------------------
+					def _model = Model.findByModelCodeAndCompany("staffManage",currentUser.company)
+					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
+					if(authorize){
+						shareService.addFlowLog(personInfor.id,"staffAdd",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						nextUser = authorize.beAuthorizer
+						nextDepart = authorize.beAuthorizerDepart
+					}
+					//-------------------------------------------------------------------------
+					
+					//任务指派给当前拟稿人
+					taskService.claim(personInfor.taskId, nextUser.username)
+					
+					def args = [:]
+					args["type"] = "【员工入职】"
+					args["content"] = "请您审核名称为  【" + personInfor.chinaName +  "】 的入职人员信息"
+					args["contentStatus"] = nextStatus
+					args["contentId"] = personInfor.id
+					args["user"] = nextUser
+					args["company"] = nextUser.company
+					
+					startService.addGtask(args)
+					
+					personInfor.currentUser = nextUser
+					personInfor.currentDepart = nextDepart
+					
+					if(!personInfor.readers.find{ item->
+						item.id.equals(nextUser.id)
+					}){
+						personInfor.addToReaders(nextUser)
+					}
+					nextUsers << nextUser.getFormattedName()
+				}
+			}
+		}
+		personInfor.status = nextStatus
+		personInfor.currentDealDate = new Date()
+		
+		//判断下一处理人是否与当前处理人员为同一人
+		if(currentUser.equals(personInfor.currentUser)){
+			json["refresh"] = true
+		}
+		
+		//----------------------------------------------------------------------------------------------------
+		
+		//修改代办事项状态
+		def gtask = Gtask.findWhere(
+			user:currentUser,
+			company:currentUser.company,
+			contentId:personInfor.id,
+			contentStatus:frontStatus,
+			status:"0"
+		)
+		if(gtask!=null){
+			gtask.dealDate = new Date()
+			gtask.status = "1"
+			gtask.save(flush:true)
+		}
+		
+		if(personInfor.save(flush:true)){
+			//添加日志
+			def logContent
+			switch (true){
+				case personInfor.status.contains("已结束"):
+					logContent = "结束流程"
+					break
+				case personInfor.status.contains("归档"):
+					logContent = "归档"
+					break
+				case personInfor.status.contains("不同意"):
+					logContent = "不同意！"
+					break
+				default:
+					logContent = "提交" + personInfor.status + "【" + nextUsers.join("、") + "】"
+					break
+			}
+			shareService.addFlowLog(personInfor.id,"staffAdd",currentUser,logContent)
+						
+			json["result"] = true
+		}else{
+			personInfor.errors.each{
+				println it
+			}
+			json["result"] = false
+		}
+		render json as JSON
+	}
 	
 	def asignAccount ={
 		def model =[:]
@@ -93,6 +335,11 @@ class StaffController {
 						def role = Role.get(it)
 						UserRole.create(user, role)
 					}
+				}
+				
+				UserDepart.removeAll(user)
+				personInfor.departs.each{
+					UserDepart.create(user, it)
 				}
 				
 				json = [result:'true']
@@ -352,6 +599,9 @@ class StaffController {
 				personInfor.currentUser = currentUser
 				personInfor.currentDepart = currentUser.getDepartName()
 				personInfor.currentDealDate = new Date()
+				
+				personInfor.drafter = currentUser
+				personInfor.drafterDepart = currentUser.getDepartName()
 			}
 			
 			//增加读者域
@@ -422,13 +672,7 @@ class StaffController {
 			//流程引擎相关日志信息
 			if("new".equals(_status)){
 				//添加日志
-				def _log = new FlowLog()
-				_log.user = currentUser
-				_log.belongToId = personInfor.id
-				_log.belongToObject = params.flowCode
-				_log.content = "新建"
-				_log.company = company
-				_log.save(flush:true)
+				shareService.addFlowLog(personInfor.id,params.flowCode,currentUser,"新建入职人员信息")
 			}
 			
 			model["id"] = personInfor.id
@@ -476,6 +720,12 @@ class StaffController {
 		//个人概况
 		if(params.id){
 			def personInfor = PersonInfor.get(params.id)
+			
+			if(!personInfor){
+				render '<h2 style="color:red;width:500px;margin:0 auto">此文件已过期或已被删除，请联系管理员！</h2>'
+				return
+			}
+			
 			//登录名
 			def registerUser = personInfor.user
 			if(registerUser){
@@ -550,7 +800,13 @@ class StaffController {
 
 			json["gridHeader"] = _gridHeader
 		}
-		def totalNum = 0
+		
+		def searchArgs =[:]
+		
+		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
 			int nowPage =  Util.str2int(params.showPageNum)
@@ -564,7 +820,21 @@ class StaffController {
 			def c = PersonInfor.createCriteria()
 			def pa=[max:max,offset:offset]
 			def query = {
-				//createAlias('user', 'a')
+				
+				searchArgs.each{k,v->
+					if(k.equals("departName")){
+						departs{
+							like(k,"%" + v + "%")
+						}
+					}else if(k.equals("username")){
+						createAlias('user', 'a')
+						like("a.username","%" + v + "%")
+						
+					}else{
+						like(k,"%" + v + "%")
+					}
+				}
+				
 				departs{
 					eq("id",params.departId)
 				}
@@ -572,8 +842,6 @@ class StaffController {
 				
 			}
 			def userList = c.list(pa,query)
-			
-			totalNum = userList.unique().size()
 			
 			def idx = 0
 			userList.each{
@@ -605,6 +873,29 @@ class StaffController {
 		}
 		
 		if(params.refreshPageControl){
+			
+			def c = PersonInfor.createCriteria()
+			def query = {
+				departs{
+					eq("id",params.departId)
+				}
+				
+				searchArgs.each{k,v->
+					if(k.equals("departName")){
+						departs{
+							like(k,"%" + v + "%")
+						}
+					}else if(k.equals("username")){
+						createAlias('user', 'a')
+						like("a.username","%" + v + "%")
+					}else{
+						like(k,"%" + v + "%")
+					}
+				}
+				
+			}
+			def totalNum = c.count(query)
+			
 			json["pageControl"] = ["total":totalNum.toString()]
 		}
 		render json as JSON
@@ -630,7 +921,13 @@ class StaffController {
 
 			json["gridHeader"] = _gridHeader
 		}
-		def totalNum = 0
+		
+		def searchArgs =[:]
+		
+		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
 			int nowPage =  Util.str2int(params.showPageNum)
@@ -640,24 +937,35 @@ class StaffController {
 
 			def _json = [identifier:'id',label:'name',items:[]]
 			
-//			def personList = PersonInfor.findAllByCompany(company,[max: max, sort: "chinaName", order: "asc", offset: offset])
-			
 			def c = PersonInfor.createCriteria()
 			def pa=[max:max,offset:offset]
 			def query = {
 				eq("company",company)
 				
+				searchArgs.each{k,v->
+					if(k.equals("departName")){
+						departs{
+							like(k,"%" + v + "%")
+						}
+					}else if(k.equals("username")){
+						createAlias('user', 'a')
+						like("a.username","%" + v + "%")
+						
+					}else{
+						like(k,"%" + v + "%")
+					}
+				}
+				
 				if("staffAdd".equals(params.type)){
 					not {'in'("status",["在职","退休","离职"])}
-					order("chinaName", "asc")
+					order("createDate", "desc")
 				}else{
 					'in'("status",["在职","退休","离职"])
 					//createAlias('user', 'a')
-					order("chinaName", "asc")
+					order("createDate", "desc")
 				}
 			}
 			def personList = c.list(pa,query)
-			totalNum = personList.size()
 			
 			def idx = 0
 			personList.each{
@@ -690,6 +998,34 @@ class StaffController {
 		}
 		
 		if(params.refreshPageControl){
+			
+			def c = PersonInfor.createCriteria()
+			def query = {
+				eq("company",company)
+				
+				searchArgs.each{k,v->
+					if(k.equals("departName")){
+						departs{
+							like(k,"%" + v + "%")
+						}
+					}else if(k.equals("username")){
+						createAlias('user', 'a')
+						like("a.username","%" + v + "%")
+					}else{
+						like(k,"%" + v + "%")
+					}
+				}
+				
+				if("staffAdd".equals(params.type)){
+					not {'in'("status",["在职","退休","离职"])}
+					order("chinaName", "asc")
+				}else{
+					'in'("status",["在职","退休","离职"])
+					//createAlias('user', 'a')
+					order("chinaName", "asc")
+				}
+			}
+			def totalNum = c.count(query)
 			json["pageControl"] = ["total":totalNum.toString()]
 		}
 		render json as JSON

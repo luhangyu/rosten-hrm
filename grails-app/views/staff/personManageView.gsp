@@ -10,6 +10,9 @@
 	<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" 
 		data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'userView')}"'></div>
 	
+	<div data-dojo-type="rosten/widget/RostenContentPane"
+		data-dojo-props='src:"${createLink(controller:'staff',action:'searchView')}",style:{padding:"1px"}'></div>
+	
 	<div data-dojo-type="rosten/widget/RostenGrid" id="rosten_rostenGrid" data-dojo-id="dom_rostenGrid"
 		data-dojo-props='url:"${createLink(controller:'staff',action:'userGrid',params:[departId:departId])}",showRowSelector:"new"'></div>
 </body>
