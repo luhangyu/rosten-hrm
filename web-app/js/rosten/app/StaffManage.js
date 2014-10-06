@@ -4,6 +4,101 @@
 define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/kernel/behavior"], function(
 		connect, registry,General) {
 	
+	staffStatusChange_print_tzd = function(){
+		//打印通知单
+	};
+	
+	staffStatusChange_print_qd = function(){
+		//打印交接清单
+	};
+	
+	staffStatusChange_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:staffStatusChange_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	staffStatusChange_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var type = rosten.kernel.getGridItemValue(rowIndex,"changeType");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&type=" + type);
+		rosten.kernel.getGrid().clearSelected();
+	};
+	add_staffStatusChange = function() {
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeAdd?companyId=" + companyId + "&userid=" + userid);
+    };
+	change_staffStatusChange = function() {
+		var unid = rosten.getGridUnid("single");
+		if (unid == "")
+			return;
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+	};
+	read_staffDepartChange = function() {
+		change_staffStatusChange();
+	};
+	delete_staffStatusChange = function() {
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.readNoTime(rosten.webPath + "/staff/staffStatusChangeDelete", content,
+					rosten.deleteCallback);
+		};
+	};
+	
+	staffDepartChange_print_tzd = function(){
+		//打印通知单
+	};
+	
+	staffDepartChange_print_qd = function(){
+		//打印交接清单
+	};
+	
+	staffDepartChange_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:staffDepartChange_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	staffDepartChange_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.kernel.getGrid().clearSelected();
+	};
+	add_staffDepartChange = function() {
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=staffDepartChange");
+    };
+	change_staffDepartChange = function() {
+		var unid = rosten.getGridUnid("single");
+		if (unid == "")
+			return;
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+	};
+	read_staffDepartChange = function() {
+		change_staffDepartChange();
+	};
+	delete_staffDepartChange = function() {
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.readNoTime(rosten.webPath + "/staff/staffDepartChangeDelete", content,
+					rosten.deleteCallback);
+		};
+	};
+	
 	personInfor_formatTopic_normal =function(value,rowIndex){
 		return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};
@@ -121,10 +216,33 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;
+		case "staffProba":	//员工转正
+			rosten.alert("此功能尚未开通")
+			returnToMain();
+			break;
 		case "staffDepartChange":	//员工调动
-			require(["rosten/app/Application"],function(){
-				rosten.kernel.setHref(rosten.webPath + "/staff/staffDepartChange?companyId=" + companyId, oString);
-			});
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/staffAction/staffDepartChangeView?userId=" + userid,
+				gridSrc : rosten.webPath + "/staff/staffDepartChangeGrid?companyId=" + companyId + "&userId=" + userid
+			};
+			rosten.kernel.addRightContent(naviJson);
+			break;
+		case "staffLeave":	//员工离职
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/staffAction/staffStatusChangeView?userId=" + userid +"&type=leave",
+				gridSrc : rosten.webPath + "/staff/staffStatusChangeGrid?companyId=" + companyId + "&userId=" + userid + "&type=leave"
+			};
+			rosten.kernel.addRightContent(naviJson);
+			break;
+		case "staffRetire":	//员工退休
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/staffAction/staffStatusChangeView?userId=" + userid +"&type=retire",
+				gridSrc : rosten.webPath + "/staff/staffStatusChangeGrid?companyId=" + companyId + "&userId=" + userid + "&type=retire"
+			};
+			rosten.kernel.addRightContent(naviJson);
 			break;
 		}
 	}

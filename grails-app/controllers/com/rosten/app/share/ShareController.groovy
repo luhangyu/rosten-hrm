@@ -4,9 +4,12 @@ import com.rosten.app.workflow.WorkFlowService
 import com.rosten.app.system.User
 import grails.converters.JSON
 import com.rosten.app.util.Util
+import com.rosten.app.system.Attachment
+import com.rosten.app.util.SystemUtil
 
 class ShareController {
 	def workFlowService
+	def springSecurityService
 	
 	/*
 	 * 获取下个处理人员
@@ -74,6 +77,82 @@ class ShareController {
 			render json as JSON
 			return
 		}
+	}
+	def uploadFile ={
+		/*
+		 * 默认参数uploadPath路径即为attachment中的type类型
+		 */
+		def json=[:]
+		SystemUtil sysUtil = new SystemUtil()
+		
+		def uploadPath
+		def currentUser = (User) springSecurityService.getCurrentUser()
+		def companyPath = currentUser.company?.shortName
+		if(companyPath == null){
+			uploadPath = sysUtil.getUploadPath(params.uploadPath)
+		}else{
+			uploadPath = sysUtil.getUploadPath(currentUser.company.shortName + "/" + params.uploadPath)
+		}
+		
+		def f = request.getFile("uploadedfile")
+		if (f.empty) {
+			json["result"] = "blank"
+			render json as JSON
+			return
+		}
+		
+		def uploadSize = sysUtil.getUploadSize()
+		if(uploadSize!=null){
+			//控制附件上传大小
+			def maxSize = uploadSize * 1024 * 1024
+			if(f.size>=maxSize){
+				json["result"] = "big"
+				render json as JSON
+				return
+			}
+		}
+		String name = f.getOriginalFilename()//获得文件原始的名称
+		def realName = sysUtil.getRandName(name)
+		f.transferTo(new File(uploadPath,realName))
+		
+		def attachment = new Attachment()
+		attachment.name = name
+		attachment.realName = realName
+		attachment.type = params.uploadPath
+		attachment.url = uploadPath
+		attachment.size = f.size
+		attachment.beUseId = params.id
+		attachment.upUser = (User) springSecurityService.getCurrentUser()
+		attachment.save(flush:true)
+		
+		json["result"] = "true"
+		json["fileId"] = attachment.id
+		json["fileName"] = name
+		
+		if("yes".equals(params.isIE)){
+			def resultStr  = '{"result":"true", "fileId":"' + json["fileId"]  + '","fileName":"' + json["fileName"] +'"}'
+			render "<textarea>" + resultStr +  "</textarea>"
+			return
+		}else{
+			render json as JSON
+		}
+	}
+	def getFileUpload ={
+		def model =[:]
+		model["docEntity"] = "share"
+		model["isShowFile"] = params.isShowFile
+		model["uploadPath"] = params.uploadPath
+		
+		if(params.id){
+			//已经保存过
+			model["docEntityId"] = params.id
+			//获取附件信息
+			model["attachFiles"] = Attachment.findAllByBeUseId(params.id)
+		}else{
+			//尚未保存
+			model["newDoc"] = true
+		}
+		render(view:'/share/fileUpload',model:model)
 	}
 	def getCommentLog ={
 		def model =[:]

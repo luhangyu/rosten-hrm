@@ -443,14 +443,16 @@
 	        	
 				</div>
 			</div>
-			<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
-				href:"${createLink(controller:'share',action:'getCommentLog',id:personInfor?.id)}"
-			'>	
-			</div>
-			<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
-				href:"${createLink(controller:'share',action:'getFlowLog',id:personInfor?.id,params:[processDefinitionId:personInfor?.processDefinitionId,taskId:personInfor?.taskId])}"
-			'>	
-			</div>
+			<g:if test="${personInfor?.id}">
+				<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
+					href:"${createLink(controller:'share',action:'getCommentLog',id:personInfor?.id)}"
+				'>	
+				</div>
+				<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+					href:"${createLink(controller:'share',action:'getFlowLog',id:personInfor?.id,params:[processDefinitionId:personInfor?.processDefinitionId,taskId:personInfor?.taskId])}"
+				'>	
+				</div>
+			</g:if>
 		</g:if>
 		<g:else>
 			<div data-dojo-type="dijit/layout/ContentPane" title="合同信息" data-dojo-props=''>

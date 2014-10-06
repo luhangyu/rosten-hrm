@@ -25,7 +25,7 @@
 							}
 						</script>
 							<form data-dojo-type="dijit/form/Form" method="post"
-								action="${createLink(controller:docEntity,action:'uploadFile',id:docEntityId)}" id="fileUpload_form" enctype="multipart/form-data">
+								action="${createLink(controller:docEntity,action:'uploadFile',id:docEntityId,params:[uploadPath:uploadPath])}" id="fileUpload_form" enctype="multipart/form-data">
 								
 								<input  data-dojo-type="dijit/form/ValidationTextBox" id="isIE"  data-dojo-props='name:"isIE",style:{display:"none"},value:"no"' />
 								
