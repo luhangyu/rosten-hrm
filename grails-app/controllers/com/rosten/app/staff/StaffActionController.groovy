@@ -6,6 +6,64 @@ import com.rosten.app.system.User
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def departChangeForm ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		def strname = "departChange"
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		
+		if(params.id){
+			def entity = DepartChange.get(params.id)
+			def user = User.get(params.userid)
+			if(user.equals(entity.currentUser)){
+				//当前处理人
+				switch (true){
+					case entity.status.contains("审核") || entity.status.contains("审批"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+						break;
+					default :
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+				}
+			}
+		}else{
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		}
+		render actionList as JSON
+	}
+	def staffStatusChangeView ={
+		def actionList =[]
+		def strname = "staffStatusChange"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		if("leave".equals(params.type)){
+			actionList << createAction("离职申请",imgPath + "add.png","add_" + strname)
+		}else{
+			actionList << createAction("退休申请",imgPath + "add.png","add_" + strname)
+		}
+		actionList << createAction("打印通知单",imgPath + "word_print.png",strname + "_print_tzd")
+		actionList << createAction("打印交接清单",imgPath + "word_print.png",strname + "_print_qd")
+		
+		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		render actionList as JSON
+	}
+	
+	def staffDepartChangeView ={
+		def actionList =[]
+		def strname = "staffDepartChange"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("员工调动",imgPath + "add.png","add_" + strname)
+		actionList << createAction("打印调动通知单",imgPath + "word_print.png",strname + "_print_tzd")
+		actionList << createAction("打印交接清单",imgPath + "word_print.png",strname + "_print_qd")
+		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		render actionList as JSON
+	}
 	def staffAddView ={
 		def actionList =[]
 		def strname = "personInfor"
@@ -86,7 +144,7 @@ class StaffActionController {
 		def actionList =[]
 		def strname = "personInfor"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("添加",imgPath + "add.png",strname + "_add")
+		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
 		actionList << createAction("查看",imgPath + "read.gif","read_" + strname)
 		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif",strname + "_freshGrid")
@@ -99,12 +157,12 @@ class StaffActionController {
 			actionList =[]
 		}
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("添加",imgPath + "add.png","add_" + strname)
+		actionList << createAction("新增",imgPath + "add.png","add_" + strname)
 		actionList << createAction("查看",imgPath + "read.gif","read_" + strname)
 		
 		if(args){
 			//允许修改，删除操作
-			actionList << createAction("修改",imgPath + "ok.png","change_" + strname)
+//			actionList << createAction("修改",imgPath + "ok.png","change_" + strname)
 			actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		}
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")

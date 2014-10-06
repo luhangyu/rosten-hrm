@@ -8,17 +8,21 @@ import com.rosten.app.util.FieldAcl
 import com.rosten.app.system.Depart
 import com.rosten.app.util.Util
 import com.rosten.app.system.UserDepart
+
 import grails.converters.JSON
+
 import com.rosten.app.system.UserRole
 import com.rosten.app.system.UserType
 import com.rosten.app.system.SystemService
 import com.rosten.app.system.Role
+
 import java.io.OutputStream
+
 import com.rosten.app.export.ExcelExport
 import com.rosten.app.export.WordExport;
-
 import com.rosten.app.workflow.FlowBusiness
 import com.rosten.app.workflow.WorkFlowService
+
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.runtime.ProcessInstanceQuery
 import org.activiti.engine.task.Task
@@ -36,6 +40,484 @@ class StaffController {
 	def workFlowService
 	def taskService
 	def startService
+	
+	def staffStatusChangeAdd ={
+		redirect(action:"staffStatusChangeShow",params:params)
+	}
+	def staffStatusChangeShow ={
+		def model =[:]
+		model["company"] = Company.get(params.companyId)
+		
+		if(params.id){
+			model["statusChange"] = StatusChange.get(params.id)
+		}else{
+			model["statusChange"] = new StatusChange()
+		}
+		model["personInfor"] = model["StatusChange"].personInfor
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		render(view:'/staff/staffStatusChange',model:model)
+	}
+	def staffStatusChangeSave ={
+		def model=[:]
+		
+		def company = Company.get(params.companyId)
+		def statusChange = new StatusChange()
+		if(params.id && !"".equals(params.id)){
+			statusChange = StatusChange.get(params.id)
+		}else{
+			statusChange.company = company
+		}
+		
+		statusChange.properties = params
+		statusChange.clearErrors()
+		statusChange.changeDate = Util.convertToTimestamp(params.changeDate)
+		
+		def personInfor = PersonInfor.get(params.personInforId)
+		statusChange.personInfor = personInfor
+		
+		if(statusChange.save(flush:true)){
+			model["result"] = "true"
+		}else{
+			statusChange.errors.each{
+				println it
+			}
+			model["result"] = "false"
+		}
+		render model as JSON
+	}
+	def staffStatusChangeDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def statusChange = StatusChange.get(it)
+				if(statusChange){
+					statusChange.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	def staffStatusChangeGrid ={
+		def model=[:]
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			model["gridHeader"] = staffService.getStaffStatusChangeListLayout()
+		}
+		
+		def searchArgs =[changeType:params.type]
+		
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			model["gridData"] = staffService.getStaffStatusChangeListDataStore(args,searchArgs)
+			
+		}
+		if(params.refreshPageControl){
+			def total = staffService.getStaffStatusChangeCount(company,searchArgs)
+			model["pageControl"] = ["total":total.toString()]
+		}
+		render model as JSON
+	}
+	
+	def staffDepartChangeFlowDeal ={
+		def json=[:]
+		
+		def departChange = DepartChange.get(params.id)
+		
+		//处理当前人的待办事项
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = departChange.status
+		def nextStatus,nextDepart,nextLogContent
+		def nextUsers=[]
+		
+		//流程引擎相关信息处理-------------------------------------------------------------------------------------
+		
+		//结束当前任务，并开启下一节点任务
+		def map =[:]
+		if(params.conditionName){
+			map[params.conditionName] = params.conditionValue
+		}
+		taskService.complete(departChange.taskId,map)	//结束当前任务
+		
+		ProcessInstance processInstance = workFlowService.getProcessIntance(departChange.processInstanceId)
+		if(!processInstance || processInstance.isEnded()){
+			//流程已结束
+			nextStatus = "已结束"
+			departChange.currentUser = null
+			departChange.currentDepart = null
+			departChange.taskId = null
+		}else{
+			//获取下一节点任务，目前处理串行情况
+			def tasks = workFlowService.getTasksByFlow(departChange.processInstanceId)
+			def task = tasks[0]
+			if(task.getDescription() && !"".equals(task.getDescription())){
+				nextStatus = task.getDescription()
+			}else{
+				nextStatus = task.getName()
+			}
+			departChange.taskId = task.getId()
+		
+			if(params.dealUser){
+				//下一步相关信息处理
+				def dealUsers = params.dealUser.split(",")
+				if(dealUsers.size() >1){
+					//并发
+				}else{
+					//串行
+					def nextUser = User.get(Util.strLeft(params.dealUser,":"))
+					nextDepart = Util.strRight(params.dealUser, ":")
+					
+					//判断是否有公务授权------------------------------------------------------------
+					def _model = Model.findByModelCodeAndCompany("staffManage",currentUser.company)
+					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
+					if(authorize){
+						shareService.addFlowLog(departChange.id,"staffAdd",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						nextUser = authorize.beAuthorizer
+						nextDepart = authorize.beAuthorizerDepart
+					}
+					//-------------------------------------------------------------------------
+					
+					//任务指派给当前拟稿人
+					taskService.claim(departChange.taskId, nextUser.username)
+					
+					def args = [:]
+					args["type"] = "【员工调动】"
+					args["content"] = "请您审核名称为  【" + departChange.getPersonInforName() +  "】 的入职人员信息"
+					args["contentStatus"] = nextStatus
+					args["contentId"] = departChange.id
+					args["user"] = nextUser
+					args["company"] = nextUser.company
+					
+					startService.addGtask(args)
+					
+					departChange.currentUser = nextUser
+					departChange.currentDepart = nextDepart
+					
+					if(!departChange.readers.find{ item->
+						item.id.equals(nextUser.id)
+					}){
+						departChange.addToReaders(nextUser)
+					}
+					nextUsers << nextUser.getFormattedName()
+				}
+			}
+		}
+		departChange.status = nextStatus
+		departChange.currentDealDate = new Date()
+		
+		//判断下一处理人是否与当前处理人员为同一人
+		if(currentUser.equals(departChange.currentUser)){
+			json["refresh"] = true
+		}
+		
+		//----------------------------------------------------------------------------------------------------
+		
+		//修改代办事项状态
+		def gtask = Gtask.findWhere(
+			user:currentUser,
+			company:currentUser.company,
+			contentId:departChange.id,
+			contentStatus:frontStatus,
+			status:"0"
+		)
+		if(gtask!=null){
+			gtask.dealDate = new Date()
+			gtask.status = "1"
+			gtask.save(flush:true)
+		}
+		
+		if(departChange.save(flush:true)){
+			//添加日志
+			def logContent
+			switch (true){
+				case departChange.status.contains("已结束"):
+					logContent = "结束流程"
+					break
+				case departChange.status.contains("归档"):
+					logContent = "归档"
+					break
+				case departChange.status.contains("不同意"):
+					logContent = "不同意！"
+					break
+				default:
+					logContent = "提交" + departChange.status + "【" + nextUsers.join("、") + "】"
+					break
+			}
+			shareService.addFlowLog(departChange.id,"staffDepartChange",currentUser,logContent)
+						
+			json["result"] = true
+		}else{
+			departChange.errors.each{
+				println it
+			}
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	def staffDepartChangeFlowBack ={
+		def json=[:]
+		def departChange = DepartChange.get(params.id)
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = departChange.status
+		
+		try{
+			//获取上一处理任务
+			def frontTaskList = workFlowService.findBackAvtivity(departChange.taskId)
+			if(frontTaskList && frontTaskList.size()>0){
+				//简单的取最近的一个节点
+				def activityEntity = frontTaskList[frontTaskList.size()-1]
+				def activityId = activityEntity.getId();
+				
+				//流程跳转
+				workFlowService.backProcess(departChange.taskId, activityId, null)
+				
+				//获取下一节点任务，目前处理串行情况
+				def nextStatus
+				def tasks = workFlowService.getTasksByFlow(departChange.processInstanceId)
+				def task = tasks[0]
+				if(task.getDescription() && !"".equals(task.getDescription())){
+					nextStatus = task.getDescription()
+				}else{
+					nextStatus = task.getName()
+				}
+				departChange.taskId = task.getId()
+				
+				//获取对应节点的处理人员以及相关状态
+				def historyActivity = workFlowService.getHistrotyActivityByActivity(departChange.taskId,activityId)
+				def user = User.findByUsername(historyActivity.getAssignee())
+				
+				//任务指派给当前拟稿人
+				taskService.claim(departChange.taskId, user.username)
+				
+				//增加待办事项
+				def args = [:]
+				args["type"] = "【员工调动】"
+				args["content"] = "名称为  【" + departChange.getPersonInforName() +  "】 的入职人员信息被退回，请查看！"
+				args["contentStatus"] = nextStatus
+				args["contentId"] = departChange.id
+				args["user"] = user
+				args["company"] = user.company
+				
+				startService.addGtask(args)
+					
+				//修改相关信息
+				departChange.currentUser = user
+				departChange.currentDepart = user.getDepartName()
+				departChange.currentDealDate = new Date()
+				departChange.status = nextStatus
+				
+				//判断下一处理人是否与当前处理人员为同一人
+				if(currentUser.equals(departChange.currentUser)){
+					json["refresh"] = true
+				}
+				
+				//----------------------------------------------------------------------------------------------------
+				
+				//修改代办事项状态
+				def gtask = Gtask.findWhere(
+					user:currentUser,
+					company:currentUser.company,
+					contentId:departChange.id,
+					contentStatus:frontStatus,
+					status:"0"
+				)
+				if(gtask!=null){
+					gtask.dealDate = new Date()
+					gtask.status = "1"
+					gtask.save(flush:true)
+				}
+				
+				departChange.save(flush:true)
+				
+				//添加日志
+				def logContent = "退回【" + user.getFormattedName() + "】"
+				
+				shareService.addFlowLog(departChange.id,"staffDepartChange",currentUser,logContent)
+			}
+				
+			json["result"] = true
+		}catch(Exception e){
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	def staffDepartChangeAdd ={
+		if(params.flowCode){
+			//需要走流程
+			def company = Company.get(params.companyId)
+			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
+			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+				params.relationFlow = flowBusiness.relationFlow
+				redirect(action:"staffDepartChangeShow",params:params)
+			}else{
+				//不存在流程引擎关联数据
+				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
+			}
+		}else{
+			redirect(action:"staffDepartChangeShow",params:params)
+		}
+		
+	}
+	def staffDepartChangeShow ={
+		def model =[:]
+		def user = User.get(params.userid)
+		model["company"] = Company.get(params.companyId)
+		model["user"] = user
+		
+		def departChange
+		if(params.id){
+			departChange = DepartChange.get(params.id)
+			model["isShowFile"] = true
+		}else{
+			departChange = new DepartChange()
+			departChange.personInfor = PersonInfor.findByUser(user)
+		}
+		model["departChange"] = departChange
+		model["personInfor"] = departChange.personInfor
+		
+		//流程相关信息----------------------------------------------
+		model["relationFlow"] = params.relationFlow
+		model["flowCode"] = params.flowCode
+		//------------------------------------------------------
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		render(view:'/staff/departChange',model:model)
+	}
+	def staffDepartChangeSave ={
+		def model=[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = Company.get(params.companyId)
+		
+		def departChange = new DepartChange()
+		if(params.id && !"".equals(params.id)){
+			departChange = DepartChange.get(params.id)
+		}else{
+			departChange.company = company
+		}
+		
+		departChange.properties = params
+		departChange.clearErrors()
+		
+		departChange.personInfor = PersonInfor.get(params.personInforId)
+		departChange.applayUser = currentUser
+		
+		departChange.changeDate = Util.convertToTimestamp(params.changeDate)
+		
+		def inDepart = Depart.get(params.allowdepartsId)
+		departChange.inDepart = inDepart
+		
+		
+		//判断是否需要走流程
+		def _status
+		if(params.relationFlow){
+			//需要走流程
+			if(params.id){
+				_status = "old"
+			}else{
+				_status = "new"
+				departChange.currentUser = currentUser
+				departChange.currentDepart = currentUser.getDepartName()
+				departChange.currentDealDate = new Date()
+				
+				departChange.drafter = currentUser
+				departChange.drafterDepart = currentUser.getDepartName()
+			}
+			
+			//增加读者域
+			if(!departChange.readers.find{ it.id.equals(currentUser.id) }){
+				departChange.addToReaders(currentUser)
+			}
+			
+			//流程引擎相关信息处理-------------------------------------------------------------------------------------
+			if(!departChange.processInstanceId){
+				//启动流程实例
+				def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,departChange.id, variables);
+				departChange.processInstanceId = processInstance.getProcessInstanceId()
+				departChange.processDefinitionId = processInstance.getProcessDefinitionId()
+				
+				//获取下一节点任务
+				def task = workFlowService.getTasksByFlow(processInstance.getProcessInstanceId())[0]
+				departChange.taskId = task.getId()
+			}
+			//-------------------------------------------------------------------------------------------------
+		}
+		
+		
+		if(departChange.save(flush:true)){
+			model["id"] = departChange.id
+			model["result"] = "true"
+			
+			//流程引擎相关日志信息
+			if("new".equals(_status)){
+				//添加日志
+				shareService.addFlowLog(departChange.id,params.flowCode,currentUser,"新建员工调动信息")
+			}
+			
+		}else{
+			departChange.errors.each{
+				println it
+			}
+			model["result"] = "false"
+		}
+		render model as JSON
+	}
+	def staffDepartChangeDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def departChange = DepartChange.get(it)
+				if(departChange){
+					departChange.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	def staffDepartChangeGrid ={
+		def model=[:]
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			model["gridHeader"] = staffService.getStaffDepartChangeListLayout()
+		}
+		
+		def searchArgs =[:]
+		
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			model["gridData"] = staffService.getStaffDepartChangeListDataStore(args,searchArgs)
+			
+		}
+		if(params.refreshPageControl){
+			def total = staffService.getStaffDepartChangeCount(company,searchArgs)
+			model["pageControl"] = ["total":total.toString()]
+		}
+		render model as JSON
+	}
 	
 	def searchView ={
 		def model =[:]
