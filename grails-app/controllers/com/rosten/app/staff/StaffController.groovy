@@ -41,6 +41,95 @@ class StaffController {
 	def taskService
 	def startService
 	
+	def bargainAdd ={
+		redirect(action:"bargainShow",params:params)
+	}
+	def bargainShow ={
+		def model =[:]
+		model["company"] = Company.get(params.companyId)
+		
+		if(params.id){
+			model["bargain"] = Bargain.get(params.id)
+		}else{
+			model["bargain"] = new Bargain()
+		}
+		model["personInfor"] = model["bargain"]?.personInfor
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		render(view:'/staff/bargain',model:model)
+	}
+	def bargainSave ={
+		def model=[:]
+		
+		def company = Company.get(params.companyId)
+		def bargain = new Bargain()
+		if(params.id && !"".equals(params.id)){
+			bargain = Bargain.get(params.id)
+		}else{
+			bargain.company = company
+		}
+		
+		bargain.properties = params
+		bargain.clearErrors()
+		bargain.changeDate = Util.convertToTimestamp(params.changeDate)
+		
+		def personInfor = PersonInfor.get(params.personInforId)
+		bargain.personInfor = personInfor
+		
+		if(bargain.save(flush:true)){
+			model["result"] = "true"
+		}else{
+			bargain.errors.each{
+				println it
+			}
+			model["result"] = "false"
+		}
+		render model as JSON
+	}
+	def bargainDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def bargain = Bargain.get(it)
+				if(bargain){
+					bargain.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	def bargainGrid ={
+		def model=[:]
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			model["gridHeader"] = staffService.getBargainListLayout()
+		}
+		
+		def searchArgs =[:]
+		
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			model["gridData"] = staffService.getBargainListDataStore(args,searchArgs)
+			
+		}
+		if(params.refreshPageControl){
+			def total = staffService.getBargainCount(company,searchArgs)
+			model["pageControl"] = ["total":total.toString()]
+		}
+		render model as JSON
+	}
+	
 	def staffStatusChangeAdd ={
 		redirect(action:"staffStatusChangeShow",params:params)
 	}
@@ -1523,7 +1612,27 @@ class StaffController {
 		model["company"] = Company.get(params.companyId)
 		render(view:'/staff/personManage',model:model)
 	}
-	
+	def getBargain ={
+		def model =[:]
+		
+		def entity = Bargain.get(params.id)
+		if(!entity){
+			entity = new Bargain()
+		}
+		
+		model["bargain"] = entity
+		
+		//个人概况在已签发状态打开编辑功能
+		FieldAcl fa = new FieldAcl()
+		if("staffAdd".equals(params.type)){
+			if(!personInfor || !"已签发".equals(personInfor.status)){
+				fa.readOnly = ["bargainSerialNo","bargainType","startDate","endDate"]
+			}
+		}
+		model["fieldAcl"] = fa
+		
+		render(view:'/staff/bargain',model:model)
+	}
 	def getPersonInfor ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()

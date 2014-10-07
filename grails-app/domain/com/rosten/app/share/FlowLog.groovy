@@ -38,6 +38,6 @@ class FlowLog {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_Flow_LOG"
+		table "ROSTEN_FLOW_LOG"
 	}
 }

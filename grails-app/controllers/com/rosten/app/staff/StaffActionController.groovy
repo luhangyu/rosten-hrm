@@ -6,6 +6,9 @@ import com.rosten.app.system.User
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def bargainView ={
+		render createCommonAction(null,"bargain",true) as JSON
+	}
 	def departChangeForm ={
 		def webPath = request.getContextPath() + "/"
 		def actionList = []
@@ -97,6 +100,7 @@ class StaffActionController {
 					case entity.status.contains("已签发"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("录入合同",webPath +imgPath + "bargain.gif",strname + "_addBargain")
 						actionList << createAction("生成录用通知书",webPath +imgPath + "word_print.png",strname +"_submit")
 						actionList << createAction("打印入职清单",webPath +imgPath + "word_print.png",strname +"_submit")
 						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_submit")

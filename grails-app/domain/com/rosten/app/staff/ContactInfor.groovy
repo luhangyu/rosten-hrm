@@ -1,7 +1,5 @@
 package com.rosten.app.staff
 
-import com.rosten.app.system.User
-
 //通讯方式
 class ContactInfor {
 	

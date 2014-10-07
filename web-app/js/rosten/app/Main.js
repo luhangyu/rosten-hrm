@@ -165,6 +165,11 @@ define(["dojo/_base/kernel"
         			show_naviEntity(oRight);
             	});
         		break;
+        	case "bargain":
+        		require(["rosten/app/BargainManage"],function(){
+        			show_naviEntity(oRight);
+            	});
+        		break;
         	default:
         		returnToMain();
         		break;
