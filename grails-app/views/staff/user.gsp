@@ -26,6 +26,9 @@
 		     	"dijit/form/RadioButton",
 		     	"dijit/form/ValidationTextBox",
 		     	"dijit/form/SimpleTextarea",
+		     	"dijit/form/DropDownButton",
+		 		"dojox/form/Uploader",
+		 		"dojox/form/uploader/FileList",
 		     	"dijit/form/Button",
 		     	"dijit/Dialog",
 				"dojox/grid/DataGrid",
@@ -243,6 +246,9 @@
 					rosten.toggleAction(buttonWidget,false);
 				});
 			};
+			user_addBargain = function(object){
+				
+			};
 			user_ok = function(object){
 				//填写面试结果
 				var msResultDom = registry.byId("msResult");
@@ -444,6 +450,16 @@
 				</div>
 			</div>
 			<g:if test="${personInfor?.id}">
+				<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
+					<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
+						href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id,params:[type:type])}"
+					'></div>
+					
+					<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
+						height:"60px",href:"${createLink(controller:'share',action:'getFileUpload',id:bargain?.id,params:[uploadPath:'staff',isShowFile:false])}"'>
+					</div>
+				
+				</div>
 				<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 					href:"${createLink(controller:'share',action:'getCommentLog',id:personInfor?.id)}"
 				'>	
@@ -455,10 +471,15 @@
 			</g:if>
 		</g:if>
 		<g:else>
-			<div data-dojo-type="dijit/layout/ContentPane" title="合同信息" data-dojo-props=''>
-		
+			<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
+				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
+					href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id)}"
+				'></div>
+				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
+					height:"60px",href:"${createLink(controller:'share',action:'getFileUpload',id:bargain?.id,params:[uploadPath:'staff',isShowFile:false])}"'>
+				</div>
 			</div>
-			<div data-dojo-type="dijit/layout/ContentPane" title="劳资福利" data-dojo-props=''>
+			<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
 			
 			</div>
 		</g:else>
