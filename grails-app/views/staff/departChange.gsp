@@ -110,6 +110,15 @@
 				if(conditionObj){
 					lang.mixin(content,conditionObj);
 				}
+				//2014-10-8针对当前流程，对调出调入部门进行特殊控制
+				if("${departChange.status}"=="领导审核"){
+					//下一节点为调出部门审核
+					content.selectDepart = registry.byId("outDepartName").get("value");
+				}else if("${departChange.status}" == "调出部门审核"){
+					//下一节点为调入部门审核
+					content.selectDepart = registry.byId("allowdepartsName").get("value");
+				}
+				
 				rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:departChange?.taskId,drafterUsername:departChange?.drafter?.username])}",content,function(data){
 					if(data.dealFlow==false){
 						//流程无下一节点
@@ -277,7 +286,7 @@
 						    	<div align="right"><span style="color:red">*&nbsp;</span>调出部门：</div>
 				            </td>
 				            <td>
-				            	<input data-dojo-type="dijit/form/ValidationTextBox" 
+				            	<input id="outDepartName" data-dojo-type="dijit/form/ValidationTextBox" 
 				                 	data-dojo-props='trim:true,required:true,readOnly:true,
 										value:"${departChange?.getOutDepartName()}"
 				                '/>

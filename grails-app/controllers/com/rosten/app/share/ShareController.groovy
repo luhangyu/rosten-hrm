@@ -73,6 +73,11 @@ class ShareController {
 				json.limitDepart = currentUser.getDepartEntityTrueName()
 			}
 			
+			//增加前端对群组部门的控制,参数为部门中文名称------------2014-10-8-----------------------
+			if(params.selectDepart){
+				json.limitDepart = params.selectDepart
+			}
+			//------------------------------------------------------------
 			json.dealType = "group"
 			render json as JSON
 			return
