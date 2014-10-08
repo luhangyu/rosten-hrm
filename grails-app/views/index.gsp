@@ -107,6 +107,11 @@
 	#information .dijitTitlePaneTitle ,#information .dijitTitlePaneContentOuter{
 		border:0px;
 	}
+	
+	#home_staffInfor p { float:left; width:32%; }
+	#home_staffInfor p img { margin:20px 0 0 60px; }
+	#home_staffInfor .userInfor {margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:60%; }
+	
 	.rosten .dijitTitlePaneCountNode{
 		margin-left:3px;
 		color:#ff0000;
@@ -270,6 +275,12 @@
 						<div data-dojo-type="rosten/widget/TitlePane" id="home_staffInfor"
 							data-dojo-props='region:"center",title:"员工信息",toggleable:false,
 								height:"157px",moreText:""'>
+								
+								<p class="userPic"><img src="images/rosten/userImg.gif"></p>
+								<div class="userInfor">
+									<div style="font-size:20px;font-weight:bold">${(user.chinaName!=null?user.chinaName:user.username)}</div>
+									<div style="margin-top:10px;color:#404040;font-size:16px">${user.getDepartName()?user.getDepartName():"暂无部门" }</div>
+								</div>
 						</div>	
 						
 					</div>

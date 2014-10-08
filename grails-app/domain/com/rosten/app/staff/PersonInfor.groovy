@@ -17,6 +17,9 @@ class PersonInfor {
 	
 	String chinaName
 	
+	//个人头像
+	String imageUrl
+	
 	//身份证号
 	String idCard
 	
@@ -192,6 +195,7 @@ class PersonInfor {
 	String msResult
 	
     static constraints = {
+		imageUrl nullable:true,blank:true
 		birthday nullable:true,blank:true
 		birthAddress nullable:true,blank:true
 		nativeAddress nullable:true,blank:true

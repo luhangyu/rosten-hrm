@@ -26,7 +26,12 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 	add_staffStatusChange = function() {
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeAdd?companyId=" + companyId + "&userid=" + userid);
+        
+        var type="retire";
+        if(rosten.kernel.navigationEntity=="staffLeave"){
+        	type="leave";
+        }
+        rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeAdd?companyId=" + companyId + "&userid=" + userid + "&type=" + type);
     };
 	change_staffStatusChange = function() {
 		var unid = rosten.getGridUnid("single");
@@ -34,7 +39,13 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			return;
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		
+		 var type="retire";
+	        if(rosten.kernel.navigationEntity=="staffLeave"){
+	        	type="leave";
+	        }
+	        
+		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&type=" + type);
 	};
 	read_staffDepartChange = function() {
 		change_staffStatusChange();

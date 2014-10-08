@@ -6,6 +6,22 @@ import com.rosten.app.system.User
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def bargainForm ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		def strname = "bargain"
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		render actionList as JSON
+	}
+	def statusChangeForm ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		def strname = "statusChange"
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		render actionList as JSON
+	}
 	def bargainView ={
 		render createCommonAction(null,"bargain",true) as JSON
 	}

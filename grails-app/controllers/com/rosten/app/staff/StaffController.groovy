@@ -48,16 +48,17 @@ class StaffController {
 		def model =[:]
 		model["company"] = Company.get(params.companyId)
 		
+		def bargain
 		if(params.id){
-			model["bargain"] = Bargain.get(params.id)
+			bargain = Bargain.get(params.id)
 		}else{
-			model["bargain"] = new Bargain()
+			bargain = new Bargain()
 		}
-		model["personInfor"] = model["bargain"]?.personInfor
+		model["bargain"] = bargain
 		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa
-		render(view:'/staff/bargain',model:model)
+		render(view:'/staff/bargainShow',model:model)
 	}
 	def bargainSave ={
 		def model=[:]
@@ -137,26 +138,35 @@ class StaffController {
 		def model =[:]
 		model["company"] = Company.get(params.companyId)
 		
+		def statusChange
 		if(params.id){
-			model["statusChange"] = StatusChange.get(params.id)
+			statusChange = StatusChange.get(params.id)
 		}else{
-			model["statusChange"] = new StatusChange()
+			statusChange = new StatusChange()
+			if("leave".equals(params.type)){
+				statusChange.changeType = "离职"
+			}else{
+				statusChange.changeType = "退休"
+			}
 		}
-		model["personInfor"] = model["StatusChange"].personInfor
+		model["statusChange"] = statusChange
+		model["personInfor"] = statusChange.personInfor
 		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa
-		render(view:'/staff/staffStatusChange',model:model)
+		render(view:'/staff/statusChange',model:model)
 	}
 	def staffStatusChangeSave ={
 		def model=[:]
 		
+		def currentUser = springSecurityService.getCurrentUser()
 		def company = Company.get(params.companyId)
 		def statusChange = new StatusChange()
 		if(params.id && !"".equals(params.id)){
 			statusChange = StatusChange.get(params.id)
 		}else{
 			statusChange.company = company
+			statusChange.applayUser = currentUser
 		}
 		
 		statusChange.properties = params
@@ -167,6 +177,9 @@ class StaffController {
 		statusChange.personInfor = personInfor
 		
 		if(statusChange.save(flush:true)){
+			personInfor.status = statusChange.changeType
+			personInfor.save(flush:true)
+			
 			model["result"] = "true"
 		}else{
 			statusChange.errors.each{
@@ -199,8 +212,12 @@ class StaffController {
 			model["gridHeader"] = staffService.getStaffStatusChangeListLayout()
 		}
 		
-		def searchArgs =[changeType:params.type]
-		
+		def searchArgs =[:]
+		if("leave".equals(params.type)){
+			searchArgs.changeType = "离职"
+		}else{
+			searchArgs.changeType = "退休"
+		}
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -1046,6 +1063,7 @@ class StaffController {
 				smap["politicsStatus"] = personInfor.politicsStatus
 				smap["marriage"] = personInfor.marriage
 				smap["religion"] = personInfor.religion
+				smap["personInforId"] = personInfor.id
 			}
 		}
 		render smap as JSON
