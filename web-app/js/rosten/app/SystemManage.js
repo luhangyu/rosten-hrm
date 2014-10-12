@@ -168,7 +168,26 @@ define(["dojo/_base/connect",
 	};
 	
 	export_personInfor = function(){
-		rosten.openNewWindow("export", rosten.webPath + "/staff/exportPerson");
+		 var companyId = rosten.kernel.getUserInforByKey("companyid");
+		 
+		 var content = {};
+			
+			var username = registry.byId("s_username");
+			if(username.get("value")!=""){
+				content.username = username.get("value");
+			}
+			
+			var chinaName = registry.byId("s_chinaName");
+			if(chinaName.get("value")!=""){
+				content.chinaName = chinaName.get("value");
+			}
+			
+			var departName = registry.byId("s_departName");
+			if(departName.get("value")!=""){
+				content.departName = departName.get("value");
+			}
+		 
+		rosten.openNewWindow("export", rosten.webPath + "/staff/exportPerson?companyId="+companyId+"&type="+ rosten.kernel.navigationEntity );
 	};
 	
 	import_personInfor = function(){
@@ -181,10 +200,24 @@ define(["dojo/_base/connect",
 	};
 	//打印
 	personInfor_print = function(){
-		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");
+		var unids = rosten.getGridUnid("multi");
+		if (unids == ""){
+			rosten.alert("请勾选要打印的数据！");
+			return;
+		}
+		var content = {};
+		content.id = unids;
+		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson/"+unids);
 	};
 	personInfor_print_rzqd = function(){
-		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");
+		var unids = rosten.getGridUnid("multi");
+		if (unids == ""){
+			rosten.alert("请勾选要打印的数据！");
+			return;
+		}
+		var content = {};
+		content.id = unids;
+		rosten.openNewWindow("print", rosten.webPath + "/staff/printPersonRzqd/"+unids);
 	};
 	personInfor_print_rztzs = function(){
 		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");

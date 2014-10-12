@@ -5,6 +5,14 @@ import com.rosten.app.system.Company
 
 class StaffService {
 	
+	public PersonInfor getPersonInfor(String id) {
+		return PersonInfor.get(id)
+	}
+	
+	public ContactInfor getContactInfor(PersonInfor person){
+		return ContactInfor.findByPersonInfor(person)
+	}
+	
 	def getBargainListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new Bargain())
@@ -148,4 +156,5 @@ class StaffService {
 		}
 		return c.count(query)
 	}
-}
+
+	}

@@ -1805,17 +1805,75 @@ class StaffController {
 	
 	def exportPerson={
 		OutputStream os = response.outputStream
-		
+		def company = Company.get(params.companyId)
 		response.setContentType('application/vnd.ms-excel')
-		response.setHeader("Content-disposition", "attachment; filename=" + new String("张三.xls".getBytes("GB2312"), "ISO_8859_1"))
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("员工信息.xls".getBytes("GB2312"), "ISO_8859_1"))
 		
+		def searchArgs =[:]
+		
+		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		
+		def c = PersonInfor.createCriteria()
+
+		def personList = c.list{
+			
+			eq("company",company)
+			
+			searchArgs.each{k,v->
+				if(k.equals("departName")){
+					departs{
+						like(k,"%" + v + "%")
+					}
+				}else if(k.equals("username")){
+					createAlias('user', 'a')
+					like("a.username","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			
+			if("staffAdd".equals(params.type)){
+				not {'in'("status",["在职","退休","离职"])}
+				order("createDate", "desc")
+			}else{
+				'in'("status",["在职","退休","离职"])
+				order("createDate", "desc")
+			}
+			
+		}
 		def excel = new ExcelExport()
-		excel.mbxz(os)
+		excel.ygxxdc(os,personList)
 	}
 	
+	//打印员工登记表
 	def printPerson={
 		def word = new WordExport()
-		word.downloadZip(response)
+		def ids = params.id.split(",")
+		if(null!=ids&&ids.length>0){
+			if(ids.length==1){
+				word.dyDjb(response,params.id)
+			}else{
+			word.downloadDjbZip(response,params.id)
+			}
+		}
 	}
+	
+	//打印员工入职手续清单
+	def printPersonRzqd={
+		def word = new WordExport()
+		def ids = params.id.split(",")
+		if(null!=ids&&ids.length>0){
+			if(ids.length==1){
+				word.dyRzqd(response,params.id)
+			}else{
+				word.downloadRzqdZip(response,params.id)
+			}
+		}
+	}
+	
+	
 	
 }
