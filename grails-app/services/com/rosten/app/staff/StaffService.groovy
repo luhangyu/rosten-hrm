@@ -156,5 +156,77 @@ class StaffService {
 		}
 		return c.count(query)
 	}
-
+	def getDegreeInforListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new Degree())
 	}
+	def getDegreeInforListDataStore ={params,searchArgs->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllDegreeInfor(offset,max,params.personInfor,searchArgs)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	private def getAllDegreeInfor={offset,max,personInfor,searchArgs->
+		def c = Degree.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("personInfor",personInfor)
+			
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.list(pa,query)
+	}
+	def getDegreeInforCount ={personInfor,searchArgs->
+		def c = Degree.createCriteria()
+		def query = {
+			eq("personInfor",personInfor)
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.count(query)
+	}
+	def getWorkResumeInforListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new WorkResume())
+	}
+	def getWorkResumeInforListDataStore ={params,searchArgs->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllWorkResumeInfor(offset,max,params.personInfor,searchArgs)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	private def getAllWorkResumeInfor={offset,max,personInfor,searchArgs->
+		def c = WorkResume.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("personInfor",personInfor)
+			
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.list(pa,query)
+	}
+	def getWorkResumeInforCount ={personInfor,searchArgs->
+		def c = WorkResume.createCriteria()
+		def query = {
+			eq("personInfor",personInfor)
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.count(query)
+	}
+	
+	
+	
+	
+	
+}

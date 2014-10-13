@@ -8,9 +8,17 @@
     	body{
 			overflow:auto;
 		}
-		.rosten .rostenTitleGrid .dijitTitlePaneContentInner{
+		.rosten .rostenFamilyTitleGrid .dijitTitlePaneContentInner{
 			padding:2px 1px 1px 1px;
 			height:160px;
+		}
+		.rosten .rostenDegreeTitleGrid .dijitTitlePaneContentInner{
+			padding:2px 1px 1px 1px;
+			height:280px;
+		}
+		.rosten .rostenWorkResumeTitleGrid .dijitTitlePaneContentInner{
+			padding:2px 1px 1px 1px;
+			height:280px;
 		}
     </style>
 	<script type="text/javascript">
@@ -94,6 +102,8 @@
 				</g:if>
 				
 				content.staffFamily = rosten.getGridDataCollect(staffFamilyGrid,["name","relation","mobile","workUnit","duties","politicsStatus"]);
+				content.degree = rosten.getGridDataCollect(degreeGrid,["name","major","degree","startDate","endDate"]);
+				content.workResume = rosten.getGridDataCollect(workResumeGrid,["workCompany","workContent","startDate","endDate","duty","proveName","remark"]);
 				if(registry.byId("msResult")) content.msResult = registry.byId("msResult").attr("value");
 
 				//流程相关信息
@@ -414,17 +424,27 @@
 			</div>
 
 			<div data-dojo-type="rosten/widget/TitlePane" 
-				data-dojo-props='"class":"rostenTitleGrid",title:"家庭成员",toggleable:true,_moreClick:staff_addFamily,moreText:"<span style=\"color:#108ac6\">增加成员</span>",marginBottom:"2px"'>
+				data-dojo-props='"class":"rostenFamilyTitleGrid",title:"家庭成员",toggleable:true,_moreClick:staff_addFamily,moreText:"<span style=\"color:#108ac6\">增加成员</span>",marginBottom:"2px"'>
+				
 				<div data-dojo-type="rosten/widget/RostenGrid" id="staffFamilyGrid" data-dojo-id="staffFamilyGrid"
 					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:personInfor?.id)}"'></div>
+			
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"学历学位",toggleable:false,moreText:"",height:"100px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getDegree',id:user?.id)}"'>
+			<div data-dojo-type="rosten/widget/TitlePane" 
+				data-dojo-props='"class":"rostenDegreeTitleGrid",title:"学历学位",toggleable:true,_moreClick:staff_addDegree,moreText:"<span style=\"color:#108ac6\">增加学历学位</span>",marginBottom:"2px"'>
+				
+				<div data-dojo-type="rosten/widget/RostenGrid" id="degreeGrid" data-dojo-id="degreeGrid"
+					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getDegree',id:personInfor?.id)}"'></div>
+				
 			</div>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"工作经历",toggleable:false,moreText:"",height:"260px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getWorkResume',id:user?.id)}"'>
+			<div data-dojo-type="rosten/widget/TitlePane" 
+				data-dojo-props='"class":"rostenWorkResumeTitleGrid",title:"工作经历",toggleable:true,_moreClick:staff_addWorkResume,moreText:"<span style=\"color:#108ac6\">增加工作经历</span>",marginBottom:"2px"'>
+				
+				<div data-dojo-type="rosten/widget/RostenGrid" id="workResumeGrid" data-dojo-id="workResumeGrid"
+					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getWorkResume',id:personInfor?.id)}"'></div>
+				
 			</div>
 		</form>
         </div>

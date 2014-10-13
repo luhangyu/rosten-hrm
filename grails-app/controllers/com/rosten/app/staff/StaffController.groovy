@@ -1256,7 +1256,28 @@ class StaffController {
 				familyInfor.personInfor = personInfor
 				familyInfor.save(flush:true)
 			}
-			//--------------------------------------------------------------
+			
+			//学习经历--------------------------------------------------------------
+			Degree.findAllByPersonInfor(personInfor).each{
+				it.delete()
+			}
+			
+			JSON.parse(params.degree).eachWithIndex{elem, i ->
+				def degree = new Degree(elem)
+				degree.personInfor = personInfor
+				degree.save(flush:true)
+			}
+			
+			//工作经历--------------------------------------------------------------
+			WorkResume.findAllByPersonInfor(personInfor).each{
+				it.delete()
+			}
+			
+			JSON.parse(params.workResume).eachWithIndex{elem, i ->
+				def workResume = new WorkResume(elem)
+				workResume.personInfor = personInfor
+				workResume.save(flush:true)
+			}
 			
 			//流程引擎相关日志信息
 			if("new".equals(_status)){
@@ -1723,35 +1744,80 @@ class StaffController {
 		render(view:'/staff/contactInfor',model:model)
 	}
 	def getDegree ={
-		def model =[:]
-		def entity
+		def json=[:]
 		
-		def user = PersonInfor.get(params.id)
-		if(user){
-			entity = Degree.findByPersonInfor(user)
-		}else{
-			entity = new Degree()
+		def personInfor = PersonInfor.get(params.id)
+		if(params.refreshHeader){
+			json["gridHeader"] = staffService.getDegreeInforListLayout()
 		}
-		model["degreeEntity"] = entity
-		FieldAcl fa = new FieldAcl()
-	
-		model["fieldAcl"] = fa
-		render(view:'/staff/degree',model:model)
+		
+		//搜索功能
+		def searchArgs =[:]
+		
+		if(params.refreshData){
+			if(!personInfor){
+				json["gridData"] = ["identifier":"id","label":"name","items":[]]
+			}else{
+				def args =[:]
+				int perPageNum = Util.str2int(params.perPageNum)
+				int nowPage =  Util.str2int(params.showPageNum)
+				
+				args["offset"] = (nowPage-1) * perPageNum
+				args["max"] = perPageNum
+				args["personInfor"] = personInfor
+				
+				def gridData = staffService.getDegreeInforListDataStore(args,searchArgs)
+				json["gridData"] = gridData
+			}
+		}
+		if(params.refreshPageControl){
+			if(!personInfor){
+				json["pageControl"] = ["total":"0"]
+			}else{
+				def total = staffService.getDegreeInforCount(personInfor,searchArgs)
+				json["pageControl"] = ["total":total.toString()]
+			}
+			
+		}
+		render json as JSON
 	}
     def getWorkResume={
-		def model =[:]
-		def entity
+		def json=[:]
 		
-		def user = PersonInfor.get(params.id)
-		if(user){
-			entity = WorkResume.findByPersonInfor(user)
-		}else{
-			entity = new WorkResume()
+		def personInfor = PersonInfor.get(params.id)
+		if(params.refreshHeader){
+			json["gridHeader"] = staffService.getWorkResumeInforListLayout()
 		}
-		model["workResumeEntity"] = entity
-		FieldAcl fa = new FieldAcl()
-		model["fieldAcl"] = fa
-		render(view:'/staff/workResume',model:model)
+		
+		//搜索功能
+		def searchArgs =[:]
+		
+		if(params.refreshData){
+			if(!personInfor){
+				json["gridData"] = ["identifier":"id","label":"name","items":[]]
+			}else{
+				def args =[:]
+				int perPageNum = Util.str2int(params.perPageNum)
+				int nowPage =  Util.str2int(params.showPageNum)
+				
+				args["offset"] = (nowPage-1) * perPageNum
+				args["max"] = perPageNum
+				args["personInfor"] = personInfor
+				
+				def gridData = staffService.getWorkResumeInforListDataStore(args,searchArgs)
+				json["gridData"] = gridData
+			}
+		}
+		if(params.refreshPageControl){
+			if(!personInfor){
+				json["pageControl"] = ["total":"0"]
+			}else{
+				def total = staffService.getWorkResumeInforCount(personInfor,searchArgs)
+				json["pageControl"] = ["total":total.toString()]
+			}
+			
+		}
+		render json as JSON
 	}
 	
 	def getFamily ={
@@ -1801,6 +1867,24 @@ class StaffController {
 			model["familyInfor"] = new FamilyInfor()
 		}
 		render(view:'/staff/familyInfor',model:model)
+	}
+	def degreeInforShow={
+		def model =[:]
+		if(params.id){
+			model["degreeInfor"] = Degree.get(params.id)
+		}else{
+			model["degreeInfor"] = new Degree()
+		}
+		render(view:'/staff/degree',model:model)
+	}
+	def workResumeInforShow={
+		def model =[:]
+		if(params.id){
+			model["workResume"] = WorkResume.get(params.id)
+		}else{
+			model["workResume"] = new WorkResume()
+		}
+		render(view:'/staff/workResume',model:model)
 	}
 	
 	def exportPerson={

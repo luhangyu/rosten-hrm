@@ -82,11 +82,21 @@
 			systemCodeItem_Submit = function(){
 				var chenkids = ["itemCode","itemName"];
 				if(!rosten.checkData(chenkids)) return;
-
+				var systemCodeId = registry.byId("itemId").get("value");
+				
 				function gotAll(items,request){
-					if(items && items.length>0){
-						store.setValue(items[0],"code",registry.byId("itemCode").get("value"));
-						store.setValue(items[0],"name",registry.byId("itemName").get("value"));
+					var node;
+					for(var i=0;i < items.length;i++){
+						var id = store.getValue(items[i], "id");
+						if(id==systemCodeId){
+							node = items[i];
+							break;
+						}
+					}
+					
+					if(node){
+						store.setValue(node,"code",registry.byId("itemCode").get("value"));
+						store.setValue(node,"name",registry.byId("itemName").get("value"));
 					}else{
 						var randId = Math.random();
 						store.newItem({id:randId,systemCodeItemId:randId,rowIndex:items.length+1,code:registry.byId("itemCode").get("value"),name:registry.byId("itemName").get("value")});
@@ -95,7 +105,7 @@
 				
 				var store = systemCodeItemGrid.getStore();
 				store.fetch({
-					query:{id:registry.byId("itemId").get("value")},onComplete:gotAll,queryOptions:{deep:true}
+					query:{id:"*"},onComplete:gotAll,queryOptions:{deep:true}
 				});
 				rosten.hideRostenShowDialog();
 			};
