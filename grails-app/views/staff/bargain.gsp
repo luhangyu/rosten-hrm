@@ -8,6 +8,7 @@
 </style>
 
 <body>
+	<input  data-dojo-type="dijit/form/ValidationTextBox" id="barginId"  data-dojo-props='name:"barginId",style:{display:"none"},value:"${bargain?.id }"' />
 	<table border="0" width="740" align="left">
 		<tr>
 			<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>合同编号：</div></td>

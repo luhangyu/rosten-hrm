@@ -320,6 +320,10 @@
 				});
 			};
 			user_addBargain = function(object){
+				if(!bargin_form.validate()) return;
+
+				return;
+
 				
 			};
 			user_ok = function(object){
@@ -334,6 +338,19 @@
 					return false;
 				}
 				user_submit(object,{conditionName:"flow",conditionValue:"agree",msResult:msResult});
+			};
+			user_end = function(object){
+				//结束流程
+				var bargain = registry.byId("bargainId");
+				console.log(bargain);
+				if(!bargain.validate()){
+					rosten.alert("请先录入合同！").queryDlgClose = function(){
+						barginDom.focus();
+					};
+					return false;
+				}
+				user_submit(object);
+				rostenTabContainer.selectChild(barginContentPane); 
 			};
 			user_cancel = function(object){
 				user_submit(object,{conditionName:"flow",conditionValue:"notAgree"});
@@ -533,11 +550,11 @@
 				</div>
 			</div>
 			<g:if test="${personInfor?.id}">
-				<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
-					<form data-dojo-type="dijit/form/Form" method="post" id="bargain_form"
+				<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-id="barginContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
+					<form data-dojo-type="dijit/form/Form" method="post" id="bargain_form" data-dojo-id="bargain_form"
         				target="bargain_iframe" enctype="multipart/form-data" action="${createLink(controller:'staff',action:'addStaffBargainInfor',params:[companyId:companyId])}">
 				
-						<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
+						<div data-dojo-type="rosten/widget/TitlePane" data-dojo-id="barginTitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
 							href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id,params:[type:type])}"
 						'></div>
 						
@@ -545,7 +562,7 @@
 							height:"60px"'>
 							<table border="0" width="770" align="left">
 								<tr>
-								    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>附件：</div></td>
+								    <td width="120">附件：</div></td>
 							  		<td>
 							  			<input data-dojo-type="dojox/form/FileInput" data-dojo-props= 'label:"浏览...",cancelText:"清空"' name="bargainInputFile" />
 								    </td>
