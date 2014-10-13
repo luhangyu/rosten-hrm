@@ -1,6 +1,7 @@
 package com.rosten.app.system
 
 import grails.converters.JSON
+import com.rosten.app.workflow.FlowBusiness
 
 class HrmController {
 	def systemService
@@ -20,6 +21,10 @@ class HrmController {
 			def modelCodes = ["system","workflow","public","sms","question","personconfig"]
 			Model.findAllByCompany(company).each{
 				if(!modelCodes.contains(it.modelCode)){
+					FlowBusiness.findAllByModel(it).each{item->
+						item.model = null
+						item.save()
+					}
 					it.delete()
 				}
 			}
@@ -79,6 +84,13 @@ class HrmController {
 			resource.url = "staffRetire"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			resource.serialNo = 7
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "员工查询"
+			resource.url = "staffSearch"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 8
 			model.addToResources(resource)
 			
 			model.save()

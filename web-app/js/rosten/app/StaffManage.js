@@ -255,6 +255,15 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;
+		case "staffSearch":	//员工查询
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/staffAction/staffView?userId=" + userid + "&type=" + oString,
+				searchSrc:rosten.webPath + "/staff/searchView",
+				gridSrc : rosten.webPath + "/staff/staffGrid?companyId=" + companyId + "&userId=" + userid + "&type=" + oString
+			};
+			rosten.kernel.addRightContent(naviJson);
+			break;
 		}
 	}
 	connect.connect("show_naviEntity", show_staffNaviEntity);
