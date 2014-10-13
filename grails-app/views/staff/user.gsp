@@ -20,6 +20,69 @@
 			padding:2px 1px 1px 1px;
 			height:280px;
 		}
+		/*
+ * 附件上传css样式
+ */
+.dijitFileInput {
+	position:relative;
+	height:1.3em;
+}
+.dijitFileInputReal {
+	position:absolute;
+	z-index:2;
+	filter:alpha(opacity:0);
+	opacity:0;
+	cursor:pointer;
+	width:350px;
+}
+.dijitFileInputRealBlind {
+	right:0;
+}
+.dijitFileInputReal:hover { cursor:pointer; } 
+
+.dijitFileInputButton,
+.dijitFileInputText {
+	border:1px solid #333;
+	padding:2px 12px 2px 12px; 
+	cursor:pointer;
+}
+
+.dijitFileInputButton {
+	z-index:3;
+	visibility:hidden;
+}
+.dijitFakeInput { position:absolute; top:0; left:0; z-index:1; white-space: nowrap; }
+
+.rosten .upload .dijitFakeInput input {
+	border: 1px solid #bcc8dd;
+	background-color: #fff;
+	background-repeat: repeat-x;
+	background-position: top left;
+	background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	line-height:normal;
+	padding:0.2em 0.3em;
+	width:280px;
+}
+
+.rosten .upload .dijitFileInputButton,
+.rosten .upload .dijitFileInputText {
+	background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+	background-color: #cde3f6;
+	border: 1px solid #799ab7;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow:0px 1px 1px rgba(0,0,0,0.2);
+	-webkit-box-shadow:0px 1px 1px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+	font-size:12px;
+	padding:2px 10px 2px 10px; 
+}
     </style>
 	<script type="text/javascript">
 	require(["dojo/parser",
@@ -35,8 +98,8 @@
 		     	"dijit/form/ValidationTextBox",
 		     	"dijit/form/SimpleTextarea",
 		     	"dijit/form/DropDownButton",
-		 		"dojox/form/Uploader",
-		 		"dojox/form/uploader/FileList",
+		     	"dijit/form/Form",
+		 		"dojox/form/FileInput",
 		     	"dijit/form/Button",
 		     	"dijit/Dialog",
 				"dojox/grid/DataGrid",
@@ -471,15 +534,28 @@
 			</div>
 			<g:if test="${personInfor?.id}">
 				<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
-					<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
-						href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id,params:[type:type])}"
-					'></div>
-					
-					<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-						height:"60px",href:"${createLink(controller:'share',action:'getFileUpload',id:bargain?.id,params:[uploadPath:'staff',isShowFile:false])}"'>
-					</div>
+					<form data-dojo-type="dijit/form/Form" method="post" id="bargain_form"
+        				target="bargain_iframe" enctype="multipart/form-data" action="${createLink(controller:'staff',action:'addStaffBargainInfor',params:[companyId:companyId])}">
 				
+						<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
+							href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id,params:[type:type])}"
+						'></div>
+						
+						<div data-dojo-type="rosten/widget/TitlePane" class="upload" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
+							height:"60px"'>
+							<table border="0" width="770" align="left">
+								<tr>
+								    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>附件：</div></td>
+							  		<td>
+							  			<input data-dojo-type="dojox/form/FileInput" data-dojo-props= 'label:"浏览...",cancelText:"清空"' name="bargainInputFile" />
+								    </td>
+								</tr>
+							</table>
+							
+						</div>
+					</form>
 				</div>
+			
 				<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 					href:"${createLink(controller:'share',action:'getCommentLog',id:personInfor?.id)}"
 				'>	
@@ -496,7 +572,8 @@
 					href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id)}"
 				'></div>
 				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-					height:"60px",href:"${createLink(controller:'share',action:'getFileUpload',id:bargain?.id,params:[uploadPath:'staff',isShowFile:false])}"'>
+					height:"60px"'>
+					
 				</div>
 			</div>
 			<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
@@ -504,7 +581,8 @@
 			</div>
 		</g:else>
 	</div>
-	
+	<iframe name="bargain_iframe" style="display:none">
+	</iframe>
 	
 </body>
 </html>
