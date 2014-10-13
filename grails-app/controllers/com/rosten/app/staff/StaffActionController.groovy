@@ -117,8 +117,9 @@ class StaffActionController {
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("录入合同",webPath +imgPath + "bargain.gif",strname + "_addBargain")
-						actionList << createAction("生成录用通知书",webPath +imgPath + "word_print.png",strname +"_submit")
-						actionList << createAction("打印入职清单",webPath +imgPath + "word_print.png",strname +"_submit")
+						actionList << createAction("生成登记表",webPath +imgPath + "word_print.png",strname +"_print_djb")
+						actionList << createAction("生成录用通知书",webPath +imgPath + "word_print.png",strname +"_print_tzs")
+						actionList << createAction("打印入职清单",webPath +imgPath + "word_print.png",strname +"_print_rzqd")
 						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_submit")
 						break;
 					case entity.status.contains("面试中"):
