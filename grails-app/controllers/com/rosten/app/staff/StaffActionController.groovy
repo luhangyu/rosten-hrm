@@ -120,7 +120,7 @@ class StaffActionController {
 						actionList << createAction("生成登记表",webPath +imgPath + "word_print.png",strname +"_print_djb")
 						actionList << createAction("生成录用通知书",webPath +imgPath + "word_print.png",strname +"_print_tzs")
 						actionList << createAction("打印入职清单",webPath +imgPath + "word_print.png",strname +"_print_rzqd")
-						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_submit")
+						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_end")
 						break;
 					case entity.status.contains("面试中"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
