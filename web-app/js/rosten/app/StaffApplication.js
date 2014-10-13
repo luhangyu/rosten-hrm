@@ -292,4 +292,21 @@ define(["dojo/dom",
 			},queryOptions:{deep:true}
 		});
     };
+    
+    //打印登记表
+    user_print_djb = function(){
+    	var personInforId = registry.byId("personInforId").get("value");
+    	rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson/"+personInforId);
+    };
+    
+    user_print_tzs = function(){
+    	
+    };
+    
+    //打印入职清单
+    user_print_rzqd = function(){
+    	var personInforId = registry.byId("personInforId").get("value");
+    	rosten.openNewWindow("print", rosten.webPath + "/staff/printPersonRzqd/"+personInforId);
+    };
+    
 });
