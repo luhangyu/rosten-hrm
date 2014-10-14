@@ -108,7 +108,9 @@
 		     	"dijit/form/FilteringSelect",
 		     	"dijit/form/ComboBox",
 		     	"rosten/app/SystemApplication",
-		     	"rosten/app/StaffApplication"],
+		     	"rosten/app/StaffApplication",
+		     	"rosten/kernel/behavior",
+		     	"rosten/app/Application"],
 			function(parser,lang,kernel,registry,ActionBar){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
@@ -394,6 +396,17 @@
 				}
 		        window.close();
 			};
+
+			//上传头像
+			uploadPic=function(){
+				var id = registry.byId("personInforId"); 
+		    	rosten.createRostenShowDialog(rosten.webPath + "/staff/addUpload?personId=" + id, {
+		            onLoadFunction : function() {
+		            }
+		        });
+			};
+
+			
 	});
     </script>
 </head>
@@ -497,7 +510,7 @@
 			</div>
 			</g:if>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"315px",marginBottom:"2px",
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"345px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId])}"
 			'>
 			</div>

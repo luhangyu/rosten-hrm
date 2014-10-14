@@ -2139,6 +2139,47 @@ class StaffController {
 		}
 	}
 	
+	def addUpload ={
+		def model =[:]
+		model["personId"] = params.personId
+		render(view:'/staff/picUpload',model:model)
+	}
 	
 	
+	def uploadPic={
+		def ostr
+	
+		//添加附件信息
+		SystemUtil sysUtil = new SystemUtil()
+		
+		def uploadPath
+		def currentUser = (User) springSecurityService.getCurrentUser()
+		def companyPath = currentUser.company?.shortName
+		
+			uploadPath = "web-app/images/"
+		
+		
+		def f = request.getFile("uploadedfile")
+		if (!f.empty) {
+			String name = f.getOriginalFilename()//获得文件原始的名称
+			def realName = sysUtil.getRandName(name)
+			f.transferTo(new File(uploadPath,realName))
+			
+			def attachment = new Attachment()
+			attachment.name = name
+			attachment.realName = realName
+			attachment.type = "person"
+			attachment.url = uploadPath
+			attachment.size = f.size
+			attachment.beUseId = params.personId
+			attachment.upUser = currentUser
+			attachment.save(flush:true)
+		
+		ostr ="<script>var _parent = window.parent;_parent.rosten.alert('成功').queryDlgClose=function(){";
+		ostr += "var imgnode= _parent.document.getElementById('pic'); imgnode.src='../../images/"+realName+ "';";
+		ostr += "_parent.rosten.hideRostenShowDialog();";
+		ostr +="}</script>";
+		}
+		render ostr
+	}
 }

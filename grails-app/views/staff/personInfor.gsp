@@ -10,6 +10,13 @@
 <body>
 	<input  data-dojo-type="dijit/form/ValidationTextBox" id="personInforId"  data-dojo-props='name:"personInforId",style:{display:"none"},value:"${personInforEntity?.id }"' />
 	<table border="0" width="740" align="left">
+		<img id="pic" ></img>
+		<div data-dojo-type="dijit/form/Button" data-dojo-props="label:'上传'">
+		<script type="dojo/method" data-dojo-event="onClick">
+			uploadPic();
+		</script>
+	</div>
+		
 		<tr>
 		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>姓名：</div></td>
 		    <td width="250">
