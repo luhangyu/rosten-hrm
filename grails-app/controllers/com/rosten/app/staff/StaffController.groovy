@@ -1409,6 +1409,7 @@ class StaffController {
 			//只提供查询显示功能
 			fa.readOnly = []
 			model["type"] = "onlyShow"
+			
 			render(view:'/staff/userOnlyShow',model:model)
 			return
 		}
@@ -1775,6 +1776,31 @@ class StaffController {
 			ostr ="<script>window.parent.rosten.alert('失败');</script>"
 		}
 		render ostr
+	}
+	def getBargainFileByPersonInfor ={
+		
+		def model =[:]
+		def personInfor = PersonInfor.get(params.id)
+		def bargain = Bargain.findByPersonInfor(personInfor)
+		model["attachFiles"] = Attachment.findAllByBeUseId(bargain?.id)
+		render(view:'/staff/bargainFileOnlyShow',model:model)
+	}
+	def getBargainByPersonInfor={
+		def model =[:]
+		
+		def personInfor = PersonInfor.get(params.id)
+		model["bargain"] = Bargain.findByPersonInfor(personInfor)
+		
+		//个人概况在已签发状态打开编辑功能
+		FieldAcl fa = new FieldAcl()
+		if("staffAdd".equals(params.type)){
+			if(!personInfor || !"已签发".equals(personInfor.status)){
+				fa.readOnly = ["bargainSerialNo","bargainType","startDate","endDate"]
+			}
+		}
+		model["fieldAcl"] = fa
+		
+		render(view:'/staff/bargain',model:model)
 	}
 	def getBargain ={
 		def model =[:]

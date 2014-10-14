@@ -112,10 +112,10 @@
         
 		<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id,params:[type:type])}"
+				href:"${createLink(controller:'staff',action:'getBargainByPersonInfor',id:personInfor?.id,params:[type:type])}"
 			'></div>
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-				height:"60px"'>
+				href:"${createLink(controller:'staff',action:'getBargainFileByPersonInfor',id:personInfor?.id,params:[type:type])}"'>
 				
 			</div>
 		</div>
