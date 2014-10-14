@@ -48,22 +48,24 @@
 	               		trim:true,required:true,
 						value:"${departName}"
 	          	'/>
-	         	<g:hiddenField name="allowdepartsId" value="${departId}" />
-				<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+	          	<g:if test="${!onlyShow }">
+		         	<g:hiddenField name="allowdepartsId" value="${departId}" />
+					<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
+           		</g:if>
            	</td>
 		</tr>
 		<tr>
 		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>性别：</div></td>
 		  	<td width="250">
 		  		<input id="sex1" data-dojo-type="dijit/form/RadioButton"
-	           		data-dojo-props='name:"sex",type:"radio",
+	           		data-dojo-props='name:"sex",type:"radio",${fieldAcl.isReadOnly("sex")},
 	           			<g:if test="${personInforEntity?.sex=="男" }">checked:true,</g:if>
 						value:"男"
               	'/>
 				<label for="sex1">男</label>
 			
               	<input id="sex2" data-dojo-type="dijit/form/RadioButton"
-           			data-dojo-props='name:"sex",type:"radio",
+           			data-dojo-props='name:"sex",type:"radio",${fieldAcl.isReadOnly("sex")},
            			<g:if test="${personInforEntity?.sex=="女" }">checked:true,</g:if>
 					value:"女"
               	'/>
@@ -136,14 +138,14 @@
 			<td width="120"><div align="right">婚姻状况：</div></td>
 			  <td width="250">
 			  		<input id="marriage1" data-dojo-type="dijit/form/RadioButton"
-		           		data-dojo-props='name:"marriage",type:"radio",
+		           		data-dojo-props='name:"marriage",type:"radio",${fieldAcl.isReadOnly("marriage")},
 		           			<g:if test="${personInforEntity?.marriage=="已婚" }">checked:true,</g:if>
 							value:"已婚"
 	              	'/>
 					<label for="marriage1">已婚</label>
 				
 	              	<input id="marriage2" data-dojo-type="dijit/form/RadioButton"
-	           			data-dojo-props='name:"marriage",type:"radio",
+	           			data-dojo-props='name:"marriage",type:"radio",${fieldAcl.isReadOnly("marriage")},
 	           			<g:if test="${personInforEntity?.marriage=="未婚" }">checked:true,</g:if>
 						value:"未婚"
 	              	'/>
@@ -152,14 +154,14 @@
 			 <td width="120"><div align="right">宗教信仰：</div></td>
 			  <td width="250">
 			  		<input id="religion1" data-dojo-type="dijit/form/RadioButton"
-		           		data-dojo-props='name:"religion",type:"radio",
+		           		data-dojo-props='name:"religion",type:"radio",${fieldAcl.isReadOnly("religion")},
 		           			<g:if test="${personInforEntity?.religion=="有" }">checked:true,</g:if>
 							value:"有"
 	              	'/>
 					<label for="religion1">有</label>
 				
 	              	<input id="religion2" data-dojo-type="dijit/form/RadioButton"
-	           			data-dojo-props='name:"religion",type:"radio",
+	           			data-dojo-props='name:"religion",type:"radio",${fieldAcl.isReadOnly("religion")},
 	           			<g:if test="${personInforEntity?.religion=="无" }">checked:true,</g:if>
 						value:"无"
 	              	'/>

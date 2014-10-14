@@ -8,9 +8,9 @@ import com.rosten.app.util.FieldAcl
 import com.rosten.app.system.Depart
 import com.rosten.app.util.Util
 import com.rosten.app.system.UserDepart
-
+import com.rosten.app.util.SystemUtil
 import grails.converters.JSON
-
+import com.rosten.app.system.Attachment
 import com.rosten.app.system.UserRole
 import com.rosten.app.system.UserType
 import com.rosten.app.system.SystemService
@@ -1248,7 +1248,7 @@ class StaffController {
 			
 			//家庭成员--------------------------------------------------------------
 			FamilyInfor.findAllByPersonInfor(personInfor).each{
-				it.delete()
+				it.delete(flush:true)
 			}
 			
 			JSON.parse(params.staffFamily).eachWithIndex{elem, i ->
@@ -1259,22 +1259,32 @@ class StaffController {
 			
 			//学习经历--------------------------------------------------------------
 			Degree.findAllByPersonInfor(personInfor).each{
-				it.delete()
+				it.delete(flush:true)
 			}
 			
 			JSON.parse(params.degree).eachWithIndex{elem, i ->
 				def degree = new Degree(elem)
+				degree.clearErrors()
+				
+				degree.startDate = Util.convertToTimestamp(elem.getFormatteStartDate)
+				degree.endDate = Util.convertToTimestamp(elem.getFormatteEndDate)
+				
 				degree.personInfor = personInfor
 				degree.save(flush:true)
 			}
 			
 			//工作经历--------------------------------------------------------------
 			WorkResume.findAllByPersonInfor(personInfor).each{
-				it.delete()
+				it.delete(flush:true)
 			}
 			
 			JSON.parse(params.workResume).eachWithIndex{elem, i ->
 				def workResume = new WorkResume(elem)
+				workResume.clearErrors()
+				
+				workResume.startDate = Util.convertToTimestamp(elem.getFormatteStartDate)
+				workResume.endDate = Util.convertToTimestamp(elem.getFormatteEndDate)
+				
 				workResume.personInfor = personInfor
 				workResume.save(flush:true)
 			}
@@ -1358,8 +1368,17 @@ class StaffController {
 			}
 			model["personInfor"] = personInfor
 		}else{
-			model["user"] = new User()
-			model["personInfor"] = new PersonInfor()
+			if(params.searchId){
+				//兼容首页打开用户信息
+				def _user = User.get(params.searchId)
+				def personInfor = PersonInfor.findByUser(_user)
+				
+				model["user"] = _user
+				model["personInfor"] = personInfor
+			}else{
+				model["user"] = new User()
+				model["personInfor"] = new PersonInfor()
+			}
 		}
 		if(params.companyId){
 			def company = Company.get(params.companyId)
@@ -1385,6 +1404,14 @@ class StaffController {
 			}
 		}
 		model["fieldAcl"] = fa
+		
+		if("staffSearch".equals(params.type)){
+			//只提供查询显示功能
+			fa.readOnly = []
+			model["type"] = "onlyShow"
+			render(view:'/staff/userOnlyShow',model:model)
+			return
+		}
 		render(view:'/staff/user',model:model)
 	}
 	
@@ -1651,6 +1678,104 @@ class StaffController {
 		model["company"] = Company.get(params.companyId)
 		render(view:'/staff/personManage',model:model)
 	}
+	def getBargainAllInfor ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		
+		def dealUser = User.get(params.userId)
+		def personInfor = PersonInfor.get(params.id)
+		def entity = Bargain.findByPersonInfor(personInfor)
+		if(!entity){
+			entity = new Bargain()
+		}
+		
+		model["bargain"] = entity
+		model["personInfor"] = personInfor
+		
+		//个人概况在已签发状态打开编辑功能
+		FieldAcl fa = new FieldAcl()
+		if("staffAdd".equals(params.type)){
+			//员工入职情况
+			def isEdit = false
+			if(currentUser.equals(dealUser)){
+				//当前处理人,并满足特定条件方可编辑
+				if(personInfor && "已签发".equals(personInfor.status)){
+					isEdit = true
+					
+				}
+			}
+			model["isShowFile"] = isEdit
+			
+			if(!isEdit){
+				fa.readOnly = ["bargainSerialNo","bargainType","startDate","endDate"]
+			}
+		}else{
+			//其他情况,均可编辑
+			model["isShowFile"] = true
+		}
+		model["fieldAcl"] = fa
+		
+		model["attachFiles"] = Attachment.findAllByBeUseId(entity?.id)
+		
+		render(view:'/staff/bargainAllInfor',model:model)
+	}
+	def addBargainInfor ={
+		def ostr
+		
+		//单独增加合同管信息
+		def personInfor = PersonInfor.get(params.id)
+		
+		def bargain = Bargain.get(params.barginId)
+		if(!bargain) bargain = new Bargain()
+		
+		bargain.properties = params
+		bargain.clearErrors()
+		
+		bargain.startDate = Util.convertToTimestamp(params.startDate)
+		bargain.endDate = Util.convertToTimestamp(params.endDate)
+		
+		bargain.personInfor = personInfor
+		bargain.company = personInfor.company
+		
+		if(bargain.save(flush:true)){
+			//添加附件信息
+			SystemUtil sysUtil = new SystemUtil()
+			
+			def uploadPath
+			def currentUser = (User) springSecurityService.getCurrentUser()
+			def companyPath = currentUser.company?.shortName
+			if(companyPath == null){
+				uploadPath = sysUtil.getUploadPath("staff")
+			}else{
+				uploadPath = sysUtil.getUploadPath(currentUser.company.shortName + "/staff")
+			}
+			
+			def f = request.getFile("uploadedfile")
+			if (!f.empty) {
+				String name = f.getOriginalFilename()//获得文件原始的名称
+				def realName = sysUtil.getRandName(name)
+				f.transferTo(new File(uploadPath,realName))
+				
+				def attachment = new Attachment()
+				attachment.name = name
+				attachment.realName = realName
+				attachment.type = "bargain"
+				attachment.url = uploadPath
+				attachment.size = f.size
+				attachment.beUseId = bargain.id
+				attachment.upUser = currentUser
+				attachment.save(flush:true)
+			}
+				ostr ="<script>var _parent = window.parent;_parent.rosten.alert('成功').queryDlgClose=function(){_parent.barginContentPane.refresh();}</script>"
+//				ostr ="<script>console.log(window);</script>"
+			}else{
+			bargain.errors.each{
+				println it
+			}
+			ostr ="<script>window.parent.rosten.alert('失败');</script>"
+		}
+		render ostr
+	}
 	def getBargain ={
 		def model =[:]
 		
@@ -1664,6 +1789,7 @@ class StaffController {
 		//个人概况在已签发状态打开编辑功能
 		FieldAcl fa = new FieldAcl()
 		if("staffAdd".equals(params.type)){
+			def personInfor = PersonInfor.get(params.personInforId)
 			if(!personInfor || !"已签发".equals(personInfor.status)){
 				fa.readOnly = ["bargainSerialNo","bargainType","startDate","endDate"]
 			}
@@ -1718,10 +1844,12 @@ class StaffController {
 		model["techGradeList"] = shareService.getSystemCodeItems(company,"rs_techGrade")
 		
 		FieldAcl fa = new FieldAcl()
-//		if( user && "normal".equals(user.getUserType()) && !currentUser.equals(user)){
-//			//非管理员并且不是本人时，不允许修改所有相关字段
-//			fa.readOnly += ["chinaName"]
-//		}
+		if("onlyShow".equals(params.type)){
+			//只提供查询显示功能
+			fa.readOnly = ["chinaName","usedName","userTypeName","idCard","birthday","city","nationality","birthAddress","nativeAddress","politicsStatus","blood","health","householdRegi","intoday","techGrade","staffOnDay"]
+			fa.readOnly += ["sex","marriage","religion"]
+			model["onlyShow"] = true
+		}
 		model["fieldAcl"] = fa
 		
 		render(view:'/staff/personInfor',model:model)
@@ -1739,7 +1867,11 @@ class StaffController {
 		
 		model["contactInforEntity"] = entity
 		FieldAcl fa = new FieldAcl()
-		
+		if("onlyShow".equals(params.type)){
+			//只提供查询显示功能
+			fa.readOnly = ["mobile","phone","qq","wechat","address","addressPostcode","homeAddress","postcode","email"]
+			model["onlyShow"] = true
+		}
 		model["fieldAcl"] = fa
 		render(view:'/staff/contactInfor',model:model)
 	}
@@ -1748,7 +1880,15 @@ class StaffController {
 		
 		def personInfor = PersonInfor.get(params.id)
 		if(params.refreshHeader){
-			json["gridHeader"] = staffService.getDegreeInforListLayout()
+			def headerList = staffService.getDegreeInforListLayout()
+			json["gridHeader"] = headerList
+			
+			//去除操作功能列
+			if("onlyShow".equals(params.type)){
+				json["gridHeader"] = headerList.grep{item->
+					!item.field.equals("actionId")
+				}
+			}
 		}
 		
 		//搜索功能
@@ -1786,7 +1926,14 @@ class StaffController {
 		
 		def personInfor = PersonInfor.get(params.id)
 		if(params.refreshHeader){
-			json["gridHeader"] = staffService.getWorkResumeInforListLayout()
+			 def headerList = staffService.getWorkResumeInforListLayout()
+			 json["gridHeader"] = headerList
+			//去除操作功能列
+			if("onlyShow".equals(params.type)){
+				json["gridHeader"] = headerList.grep{item->
+					!item.field.equals("actionId")
+				}
+			}
 		}
 		
 		//搜索功能
@@ -1825,7 +1972,15 @@ class StaffController {
 		
 		def personInfor = PersonInfor.get(params.id)
 		if(params.refreshHeader){
-			json["gridHeader"] = staffService.getFamilyInforListLayout()
+			def headerList = staffService.getFamilyInforListLayout()
+			json["gridHeader"] = headerList
+			
+			//去除操作功能列
+			if("onlyShow".equals(params.type)){
+				json["gridHeader"] = headerList.grep{item->
+					!item.field.equals("familyInforId")
+				}
+			}
 		}
 		
 		//搜索功能

@@ -224,6 +224,12 @@ define(["dojo/_base/kernel"
             returnToMain();
         }
     };
+    showUserInfor = function(){
+    	var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var tmpArgs = "&type=staffSearch&searchId=" + userid;
+    	rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow?userid=" + userid + "&companyId=" + companyId + tmpArgs);
+    };
     excuteService = function(args){
     	if(new general().isInArray(args,"http:")){
             window.open(args);

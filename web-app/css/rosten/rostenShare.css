@@ -271,6 +271,9 @@
 /*
 * 附件上传css样式
 */
+.dijitUploadDisplayInput {
+	width:260px;
+}
 .dojoxUploaderFileList {
 	border: 1px solid #ccc;
 	min-height: 50px;
@@ -292,7 +295,7 @@
 }
 
 .dojoxUploaderIndex {
-	width: 20px;
+	width: 40px;
 }
 
 .dojoxUploaderIcon {

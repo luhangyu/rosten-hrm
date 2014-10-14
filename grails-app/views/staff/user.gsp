@@ -99,7 +99,8 @@
 		     	"dijit/form/SimpleTextarea",
 		     	"dijit/form/DropDownButton",
 		     	"dijit/form/Form",
-		 		"dojox/form/FileInput",
+		 		"dojox/form/Uploader",
+		 		"dojox/form/uploader/FileList",
 		     	"dijit/form/Button",
 		     	"dijit/Dialog",
 				"dojox/grid/DataGrid",
@@ -165,8 +166,8 @@
 				</g:if>
 				
 				content.staffFamily = rosten.getGridDataCollect(staffFamilyGrid,["name","relation","mobile","workUnit","duties","politicsStatus"]);
-				content.degree = rosten.getGridDataCollect(degreeGrid,["name","major","degree","startDate","endDate"]);
-				content.workResume = rosten.getGridDataCollect(workResumeGrid,["workCompany","workContent","startDate","endDate","duty","proveName","remark"]);
+				content.degree = rosten.getGridDataCollect(degreeGrid,["degreeName","major","degree","getFormatteStartDate","getFormatteEndDate"]);
+				content.workResume = rosten.getGridDataCollect(workResumeGrid,["workCompany","workContent","getFormatteStartDate","getFormatteEndDate","duty","proveName","remark"]);
 				if(registry.byId("msResult")) content.msResult = registry.byId("msResult").attr("value");
 
 				//流程相关信息
@@ -320,11 +321,13 @@
 				});
 			};
 			user_addBargain = function(object){
-				if(!bargin_form.validate()) return;
-
-				return;
-
-				
+				var bargain_form = registry.byId("bargain_form");
+				if(bargain_form==undefined){
+					rosten.alert("请先查看合同相关信息");
+					return;
+				}
+				if(!bargain_form.validate()) return;
+				bargain_form.submit();
 			};
 			user_ok = function(object){
 				//填写面试结果
@@ -550,29 +553,11 @@
 				</div>
 			</div>
 			<g:if test="${personInfor?.id}">
-				<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-id="barginContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
-					<form data-dojo-type="dijit/form/Form" method="post" id="bargain_form" data-dojo-id="bargain_form"
-        				target="bargain_iframe" enctype="multipart/form-data" action="${createLink(controller:'staff',action:'addStaffBargainInfor',params:[companyId:companyId])}">
-				
-						<div data-dojo-type="rosten/widget/TitlePane" data-dojo-id="barginTitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
-							href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id,params:[type:type])}"
-						'></div>
-						
-						<div data-dojo-type="rosten/widget/TitlePane" class="upload" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-							height:"60px"'>
-							<table border="0" width="770" align="left">
-								<tr>
-								    <td width="120">附件：</div></td>
-							  		<td>
-							  			<input data-dojo-type="dojox/form/FileInput" data-dojo-props= 'label:"浏览...",cancelText:"清空"' name="bargainInputFile" />
-								    </td>
-								</tr>
-							</table>
-							
-						</div>
-					</form>
+				<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-id="barginContentPane" class="rosten_form" title="合同信息" data-dojo-props='refreshOnShow:true,
+					href:"${createLink(controller:'staff',action:'getBargainAllInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
+				'>
 				</div>
-			
+				
 				<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 					href:"${createLink(controller:'share',action:'getCommentLog',id:personInfor?.id)}"
 				'>	
@@ -584,10 +569,10 @@
 			</g:if>
 		</g:if>
 		<g:else>
-			<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="合同信息" data-dojo-props=''>
-				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
-					href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id)}"
-				'></div>
+				<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-id="barginContentPane" class="rosten_form" title="合同信息" data-dojo-props='refreshOnShow:true,
+					href:"${createLink(controller:'staff',action:'getBargainAllInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
+				'>
+				
 				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
 					height:"60px"'>
 					
@@ -598,8 +583,6 @@
 			</div>
 		</g:else>
 	</div>
-	<iframe name="bargain_iframe" style="display:none">
-	</iframe>
 	
 </body>
 </html>

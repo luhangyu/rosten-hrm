@@ -101,6 +101,11 @@ class StaffActionController {
 		def strname = "user"
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
 		
+		if("onlyShow".equals(params.type)){
+			render actionList as JSON
+			return
+		}
+		
 		if(params.id && "staffAdd".equals(params.type)){
 			def entity = PersonInfor.get(params.id)
 			def user = User.get(params.userId)
@@ -137,6 +142,7 @@ class StaffActionController {
 			}
 		}else{
 			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+			actionList << createAction("录入合同",webPath +imgPath + "bargain.gif",strname + "_addBargain")
 		}
 		render actionList as JSON
 	}

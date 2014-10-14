@@ -110,7 +110,7 @@
 	
 	#home_staffInfor p { float:left; width:32%; }
 	#home_staffInfor p img { margin:20px 0 0 60px; }
-	#home_staffInfor .userInfor {margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:60%; }
+	#home_staffInfor .userInfor {margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:40%; }
 	
 	.rosten .dijitTitlePaneCountNode{
 		margin-left:3px;
@@ -251,7 +251,7 @@
 					<ul>
 						<g:each in="${servicesList}">
 							<li>
-								<a href="javascript:${it.functionName }('${it.functionArgs }')">
+								<a href="javascript:${it.functionName }('${(it.functionArgs && !"".equals(it.functionArgs))?it.functionArgs:it.functionUrl }')">
 									<img width="39px" height="39px" src="${it.imgUrl }"></img>
 									<h5>${it.serviceName }</h5>
 								</a>
@@ -280,6 +280,9 @@
 								<div class="userInfor">
 									<div style="font-size:20px;font-weight:bold">${(user.chinaName!=null?user.chinaName:user.username)}</div>
 									<div style="margin-top:10px;color:#404040;font-size:16px">${user.getDepartName()?user.getDepartName():"暂无部门" }</div>
+								</div>
+								<div style="margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:20%; ">
+									<a href="javascript:showUserInfor();">详细信息</a>
 								</div>
 						</div>	
 						

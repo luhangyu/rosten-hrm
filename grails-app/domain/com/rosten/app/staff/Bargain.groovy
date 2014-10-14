@@ -2,8 +2,9 @@ package com.rosten.app.staff
 
 import java.text.SimpleDateFormat
 import java.util.Date
-import com.rosten.app.system.Company
 
+import com.rosten.app.system.Attachment;
+import com.rosten.app.system.Company
 import com.rosten.app.annotation.GridColumn
 
 class Bargain {
@@ -42,8 +43,11 @@ class Bargain {
 			return ""
 		}
 	}
+	//附件
+	Attachment attachment
 	
     static constraints = {
+		attachment nullable:true,blank:true
     }
 	static belongsTo = [personInfor:PersonInfor,company:Company]
 	

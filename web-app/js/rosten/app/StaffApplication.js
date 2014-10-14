@@ -61,8 +61,8 @@ define(["dojo/dom",
 				store.setValue(node,"degreeName",registry.byId("degree_name").get("value"));
 				store.setValue(node,"major",registry.byId("degree_major").get("value"));
 				store.setValue(node,"degree",registry.byId("degree_degree").get("value"));
-				store.setValue(node,"getFormatteStartDate",datestamp.toISOString(registry.byId("degree_startDate").get("value"),{selector: "date"}));
-				store.setValue(node,"getFormatteEndDate",datestamp.toISOString(registry.byId("degree_endDate").get("value"),{selector: "date"}));
+				store.setValue(node,"getFormatteStartDate",registry.byId("degree_startDate").get("displayedValue"));
+				store.setValue(node,"getFormatteEndDate",registry.byId("degree_endDate").get("displayedValue"));
 			}else{
 				var randId = Math.random();
 				store.newItem({
@@ -72,8 +72,8 @@ define(["dojo/dom",
 					degreeName:registry.byId("degree_name").get("value"),
 					major:registry.byId("degree_major").get("value"),
 					degree:registry.byId("degree_degree").get("value"),
-					getFormatteStartDate:registry.byId("degree_startDate").get("value"),
-					getFormatteEndDate:registry.byId("degree_endDate").get("value")
+					getFormatteStartDate:registry.byId("degree_startDate").get("displayedValue"),
+					getFormatteEndDate:registry.byId("degree_endDate").get("displayedValue")
 				});
 			}
 		}
@@ -140,8 +140,8 @@ define(["dojo/dom",
 			if(node){
 				store.setValue(node,"workCompany",registry.byId("workResume_workCompany").get("value"));
 				store.setValue(node,"workContent",registry.byId("workResume_workContent").get("value"));
-				store.setValue(node,"getFormatteStartDate",registry.byId("workResume_startDate").get("value"));
-				store.setValue(node,"getFormatteEndDate",registry.byId("workResume_endDate").get("value"));
+				store.setValue(node,"getFormatteStartDate",registry.byId("workResume_startDate").get("displayedValue"));
+				store.setValue(node,"getFormatteEndDate",registry.byId("workResume_endDate").get("displayedValue"));
 				store.setValue(node,"duty",registry.byId("workResume_duty").get("value"));
 				store.setValue(node,"proveName",registry.byId("workResume_proveName").get("value"));
 				store.setValue(node,"remark",registry.byId("workResume_remark").get("value"));
@@ -153,8 +153,8 @@ define(["dojo/dom",
 					rowIndex:items.length+1,
 					workCompany:registry.byId("workResume_workCompany").get("value"),
 					workContent:registry.byId("workResume_workContent").get("value"),
-					getFormatteStartDate:registry.byId("workResume_startDate").get("value"),
-					getFormatteEndDate:registry.byId("workResume_endDate").get("value"),
+					getFormatteStartDate:registry.byId("workResume_startDate").get("displayedValue"),
+					getFormatteEndDate:registry.byId("workResume_endDate").get("displayedValue"),
 					duty:registry.byId("workResume_duty").get("value"),
 					proveName:registry.byId("workResume_proveName").get("value"),
 					remark:registry.byId("workResume_remark").get("value")
