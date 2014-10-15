@@ -106,44 +106,51 @@ class StaffActionController {
 			return
 		}
 		
-		if(params.id && "staffAdd".equals(params.type)){
-			def entity = PersonInfor.get(params.id)
-			def user = User.get(params.userId)
-			if(user.equals(entity.currentUser)){
-				//当前处理人
-				switch (true){
-					case entity.status.contains("审核") || entity.status.contains("审批"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
-						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
-						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
-						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
-						break;
-					case entity.status.contains("已签发"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
-						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
-						actionList << createAction("录入合同",webPath +imgPath + "bargain.gif",strname + "_addBargain")
-						actionList << createAction("生成登记表",webPath +imgPath + "word_print.png",strname +"_print_djb")
-						actionList << createAction("生成录用通知书",webPath +imgPath + "word_print.png",strname +"_print_tzs")
-						actionList << createAction("打印入职清单",webPath +imgPath + "word_print.png",strname +"_print_rzqd")
-						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_end")
-						break;
-					case entity.status.contains("面试中"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
-						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
-						actionList << createAction("提交领导审核",webPath +imgPath + "submit.png",strname +"_ok")
-						actionList << createAction("不通过",webPath +imgPath + "qx.png",strname +"_cancel")
-						break;
-					default :
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
-						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
-						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
-						break;
+		if("staffAdd".equals(params.type)){
+			
+			//员工入职
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+			
+			if(params.id){
+				def entity = PersonInfor.get(params.id)
+				def user = User.get(params.userId)
+				if(user.equals(entity.currentUser)){
+					//当前处理人
+					switch (true){
+						case entity.status.contains("审核") || entity.status.contains("审批"):
+							actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+							actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+							actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+							break;
+						case entity.status.contains("已签发"):
+							actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+							actionList << createAction("录入合同",webPath +imgPath + "bargain.gif",strname + "_addBargain")
+							actionList << createAction("生成登记表",webPath +imgPath + "word_print.png",strname +"_print_djb")
+							actionList << createAction("生成录用通知书",webPath +imgPath + "word_print.png",strname +"_print_tzs")
+							actionList << createAction("打印入职清单",webPath +imgPath + "word_print.png",strname +"_print_rzqd")
+							actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_end")
+							break;
+						case entity.status.contains("面试中"):
+							actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+							actionList << createAction("提交领导审核",webPath +imgPath + "submit.png",strname +"_ok")
+							actionList << createAction("不通过",webPath +imgPath + "qx.png",strname +"_cancel")
+							break;
+						default :
+							actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+							actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+							break;
+					}
 				}
 			}
+			
 		}else{
+			//员工登记
 			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
-			actionList << createAction("录入合同",webPath +imgPath + "bargain.gif",strname + "_addBargain")
+			if(params.id){
+				actionList << createAction("录入合同",webPath +imgPath + "bargain.gif",strname + "_addBargain")
+			}
 		}
+		
 		render actionList as JSON
 	}
 	def staffChangeDepartForm ={

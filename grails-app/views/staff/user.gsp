@@ -181,16 +181,11 @@
 				rosten.readSync(rosten.webPath + "/staff/userSave",content,function(data){
 					if(data.result=="true"){
 						rosten.alert("保存成功！").queryDlgClose= function(){
-							<g:if test='${flowCode}'>
-								if(window.location.href.indexOf(data.id)==-1){
-									window.location.replace(window.location.href + "&id=" + data.id);
-								}else{
-									window.location.reload();
-								}
-							</g:if>
-							<g:else>
-								page_quit();
-							</g:else>	
+							if(window.location.href.indexOf(data.id)==-1){
+								window.location.replace(window.location.href + "&id=" + data.id);
+							}else{
+								window.location.reload();
+							}
 						};
 					}else if(data.result=="repeat"){
 						rosten.alert("账号冲突，保存失败!");
@@ -345,17 +340,15 @@
 				user_submit(object,{conditionName:"flow",conditionValue:"agree",msResult:msResult});
 			};
 			user_end = function(object){
-				//结束流程
-				var bargain = registry.byId("bargainId");
-				console.log(bargain);
-				if(!bargain.validate()){
-					rosten.alert("请先录入合同！").queryDlgClose = function(){
-						barginDom.focus();
-					};
-					return false;
-				}
+				//结束流程,检测是否已经生成合同信息
+				rosten.readSync(rosten.webPath + "/staff/checkHasBargain",{id:"${personInfor?.id}"},function(data){
+					if(data.result==false){
+						rosten.alert("请先录入合同！").queryDlgClose = function(){
+							rostenTabContainer.selectChild(barginContentPane); 
+						};
+					}
+				});
 				user_submit(object);
-				rostenTabContainer.selectChild(barginContentPane); 
 			};
 			user_cancel = function(object){
 				user_submit(object,{conditionName:"flow",conditionValue:"notAgree"});
@@ -415,7 +408,7 @@
 			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'staffForm',id:personInfor?.id,params:[userId:loginUser?.id,type:type])}"'></div>
 	</div>
 	
-	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"880px",margin:"0 auto"}' data-dojo-id="rostenTabContainer" >
+	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"860px",margin:"0 auto"}' data-dojo-id="rostenTabContainer" >
         <div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">
 		
@@ -424,7 +417,7 @@
 			<g:if test='${departId}'>
 				<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${user?.id }"' />
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"账号信息 <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"100px",marginBottom:"2px"'>
-				<table border="0" width="740" align="left">
+				<table border="0" width="730" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>账号：</div></td>
 					    <td width="250">
@@ -444,7 +437,7 @@
 					    	
 					    </td>
 					    <td width="120"><div align="right">具有角色：</div></td>
-					    <td width="250">
+					    <td width="240">
 					    	<input id="allowrolesName" data-dojo-type="dijit/form/ValidationTextBox"
                 					data-dojo-props='trim:true,readOnly:true,
                 						value:"${allowrolesName }"
@@ -581,18 +574,16 @@
 			</g:if>
 		</g:if>
 		<g:else>
+			<g:if test="${personInfor?.id}">
 				<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-id="barginContentPane" class="rosten_form" title="合同信息" data-dojo-props='refreshOnShow:true,
 					href:"${createLink(controller:'staff',action:'getBargainAllInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
 				'>
-				
-				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-					height:"60px"'>
-					
 				</div>
-			</div>
-			<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
-			
-			</div>
+				
+				<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
+				
+				</div>
+			</g:if>
 		</g:else>
 	</div>
 	

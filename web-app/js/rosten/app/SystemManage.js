@@ -220,6 +220,8 @@ define(["dojo/_base/connect",
 		rosten.openNewWindow("print", rosten.webPath + "/staff/printPersonRzqd/"+unids);
 	};
 	personInfor_print_rztzs = function(){
+		rosten.alert("尚未开通！");
+		return;
 		rosten.openNewWindow("print", rosten.webPath + "/staff/printPerson");
 	};
 	personInfor_rz = function() {

@@ -41,6 +41,18 @@ class StaffController {
 	def taskService
 	def startService
 	
+	def checkHasBargain ={
+		def json=[:]
+		
+		def personInfor = PersonInfor.get(params.id)
+		def bargain = Bargain.findByPersonInfor(personInfor)
+		if(bargain){
+			json["result"] = true
+		}else{
+			json["result"] = false
+		}
+		render json as JSON
+	}
 	def bargainAdd ={
 		redirect(action:"bargainShow",params:params)
 	}
@@ -1597,6 +1609,10 @@ class StaffController {
 				if("staffAdd".equals(params.type)){
 					not {'in'("status",["在职","退休","离职"])}
 					order("createDate", "desc")
+				}else if("staffSearch".equals(params.type)){
+					//所有状态下均可查询
+					'in'("status",["在职","退休","离职","试用","实习"])
+					order("createDate", "desc")
 				}else{
 					'in'("status",["在职","退休","离职"])
 					//createAlias('user', 'a')
@@ -1716,7 +1732,9 @@ class StaffController {
 		}
 		model["fieldAcl"] = fa
 		
-		model["attachFiles"] = Attachment.findAllByBeUseId(entity?.id)
+		if(entity?.id){
+			model["attachFiles"] = Attachment.findAllByBeUseId(entity?.id)
+		}
 		
 		render(view:'/staff/bargainAllInfor',model:model)
 	}
@@ -1782,7 +1800,9 @@ class StaffController {
 		def model =[:]
 		def personInfor = PersonInfor.get(params.id)
 		def bargain = Bargain.findByPersonInfor(personInfor)
-		model["attachFiles"] = Attachment.findAllByBeUseId(bargain?.id)
+		if(bargain){
+			model["attachFiles"] = Attachment.findAllByBeUseId(bargain?.id)
+		}
 		render(view:'/staff/bargainFileOnlyShow',model:model)
 	}
 	def getBargainByPersonInfor={
@@ -1870,9 +1890,13 @@ class StaffController {
 		model["techGradeList"] = shareService.getSystemCodeItems(company,"rs_techGrade")
 		
 		//获取头像信息
-		def pic= Attachment.findByBeUseIdAndType(params.id,"staff")
-		if(pic){
-			model["imgName"] = pic.realName
+		if(params.id){
+			def pic= Attachment.findByBeUseIdAndType(params.id,"staff")
+			if(pic){
+				model["imgName"] = pic.realName
+			}else{
+				model["imgName"] = "regpic.gif"
+			}
 		}else{
 			model["imgName"] = "regpic.gif"
 		}

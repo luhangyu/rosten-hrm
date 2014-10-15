@@ -110,7 +110,7 @@
 	
 	#home_staffInfor p { float:left; width:32%; }
 	#home_staffInfor p img { margin:0px 0 0 60px; width:80px;height:100px}
-	#home_staffInfor .userInfor {margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:40%; }
+	#home_staffInfor .userInfor {margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:100px; }
 	
 	.rosten .dijitTitlePaneCountNode{
 		margin-left:3px;
@@ -281,7 +281,7 @@
 									<div style="font-size:20px;font-weight:bold">${(user.chinaName!=null?user.chinaName:user.username)}</div>
 									<div style="margin-top:10px;color:#404040;font-size:16px">${user.getDepartName()?user.getDepartName():"暂无部门" }</div>
 								</div>
-								<div style="margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:20%; ">
+								<div style="margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:80px;font-size:14px; ">
 									<a href="javascript:showUserInfor();">详细信息</a>
 								</div>
 						</div>	

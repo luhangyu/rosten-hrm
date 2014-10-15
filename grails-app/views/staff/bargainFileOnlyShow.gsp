@@ -13,7 +13,9 @@
 			<legend class="tableHeader">附件查看</legend>
 			<div id="fileUpload_show" style="padding:5px;margin:8px;font-size:14px">
 				<g:each in="${attachFiles}">
-					<a href="${createLink(controller:'system',action:'downloadFile',id:it.id)}" style="margin-right:20px" dealId="${it.id }">${it.name }</a>
+					<div style="height:30px;width:50%;float:left">
+						<a href="${createLink(controller:'system',action:'downloadFile',id:it.id)}" style="margin-right:20px" dealId="${it.id }">${it.name }</a>
+					</div>
 				</g:each>
 			</div>
 		</fieldset>
