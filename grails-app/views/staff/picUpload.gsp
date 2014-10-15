@@ -8,7 +8,7 @@
 <body>
 	<div style="text-Align:center">
         <form data-dojo-type="dijit/form/Form" method="post" class="rosten_form" id="file_form" style="width:560px;text-align:left" 
-        	target="upload_iframe" enctype="multipart/form-data" action="${createLink(controller:'staff',action:'uploadPic',params:[personId:uploadPic])}">
+        	target="upload_iframe" enctype="multipart/form-data" action="${createLink(controller:'staff',action:'uploadPic',params:[personId:personId])}">
             <fieldset class="fieldset-form">
                 <legend class="tableHeader">图片上传</legend>
                 <table class="tableData upload" style="margin:2px;">

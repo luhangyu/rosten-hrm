@@ -55,20 +55,6 @@
 <g:if test="${isShowFile}">
 	<div data-dojo-type="dojox/form/Uploader"  type="file" data-dojo-id="uploaderDom"
 		id="fileUploader"  data-dojo-props="name:'uploadedfile',showInput:'before',multiple:false">浏览...
-		
-		<script type="dojo/method" data-dojo-event="onComplete" data-dojo-args="dataArray">
-			alert("hell baby!!!!");
-			if(dojo.isIE){
-				dataArray = dojo.fromJson(dataArray);
-			}
-			if(dataArray.result=="true" || dataArray.result==true){
-				rosten.alert("成功！");
-				barginContentPane.refresh();
-			}else if(dataArray.result=="big"){
-				rosten.alert("上传文件过大，请重新上传！");
-			}else{rosten.alert("上传失败");}
-		</script>
-		
 	</div>
 	<div data-dojo-type="dijit/form/Button" data-dojo-props="label:'清空'">
 		<script type="dojo/method" data-dojo-event="onClick">
@@ -97,7 +83,12 @@
 			<legend class="tableHeader">附件查看</legend>
 			<div id="fileUpload_show" style="padding:5px;margin:8px;font-size:14px">
 				<g:each in="${attachFiles}">
-					<a href="${createLink(controller:'system',action:'downloadFile',id:it.id)}" style="margin-right:20px" dealId="${it.id }">${it.name }</a>
+					<div style="height:30px;width:50%;float:left">
+						<a href="${createLink(controller:'system',action:'downloadFile',id:it.id)}" style="margin-right:20px" dealId="${it.id }">${it.name }</a>
+						<g:if test="${isShowFile}">
+							<a href="javascript:deleteFile('${it.id}')" style="color:green">删除</a>
+						</g:if>
+					</div>
 				</g:each>
 			</div>
 		</fieldset>

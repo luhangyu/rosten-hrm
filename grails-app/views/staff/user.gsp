@@ -399,8 +399,7 @@
 
 			//上传头像
 			uploadPic=function(){
-				var id = registry.byId("personInforId"); 
-		    	rosten.createRostenShowDialog(rosten.webPath + "/staff/addUpload?personId=" + id, {
+		    	rosten.createRostenShowDialog(rosten.webPath + "/staff/addUpload?personId=${personInfor?.id}", {
 		            onLoadFunction : function() {
 		            }
 		        });
@@ -416,7 +415,7 @@
 			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'staffForm',id:personInfor?.id,params:[userId:loginUser?.id,type:type])}"'></div>
 	</div>
 	
-	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' data-dojo-id="rostenTabContainer" >
+	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"880px",margin:"0 auto"}' data-dojo-id="rostenTabContainer" >
         <div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">
 		

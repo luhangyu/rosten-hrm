@@ -69,7 +69,7 @@
 			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'staffForm',id:personInfor?.id,params:[type:type])}"'></div>
 	</div>
 	
-	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' data-dojo-id="rostenTabContainer" >
+	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"860px",margin:"0 auto"}' data-dojo-id="rostenTabContainer" >
         <div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="基本信息" data-dojo-props=''>
 			<div data-dojo-type="rosten/widget/TitlePane" 
 				data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"315px",marginBottom:"2px",

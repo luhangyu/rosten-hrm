@@ -1869,6 +1869,14 @@ class StaffController {
 		//专业技术等级
 		model["techGradeList"] = shareService.getSystemCodeItems(company,"rs_techGrade")
 		
+		//获取头像信息
+		def pic= Attachment.findByBeUseIdAndType(params.id,"staff")
+		if(pic){
+			model["imgName"] = pic.realName
+		}else{
+			model["imgName"] = "regpic.gif"
+		}
+		
 		FieldAcl fa = new FieldAcl()
 		if("onlyShow".equals(params.type)){
 			//只提供查询显示功能
@@ -2151,14 +2159,9 @@ class StaffController {
 	
 		//添加附件信息
 		SystemUtil sysUtil = new SystemUtil()
-		
-		def uploadPath
 		def currentUser = (User) springSecurityService.getCurrentUser()
-		def companyPath = currentUser.company?.shortName
 		
-			uploadPath = "web-app/images/"
-		
-		
+		def uploadPath = "web-app/images/staff"
 		def f = request.getFile("uploadedfile")
 		if (!f.empty) {
 			String name = f.getOriginalFilename()//获得文件原始的名称
@@ -2168,17 +2171,19 @@ class StaffController {
 			def attachment = new Attachment()
 			attachment.name = name
 			attachment.realName = realName
-			attachment.type = "person"
+			attachment.type = "staff"
 			attachment.url = uploadPath
 			attachment.size = f.size
 			attachment.beUseId = params.personId
 			attachment.upUser = currentUser
 			attachment.save(flush:true)
-		
-		ostr ="<script>var _parent = window.parent;_parent.rosten.alert('成功').queryDlgClose=function(){";
-		ostr += "var imgnode= _parent.document.getElementById('pic'); imgnode.src='../../images/"+realName+ "';";
-		ostr += "_parent.rosten.hideRostenShowDialog();";
-		ostr +="}</script>";
+			
+			ostr ="<script>var _parent = window.parent;_parent.rosten.alert('成功').queryDlgClose=function(){";
+			ostr += "var imgnode= _parent.document.getElementById('pic'); imgnode.src='" + request.getContextPath() + "/images/staff/"+realName+ "';";
+			ostr += "_parent.rosten.hideRostenShowDialog();";
+			ostr +="}</script>";
+		}else{
+			ostr = "<script></script>"
 		}
 		render ostr
 	}

@@ -30,6 +30,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 
 import com.rosten.app.util.Util
 import com.rosten.app.system.*
+import com.rosten.app.staff.PersonInfor
 
 @Secured('permitAll')
 class LoginController {
@@ -181,6 +182,16 @@ class LoginController {
 				//获取所有角色
 			}
 			model["userinfor"] = userinfor as JSON
+			
+			//增加用户图片信息
+			model["imgName"] = "regpic.gif"
+			def personInfor = PersonInfor.findByUser(user)
+			if(personInfor){
+				def pic= Attachment.findByBeUseIdAndType(personInfor.id,"staff")
+				if(pic){
+					model["imgName"] = pic.realName
+				}
+			}
 			
 			//获取展示的所有服务
 			model["servicesList"] = NormalService.findAllWhere(company:user.company,status:"是")
