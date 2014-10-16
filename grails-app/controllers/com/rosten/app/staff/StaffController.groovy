@@ -638,6 +638,7 @@ class StaffController {
 	}
 	
 	def searchView ={
+		
 		def model =[:]
 		render(view:'/staff/search',model:model)
 	}
@@ -2180,26 +2181,44 @@ class StaffController {
 	
 	def uploadPic={
 		def ostr
-	
-		//添加附件信息
+		
 		SystemUtil sysUtil = new SystemUtil()
 		def currentUser = (User) springSecurityService.getCurrentUser()
-		
-		def uploadPath = "web-app/images/staff"
 		def f = request.getFile("uploadedfile")
 		if (!f.empty) {
+			//添加附件信息
+			def uploadPath = new File(servletContext.getRealPath("/"), "/images/staff/")
+			
 			String name = f.getOriginalFilename()//获得文件原始的名称
 			def realName = sysUtil.getRandName(name)
 			f.transferTo(new File(uploadPath,realName))
 			
-			def attachment = new Attachment()
-			attachment.name = name
-			attachment.realName = realName
-			attachment.type = "staff"
-			attachment.url = uploadPath
-			attachment.size = f.size
-			attachment.beUseId = params.personId
-			attachment.upUser = currentUser
+			//判断是否已经存在当前的头像
+			def attachment = Attachment.findByBeUseIdAndType(params.personId,"staff")
+			if(attachment){
+				//删除相关的文件
+				def deletename = attachment.url + "/" + attachment.realName
+				File file = new File(deletename)
+				if(file.isFile() && file.exists()){
+					file.delete()
+				}
+				
+				attachment.name = name
+				attachment.realName = realName
+				attachment.upUser = currentUser
+				attachment.url = uploadPath
+				attachment.size = f.size
+				
+			}else{
+				attachment = new Attachment()
+				attachment.name = name
+				attachment.realName = realName
+				attachment.type = "staff"
+				attachment.url = uploadPath
+				attachment.size = f.size
+				attachment.beUseId = params.personId
+				attachment.upUser = currentUser
+			}
 			attachment.save(flush:true)
 			
 			ostr ="<script>var _parent = window.parent;_parent.rosten.alert('成功').queryDlgClose=function(){";
@@ -2207,7 +2226,7 @@ class StaffController {
 			ostr += "_parent.rosten.hideRostenShowDialog();";
 			ostr +="}</script>";
 		}else{
-			ostr = "<script></script>"
+			ostr = "<script>window.parent.rosten.hideRostenShowDialog();</script>"
 		}
 		render ostr
 	}

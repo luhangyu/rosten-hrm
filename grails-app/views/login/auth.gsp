@@ -33,8 +33,7 @@
 				</table>
 			</div>
 		</form>
-		<div  id="footer" style="text-align:center;color: #908964;font-family: Microsoft YaHei;margin-top: 39px">Copyright @2014 ; Rosten 杭州恒传信息技术有限公司
-			版权所有,提供技术支持</div>
+		<div  id="footer" style="text-align:center;color: #908964;font-family: Microsoft YaHei;margin-top: 39px">Copyright @2014 ; Rosten 版权所有,提供技术支持</div>
 	</div>
 </div>
 <script type='text/javascript'>

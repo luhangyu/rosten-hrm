@@ -140,7 +140,7 @@ activiti {
 	  history = "audit" // "none", "activity", "audit" or "full"
 	  sessionUsernameKey = "username"
 	  useFormKey = true
-	  activityFontName = "微软雅黑"
+	  activityFontName = "宋体"
 }
 environments {
 	development {

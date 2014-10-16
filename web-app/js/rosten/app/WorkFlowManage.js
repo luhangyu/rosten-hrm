@@ -155,7 +155,7 @@ define([ "dojo/_base/connect", "dijit/registry", "dojo/has", "rosten/app/Applica
 	//-----------增加流程引擎部分------------------------------------------------
     import_modeler = function(){
     	var companyId = rosten.kernel.getUserInforByKey("companyid");
-    	rosten.kernel.createRostenShowDialog(rosten.webPath + "/modeler/addModelUpload?companyId=" + companyId, {
+    	rosten.kernel.createRostenShowDialog(rosten.webPath + "/modeler/modelUpload?companyId=" + companyId, {
             onLoadFunction : function() {
             }
         });
