@@ -2,6 +2,8 @@ package com.rosten.app.staff
 
 import com.rosten.app.util.GridUtil
 import com.rosten.app.system.Company
+import com.rosten.app.system.Depart
+import com.rosten.app.system.User
 
 class StaffService {
 	
@@ -67,19 +69,32 @@ class StaffService {
 		def query = {
 			eq("company",company)
 			order("personInfor", "asc")
-			
 			searchArgs.each{k,v->
-				like(k,"%" + v + "%")
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
+				
 			}
 		}
 		return c.list(pa,query)
 	}
+	
 	def getStaffStatusChangeCount ={company,searchArgs->
 		def c = StatusChange.createCriteria()
 		def query = {
 			eq("company",company)
 			searchArgs.each{k,v->
-				like(k,"%" + v + "%")
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.count(query)
@@ -105,7 +120,17 @@ class StaffService {
 			order("personInfor", "asc")
 			
 			searchArgs.each{k,v->
-				like(k,"%" + v + "%")
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+					
+				}else if(k.equals("inDepart")){
+					createAlias('inDepart', 'a')
+					like("a.departName","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.list(pa,query)
@@ -115,7 +140,17 @@ class StaffService {
 		def query = {
 			eq("company",company)
 			searchArgs.each{k,v->
-				like(k,"%" + v + "%")
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+					
+				}else if(k.equals("inDepart")){
+					createAlias('inDepart', 'a')
+					like("a.departName","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.count(query)
@@ -225,8 +260,22 @@ class StaffService {
 		return c.count(query)
 	}
 	
+	//后期需要更新改造
 	
-	
-	
+	public boolean commonSave(PersonInfor entity,String departName,User userEntity) {
+		
+		def departEntity = Depart.findByDepartName(departName);
+		entity.addToDeparts(departEntity)
+		entity.company = userEntity.company
+		
+		if(entity.save(flush:true)){
+			return true
+		}else{
+			entity.errors.each{
+				println it
+			}
+			return false
+		}
+	}
 	
 }

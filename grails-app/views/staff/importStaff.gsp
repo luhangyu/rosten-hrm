@@ -41,6 +41,7 @@
 				
             </fieldset>
             </form>
+            <iframe name="upload_iframe" style="display:none"></iframe>
 	</div>
 </body>
 </html>

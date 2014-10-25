@@ -16,22 +16,31 @@
         <tbody>
           <tr>
       
-            <th width="10%">申请人</th>
+            <th width="5%">申请人</th>
             <td width="18%">
             	<input id="s_chinaName"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
+            
             <th width="10%">调入部门</th>
+            <td width="18%">
+            	<input id="s_inDepart" data-dojo-type="dijit/form/ValidationTextBox"
+	                data-dojo-props='trim:true,value:""
+	            ' />
+            </td>
+            
+             <th width="10%">调出部门</th>
             <td width="18%">
             	<input id="s_departName" data-dojo-type="dijit/form/ValidationTextBox"
 	                data-dojo-props='trim:true,value:""
 	            ' />
             </td>
+            
             <td>
             	<div class="btn">
-                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){staff_search()}'>查询</button>
-                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){staff_resetSearch()}'>重置条件</button>
+                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){departChange_search()}'>查询</button>
+                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){departChange_resetSearch()}'>重置条件</button>
               	</div>
             </td>
           </tr>

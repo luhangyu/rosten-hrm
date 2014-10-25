@@ -39,6 +39,7 @@ define(["dojo/_base/connect",
 		
 		
 	};
+	
 	staff_resetSearch = function(){
 		switch(rosten.kernel.navigationEntity) {
 		case "userManage":
@@ -56,6 +57,77 @@ define(["dojo/_base/connect",
 			rosten.kernel.refreshGrid();
 			break;
 		}	
+	};
+	
+	
+	//
+	statsChange_search = function(){
+		var content = {};
+		
+		var departName = registry.byId("s_departName");
+		if(departName.get("value")!=""){
+			content.departName = departName.get("value");
+		}
+		
+		var chinaName = registry.byId("s_chinaName");
+		if(chinaName.get("value")!=""){
+			content.chinaName = chinaName.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	statsChange_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("s_departName").set("value","");
+			registry.byId("s_chinaName").set("value","");
+			break;
+		}	
+		
+		rosten.kernel.refreshGrid();
+	};
+	
+	//
+	departChange_search = function(){
+		var content = {};
+		
+		var inDepart = registry.byId("s_inDepart");
+		if(inDepart.get("value")!=""){
+			content.inDepart = inDepart.get("value");
+		}
+		
+		var departName = registry.byId("s_departName");
+		if(departName.get("value")!=""){
+			content.departName = departName.get("value");
+		}
+		
+		var chinaName = registry.byId("s_chinaName");
+		if(chinaName.get("value")!=""){
+			content.chinaName = chinaName.get("value");
+		}
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+			break;
+		}
+	};
+	
+	departChange_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("s_inDepart").set("value","");
+			registry.byId("s_departName").set("value","");
+			registry.byId("s_chinaName").set("value","");
+			break;
+		}	
+		
+		rosten.kernel.refreshGrid();
 	};
 	
 	systemCode_formatTopic = function(value,rowIndex){

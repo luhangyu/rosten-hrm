@@ -180,6 +180,9 @@ class StaffController {
 		}else{
 			statusChange.company = company
 			statusChange.applayUser = currentUser
+			
+			statusChange.currentDepart = currentUser.getDepartName()
+			statusChange.currentDealDate = new Date()
 		}
 		
 		statusChange.properties = params
@@ -218,6 +221,8 @@ class StaffController {
 		}
 		render json as JSON
 	}
+	
+	
 	def staffStatusChangeGrid ={
 		def model=[:]
 		def company = Company.get(params.companyId)
@@ -227,6 +232,9 @@ class StaffController {
 		
 		//增加查询条件
 		def searchArgs =[:]
+		
+		if(params.departName && !"".equals(params.departName)) searchArgs["currentDepart"] = params.departName
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
 		
 		if("leave".equals(params.type)){
 			searchArgs.changeType = "离职"
@@ -540,7 +548,6 @@ class StaffController {
 		def inDepart = Depart.get(params.allowdepartsId)
 		departChange.inDepart = inDepart
 		
-		
 		//判断是否需要走流程
 		def _status
 		if(params.relationFlow){
@@ -621,6 +628,10 @@ class StaffController {
 		}
 		
 		def searchArgs =[:]
+		
+		if(params.inDepart && !"".equals(params.inDepart)) searchArgs["inDepart"] = params.inDepart
+		if(params.departName && !"".equals(params.departName)) searchArgs["currentDepart"] = params.departName
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
 		
 		if(params.refreshData){
 			def args =[:]
@@ -2267,9 +2278,18 @@ class StaffController {
 			def realName = sysUtil.getRandName(name)
 			f.transferTo(new File(uploadPath,realName))
 			
-		def excelimp = new ExcelImport()
-		excelimp.personsjdr(servletContext.getRealPath("/")+"template/staff/",realName)
+			
+			UserType userType = UserType.first()
+			
+			def excelimp = new ExcelImport()
+			def result = excelimp.personsjdr(servletContext.getRealPath("/")+"template/staff/",realName,currentUser,userType)
+			if("true".equals(result)){
+				ostr ="<script>var _parent = window.parent;_parent.rosten.alert('导入成功').queryDlgClose=function(){_parent.rosten.kernel.hideRostenShowDialog();_parent.rosten.kernel.refreshGrid();}</script>"
+			}else{
+				ostr = "<script>window.parent.rosten.alert('导入失败');</script>"
+			}
 		}
+		
 		render ostr
 	}
 	

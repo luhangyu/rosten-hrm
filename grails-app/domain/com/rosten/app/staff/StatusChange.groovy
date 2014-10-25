@@ -20,6 +20,12 @@ class StatusChange {
 	}
 	
 	
+	//当前处理部门
+	String currentDepart
+
+	//当前处理时间
+	Date currentDealDate
+	
 	@GridColumn(name="申请部门",colIdx=2,width="80px")
 	def getOutDepartName(){
 		def departs = personInfor.departs
