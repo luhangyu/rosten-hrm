@@ -2,6 +2,7 @@ package com.rosten.app.train
 
 import java.text.SimpleDateFormat
 import java.util.Date;
+import java.util.List;
 
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
@@ -35,8 +36,20 @@ class TrainCourse {
 	@GridColumn(name="培训地点")
 	String trainAddress
 	
-	//培训对象
-	String trainObject
+	//培训费用
+	Long trainMoney
+	 
+	//培训所属计划
+	String trainPlan
+	
+	//培训证书发放情况
+	//String trainCert
+	boolean trainCert = false
+	@GridColumn(name="培训证书是否发放")
+	def getIstrainCertValue(){
+		if(trainCert)return "是"
+		else return "否"
+	}
 	
 	//创建时间
 	Date createDate = new Date()
@@ -54,8 +67,11 @@ class TrainCourse {
 	//描述
 	String description
 	
+	List items
+	static hasMany=[items:TrainMessage]
+	
     static constraints = {
-		trainObject nullable:true,blank:true
+		//trainObject nullable:true,blank:true
 		description nullable:true,blank:true
     }
 	

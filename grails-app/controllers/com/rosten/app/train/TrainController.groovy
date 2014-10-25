@@ -11,6 +11,54 @@ class TrainController {
 	def trainService
 	def springSecurityService
 	
+	def  staffItemShow ={
+		def model =[:]
+		if(params.id){
+			model["trainMessage"] = TrainMessage.get(params.id)
+		}else{
+			model["trainMessage"] = new TrainMessage()
+		}
+		render(view:'/train/staffItemShow',model:model)
+	}
+	def staffListGrid ={
+		def json=[:]
+		
+		def trainCourse = TrainCourse.get(params.id)
+		if(params.refreshHeader){
+			json["gridHeader"] = trainService.getStaffListLayout()
+		}
+		
+		//2014-9-1 增加搜索功能
+		def searchArgs =[:]
+		
+		if(params.refreshData){
+			if(!trainCourse){
+				json["gridData"] = ["identifier":"id","label":"name","items":[]]
+			}else{
+				def args =[:]
+				int perPageNum = Util.str2int(params.perPageNum)
+				int nowPage =  Util.str2int(params.showPageNum)
+				
+				args["offset"] = (nowPage-1) * perPageNum
+				args["max"] = perPageNum
+				args["trainCourse"] = trainCourse
+				
+				def gridData = trainService.getStaffItemListDataStore(args,searchArgs)
+				json["gridData"] = gridData
+			}
+		}
+		if(params.refreshPageControl){
+			if(!trainCourse){
+				json["pageControl"] = ["total":"0"]
+			}else{
+				def total = trainService.getStaffItemCount(trainCourse,searchArgs)
+				json["pageControl"] = ["total":total.toString()]
+			}
+			
+		}
+		render json as JSON
+	}
+	
 	//培训班查询条件
 	def trainCourseSearchView ={
 		def model =[:]

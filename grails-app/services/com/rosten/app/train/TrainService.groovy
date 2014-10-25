@@ -3,7 +3,43 @@ package com.rosten.app.train
 import com.rosten.app.util.GridUtil
 
 class TrainService {
+	
+	def getStaffListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new TrainMessage())
+	}
+	def getStaffItemListDataStore ={params,searchArgs->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllStaffListItem(offset,max,params.trainCourse,searchArgs)
 
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	private def getAllStaffListItem={offset,max,trainCourse,searchArgs->
+		def c = TrainMessage.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("trainCourse",trainCourse)
+			order("user", "asc")
+			
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.list(pa,query)
+	}
+	def getStaffItemCount ={trainCourse,searchArgs->
+		def c = TrainMessage.createCriteria()
+		def query = {
+			eq("trainCourse",trainCourse)
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.count(query)
+	}
+	
 	def getTrainCourseListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new TrainCourse())
