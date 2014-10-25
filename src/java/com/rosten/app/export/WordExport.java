@@ -103,5 +103,89 @@ public class WordExport {
 		}
 		return null;
 	}
+	
+	// 填充模版数据生成word文件(离职交接单)
+		private File getLzjjdWord(String id) throws Exception {
+			Map<String, Object> data = new HashMap<String, Object>();
+			StaffService staffser = new StaffService();
+			PersonInfor personInfor = staffser.getPersonInfor(id);
+			data.put("personInfor", personInfor);	
+			File wordFile = FreeMarkerUtil.getWordFile(data,
+					"classpath:com/rosten/app/template", "lzjjd.xml",personInfor.getChinaName()+"离职交接单");
+			return wordFile;
+		}
+		
+		/**
+		 * 单个打印离职交接单
+		 */
+		public String dyLzjjd(HttpServletResponse response,String ids) throws Exception {
+			
+			File wordFile = getLzjjdWord(ids);
+			FileUtil.outputWord(response,wordFile);
+			return null;
+		}
+		
+		/**
+		 * 批量打印离职交接单
+		 * @param response
+		 * @return
+		 * @throws Exception
+		 */
+		public String downloadLzjjdZip(HttpServletResponse response,String ids)
+				throws Exception {
+			String[] pks = ids.split(",");
+			if (null!=pks) {
+				List<File> files = new ArrayList<File>();
+				for (int i = 0, n = pks.length; i < n; i++) {
+					File file = getLzjjdWord(pks[i]);
+					files.add(file);
+				}
+				File zipFile = ZipUtil.zip("离职交接单",files.toArray(new File[] {}));
+				FileUtil.outputZip(response, zipFile);
+			}
+			return null;
+		}
+		
+		// 填充模版数据生成word文件(离职交接单)
+		private File getDdjjdWord(String id) throws Exception {
+			Map<String, Object> data = new HashMap<String, Object>();
+			StaffService staffser = new StaffService();
+			PersonInfor personInfor = staffser.getPersonInfor(id);
+			data.put("personInfor", personInfor);	
+			File wordFile = FreeMarkerUtil.getWordFile(data,
+					"classpath:com/rosten/app/template", "ddjjd.xml",personInfor.getChinaName()+"调动交接单");
+			return wordFile;
+		}
+		
+		/**
+		 * 单个打印离职交接单
+		 */
+		public String dyDdjjd(HttpServletResponse response,String ids) throws Exception {
+			
+			File wordFile = getDdjjdWord(ids);
+			FileUtil.outputWord(response,wordFile);
+			return null;
+		}
+		
+		/**
+		 * 批量打印离职交接单
+		 * @param response
+		 * @return
+		 * @throws Exception
+		 */
+		public String downloadDdjjdZip(HttpServletResponse response,String ids)
+				throws Exception {
+			String[] pks = ids.split(",");
+			if (null!=pks) {
+				List<File> files = new ArrayList<File>();
+				for (int i = 0, n = pks.length; i < n; i++) {
+					File file = getDdjjdWord(pks[i]);
+					files.add(file);
+				}
+				File zipFile = ZipUtil.zip("调动交接单",files.toArray(new File[] {}));
+				FileUtil.outputZip(response, zipFile);
+			}
+			return null;
+		}
 
 }

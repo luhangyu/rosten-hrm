@@ -19,6 +19,7 @@ import com.rosten.app.system.Role
 import java.io.OutputStream
 
 import com.rosten.app.export.ExcelExport
+import com.rosten.app.export.ExcelImport
 import com.rosten.app.export.WordExport;
 import com.rosten.app.workflow.FlowBusiness
 import com.rosten.app.workflow.WorkFlowService
@@ -224,7 +225,9 @@ class StaffController {
 			model["gridHeader"] = staffService.getStaffStatusChangeListLayout()
 		}
 		
+		//增加查询条件
 		def searchArgs =[:]
+		
 		if("leave".equals(params.type)){
 			searchArgs.changeType = "离职"
 		}else{
@@ -642,6 +645,19 @@ class StaffController {
 		def model =[:]
 		render(view:'/staff/search',model:model)
 	}
+
+	def departChangeSearchView ={
+		
+		def model =[:]
+		render(view:'/staff/departChangeSearch',model:model)
+	}
+	
+	def statusChangeSearchView ={
+		
+		def model =[:]
+		render(view:'/staff/statusChangeSearch',model:model)
+	}
+
 	def staffAddFlowBack ={
 		def json=[:]
 		def personInfor = PersonInfor.get(params.id)
@@ -1890,6 +1906,12 @@ class StaffController {
 		//专业技术等级
 		model["techGradeList"] = shareService.getSystemCodeItems(company,"rs_techGrade")
 		
+		//民族
+		model["nationList"] = shareService.getSystemCodeItems(company,"rs_nation")
+		
+		//国籍
+		model["countryList"] = shareService.getSystemCodeItems(company,"rs_country")
+		
 		//获取头像信息
 		if(params.id){
 			def pic= Attachment.findByBeUseIdAndType(params.id,"staff")
@@ -2178,7 +2200,7 @@ class StaffController {
 		render(view:'/staff/picUpload',model:model)
 	}
 	
-	
+	//上传照片
 	def uploadPic={
 		def ostr
 		
@@ -2229,5 +2251,51 @@ class StaffController {
 			ostr = "<script>window.parent.rosten.hideRostenShowDialog();</script>"
 		}
 		render ostr
+	}
+	
+	def importPerson={
+		def ostr
+		
+		SystemUtil sysUtil = new SystemUtil()
+		def currentUser = (User) springSecurityService.getCurrentUser()
+		def f = request.getFile("uploadedfile")
+		if (!f.empty) {
+			//添加附件信息
+			def uploadPath = new File(servletContext.getRealPath("/"), "/template/staff/")
+			
+			String name = f.getOriginalFilename()//获得文件原始的名称
+			def realName = sysUtil.getRandName(name)
+			f.transferTo(new File(uploadPath,realName))
+			
+		def excelimp = new ExcelImport()
+		excelimp.personsjdr(servletContext.getRealPath("/")+"template/staff/",realName)
+		}
+		render ostr
+	}
+	
+	//打印员工离职交接单
+	def printPersonLzjjd={
+		def word = new WordExport()
+		def ids = params.id.split(",")
+		if(null!=ids&&ids.length>0){
+			if(ids.length==1){
+				word.dyLzjjd(response,params.id)
+			}else{
+				word.downloadLzjjdZip(response,params.id)
+			}
+		}
+	}
+	
+	//打印员工调动交接单
+	def printPersonDdjjd={
+		def word = new WordExport()
+		def ids = params.id.split(",")
+		if(null!=ids&&ids.length>0){
+			if(ids.length==1){
+				word.dyLzjjd(response,params.id)
+			}else{
+				word.downloadLzjjdZip(response,params.id)
+			}
+		}
 	}
 }

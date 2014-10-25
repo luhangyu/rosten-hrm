@@ -7,26 +7,30 @@
   
 <body>
 	<div style="text-Align:center">
-        <div class="rosten_form" style="width:400px;text-align:left">
+           <form data-dojo-type="dijit/form/Form" method="post" class="rosten_form" id="file_form" style="width:560px;text-align:left" 
+        	target="upload_iframe" enctype="multipart/form-data" action="${createLink(controller:'staff',action:'importPerson',params:[])}">
             <fieldset class="fieldset-form">
                 <legend class="tableHeader">用户批量导入</legend>
-                <table class="tableData">
+                <table class="tableData upload"  style="margin:2px;">
                     <tbody>
 						<tr>
                             <td width="80">
-                                <div align="right"><span style="color:red">*</span>文件地址：</div>
+                                <div align="right" style="margin-top:10px"><span style="color:red">*</span>文件地址：</div>
                             </td>
-                            <td width="220">
-                            	<input data-dojo-type="dijit/form/ValidationTextBox" 
-                            	data-dojo-props='readOnly:true' />
-                            	<img src="${resource(dir:'images/rosten/navigation',file:'attach.png')}" >
+                             <td width="220">
+                            	<input data-dojo-type="dojox/form/FileInput" data-dojo-props= 'label:"浏览...",cancelText:"清空"' name="uploadedfile" />
                             </td>
+<%--                            <td width="220">--%>
+<%--                            	<input data-dojo-type="dijit/form/ValidationTextBox" --%>
+<%--                            	data-dojo-props='readOnly:true' />--%>
+<%--                            	<img src="${resource(dir:'images/rosten/navigation',file:'attach.png')}" >--%>
+<%--                            </td>--%>
                         </tr>
                         
 						<tr style="text-align:center;margin-top:10px">
 							<td colspan="2">
 								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){}'>模板下载</button>
-								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.kernel.hideRostenShowDialog()}'>确定</button>
+								<button data-dojo-type="dijit/form/Button" type="submit" data-dojo-props=''}'>确定</button>
 								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.kernel.hideRostenShowDialog()}'>取消</button>
 								
 							</td>
@@ -36,7 +40,7 @@
 				
 				
             </fieldset>
-		</div>
+            </form>
 	</div>
 </body>
 </html>

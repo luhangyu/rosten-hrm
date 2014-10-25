@@ -8,8 +8,16 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		//打印通知单
 	};
 	
+	//打印离职交接单
 	staffStatusChange_print_qd = function(){
-		//打印交接清单
+		var unids = rosten.getGridUnid("multi");
+		if (unids == ""){
+			rosten.alert("请勾选要打印的数据！");
+			return;
+		}
+		var content = {};
+		content.id = unids;
+		rosten.openNewWindow("print", rosten.webPath + "/staff/printPersonLzjjd/"+unids);
 	};
 	
 	staffStatusChange_formatTopic = function(value,rowIndex){
@@ -69,6 +77,14 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 	
 	staffDepartChange_print_qd = function(){
 		//打印交接清单
+		var unids = rosten.getGridUnid("multi");
+		if (unids == ""){
+			rosten.alert("请勾选要打印的数据！");
+			return;
+		}
+		var content = {};
+		content.id = unids;
+		rosten.openNewWindow("print", rosten.webPath + "/staff/printPersonDdjjd/"+unids);
 	};
 	
 	staffDepartChange_formatTopic = function(value,rowIndex){
@@ -235,6 +251,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffDepartChangeView?userId=" + userid,
+				searchSrc:rosten.webPath + "/staff/departChangeSearchView",
 				gridSrc : rosten.webPath + "/staff/staffDepartChangeGrid?companyId=" + companyId + "&userId=" + userid
 			};
 			rosten.kernel.addRightContent(naviJson);
@@ -243,6 +260,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffStatusChangeView?userId=" + userid +"&type=leave",
+				searchSrc:rosten.webPath + "/staff/statusChangeSearchView",
 				gridSrc : rosten.webPath + "/staff/staffStatusChangeGrid?companyId=" + companyId + "&userId=" + userid + "&type=leave"
 			};
 			rosten.kernel.addRightContent(naviJson);
@@ -251,6 +269,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffStatusChangeView?userId=" + userid +"&type=retire",
+				searchSrc:rosten.webPath + "/staff/statusChangeSearchView",
 				gridSrc : rosten.webPath + "/staff/staffStatusChangeGrid?companyId=" + companyId + "&userId=" + userid + "&type=retire"
 			};
 			rosten.kernel.addRightContent(naviJson);

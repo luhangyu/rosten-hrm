@@ -89,20 +89,40 @@
 		    </td>
 		    <td><div align="right">国籍：</div></td>
 		  	<td>
-		    	<input id="city" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"city",trim:true,${fieldAcl.isReadOnly("city")},
-							value:"${personInforEntity?.city}"
-	                '/>
+<%--		    	<input id="city" data-dojo-type="dijit/form/ValidationTextBox" --%>
+<%--	                 	data-dojo-props='name:"city",trim:true,${fieldAcl.isReadOnly("city")},--%>
+<%--							value:"${personInforEntity?.city}"--%>
+<%--	                '/>--%>
+	                
+	            <select id="city" data-dojo-type="dijit/form/ComboBox" 
+                 	data-dojo-props='name:"city",trim:true,${fieldAcl.isReadOnly("city")},
+						value:"${personInforEntity?.city}"
+                '>
+	                <g:each in="${countryList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>
+                </select>
 		    </td>
 		     
 		</tr>
 		<tr>
 			<td><div align="right">民族：</div></td>
 		  	<td>
-		    	<input id="nationality" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"nationality",trim:true,${fieldAcl.isReadOnly("nationality")},
-							value:"${personInforEntity?.nationality}"
-	                '/>
+<%--		    	<input id="nationality" data-dojo-type="dijit/form/ValidationTextBox" --%>
+<%--	                 	data-dojo-props='name:"nationality",trim:true,${fieldAcl.isReadOnly("nationality")},--%>
+<%--							value:"${personInforEntity?.nationality}"--%>
+<%--	                '/>--%>
+<%--	                --%>
+	           <select id="nationality" data-dojo-type="dijit/form/ComboBox" 
+                 	data-dojo-props='name:"nationality",trim:true,${fieldAcl.isReadOnly("nationality")},
+						value:"${personInforEntity?.nationality}"
+                '>
+	                <g:each in="${nationList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>
+                </select>
+	                
+	                
 		    </td>
 		 	<td><div align="right">出生地：</div></td>
 		  	<td>
