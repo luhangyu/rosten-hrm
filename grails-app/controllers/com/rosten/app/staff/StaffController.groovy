@@ -42,6 +42,10 @@ class StaffController {
 	def taskService
 	def startService
 	
+	def getChooseListSearch ={
+		def model =[:]
+		render(view:'/staff/chooseStaffSearch',model:model)
+	}
 	def checkHasBargain ={
 		def json=[:]
 		

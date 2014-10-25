@@ -224,7 +224,27 @@ class PersonInfor {
     }
 	
 	def beforeDelete(){
-		
+		PersonInfor.withNewSession{session ->
+			ContactInfor.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			Bargain.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			Degree.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			FamilyInfor.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			Political.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			WorkResume.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			session.flush()
+		}
 	}
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

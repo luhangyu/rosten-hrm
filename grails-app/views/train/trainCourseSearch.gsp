@@ -18,7 +18,7 @@
             <th width="8%">培训班名称</th>
             <td width="10%">
             	<input id="s_courseName" data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true,style:{width:"100px"},
+                	data-dojo-props='trim:true,
                '/>
             </td>
  

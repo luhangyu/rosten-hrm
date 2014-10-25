@@ -32,7 +32,7 @@ this.initialized=true;
 }
 this._dialog.show();
 if(this.mode=="CLOSE"){
-setTimeout(_5.hitch(this,"close"),800);
+setTimeout(_5.hitch(this,"close"),1200);
 }
 },close:function(){
 this._dialog.hide();

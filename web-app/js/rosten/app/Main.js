@@ -470,9 +470,9 @@ define(["dojo/_base/kernel"
     more_downloadFile = function(){
     	var key = rosten.kernel.getMenuKeyByCode("public");
     	if(key!=null){
-    		rosten.variable.showStartDownloadFile = true;
+    		//rosten.variable.showStartDownloadFile = true;
     		rosten.kernel._naviMenuShow(key,"downloadFileManage");
-    		rosten.variable.showStartDownloadFile = false;
+    		//rosten.variable.showStartDownloadFile = false;
     	}else{
     		rosten.alert("未找到相对应的模块,请通知管理员");
     	}
@@ -542,9 +542,9 @@ define(["dojo/_base/kernel"
     more_bbs = function(){
     	var key = rosten.kernel.getMenuKeyByCode("bbs");
     	if(key!=null){
-    		rosten.variable.showStartBbs = true;
+    		//rosten.variable.showStartBbs = true;
     		rosten.kernel._naviMenuShow(key,"newbbsManage");
-    		rosten.variable.showStartBbs = false;
+    		//rosten.variable.showStartBbs = false;
     	}else{
     		rosten.alert("未找到相对应的模块,请通知管理员");
     	}

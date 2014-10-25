@@ -31,6 +31,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 import com.rosten.app.util.Util
 import com.rosten.app.system.*
 import com.rosten.app.staff.PersonInfor
+import com.rosten.app.staff.ContactInfor
 
 @Secured('permitAll')
 class LoginController {
@@ -191,6 +192,16 @@ class LoginController {
 				if(pic){
 					model["imgName"] = pic.realName
 				}
+				model["personInfor"] = personInfor
+				
+				def contactInfor = ContactInfor.findByPersonInfor(personInfor)
+				if(contactInfor){
+					model["contactInfor"] = contactInfor
+				}else{
+					model["contactInfor"] = new ContactInfor()
+				}
+			}else{
+				model["personInfor"] = new PersonInfor()
 			}
 			
 			//获取展示的所有服务

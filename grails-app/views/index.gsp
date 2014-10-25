@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%@page import="com.rosten.app.staff.ContactInfor"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
@@ -110,7 +111,7 @@
 	
 	#home_staffInfor p { float:left; width:32%; }
 	#home_staffInfor p img { margin:0px 0 0 60px; width:80px;height:100px}
-	#home_staffInfor .userInfor {margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:100px; }
+	#home_staffInfor .userInfor {margin-top:20px; padding-top:5px; float:left; width:150px; }
 	
 	.rosten .dijitTitlePaneCountNode{
 		margin-left:3px;
@@ -210,7 +211,7 @@
 							<div class="nav verticalAlign">
 								<span class="nav0Icon">&nbsp;</span> <span class="nav0Div">&nbsp;<span
 									id="header_username">
-										${(user.chinaName!=null?user.chinaName:user.username) + "&nbsp;" + usertype}
+										${(user.chinaName!=null?user.chinaName:user.username)}
 								</span>&nbsp;&nbsp;欢迎您的到来！
 								</span> <span class="nav5Icon">&nbsp;</span> <span class="nav5Div"><a
 									href="javascript:changeSkin();">更换皮肤</a></span> <span class="nav4Icon">&nbsp;</span>
@@ -278,10 +279,11 @@
 								
 								<p class="userPic"><img src="${resource(dir:'images/staff',file:imgName)}"></p>
 								<div class="userInfor">
-									<div style="font-size:20px;font-weight:bold">${(user.chinaName!=null?user.chinaName:user.username)}</div>
-									<div style="margin-top:10px;color:#404040;font-size:16px">${user.getDepartName()?user.getDepartName():"暂无部门" }</div>
+									<div style="font-size:20px;font-weight:bold">${user?.getFormattedName() + "(" + personInfor?.sex + ")" }</div>
+									<div style="margin-top:10px;color:#404040;font-size:16px">${user.getDepartName()?user.getDepartName():"无部门" }</div>
+									<div style="margin-top:10px;color:#404040;font-size:16px">${contactInfor?ContactInfor.mobile:"无手机号码" }</div>
 								</div>
-								<div style="margin-left:20px;margin-top:30px; padding-top:5px; float:left; width:80px;font-size:14px; ">
+								<div style="margin-top:30px; padding-top:5px; float:left; width:80px;font-size:14px; ">
 									<a href="javascript:showUserInfor();">详细信息</a>
 								</div>
 						</div>	

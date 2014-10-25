@@ -254,6 +254,23 @@ define(["dojo/_base/lang",
     	var item = grid.getItem(index);
     	return item;
     },
+    application.getGridItemValue1 = function(rostenGrid,name){
+        var selectitems = rostenGrid.getSelected();
+		
+		if(selectitems.length<=0){
+			rosten.alert("请先选择条目！");
+			return "";
+		}
+		var gridStore = rostenGrid.getStore();
+		var item;
+		var idArgs;
+		var getName = "id";
+		if(name) getName = name;
+    	item = selectitems[0];
+    	idArgs = gridStore.getValue(item, getName);
+       
+		return idArgs;
+	};
     lang.mixin(rosten,application);
     
     return application;

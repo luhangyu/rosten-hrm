@@ -14,7 +14,7 @@
 		}
 		.rosten .rostenTitleGrid .dijitTitlePaneContentInner{
 			padding:2px 1px 1px 1px;
-			height:330px;
+			height:500px;
 		}
     </style>
 	<script type="text/javascript">
