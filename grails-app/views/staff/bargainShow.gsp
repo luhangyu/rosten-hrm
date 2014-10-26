@@ -4,9 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
     <title>合同管理</title>
+    <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <style type="text/css">
 		body{
 			overflow:auto;
+		}
+		.rosten .rostenGridView .pagecontrol{
+			text-align:left;
 		}
     </style>
 	<script type="text/javascript">
@@ -14,6 +18,7 @@
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
 		 		"dojo/_base/xhr",
+		 		"dojo/dom",
 		 		"dojo/date/stamp",
 		 		"rosten/widget/DepartUserDialog",
 		 		"dijit/form/ValidationTextBox",
@@ -27,54 +32,92 @@
 		 		"dojox/form/uploader/FileList",
 		 		"dijit/Editor",
 				"dijit/_editor/plugins/FontChoice",
+				"dojox/widget/Wizard",
+				"dojox/widget/WizardPane",
 		     	"rosten/widget/ActionBar",
 		     	"rosten/app/Application",
 		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry,xhr,datestamp,DepartUserDialog){
+			function(parser,kernel,registry,xhr,dom,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
-					rosten.init({webpath:"${request.getContextPath()}"});
+					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 					rosten.cssinit();
 				});
 				
 			bargain_add = function(object){
-				var chenkids = ["level","category","publishDate","topic"];
-				if(!rosten.checkData(chenkids)) return;
-				
 				var content = {};
-				var publishDate = registry.byId("publishDate");
-				content.publishDate = datestamp.toISOString(publishDate.attr("value"),{selector: "date"});
-				content.content = registry.byId("content").get("value");
-
-				//增加对多次单击的次数----2014-9-4
-				var buttonWidget = object.target;
-				rosten.toggleAction(buttonWidget,true);
 				
-				rosten.readSync(rosten.webPath + "/bbs/bbsSave",content,function(data){
+				//添加新增时添加附件功能
+				<g:if test="${!bargain?.id}">
+					var filenode = dom.byId("fileUpload_show");
+					var fileIds = [];
+
+			       	var node=filenode.firstChild;
+			       	while(node!=null){
+			            node=node.nextSibling;
+			            if(node!=null){
+			            	fileIds.push(node.getAttribute("id"));
+				        }
+			        }
+					content.attachmentIds = fileIds.join(",");
+				</g:if>
+				
+				rosten.readSync(rosten.webPath + "/staff/bargainSave",{},function(data){
 					if(data.result=="true" || data.result == true){
 						rosten.alert("保存成功！").queryDlgClose= function(){
-							if(window.location.href.indexOf(data.id)==-1){
-								window.location.replace(window.location.href + "&id=" + data.id);
-							}else{
-								window.location.reload();
-							}
+							page_quit();
 						};
-					}else if(data.result=="noConfig"){
-						rosten.alert("系统不存在配置文档，请通知管理员！");
 					}else{
 						rosten.alert("保存失败!");
 					}
-					rosten.toggleAction(buttonWidget,false);
-				},function(error){
-					rosten.alert("系统错误，请通知管理员！");
-					rosten.toggleAction(buttonWidget,false);
-				},"rosten_form");
+				},null,"rosten_form");
 			};
+			
 			page_quit = function(){
 				rosten.pagequit();
 			};
+			
+			addPersonInfor = function(){
+				registry.byId("chooseDialog").show();
+			};
+	
+			addPersonInforNext = function(){
+				var content = {};
+				
+				var username = registry.byId("s_username");
+				if(username.get("value")!=""){
+					content.username = username.get("value");
+				}
+				
+				var chinaName = registry.byId("s_chinaName");
+				if(chinaName.get("value")!=""){
+					content.chinaName = chinaName.get("value");
+				}
+				chooseListGrid.refresh(null,content);
+			};
+			
+			addPersonInforDone = function(){
+				var id = rosten.getGridItemValue1(chooseListGrid,"id");
+				var chinaName = rosten.getGridItemValue1(chooseListGrid,"chinaName");
+				var sex = rosten.getGridItemValue1(chooseListGrid,"sex");
+				var departName = rosten.getGridItemValue1(chooseListGrid,"departName");
+				var status = rosten.getGridItemValue1(chooseListGrid,"status");
+	
+				registry.byId("personInforId").set("value",id);
+				registry.byId("personInforName").set("value",chinaName);
+				registry.byId("sex").set("value",sex);
+				registry.byId("departName").set("value",departName);
+				registry.byId("status").set("value",status);
+				
+				registry.byId("chooseDialog").hide();
+			};
+			personInfor_formatTopic_normal = function(value,rowIndex){
+				return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+			};
+			personInfor_normal_onMessageOpen = function(rowIndex){
+				
+			}
 		});
-		
-		
+
     </script>
 </head>
 <body>
@@ -83,14 +126,20 @@
 			data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'bargainForm',id:bargain?.id,params:[userid:user?.id])}"'></div>
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"300px"}'>
+	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"600px"}'>
 	  		<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">	
+	  		<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
+	  			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"员工信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
+					href:"${createLink(controller:'bargain',action:'getBargainPerson',id:bargain?.id)}"
+				'></div>
+	  		
 		  		<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
 					href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id)}"
 				'></div>
 		  	
 		  		<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-					height:"60px",href:"${createLink(controller:'share',action:'getFileUpload',id:bargain?.id,params:[uploadPath:'staff',isShowFile:false])}"'>
+		  			href:"${createLink(controller:'share',action:'getFileUploadNew',id:bargain?.id,params:[uploadPath:'staff',isShowFile:isShowFile])}"'>
+					
 				</div>
 	  		</form>
 		</div>

@@ -10,6 +10,12 @@ import com.rosten.app.annotation.GridColumn
 class Bargain {
 	String id
 	
+	//员工
+	@GridColumn(name="姓名",colIdx=1,width="60px",formatter="bargain_formatTopic")
+	def getPersonInforName(){
+		return personInfor?.chinaName
+	}
+	
 	//合同编号
 	@GridColumn(name="合同编号",colIdx=1)
 	String bargainSerialNo

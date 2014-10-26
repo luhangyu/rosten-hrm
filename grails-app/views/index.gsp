@@ -281,7 +281,7 @@
 								<div class="userInfor">
 									<div style="font-size:20px;font-weight:bold">${user?.getFormattedName() + "(" + personInfor?.sex + ")" }</div>
 									<div style="margin-top:10px;color:#404040;font-size:16px">${user.getDepartName()?user.getDepartName():"无部门" }</div>
-									<div style="margin-top:10px;color:#404040;font-size:16px">${contactInfor?ContactInfor.mobile:"无手机号码" }</div>
+									<div style="margin-top:10px;color:#404040;font-size:16px">${contactInfor?contactInfor.mobile:"无手机号码" }</div>
 								</div>
 								<div style="margin-top:30px; padding-top:5px; float:left; width:80px;font-size:14px; ">
 									<a href="javascript:showUserInfor();">详细信息</a>

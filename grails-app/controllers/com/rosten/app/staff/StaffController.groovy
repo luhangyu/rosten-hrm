@@ -63,13 +63,18 @@ class StaffController {
 	}
 	def bargainShow ={
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
 		model["company"] = Company.get(params.companyId)
 		
 		def bargain
 		if(params.id){
 			bargain = Bargain.get(params.id)
+			
+			//判断是否为当前处理人
+			model["isShowFile"] = true
 		}else{
 			bargain = new Bargain()
+			model["isShowFile"] = true
 		}
 		model["bargain"] = bargain
 		
@@ -90,12 +95,22 @@ class StaffController {
 		
 		bargain.properties = params
 		bargain.clearErrors()
-		bargain.changeDate = Util.convertToTimestamp(params.changeDate)
+		//bargain.changeDate = Util.convertToTimestamp(params.changeDate)
 		
 		def personInfor = PersonInfor.get(params.personInforId)
 		bargain.personInfor = personInfor
 		
 		if(bargain.save(flush:true)){
+			
+			//增加附件功能
+			if(params.attachmentIds){
+				params.attachmentIds.split(",").each{
+					def attachment = Attachment.get(it)
+					attachment.beUseId = bargain.id
+					attachment.save(flush:true)
+				}
+			}
+			
 			model["result"] = "true"
 		}else{
 			bargain.errors.each{
