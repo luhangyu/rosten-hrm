@@ -18,6 +18,7 @@
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
 		 		"dojo/_base/xhr",
+		 		"dojo/dom",
 		 		"dojo/date/stamp",
 		 		"rosten/widget/DepartUserDialog",
 		 		"dijit/form/ValidationTextBox",
@@ -35,7 +36,7 @@
 		     	"rosten/app/Application",
 		     	"rosten/app/SystemApplication",
 		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry,xhr,datestamp,DepartUserDialog){
+			function(parser,kernel,registry,xhr,dom,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 					rosten.cssinit();
@@ -62,6 +63,21 @@
 				<g:if test='${flowCode}'>
 					content.flowCode = "${flowCode}";
 					content.relationFlow = "${relationFlow}";
+				</g:if>
+
+				//添加新增时添加附件功能
+				<g:if test="${!departChange?.id}">
+					var filenode = dom.byId("fileUpload_show");
+					var fileIds = [];
+
+			       	var node=filenode.firstChild;
+			       	while(node!=null){
+			            node=node.nextSibling;
+			            if(node!=null){
+			            	fileIds.push(node.getAttribute("id"));
+				        }
+			        }
+					content.attachmentIds = fileIds.join(",");
 				</g:if>
 				
 				//增加对多次单击的次数----2014-9-4
@@ -298,11 +314,14 @@
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'departChangeForm',id:departChange?.id,params:[userid:user?.id])}"'></div>
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"480px"}'>
-        	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="padding:0px">
+	<form method="post" class="rosten_form" id="rosten_form" 
+		onsubmit="return false;" style="padding:0px" enctype="multipart/form-data">
+		
+	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"600px"}'>
+	  		
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${departChange?.id }"' />
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
-        	  	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"400px",marginBottom:"2px"'>
+        	  	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",marginBottom:"2px"'>
         	  
                 <table class="tableData" style="width:740px;margin:0px">
                     <tbody>
@@ -371,7 +390,7 @@
 						    <td colspan=3>
 				                <textarea id="changeReason" data-dojo-type="dijit/form/SimpleTextarea" 
 									data-dojo-props='name:"changeReason",
-					                    style:{width:"620px",height:"300px"},
+					                    style:{width:"620px",height:"150px"},
 					                    trim:true,value:"${departChange?.changeReason}"
 					            '>
 								</textarea>
@@ -380,13 +399,16 @@
 						</tr>
                     </tbody>
                 </table>
-                </div>
-			</form>
+                
+            </div>
+			
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-				height:"60px",href:"${createLink(controller:'share',action:'getFileUpload',id:departChange?.id,params:[uploadPath:'staff',isShowFile:isShowFile])}"'>
+				href:"${createLink(controller:'share',action:'getFileUploadNew',id:departChange?.id,params:[uploadPath:'staff',isShowFile:isShowFile])}"'>
 			</div>
 			
 		</div>
+		</form>
+		
 		<g:if test="${departChange?.id}">
 			<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 				href:"${createLink(controller:'share',action:'getCommentLog',id:departChange?.id)}"

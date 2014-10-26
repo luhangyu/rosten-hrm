@@ -83,6 +83,93 @@ class ShareController {
 			return
 		}
 	}
+	def deleteAttachmentFile ={
+		
+		def json=[:]
+		try{
+			def attachment = Attachment.get(params.id)
+			if(attachment){
+				//删除相关的文件
+				def deletename = attachment.url + "/" + attachment.realName
+				File file = new File(deletename)
+				if(file.isFile() && file.exists()){
+					file.delete()
+				}
+				attachment.delete(flush:true)
+				
+				json = [result:'true']
+			}
+		}catch(Exception e){
+			println e
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	def uploadFileNew ={
+		/*
+		 * 默认参数uploadPath路径即为attachment中的type类型
+		 */
+		def json=[:]
+		SystemUtil sysUtil = new SystemUtil()
+		
+		def uploadPath
+		def currentUser = (User) springSecurityService.getCurrentUser()
+		def companyPath = currentUser.company?.shortName
+		if(companyPath == null){
+			uploadPath = sysUtil.getUploadPath(params.uploadPath)
+		}else{
+			uploadPath = sysUtil.getUploadPath(currentUser.company.shortName + "/" + params.uploadPath)
+		}
+		
+		def f = request.getFile("uploadedfile")
+		if (f.empty) {
+			json["result"] = "blank"
+			render json as JSON
+			return
+		}
+		
+		def uploadSize = sysUtil.getUploadSize()
+		if(uploadSize!=null){
+			//控制附件上传大小
+			def maxSize = uploadSize * 1024 * 1024
+			if(f.size>=maxSize){
+				json["result"] = "big"
+				render json as JSON
+				return
+			}
+		}
+		String name = f.getOriginalFilename()//获得文件原始的名称
+		def realName = sysUtil.getRandName(name)
+		f.transferTo(new File(uploadPath,realName))
+		
+		//当前文件已经保存，则增加附件信息
+		def attachment = new Attachment()
+		attachment.name = name
+		attachment.realName = realName
+		attachment.type = params.uploadPath
+		attachment.url = uploadPath
+		attachment.size = f.size
+		attachment.upUser = (User) springSecurityService.getCurrentUser()
+		
+		if(params.id){
+			attachment.beUseId = params.id
+		}else{
+			attachment.beUseId = "rostenFileId"
+		}
+		attachment.save(flush:true)
+		
+		json["result"] = "true"
+		json["fileId"] = attachment.id
+		json["fileName"] = name
+		
+		if("yes".equals(params.isIE)){
+			def resultStr  = '{"result":"true", "fileId":"' + json["fileId"]  + '","fileName":"' + json["fileName"] +'"}'
+			render "<textarea>" + resultStr +  "</textarea>"
+			return
+		}else{
+			render json as JSON
+		}
+	}
 	def uploadFile ={
 		/*
 		 * 默认参数uploadPath路径即为attachment中的type类型
@@ -141,6 +228,23 @@ class ShareController {
 		}else{
 			render json as JSON
 		}
+	}
+	def getFileUploadNew ={
+		def model =[:]
+		model["docEntity"] = "share"
+		model["isShowFile"] = params.isShowFile
+		model["uploadPath"] = params.uploadPath
+		
+		if(params.id){
+			//已经保存过
+			model["docEntityId"] = params.id
+			//获取附件信息
+			model["attachFiles"] = Attachment.findAllByBeUseId(params.id)
+		}else{
+			//尚未保存
+			model["newDoc"] = true
+		}
+		render(view:'/share/fileUploadNew',model:model)
 	}
 	def getFileUpload ={
 		def model =[:]

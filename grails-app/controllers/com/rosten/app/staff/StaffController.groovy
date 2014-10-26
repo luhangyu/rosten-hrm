@@ -505,6 +505,8 @@ class StaffController {
 	}
 	def staffDepartChangeShow ={
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		
 		def user = User.get(params.userid)
 		model["company"] = Company.get(params.companyId)
 		model["user"] = user
@@ -512,11 +514,18 @@ class StaffController {
 		def departChange
 		if(params.id){
 			departChange = DepartChange.get(params.id)
-			model["isShowFile"] = true
+			
+			//判断是否为当前处理人
+			if(currentUser.equals(departChange.currentUser)){
+				model["isShowFile"] = true
+			}
+			
 		}else{
 			departChange = new DepartChange()
 			departChange.personInfor = PersonInfor.findByUser(user)
+			model["isShowFile"] = true
 		}
+		
 		model["departChange"] = departChange
 		model["personInfor"] = departChange.personInfor
 		
@@ -599,7 +608,14 @@ class StaffController {
 				//添加日志
 				shareService.addFlowLog(departChange.id,params.flowCode,currentUser,"新建员工调动信息")
 			}
-			
+			//增加附件功能
+			if(params.attachmentIds){
+				params.attachmentIds.split(",").each{
+					def attachment = Attachment.get(it)
+					attachment.beUseId = departChange.id
+					attachment.save(flush:true)
+				}
+			}
 		}else{
 			departChange.errors.each{
 				println it
