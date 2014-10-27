@@ -78,6 +78,7 @@ class StaffController {
 		}
 		model["bargain"] = bargain
 		
+		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa
 		render(view:'/staff/bargainShow',model:model)
@@ -95,7 +96,6 @@ class StaffController {
 		
 		bargain.properties = params
 		bargain.clearErrors()
-		//bargain.changeDate = Util.convertToTimestamp(params.changeDate)
 		
 		def personInfor = PersonInfor.get(params.personInforId)
 		bargain.personInfor = personInfor
@@ -110,6 +110,11 @@ class StaffController {
 					attachment.save(flush:true)
 				}
 			}
+			
+			//修改配置文档中的流水号，改为发布后产生流水号
+			def config = BargainConfig.first()
+			config.nowSN += 1
+			config.save(flush:true)
 			
 			model["result"] = "true"
 		}else{
@@ -143,7 +148,12 @@ class StaffController {
 			model["gridHeader"] = staffService.getBargainListLayout()
 		}
 		
+		//增加查询条件
 		def searchArgs =[:]
+		
+		if(params.bargainSerialNo && !"".equals(params.bargainSerialNo)) searchArgs["bargainSerialNo"] = params.bargainSerialNo
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+		if(params.bargainTime && !"".equals(params.bargainTime)) searchArgs["bargainTime"] = Util.convertToTimestamp(params.bargainTime)
 		
 		if(params.refreshData){
 			def args =[:]
@@ -181,6 +191,7 @@ class StaffController {
 				statusChange.changeType = "退休"
 			}
 		}
+		model["isShowFile"] = true
 		model["statusChange"] = statusChange
 		model["personInfor"] = statusChange.personInfor
 		
@@ -214,6 +225,15 @@ class StaffController {
 		if(statusChange.save(flush:true)){
 			personInfor.status = statusChange.changeType
 			personInfor.save(flush:true)
+			
+			//增加附件功能
+			if(params.attachmentIds){
+				params.attachmentIds.split(",").each{
+					def attachment = Attachment.get(it)
+					attachment.beUseId = statusChange.id
+					attachment.save(flush:true)
+				}
+			}
 			
 			model["result"] = "true"
 		}else{
@@ -1767,6 +1787,8 @@ class StaffController {
 		def entity = Bargain.findByPersonInfor(personInfor)
 		if(!entity){
 			entity = new Bargain()
+			def bargainConfig = BargainConfig.first()
+			entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
 		}
 		
 		model["bargain"] = entity
@@ -1798,6 +1820,9 @@ class StaffController {
 		if(entity?.id){
 			model["attachFiles"] = Attachment.findAllByBeUseId(entity?.id)
 		}
+		
+		//合同类型
+		model["bargainTypeList"] = shareService.getSystemCodeItems(currentUser.company,"rs_bargainConfig")
 		
 		render(view:'/staff/bargainAllInfor',model:model)
 	}
@@ -1848,9 +1873,14 @@ class StaffController {
 				attachment.upUser = currentUser
 				attachment.save(flush:true)
 			}
-				ostr ="<script>var _parent = window.parent;_parent.rosten.alert('成功').queryDlgClose=function(){_parent.barginContentPane.refresh();}</script>"
-//				ostr ="<script>console.log(window);</script>"
-			}else{
+			
+			//修改配置文档中的流水号，改为发布后产生流水号
+			def config = BargainConfig.first()
+			config.nowSN += 1
+			config.save(flush:true)
+			
+			ostr ="<script>var _parent = window.parent;_parent.rosten.alert('成功').queryDlgClose=function(){_parent.barginContentPane.refresh();}</script>"
+		}else{
 			bargain.errors.each{
 				println it
 			}
@@ -1888,9 +1918,15 @@ class StaffController {
 	def getBargain ={
 		def model =[:]
 		
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = currentUser.company
+		
 		def entity = Bargain.get(params.id)
 		if(!entity){
 			entity = new Bargain()
+			
+			def bargainConfig = BargainConfig.first()
+			entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
 		}
 		
 		model["bargain"] = entity
@@ -1904,6 +1940,9 @@ class StaffController {
 			}
 		}
 		model["fieldAcl"] = fa
+		
+		//合同类型
+		model["bargainTypeList"] = shareService.getSystemCodeItems(company,"rs_bargainConfig")
 		
 		render(view:'/staff/bargain',model:model)
 	}

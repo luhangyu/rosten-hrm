@@ -140,10 +140,17 @@ class HrmController {
 			model.serialNo = 9
 			
 			resource = new Resource()
+			resource.resourceName = "配置文档"
+			resource.url = "bargainConfig"
+			resource.imgUrl = "images/rosten/navigation/config.png"
+			resource.serialNo = 1
+			model.addToResources(resource)
+			
+			resource = new Resource()
 			resource.resourceName = "合同档案管理"
 			resource.url = "bargainManage"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			resource.serialNo = 1
+			resource.serialNo = 2
 			model.addToResources(resource)
 			
 			model.save()

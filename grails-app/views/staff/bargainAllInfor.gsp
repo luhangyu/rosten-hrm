@@ -19,16 +19,21 @@
 			<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>合同编号：</div></td>
 		  	<td width="250">
 		    	<input id="bargain_serialNo" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"bargainSerialNo",trim:true,required:true,${fieldAcl.isReadOnly("bargainSerialNo")},
+	                 	data-dojo-props='name:"bargainSerialNo",trim:true,required:true,readOnly:true,
 							value:"${bargain?.bargainSerialNo}"
 	                '/>
 		    </td>
 		 	<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>合同类别：</div></td>
 		  	<td width="250">
-		    	<input id="bargain_type" data-dojo-type="dijit/form/ValidationTextBox" 
+		    	<select id="bargain_bargainType" data-dojo-type="dijit/form/ComboBox"
 	                 	data-dojo-props='name:"bargainType",trim:true,required:true,${fieldAcl.isReadOnly("bargainType")},
 							value:"${bargain?.bargainType}"
-	                '/>
+                '>
+	                
+	                <g:each in="${bargainTypeList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>	
+	            </select>
 		    </td>
 		</tr>
 		<tr>

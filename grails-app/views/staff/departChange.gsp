@@ -35,6 +35,7 @@
 		     	"rosten/widget/ActionBar",
 		     	"rosten/app/Application",
 		     	"rosten/app/SystemApplication",
+		     	"rosten/app/StaffApplication",
 		     	"rosten/kernel/behavior"],
 			function(parser,kernel,registry,xhr,dom,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
@@ -265,28 +266,6 @@
 			page_quit = function(){
 				rosten.pagequit();
 			};
-			addPersonInfor = function(){
-				registry.byId("chooseDialog").show();
-			};
-			addPersonInforNext = function(){
-				var content = {};
-				
-				var username = registry.byId("s_username");
-				if(username.get("value")!=""){
-					content.username = username.get("value");
-				}
-				
-				var chinaName = registry.byId("s_chinaName");
-				if(chinaName.get("value")!=""){
-					content.chinaName = chinaName.get("value");
-				}
-				
-				var departName = registry.byId("s_departName");
-				if(departName.get("value")!=""){
-					content.departName = departName.get("value");
-				}
-				chooseListGrid.refresh(null,content);
-			};
 			addPersonInforDone = function(){
 				var id = rosten.getGridItemValue1(chooseListGrid,"id");
 				var chinaName = rosten.getGridItemValue1(chooseListGrid,"chinaName");
@@ -298,12 +277,6 @@
 				
 				registry.byId("chooseDialog").hide();
 			};
-			personInfor_formatTopic_normal = function(value,rowIndex){
-				return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
-			};
-			personInfor_normal_onMessageOpen = function(rowIndex){
-				
-			}
 		});
 		
 		
@@ -330,7 +303,7 @@
 						    <td width="250">
 						    	<input  data-dojo-type="dijit/form/ValidationTextBox" id="personInforId"  data-dojo-props='name:"personInforId",style:{display:"none"},value:"${departChange?.personInfor?.id }"' />
 						    	<input id="personInforName" data-dojo-type="dijit/form/ValidationTextBox" 
-				                 	data-dojo-props='trim:true,required:true,value:"${departChange?.getPersonInforName() }"
+				                 	data-dojo-props='trim:true,required:true,readOnly:true,value:"${departChange?.getPersonInforName() }"
 				                '/>
 				                <button data-dojo-type='dijit/form/Button' 
 									data-dojo-props="label:'选择',iconClass:'docAddIcon'">

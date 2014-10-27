@@ -17,17 +17,17 @@ class Bargain {
 	}
 	
 	//合同编号
-	@GridColumn(name="合同编号",colIdx=1)
+	@GridColumn(name="合同编号",colIdx=2)
 	String bargainSerialNo
 	
 	//合同类别
-	@GridColumn(name="合同类别",colIdx=2)
+	@GridColumn(name="合同类别",colIdx=3)
 	String bargainType
 	
 	//起聘时间
 	Date startDate = new Date()
 	
-	@GridColumn(name="起聘日期",colIdx=3)
+	@GridColumn(name="起聘日期",colIdx=4)
 	def getFormatteStartDate(){
 		if(startDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -40,7 +40,7 @@ class Bargain {
 	//终聘时间
 	Date endDate = new Date() + 360
 	
-	@GridColumn(name="终聘日期",colIdx=4)
+	@GridColumn(name="终聘日期",colIdx=5)
 	def getFormatteEndDate(){
 		if(endDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -51,6 +51,20 @@ class Bargain {
 	}
 	//附件
 	Attachment attachment
+	
+	
+	//创建时间
+	Date createDate = new Date()
+
+	@GridColumn(name="创建时间",width="106px",colIdx=6)
+	def getFormattedCreatedDate(){
+		if(createDate!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+			return sd.format(createDate)
+		}else{
+			return ""
+		}
+	}
 	
     static constraints = {
 		attachment nullable:true,blank:true

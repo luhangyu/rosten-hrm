@@ -11,9 +11,9 @@
 		<tr>
 		 <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>员工姓名：</div></td>
 	    <td width="250">
-	    	<input  data-dojo-type="dijit/form/ValidationTextBox" id="personInforId"  data-dojo-props='name:"personInforId",style:{display:"none"},value:"${personInfor?.id }"' />
+	    	<input  data-dojo-type="dijit/form/ValidationTextBox" id="personInforId"  data-dojo-props='name:"personInforId",style:{display:"none"},value:"${bargain?.personInfor?.id }"' />
 	    	<input id="personInforName" data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true,required:true,value:"${bargain?.getPersonInforName() }"
+                	data-dojo-props='trim:true,required:true,readOnly:true,value:"${bargain?.getPersonInforName() }"
                '/>
                <button data-dojo-type='dijit/form/Button' 
 				data-dojo-props="label:'选择',iconClass:'docAddIcon'">
@@ -26,7 +26,7 @@
 	     <td width="120"><div align="right">性别：</div></td>
 	     <td width="250">
 	    	<input id="sex" data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true,required:true,value:"${personInfor?.sex }"
+                	data-dojo-props='trim:true,required:true,readOnly:true,value:"${bargain?.personInfor?.sex }"
                '/>
 	    </td>
 	    
@@ -36,14 +36,14 @@
 			 <td width="120"><div align="right">部门：</div></td>
 		    <td width="250">
 		    	<input id="departName" data-dojo-type="dijit/form/ValidationTextBox" 
-	                	data-dojo-props='trim:true,required:true,value:"${personInfor?.currentDepart}"
+	                	data-dojo-props='trim:true,required:true,readOnly:true,value:"${bargain?.personInfor?.getUserDepartName()}"
 	               '/>
 		    </td>
 		    
 		     <td width="120"><div align="right">状态：</div></td>
 		     <td width="250">
 		    	<input id="status" data-dojo-type="dijit/form/ValidationTextBox" 
-	                	data-dojo-props='trim:true,required:true,value:""
+	                	data-dojo-props='trim:true,required:true,readOnly:true,value:"${bargain?.personInfor?.status}"
 	               '/>
 		    </td>
 	    

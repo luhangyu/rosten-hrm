@@ -8,6 +8,34 @@ define(["dojo/dom",
         "rosten/app/Application",
         "rosten/kernel/behavior"], function(dom,registry,stamp,PickTreeDialog) {
 	
+	addPersonInfor = function(){
+		registry.byId("chooseDialog").show();
+	};
+	addPersonInforNext = function(){
+		var content = {};
+		
+		var username = registry.byId("s_username");
+		if(username.get("value")!=""){
+			content.username = username.get("value");
+		}
+		
+		var chinaName = registry.byId("s_chinaName");
+		if(chinaName.get("value")!=""){
+			content.chinaName = chinaName.get("value");
+		}
+		
+		var departName = registry.byId("s_departName");
+		if(departName.get("value")!=""){
+			content.departName = departName.get("value");
+		}
+		chooseListGrid.refresh(null,content);
+	};
+	personInfor_formatTopic_normal = function(value,rowIndex){
+		return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	personInfor_normal_onMessageOpen = function(rowIndex){
+		
+	}
 	
 	degree_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:degree_onMessageOpen(" + rowIndex + ");\">" + value+ "</a>";

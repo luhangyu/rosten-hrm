@@ -36,6 +36,7 @@
 				"dojox/widget/WizardPane",
 		     	"rosten/widget/ActionBar",
 		     	"rosten/app/Application",
+		     	"rosten/app/StaffApplication",
 		     	"rosten/kernel/behavior"],
 			function(parser,kernel,registry,xhr,dom,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
@@ -61,7 +62,7 @@
 					content.attachmentIds = fileIds.join(",");
 				</g:if>
 				
-				rosten.readSync(rosten.webPath + "/staff/bargainSave",{},function(data){
+				rosten.readSync(rosten.webPath + "/staff/bargainSave",content,function(data){
 					if(data.result=="true" || data.result == true){
 						rosten.alert("保存成功！").queryDlgClose= function(){
 							page_quit();
@@ -75,26 +76,6 @@
 			page_quit = function(){
 				rosten.pagequit();
 			};
-			
-			addPersonInfor = function(){
-				registry.byId("chooseDialog").show();
-			};
-	
-			addPersonInforNext = function(){
-				var content = {};
-				
-				var username = registry.byId("s_username");
-				if(username.get("value")!=""){
-					content.username = username.get("value");
-				}
-				
-				var chinaName = registry.byId("s_chinaName");
-				if(chinaName.get("value")!=""){
-					content.chinaName = chinaName.get("value");
-				}
-				chooseListGrid.refresh(null,content);
-			};
-			
 			addPersonInforDone = function(){
 				var id = rosten.getGridItemValue1(chooseListGrid,"id");
 				var chinaName = rosten.getGridItemValue1(chooseListGrid,"chinaName");
@@ -110,12 +91,6 @@
 				
 				registry.byId("chooseDialog").hide();
 			};
-			personInfor_formatTopic_normal = function(value,rowIndex){
-				return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
-			};
-			personInfor_normal_onMessageOpen = function(rowIndex){
-				
-			}
 		});
 
     </script>

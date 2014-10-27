@@ -32,10 +32,18 @@ class StaffService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			order("personInfor", "asc")
+			order("createDate", "desc")
 			
 			searchArgs.each{k,v->
-				like(k,"%" + v + "%")
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+				}else if(k.equals("bargainTime")){
+					//lt("startDate",v)
+					ge("endDate",v)
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.list(pa,query)
@@ -45,7 +53,15 @@ class StaffService {
 		def query = {
 			eq("company",company)
 			searchArgs.each{k,v->
-				like(k,"%" + v + "%")
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+				}else if(k.equals("bargainTime")){
+					lt("startDate",v)
+					ge("endDate",v)
+				}else{
+					like(k,"%" + v + "%")
+				}
 			}
 		}
 		return c.count(query)
@@ -68,7 +84,7 @@ class StaffService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			order("personInfor", "asc")
+			order("createDate", "desc")
 			searchArgs.each{k,v->
 				if(k.equals("chinaName")){
 					createAlias('personInfor', 'a')
