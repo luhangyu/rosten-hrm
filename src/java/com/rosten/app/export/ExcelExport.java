@@ -68,6 +68,9 @@ public class ExcelExport {
 					
 					if(null!=personList.get(i)){
 						ContactInfor con = staffser.getContactInfor(personList.get(i));
+						if(null==con){
+							ws.addCell(new Label(6, i+2, ""));	
+						}else
 						ws.addCell(new Label(6, i+2, con.getMobile()));
 					}else{
 						ws.addCell(new Label(6, i+2, ""));

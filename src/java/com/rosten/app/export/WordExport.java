@@ -1,6 +1,10 @@
 package com.rosten.app.export;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,10 +12,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import sun.misc.BASE64Encoder;
+
 import com.rosten.app.export.ZipUtil;
 import com.rosten.app.staff.ContactInfor;
 import com.rosten.app.staff.PersonInfor;
 import com.rosten.app.staff.StaffService;
+import com.rosten.app.system.Attachment;
 
 public class WordExport {
 	
@@ -19,16 +26,56 @@ public class WordExport {
 	private File getDjbWord(String id) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
 		StaffService staffser = new StaffService();
+		String zpstr="";
 		PersonInfor personInfor = staffser.getPersonInfor(id);
 		data.put("personInfor", personInfor);	
+		Attachment attachment = staffser.getAttachment(id);
+		if(null!=attachment){
+			 zpstr = getZpStr("web-app/images/staff/" + attachment.getRealName());
+		}else{
+			zpstr = getZpStr("web-app/images/staff/regpic.gif");
+		}
+		
 		if(null!=personInfor){
 			ContactInfor con = staffser.getContactInfor(personInfor);
+			if (null==con){
+				con = new ContactInfor();
+				con.setHomeAddress("");
+			}
 			data.put("contactInfor", con);	
+			data.put("zpstr", zpstr);	
 		}
 		File wordFile = FreeMarkerUtil.getWordFile(data,
 				"classpath:com/rosten/app/template", "ygdjb.xml",personInfor.getChinaName()+"登记表");
 		return wordFile;
 	}
+	
+	/**
+	 * 獲取照片
+	 */
+	public String getZpStr(String filePath)  {
+		byte[] buffer  = null;  
+		try {  
+            File file = new File(filePath);  
+            FileInputStream fis = new FileInputStream(file);  
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(100000);  
+            byte[] b = new byte[100000];  
+            int n;  
+            while ((n = fis.read(b)) != -1) {  
+                bos.write(b, 0, n);  
+            }  
+            fis.close();  
+            bos.close();  
+            buffer = bos.toByteArray();  
+        } catch (FileNotFoundException e) {  
+            e.printStackTrace();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }  
+			BASE64Encoder encoder = new BASE64Encoder();
+			return buffer != null ? encoder.encode(buffer) : null;
+	}
+	
 	
 	/**
 	 * 单个打印登记表
