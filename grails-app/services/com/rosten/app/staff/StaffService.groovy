@@ -4,6 +4,7 @@ import com.rosten.app.util.GridUtil
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.system.User
+import com.rosten.app.system.Attachment
 
 class StaffService {
 	
@@ -13,6 +14,10 @@ class StaffService {
 	
 	public ContactInfor getContactInfor(PersonInfor person){
 		return ContactInfor.findByPersonInfor(person)
+	}
+	
+	public Attachment getAttachment(String ids){  
+		return Attachment.findByBeUseIdAndType(ids,"staff")
 	}
 	
 	def getBargainListLayout ={
