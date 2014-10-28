@@ -380,11 +380,11 @@ define(["dojo/_base/kernel"
     	case "【员工入职】":
     		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&type=staffAdd&flowCode=staffAdd");
     		break;
-    	case "【大事记】":
-    		rosten.openNewWindow("dsj", rosten.webPath + "/dsj/dsjShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    	case "【请假】":
+    		rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
     		break;
-    	case "【会议通知】":
-    		rosten.openNewWindow("meeting", rosten.webPath + "/meeting/meetingShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    	case "【员工调动】":
+    		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
     		break;
     	}
     	

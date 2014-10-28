@@ -64,69 +64,60 @@
 			<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${degreeStudy?.id }"' />
         	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
         	
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"200px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
-		<tr>
-		 		<td><div align="right">姓名：</div></td>
-					    <td >
+					<tr>
+				 		<td width="20%"><div align="right"><span style="color:red">*&nbsp;</span>姓名：</div></td>
+					    <td width="30%">
 					    	<input id="userName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='trim:true,readOnly:true,
 									value:"${degreeStudy?.getUserName()}"
 			                '/>
-			</td>
-		</tr>
-		
-		<tr>
-		 		<td><div align="right">部门：</div></td>
-					    <td >
+						</td>
+						<td width="20%"><div align="right"><span style="color:red">*&nbsp;</span>部门：</div></td>
+					    <td width="30%">
 					    	<input id="departName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='trim:true,readOnly:true,
 									value:"${degreeStudy?.getFormattedDepartName()}"
 			                '/>
-			</td>
-		</tr>
-		
-		<tr>
-		 		<td><div align="right">拟进修院校：</div></td>
+						</td>
+						
+					</tr>
+					<tr>
+				 		<td><div align="right">拟进修院校：</div></td>
 					    <td >
 					    	<input id="School" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"School",style:{width:"350px"},
+                                	data-dojo-props='name:"School",
               							value:"${degreeStudy?.School}"
                                 	'/>
-			</td>
-		</tr>
-		
-		<tr>
-		 		<td><div align="right">拟进修专业：</div></td>
+						</td>
+						<td><div align="right">拟进修专业：</div></td>
 					    <td >
 					    	<input id="major" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"major",style:{width:"350px"},
+                                	data-dojo-props='name:"major",
               							value:"${degreeStudy?.major}"
                                 	'/>
-			</td>
-		</tr>
-		
-		<tr>
-		 		<td><div align="right">拟攻读学历：</div></td>
+						</td>
+					</tr>
+					
+					<tr>
+				 		<td><div align="right">拟攻读学历：</div></td>
 					    <td >
 					    	<input id="Education" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"Education",style:{width:"350px"},
+                                	data-dojo-props='name:"Education",
               							value:"${degreeStudy?.Education}"
                                 	'/>
-			</td>
-		</tr>
-		
-		<tr>
-		 		<td><div align="right">拟攻读学位：</div></td>
+						</td>
+						<td><div align="right">拟攻读学位：</div></td>
 					    <td >
 					    	<input id="degree" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"degree",style:{width:"350px"},
+                                	data-dojo-props='name:"degree",
               							value:"${degreeStudy?.degree}"
                                 	'/>
-			</td>
-		</tr>
-		
-		<tr>
+						</td>
+					</tr>
+					
+					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>开始时间：</div></td>
 					    <td>
 					    	<input id="startDate" data-dojo-type="dijit/form/DateTextBox" 
@@ -135,11 +126,7 @@
 			                	value:"${degreeStudy?.getFormatteStartDate()}"
 			               '/>
 			            </td>
-			            </tr>
-			            
-		
-				<tr>
-					<td><div align="right"><span style="color:red">*&nbsp;</span>结束时间：</div></td>
+			            <td><div align="right"><span style="color:red">*&nbsp;</span>结束时间：</div></td>
 					    <td>
 					    	<input id="endDate" data-dojo-type="dijit/form/DateTextBox" 
 			                	data-dojo-props='name:"endDate",${fieldAcl.isReadOnly("endDate")},
@@ -147,10 +134,9 @@
 			                	value:"${degreeStudy?.getFormatteEndDate()}"
 			               '/>
 			            </td>
-			            </tr>
-			            
+		            </tr>
 			       <tr>
-					<td><div align="right"><span style="color:red">*&nbsp;</span>进修学费：</div></td>
+						<td><div align="right"><span style="color:red">*&nbsp;</span>进修学费：</div></td>
 					    <td>
 					    	<input id="tuition" data-dojo-type="dijit/form/NumberTextBox" 
 			                	data-dojo-props='name:"tuition",${fieldAcl.isReadOnly("endDate")},
@@ -158,10 +144,7 @@
 			                	value:"${degreeStudy?.tuition}"
 			               '/>
 			            </td>
-			            </tr>
-		
-				
-					
+		            </tr>
 				</table>
 			</div>
 			

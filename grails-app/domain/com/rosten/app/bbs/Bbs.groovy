@@ -6,6 +6,8 @@ import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Attachment
+import com.rosten.app.share.*
+import com.rosten.app.gtask.Gtask
 
 import java.text.SimpleDateFormat
 
@@ -187,10 +189,13 @@ class Bbs {
 	}
 	def beforeDelete(){
 		Bbs.withNewSession{session ->
-			BbsComment.findAllByBbs(this).each{item->
+			FlowComment.findAllByBelongToId(this.id).each{item->
 				item.delete()
 			}
-			BbsLog.findAllByBbs(this).each{item->
+			FlowLog.findAllByBelongToId(this.id).each{item->
+				item.delete()
+			}
+			Gtask.findAllByContentId(this.id).each{item->
 				item.delete()
 			}
 			session.flush()

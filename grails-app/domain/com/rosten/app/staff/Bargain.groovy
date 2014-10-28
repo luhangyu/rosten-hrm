@@ -11,13 +11,13 @@ class Bargain {
 	String id
 	
 	//员工
-	@GridColumn(name="姓名",colIdx=1,width="60px",formatter="bargain_formatTopic")
+	@GridColumn(name="姓名",colIdx=1,width="60px")
 	def getPersonInforName(){
 		return personInfor?.chinaName
 	}
 	
 	//合同编号
-	@GridColumn(name="合同编号",colIdx=2)
+	@GridColumn(name="合同编号",colIdx=2,formatter="bargain_formatTopic")
 	String bargainSerialNo
 	
 	//合同类别

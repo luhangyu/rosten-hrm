@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
-    <title>学历学位进修</title>
+    <title>出国进修</title>
     <style type="text/css">
     	.rosten .dsj_form table tr{
     		height:30px;
@@ -64,102 +64,99 @@
 			<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${degreeStudy?.id }"' />
         	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
         	
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"620px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"720px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
-		<tr>
-		 		<td width="20%"><div align="right"  >姓名：</div></td>
+					<tr>
+				 		<td width="20%"><div align="right"><span style="color:red">*&nbsp;</span>姓名：</div></td>
 					    <td width="30%">
 					    	<input id="userName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='trim:true,readOnly:true,
 									value:"${forgeinStudy?.getUserName()}"
 			                '/>
-			</td>
-			
-			<td width="20%"><div align="right" >部门：</div></td>
+						</td>
+						
+						<td width="20%"><div align="right"><span style="color:red">*&nbsp;</span>部门：</div></td>
 					    <td  width="30%">
 					    	<input id="departName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='trim:true,readOnly:true,
 									value:"${forgeinStudy?.getFormattedDepartName()}"
 			                '/>
-			</td>
-			
-		</tr>
-		
-		
-		
-		<tr>
-		 		<td><div align="right">申请年度：</div></td>
-					    <td >
-					    	<input id="appYear" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"appYear",
-              							value:"${forgeinStudy?.appYear}"
-                                	'/>
-			</td>
-	
-		 		<td><div align="right">出国国别：</div></td>
-					    <td >
-					    	<input id="country" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"country",
-              							value:"${forgeinStudy?.country}"
-                                	'/>
-			</td>
-		</tr>
-		
-		<tr>
-		 		<td><div align="right">留学层次：</div></td>
-					    <td >
-					    	<input id="studyLevel" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"studyLevel",
-              							value:"${forgeinStudy?.studyLevel}"
-                                	'/>
-			</td>
-		
-		 		<td><div align="right">留学身份：</div></td>
-					    <td >
-					    	<input id="studyIdentity" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"studyIdentity",
-              							value:"${forgeinStudy?.studyIdentity}"
-                                	'/>
-			</td>
-		</tr>
-		
-		<tr>
-		 		<td><div align="right">学历层次：</div></td>
-					    <td >
-					    	<input id="educationLevel" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"educationLevel",
-              							value:"${forgeinStudy?.educationLevel}"
-                                	'/>
-			</td>
-		
-		 		<td><div align="right">留学项目：</div></td>
-					    <td >
-					    	<input id="program" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"program",
-              							value:"${forgeinStudy?.program}"
-                                	'/>
-			</td>
-		</tr>
-		
-			<tr>
-		 		<td><div align="right">学科：</div></td>
-					    <td >
-					    	<input id="discipline" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"discipline",
-              							value:"${forgeinStudy?.discipline}"
-                                	'/>
-			</td>
-		
-		 		<td><div align="right">专业：</div></td>
-					    <td >
-					    	<input id="major" data-dojo-type="dijit/form/ValidationTextBox" 
-                                	data-dojo-props='name:"major",
-              							value:"${forgeinStudy?.major}"
-                                	'/>
-			</td>
-		</tr>
-		
-		<tr>
+						</td>
+						
+					</tr>
+					<tr>
+					 		<td><div align="right"><span style="color:red">*&nbsp;</span>申请年度：</div></td>
+						    <td >
+						    	<input id="appYear" data-dojo-type="dijit/form/DateTextBox" 
+                               		data-dojo-props='name:"appYear",trim:true,required:true,
+             							value:"${forgeinStudy?.appYear}"
+                               	'/>
+							</td>
+				
+					 		<td><div align="right">出国国别：</div></td>
+								    <td >
+								    	<input id="country" data-dojo-type="dijit/form/ValidationTextBox" 
+			                                	data-dojo-props='name:"country",
+			              							value:"${forgeinStudy?.country}"
+			                                	'/>
+						</td>
+					</tr>
+					
+					<tr>
+					 		<td><div align="right">留学层次：</div></td>
+								    <td >
+								    	<input id="studyLevel" data-dojo-type="dijit/form/ValidationTextBox" 
+			                                	data-dojo-props='name:"studyLevel",
+			              							value:"${forgeinStudy?.studyLevel}"
+			                                	'/>
+						</td>
+					
+					 		<td><div align="right">留学身份：</div></td>
+								    <td >
+								    	<input id="studyIdentity" data-dojo-type="dijit/form/ValidationTextBox" 
+			                                	data-dojo-props='name:"studyIdentity",
+			              							value:"${forgeinStudy?.studyIdentity}"
+			                                	'/>
+						</td>
+					</tr>
+					
+					<tr>
+					 		<td><div align="right">学历层次：</div></td>
+								    <td >
+								    	<input id="educationLevel" data-dojo-type="dijit/form/ValidationTextBox" 
+			                                	data-dojo-props='name:"educationLevel",
+			              							value:"${forgeinStudy?.educationLevel}"
+			                                	'/>
+						</td>
+					
+					 		<td><div align="right">留学项目：</div></td>
+								    <td >
+								    	<input id="program" data-dojo-type="dijit/form/ValidationTextBox" 
+			                                	data-dojo-props='name:"program",
+			              							value:"${forgeinStudy?.program}"
+			                                	'/>
+						</td>
+					</tr>
+					
+						<tr>
+					 		<td><div align="right">学科：</div></td>
+								    <td >
+								    	<input id="discipline" data-dojo-type="dijit/form/ValidationTextBox" 
+			                                	data-dojo-props='name:"discipline",
+			              							value:"${forgeinStudy?.discipline}"
+			                                	'/>
+						</td>
+					
+					 		<td><div align="right">专业：</div></td>
+								    <td >
+								    	<input id="major" data-dojo-type="dijit/form/ValidationTextBox" 
+			                                	data-dojo-props='name:"major",
+			              							value:"${forgeinStudy?.major}"
+			                                	'/>
+						</td>
+					</tr>
+					
+					<tr>
 					    <td><div align="right">出国时间：</div></td>
 					    <td>
 					    	<input id="abroadDate" data-dojo-type="dijit/form/DateTextBox" 

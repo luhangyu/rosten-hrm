@@ -19,6 +19,7 @@
 		 		"dijit/registry",
 		 		"dojo/_base/xhr",
 		 		"dojo/dom",
+		 		"dojo/_base/lang",
 		 		"dojo/date/stamp",
 		 		"rosten/widget/DepartUserDialog",
 		 		"dijit/form/ValidationTextBox",
@@ -37,7 +38,7 @@
 		     	"rosten/app/SystemApplication",
 		     	"rosten/app/StaffApplication",
 		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry,xhr,dom,datestamp,DepartUserDialog){
+			function(parser,kernel,registry,xhr,dom,lang,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 					rosten.cssinit();

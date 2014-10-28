@@ -15,6 +15,7 @@ import com.rosten.app.system.SystemService
 import com.rosten.app.start.StartService
 import com.rosten.app.workflow.WorkFlowService
 import com.rosten.app.share.ShareService
+import com.rosten.app.workflow.FlowBusiness
 
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.runtime.ProcessInstanceQuery
@@ -31,84 +32,92 @@ class VacateController {
 	def startService
 	def dataSource
 	def shareService
-	def getDealWithUser ={
-		if("user".equals(params.type)){
-			//选择人员，默认获取选择人员人数为大于一人，params中必须具备参数params.user：用户登录名
-			redirect controller: "system",action:'userTreeDataStore', params: params
-			return
-		}else if("group".equals(params.type)){
-			/*
-			 * 通过群组选择人员
-			 * 默认有一组group的方式为true，则整组均为true;true:严格控制本部门权限 
-			 * 参数格式为：params.groupIds(depart-leader),params.limitDepart
-			 */
-			redirect controller: "system",action:'userTreeDataStore', params: params
-			return
-		}
-	}
 	
-	def getSelectFlowUser ={
+	def vacateFlowBack ={
 		def json=[:]
-		json.dealFlow = true
-		
-		def currentUser = springSecurityService.getCurrentUser()
-		
 		def vacate = Vacate.get(params.id)
-		def defEntity = workFlowService.getNextTaskDefinition(vacate.taskId);
+		def currentUser = springSecurityService.getCurrentUser()
+		def frontStatus = vacate.status
 		
-		if(!defEntity){
-			//流程处于最后一个节点
-			json.dealFlow = false
-			render json as JSON
-			return
-		}
-		
-		def expEntity = defEntity.getAssigneeExpression()
-		if(expEntity){
-			def expEntityText = expEntity.getExpressionText()
-			if(expEntityText.contains("{")){
-				json.user = vacate.user.username
-			}else{
-				json.user = expEntity.getExpressionText()
-			}
-			
-			//判断下一处理人是否有多部门情况，如果有，则弹出对话框选择，如果没有，直接进入下一步
-			def userEntity = User.findByUsername(json.user)
-			def userDeparts = userEntity.getAllDepartEntity()
-			if(userDeparts && userDeparts.size()>1){
-				json.showDialog = true
-			}else{
-				json.showDialog = false
-				json.userDepart = userDeparts[0].departName
-				json.userId = userEntity.id
-			}
-			
-			json.dealType = "user"
-			render json as JSON
-			return
-		}
-		
-		def groupEntity = defEntity.getCandidateGroupIdExpressions()
-		if(groupEntity.size()>0){
-			//默认有一组group的方式为true，则整组均为true;true:严格控制本部门权限
-			def groupIds = []
-			def limit = false
-			groupEntity.each{
-				groupIds << Util.strLeft(it.getExpressionText(), ":")
-				if(!limit && "true".equals(Util.strRight(it.getExpressionText(), ":"))){
-					limit = true
+		try{
+			//获取上一处理任务
+			def frontTaskList = workFlowService.findBackAvtivity(vacate.taskId)
+			if(frontTaskList && frontTaskList.size()>0){
+				//简单的取最近的一个节点
+				def activityEntity = frontTaskList[frontTaskList.size()-1]
+				def activityId = activityEntity.getId();
+				
+				//流程跳转
+				workFlowService.backProcess(vacate.taskId, activityId, null)
+				
+				//获取下一节点任务，目前处理串行情况
+				def nextStatus
+				def tasks = workFlowService.getTasksByFlow(vacate.processInstanceId)
+				def task = tasks[0]
+				if(task.getDescription() && !"".equals(task.getDescription())){
+					nextStatus = task.getDescription()
+				}else{
+					nextStatus = task.getName()
 				}
+				vacate.taskId = task.getId()
+				
+				//获取对应节点的处理人员以及相关状态
+				def historyActivity = workFlowService.getHistrotyActivityByActivity(vacate.taskId,activityId)
+				def user = User.findByUsername(historyActivity.getAssignee())
+				
+				//任务指派给当前拟稿人
+				taskService.claim(vacate.taskId, user.username)
+				
+				//增加待办事项
+				def args = [:]
+				args["type"] = "【请假】"
+				args["content"] = "申请人为  【" + vacate.getFormattedDrafter() +  "】 的请假申请被退回，请查看！"
+				args["contentStatus"] = nextStatus
+				args["contentId"] = vacate.id
+				args["user"] = user
+				args["company"] = user.company
+				
+				startService.addGtask(args)
+					
+				//修改信息
+				vacate.currentUser = user
+				vacate.currentDepart = user.getDepartName()
+				vacate.currentDealDate = new Date()
+				vacate.status = nextStatus
+				
+				//判断下一处理人是否与当前处理人员为同一人
+				if(currentUser.equals(vacate.currentUser)){
+					json["refresh"] = true
+				}
+				
+				//----------------------------------------------------------------------------------------------------
+				
+				//修改代办事项状态
+				def gtask = Gtask.findWhere(
+					user:currentUser,
+					company:currentUser.company,
+					contentId:vacate.id,
+					contentStatus:frontStatus,
+					status:"0"
+				)
+				if(gtask!=null){
+					gtask.dealDate = new Date()
+					gtask.status = "1"
+					gtask.save(flush:true)
+				}
+				
+				vacate.save(flush:true)
+				
+				//添加日志
+				def logContent = "退回【" + user.getFormattedName() + "】"
+				shareService.addFlowLog(vacate.id,"vacate",currentUser,logContent)
 			}
-			json.groupIds = groupIds.unique().join("-")
-			if(limit){
-				json.limitDepart = currentUser.getDepartEntityTrueName()
-			}
-			
-			json.dealType = "group"
-			render json as JSON
-			return
+				
+			json["result"] = true
+		}catch(Exception e){
+			json["result"] = false
 		}
-		
+		render json as JSON
 	}
 	def vacateFlowDeal = {
 		def json=[:]
@@ -123,7 +132,11 @@ class VacateController {
 		//流程引擎相关信息处理-------------------------------------------------------------------------------------
 		
 		//结束当前任务，并开启下一节点任务
-		taskService.complete(vacate.taskId)	//结束当前任务
+		def map =[:]
+		if(params.conditionName){
+			map[params.conditionName] = params.conditionValue
+		}
+		taskService.complete(vacate.taskId,map)	//结束当前任务
 		
 		ProcessInstance processInstance = workFlowService.getProcessIntance(vacate.processInstanceId)
 		if(!processInstance || processInstance.isEnded()){
@@ -157,8 +170,7 @@ class VacateController {
 					def _model = Model.findByModelCodeAndCompany("workAttendance",vacate.company)
 					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
 					if(authorize){
-						vacateService.addFlowLog(vacate,nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
-						
+						shareService.addFlowLog(vacate.id,"bbs",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
 						nextUser = authorize.beAuthorizer
 						nextDepart = authorize.beAuthorizerDepart
 					}
@@ -230,7 +242,7 @@ class VacateController {
 					logContent = "提交" + vacate.status + "【" + nextUsers.join("、") + "】"
 					break
 			}
-			vacateService.addFlowLog(vacate,currentUser,logContent)
+			shareService.addFlowLog(vacate.id,"vacate",currentUser,logContent)
 						
 			json["result"] = true
 		}else{
@@ -241,69 +253,6 @@ class VacateController {
 		}
 		render json as JSON
 	}
-	def flowActiveExport ={
-		def vacate = Vacate.get(params.id)
-		InputStream imageStream = workFlowService.getflowActiveStream(vacate.processDefinitionId,vacate.taskId)
-		
-		byte[] b = new byte[1024];
-		int len = -1;
-		while ((len = imageStream.read(b, 0, 1024)) != -1) {
-		  response.outputStream.write(b, 0, len);
-		}
-		response.outputStream.flush()
-		response.outputStream.close()
-		
-	}
-	def addComment ={
-		def json=[:]
-		def vacate = Vacate.get(params.id)
-		def user = User.get(params.userId)
-		if(vacate){
-			def comment = new VacateComment()
-			comment.user = user
-			comment.status = vacate.status
-			comment.content = params.dataStr
-			comment.vacate = vacate
-			
-			if(comment.save(flush:true)){
-				json["result"] = true
-			}else{
-				comment.errors.each{
-					println it
-				}
-				json["result"] = false
-			}
-			
-		}else{
-			json["result"] = false
-		}
-		
-		render json as JSON
-	}
-	def getCommentLog ={
-		def model =[:]
-		def vacate = Vacate.get(params.id)
-		if(vacate){
-			def logs = VacateComment.findAllByVacate(vacate,[ sort: "createDate", order: "desc"])
-			model["log"] = logs
-		}
-		
-		render(view:'/share/commentLog',model:model)
-	}
-	def getFlowLog={
-		def model =[:]
-		def vacate = Vacate.get(params.id)
-		if(vacate){
-			def logs = VacateLog.findAllByVacate(vacate,[ sort: "createDate", order: "asc"])
-			model["log"] = logs
-			
-			model["logEntityId"] = params.id
-			model["logEntityName"] = "vacate"
-		}
-		
-		render(view:'/share/flowLog',model:model)
-	}
-	
     def vacateGrid ={
 		def json=[:]
 		def user = User.get(params.userId)
@@ -348,14 +297,19 @@ class VacateController {
 		render json as JSON
 	}
 	def vacateAdd ={
-		//判断是否关联流程引擎
-		def company = Company.get(params.companyId)
-		def model = Model.findByModelCodeAndCompany("workAttendance",company)
-		if(model.relationFlow && !"".equals(model.relationFlow)){
-			redirect(action:"vacateShow",params:params)
+		if(params.flowCode){
+			//需要走流程
+			def company = Company.get(params.companyId)
+			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
+			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+				params.relationFlow = flowBusiness.relationFlow
+				redirect(action:"vacateShow",params:params)
+			}else{
+				//不存在流程引擎关联数据
+				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
+			}
 		}else{
-			//不存在流程引擎关联数据
-			render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前模块不存在流程设置，无法创建，请联系管理员！</h2>'
+			redirect(action:"bbsShow",params:params)
 		}
 	}
 		
@@ -380,6 +334,11 @@ class VacateController {
 //			fa.readOnly += ["description"]
 		}
 		model["fieldAcl"] = fa
+		
+		//流程相关信息----------------------------------------------
+		model["relationFlow"] = params.relationFlow
+		model["flowCode"] = params.flowCode
+		//------------------------------------------------------
 		
 		render(view:'/vacate/vacate',model:model)
 	}
@@ -417,8 +376,7 @@ class VacateController {
 		//流程引擎相关信息处理-------------------------------------------------------------------------------------
 		if(!vacate.processInstanceId){
 			//启动流程实例
-			def _model = Model.findByModelCodeAndCompany("workAttendance",vacate.company)
-			def _processInstance = workFlowService.getProcessDefinition(_model.relationFlow)
+			def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
 			Map<String, Object> variables = new HashMap<String, Object>();
 			ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,vacate.id, variables);
 			vacate.processInstanceId = processInstance.getProcessInstanceId()
@@ -440,11 +398,7 @@ class VacateController {
 			
 			if("new".equals(_status)){
 				//添加日志
-				def _log = new VacateLog()
-				_log.user = currentUser
-				_log.vacate = vacate
-				_log.content = "新建请假申请"
-				_log.save(flush:true)
+				shareService.addFlowLog(vacate.id,params.flowCode,currentUser,"新建请假申请")
 			}
 			
 		}else{

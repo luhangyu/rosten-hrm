@@ -7,6 +7,7 @@ import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.gtask.Gtask
 import java.text.SimpleDateFormat
+import com.rosten.app.share.*
 
 /**
  * 请假申请
@@ -17,7 +18,7 @@ class Vacate {
 
 	String id
 	
-	@GridColumn(name="拟稿人",formatter="vacate_formatTopic",colIdx=1)
+	@GridColumn(name="申请人",formatter="vacate_formatTopic",colIdx=1)
 	def getFormattedDrafter(){
 		if(user!=null){
 			return user.getFormattedName()
@@ -27,6 +28,7 @@ class Vacate {
 	}
 	
 	//部门名称
+	@GridColumn(name="申请部门",colIdx=2)
 	def getFormattedDepartName(){
 		if(user!=null){
 			return user.getDepartName()
@@ -38,7 +40,7 @@ class Vacate {
 	//开始时间
 	Date startDate = new Date()
 	
-	@GridColumn(name="开始时间",width="106px",colIdx=2)
+	@GridColumn(name="开始时间",width="106px",colIdx=3)
 	def getFormatteStartDate(){
 		if(startDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -51,7 +53,7 @@ class Vacate {
 	//结束时间
 	Date endDate = new Date()
 	
-	@GridColumn(name="结束时间",width="106px",colIdx=3)
+	@GridColumn(name="结束时间",width="106px",colIdx=4)
 	def getFormatteEndDate(){
 		if(endDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -69,7 +71,7 @@ class Vacate {
 	String unitType = "天"//小时或者天
 	
 	//请假类型
-	@GridColumn(name="类型",colIdx=4)
+	@GridColumn(name="类型",colIdx=5)
 	String vacateType = "事假"
 	
 	//请假内容
@@ -173,10 +175,10 @@ class Vacate {
 			Gtask.findAllByContentId(this.id).each{item->
 				item.delete()
 			}
-			VacateLog.findAllByVacate(this).each{item->
+			FlowComment.findAllByBelongToId(this.id).each{item->
 				item.delete()
 			}
-			VacateComment.findAllByVacate(this).each{item->
+			FlowLog.findAllByBelongToId(this.id).each{item->
 				item.delete()
 			}
 			session.flush()

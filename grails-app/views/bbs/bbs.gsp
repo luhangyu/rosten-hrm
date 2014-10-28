@@ -14,6 +14,8 @@
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
 		 		"dojo/_base/xhr",
+		 		"dojo/dom",
+		 		"dojo/_base/lang",
 		 		"dojo/date/stamp",
 		 		"rosten/widget/DepartUserDialog",
 		 		"dijit/form/ValidationTextBox",
@@ -30,7 +32,7 @@
 		     	"rosten/widget/ActionBar",
 		     	"rosten/app/Application",
 		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry,xhr,datestamp,DepartUserDialog){
+			function(parser,kernel,registry,xhr,dom,lang,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}"});
 					rosten.cssinit();
@@ -59,7 +61,28 @@
 				var publishDate = registry.byId("publishDate");
 				content.publishDate = datestamp.toISOString(publishDate.attr("value"),{selector: "date"});
 				content.content = registry.byId("content").get("value");
+				
+				//流程相关信息
+				<g:if test='${flowCode}'>
+					content.flowCode = "${flowCode}";
+					content.relationFlow = "${relationFlow}";
+				</g:if>
 
+				//添加新增时添加附件功能
+				<g:if test="${!bbs?.id}">
+					var filenode = dom.byId("fileUpload_show");
+					var fileIds = [];
+
+			       	var node=filenode.firstChild;
+			       	while(node!=null){
+			            node=node.nextSibling;
+			            if(node!=null){
+			            	fileIds.push(node.getAttribute("id"));
+				        }
+			        }
+					content.attachmentIds = fileIds.join(",");
+				</g:if>
+				
 				//增加对多次单击的次数----2014-9-4
 				var buttonWidget = object.target;
 				rosten.toggleAction(buttonWidget,true);
@@ -84,7 +107,7 @@
 					rosten.toggleAction(buttonWidget,false);
 				},"rosten_form");
 			};
-			bbs_back = function(object){
+			bbs_back = function(object,conditionObj){
 				//增加对多次单击的次数----2014-9-4
 				var buttonWidget = object.target;
 				rosten.toggleAction(buttonWidget,true);
@@ -114,12 +137,15 @@
 					rosten.toggleAction(buttonWidget,false);
 				});
 			};
-			bbs_deal = function(type,readArray,buttonWidget){
+			bbs_deal = function(type,readArray,buttonWidget,conditionObj){
 				var content = {};
 				content.id = registry.byId("id").attr("value");
 				content.deal = type;
 				if(readArray){
 					content.dealUser = readArray.join(",");
+				}
+				if(conditionObj){
+					lang.mixin(content,conditionObj);
 				}
 				rosten.readSync(rosten.webPath + "/bbs/bbsFlowDeal",content,function(data){
 					if(data.result=="true" || data.result == true){
@@ -144,7 +170,7 @@
 					rosten.toggleAction(buttonWidget,false);
 				});
 			};
-			bbs_submit_select = function(url,buttonWidget){
+			bbs_submit_select = function(url,buttonWidget,conditionObj){
 				var rostenShowDialog = rosten.selectFlowUser(url,"single");
 	            rostenShowDialog.callback = function(data) {
 	            	if(data.length==0){
@@ -156,7 +182,7 @@
 		            		var item = data[k];
 		            		_data.push(item.value + ":" + item.departId);
 		            	};
-		            	bbs_deal("submit",_data,buttonWidget);
+		            	bbs_deal("submit",_data,buttonWidget,conditionObj);
 		            }
 	            };
 				rostenShowDialog.afterLoad = function(){
@@ -173,7 +199,7 @@
 					rosten.toggleAction(buttonWidget,false);
 				};	
 			};
-			bbs_submit = function(object){
+			bbs_submit = function(object,conditionObj){
 				//从后台获取下一处理人
 				
 				//增加对多次单击的次数----2014-9-4
@@ -181,10 +207,16 @@
 				rosten.toggleAction(buttonWidget,true);
 				
 				var content = {};
-				rosten.readSync("${createLink(controller:'bbs',action:'getSelectFlowUser',params:[companyId:company?.id,id:bbs?.id])}",content,function(data){
+
+				//增加对排他分支的控制
+				if(conditionObj){
+					lang.mixin(content,conditionObj);
+				}
+				
+				rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:bbs?.taskId,drafterUsername:bbs?.drafter?.username])}",content,function(data){
 					if(data.dealFlow==false){
 						//流程无下一节点
-						bbs_deal("submit",null,buttonWidget);
+						bbs_deal("submit",null,buttonWidget,conditionObj);
 						return;
 					}
 					var url = "${createLink(controller:'system',action:'userTreeDataStore',params:[companyId:company?.id])}";
@@ -194,11 +226,11 @@
 							//单一处理人
 							var _data = [];
 							_data.push(data.userId + ":" + data.userDepart);
-							bbs_deal("submit",_data,buttonWidget);
+							bbs_deal("submit",_data,buttonWidget,conditionObj);
 						}else{
 							//多人，多部门处理
 							url += "&type=user&user=" + data.user;
-							bbs_submit_select(url,buttonWidget);
+							bbs_submit_select(url,buttonWidget,conditionObj);
 						}
 					}else{
 						//群组处理
@@ -206,7 +238,7 @@
 						if(data.limitDepart){
 							url += "&limitDepart="+data.limitDepart;
 						}
-						bbs_submit_select(encodeURI(url),buttonWidget);
+						bbs_submit_select(encodeURI(url),buttonWidget,conditionObj);
 					}
 
 				},function(error){
@@ -215,10 +247,11 @@
 				});
 			};
 			bbs_addComment = function(){
-				var bbsId = registry.byId("id").get("value");
+				//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
 				var commentDialog = rosten.addCommentDialog({type:"bbs"});
 				commentDialog.callback = function(_data){
-					rosten.readSync(rosten.webPath + "/bbs/bbsAddComment/" + bbsId,{dataStr:_data.content,userId:"${user?.id}"},function(data){
+					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${bbs?.status}",flowCode:"${flowCode}"};
+					rosten.readSync(rosten.webPath + "/share/addComment/${bbs?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("成功！");
 						}else{
@@ -226,6 +259,7 @@
 						}	
 					});
 				};
+				
 			};
 			page_quit = function(){
 				rosten.pagequit();
@@ -240,11 +274,12 @@
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'bbsAction',action:'bbsForm',id:bbs?.id,params:[userid:user?.id])}"'></div>
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"590px"}'>
-        	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="padding:0px">
+		
+	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"650px"}'>
+        <form class="rosten_form" id="rosten_form" onsubmit="return false;" style="padding:0px">
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${bbs?.id }"' />
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
-        	  	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"460px",marginBottom:"2px"'>
+        	 <div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"460px",marginBottom:"2px"'>
         	  
                 <table class="tableData" style="width:740px;margin:0px">
                     <tbody>
@@ -323,21 +358,27 @@
 						
                     </tbody>
                 </table>
-                </div>
-			</form>
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-				height:"60px",href:"${createLink(controller:'bbs',action:'getFileUpload',id:bbs?.id)}"'>
-			</div>
+            </div>
 			
+			
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
+				href:"${createLink(controller:'share',action:'getFileUploadNew',id:bbs?.id,params:[uploadPath:'bbs',isShowFile:isShowFile])}"'>
+			</div>
+		
+		</form>
 		</div>
-		<div data-dojo-type="dijit/layout/ContentPane" id="bbsComment" title="流转意见" data-dojo-props='refreshOnShow:true,
-			href:"${createLink(controller:'bbs',action:'getCommentLog',id:bbs?.id)}"
-		'>	
-		</div>
-		<div data-dojo-type="dijit/layout/ContentPane" id="bbsFlowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
-			href:"${createLink(controller:'bbs',action:'getFlowLog',id:bbs?.id)}"
-		'>	
-		</div>
+		
+		<g:if test="${bbs?.id}">
+			<div data-dojo-type="dijit/layout/ContentPane" id="bbsComment" title="流转意见" data-dojo-props='refreshOnShow:true,
+				href:"${createLink(controller:'share',action:'getCommentLog',id:bbs?.id)}"
+			'>	
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane" id="bbsFlowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+				href:"${createLink(controller:'share',action:'getFlowLog',id:bbs?.id,params:[processDefinitionId:bbs?.processDefinitionId,taskId:bbs?.taskId])}"
+			'>	
+			</div>
+		
+		</g:if>
 	</div>
 </body>
 </html>

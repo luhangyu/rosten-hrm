@@ -81,7 +81,7 @@ define([ "dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/k
 	add_bbs = function() {
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("bbs", rosten.webPath + "/bbs/bbsAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("bbs", rosten.webPath + "/bbs/bbsAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=bbs");
     };
 	change_bbs = function() {
 		var unid = rosten.getGridUnid("single");

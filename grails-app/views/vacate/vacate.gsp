@@ -17,6 +17,8 @@
 	require(["dojo/parser",
 		 		"dojo/_base/kernel",
 		 		"dijit/registry",
+		 		"dojo/dom",
+		 		"dojo/_base/lang",
 		 		"dijit/layout/TabContainer",
 		 		"dijit/layout/ContentPane",
 		 		"dijit/form/ValidationTextBox",
@@ -29,16 +31,28 @@
 		     	"rosten/widget/TitlePane",
 		     	"rosten/app/Application",
 		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry){
+			function(parser,kernel,registry,dom,lang){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}"});
 					rosten.cssinit();
 				});
-				vacate_save = function(){
+				vacate_save = function(object){
 					var courseName = registry.byId("courseName");
 					var chenkids = ["startDate","endDate","numbers"];
 					if(rosten.checkData(chenkids)){
-						rosten.readSync(rosten.webPath + "/vacate/vacateSave",{},function(data){
+						var content = {};
+						
+						//流程相关信息
+						<g:if test='${flowCode}'>
+							content.flowCode = "${flowCode}";
+							content.relationFlow = "${relationFlow}";
+						</g:if>
+
+						//增加对多次单击的次数----2014-9-4
+						var buttonWidget = object.target;
+						rosten.toggleAction(buttonWidget,true);
+
+						rosten.readSync(rosten.webPath + "/vacate/vacateSave",content,function(data){
 							if(data.result=="true" || data.result == true){
 								rosten.alert("保存成功！").queryDlgClose= function(){
 									if(window.location.href.indexOf(data.id)==-1){
@@ -50,14 +64,19 @@
 							}else{
 								rosten.alert("保存失败!");
 							}
-						},null,"rosten_form");
+							rosten.toggleAction(buttonWidget,false);
+						},function(error){
+							rosten.alert("系统错误，请通知管理员！");
+							rosten.toggleAction(buttonWidget,false);
+						},"rosten_form");
 					}
 				};
 				vacate_addComment = function(){
-					var id = registry.byId("id").get("value");
+					//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
 					var commentDialog = rosten.addCommentDialog({type:"vacate"});
 					commentDialog.callback = function(_data){
-						rosten.readSync(rosten.webPath + "/vacate/addComment/" + id,{dataStr:_data.content,userId:"${user?.id}"},function(data){
+						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${vacate?.status}",flowCode:"${flowCode}"};
+						rosten.readSync(rosten.webPath + "/share/addComment/${vacate?.id}",content,function(data){
 							if(data.result=="true" || data.result == true){
 								rosten.alert("成功！");
 							}else{
@@ -66,12 +85,15 @@
 						});
 					};
 				};
-				vacate_deal = function(type,readArray){
+				vacate_deal = function(type,readArray,buttonWidget,conditionObj){
 					var content = {};
 					content.id = registry.byId("id").attr("value");
 					content.deal = type;
 					if(readArray){
 						content.dealUser = readArray.join(",");
+					}
+					if(conditionObj){
+						lang.mixin(content,conditionObj);
 					}
 					rosten.readSync(rosten.webPath + "/vacate/vacateFlowDeal",content,function(data){
 						if(data.result=="true" || data.result == true){
@@ -87,31 +109,44 @@
 							}
 						}else{
 							rosten.alert("失败!");
+							rosten.toggleAction(buttonWidget,false);
 						}	
+					},function(error){
+						rosten.alert("系统错误，请通知管理员！");
+						rosten.toggleAction(buttonWidget,false);
 					});
 				};
-				vacate_submit = function(){
+				vacate_submit = function(object,conditionObj){
+					//增加对多次单击的次数----2014-9-4
+					var buttonWidget = object.target;
+					rosten.toggleAction(buttonWidget,true);
+					
 					var content = {};
-					rosten.readSync("${createLink(controller:'vacate',action:'getSelectFlowUser',params:[companyId:company?.id,id:vacate?.id])}",content,function(data){
+
+					//增加对排他分支的控制
+					if(conditionObj){
+						lang.mixin(content,conditionObj);
+					}
+					
+					rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:vacate?.taskId,drafterUsername:vacate?.user?.username])}",content,function(data){
 						
 						if(data.dealFlow==false){
 							//流程无下一节点
-							vacate_deal("submit");
+							vacate_deal("submit",null,buttonWidget,conditionObj);
 							return;
 						}
-
-						var url = "${createLink(controller:'vacate',action:'getDealWithUser',params:[companyId:company?.id,id:vacate?.id])}";
+						var url = "${createLink(controller:'system',action:'userTreeDataStore',params:[companyId:company?.id])}";
 						if(data.dealType=="user"){
 							//人员处理
 							if(data.showDialog==false){
 								//单一处理人
 								var _data = [];
 								_data.push(data.userId + ":" + data.userDepart);
-								vacate_deal("submit",_data);
+								vacate_deal("submit",_data,buttonWidget,conditionObj);
 							}else{
 								//多人，多部门处理
 								url += "&type=user&user=" + data.user;
-								vacate_submit_select(url);
+								vacate_submit_select(url,buttonWidget,conditionObj);
 							}
 						}else{
 							//群组处理
@@ -119,20 +154,28 @@
 							if(data.limitDepart){
 								url += "&limitDepart="+data.limitDepart;
 							}
-							vacate_submit_select(url);
+							vacate_submit_select(encodeURI(url),buttonWidget,conditionObj);
 						}
+					},function(error){
+						rosten.alert("系统错误，请通知管理员！");
+						rosten.toggleAction(buttonWidget,false);
 					});
 				};
-				vacate_submit_select = function(url){
+				vacate_submit_select = function(url,buttonWidget,conditionObj){
 					var rostenShowDialog = rosten.selectFlowUser(url,"single");
 		            rostenShowDialog.callback = function(data) {
-		            	var _data = [];
-		            	for (var k = 0; k < data.length; k++) {
-		            		var item = data[k];
-		            		_data.push(item.value + ":" + item.departId);
-		            	};
-		            	vacate_deal("submit",_data);	
-		            }
+		            	if(data.length==0){
+			            	rosten.alert("请正确选择人员！");
+		            		rosten.toggleAction(buttonWidget,false);
+			            }else{
+			            	var _data = [];
+			            	for (var k = 0; k < data.length; k++) {
+			            		var item = data[k];
+			            		_data.push(item.value + ":" + item.departId);
+			            	};
+			            	vacate_deal("submit",_data,buttonWidget,conditionObj);
+			            }
+		            };
 					rostenShowDialog.afterLoad = function(){
 						var _data = rostenShowDialog.getData();
 			            if(_data && _data.length==1){
@@ -142,7 +185,38 @@
 							//显示对话框
 							rostenShowDialog.open();
 					    }
-					}
+					};
+					rostenShowDialog.queryDlgClose = function(){
+						rosten.toggleAction(buttonWidget,false);
+					};	
+				};
+				vacate_back = function(object,conditionObj){
+					//增加对多次单击的次数----2014-9-4
+					var buttonWidget = object.target;
+					rosten.toggleAction(buttonWidget,true);
+					
+					var content = {};
+					rosten.readSync("${createLink(controller:'vacate',action:'vacateFlowBack',params:[id:vacate?.id])}",content,function(data){
+						if(data.result=="true" || data.result == true){
+							rosten.alert("成功！").queryDlgClose= function(){
+								//刷新待办事项内容
+								window.opener.showStartGtask("${user?.id}","${company?.id }");
+								
+								if(data.refresh=="true" || data.refresh==true){
+									window.location.reload();
+								}else{
+									rosten.pagequit();
+								}
+							}
+						}else{
+							rosten.alert("失败!");
+							rosten.toggleAction(buttonWidget,false);
+						}
+						
+					},function(error){
+						rosten.alert("系统错误，请通知管理员！");
+						rosten.toggleAction(buttonWidget,false);
+					});
 				};
 				page_quit = function(){
 					rosten.pagequit();
@@ -170,14 +244,14 @@
 				<table border="0" width="740" align="left">
 
 					<tr>
-					    <td><div align="right">拟稿人：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
 					    <td >
 					    	<input id="userName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='trim:true,readOnly:true,
 									value:"${vacate?.getFormattedDrafter()}"
 			                '/>
 					    </td>
-					    <td><div align="right">拟稿人部门：</div></td>
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
 					    <td >
 					    	<input id="userDepa" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='trim:true,readOnly:true,
@@ -266,13 +340,16 @@
 			
 		</form>
 	</div>
-	<div data-dojo-type="dijit/layout/ContentPane" id="Comment" title="流转意见" data-dojo-props='refreshOnShow:true,
-		href:"${createLink(controller:'vacate',action:'getCommentLog',id:vacate?.id)}"
-	'>	
-	</div>
-	<div data-dojo-type="dijit/layout/ContentPane" id="FlowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
-		href:"${createLink(controller:'vacate',action:'getFlowLog',id:vacate?.id)}"
-	'>	
-	</div>
+	<g:if test="${vacate?.id}">
+	
+		<div data-dojo-type="dijit/layout/ContentPane" id="Comment" title="流转意见" data-dojo-props='refreshOnShow:true,
+			href:"${createLink(controller:'share',action:'getCommentLog',id:vacate?.id)}"
+		'>	
+		</div>
+		<div data-dojo-type="dijit/layout/ContentPane" id="FlowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+			href:"${createLink(controller:'share',action:'getFlowLog',id:vacate?.id,params:[processDefinitionId:vacate?.processDefinitionId,taskId:vacate?.taskId])}"
+		'>	
+		</div>
+	</g:if>
 </div>
 </body>

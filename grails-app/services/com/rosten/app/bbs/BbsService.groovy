@@ -4,14 +4,6 @@ import com.rosten.app.util.GridUtil
 
 class BbsService {
 	
-	//增加流程日志
-	def addFlowLog ={ entity,currentUser,content ->
-		def bbsLog = new BbsLog()
-		bbsLog.user = currentUser
-		bbsLog.bbs = entity
-		bbsLog.content = content
-		bbsLog.save(flush:true)
-	}
 	def getBbsListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new Bbs())

@@ -39,7 +39,7 @@ class VacateActionController {
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
-						actionList << createAction("不同意",webPath +imgPath + "back.png",strname + "_submit")
+						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
 						break;
 					case vacate.status.contains("归档"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_save")

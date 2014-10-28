@@ -32,7 +32,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	vacate_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=vacate");
 	};
 	vacate_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");

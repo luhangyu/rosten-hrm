@@ -17,22 +17,19 @@
                             <td width="80">
                                 <div align="right" style="margin-top:10px"><span style="color:red">*</span>文件地址：</div>
                             </td>
-                             <td width="220">
+                             <td width="400">
                             	<input data-dojo-type="dojox/form/FileInput" data-dojo-props= 'label:"浏览...",cancelText:"清空"' name="uploadedfile" />
                             </td>
-<%--                            <td width="220">--%>
-<%--                            	<input data-dojo-type="dijit/form/ValidationTextBox" --%>
-<%--                            	data-dojo-props='readOnly:true' />--%>
-<%--                            	<img src="${resource(dir:'images/rosten/navigation',file:'attach.png')}" >--%>
-<%--                            </td>--%>
                         </tr>
                         
-						<tr style="text-align:center;margin-top:10px">
+						<tr style="text-align:center">
 							<td colspan="2">
+								<div style="margin-top:10px">
+								
 								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){}'>模板下载</button>
 								<button data-dojo-type="dijit/form/Button" type="submit" data-dojo-props=''}'>确定</button>
 								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.kernel.hideRostenShowDialog()}'>取消</button>
-								
+								</div>
 							</td>
 						</tr>
                     </tbody>

@@ -3,22 +3,25 @@ package com.rosten.app.bbs
 import grails.converters.JSON
 import com.rosten.app.util.FieldAcl
 import com.rosten.app.util.SystemUtil
-import com.rosten.app.system.Company
 import com.rosten.app.util.Util
-import com.rosten.app.system.User
-import com.rosten.app.start.StartService
 import com.rosten.app.gtask.Gtask
 import com.rosten.app.system.Depart
 import com.rosten.app.system.Attachment
 import com.rosten.app.system.Model
-import com.rosten.app.system.SystemService
 import com.rosten.app.system.Authorize
+import com.rosten.app.system.Company
+import com.rosten.app.system.User
 
-import com.rosten.app.workflow.WorkFlowService
 import org.activiti.engine.runtime.ProcessInstance
 import org.activiti.engine.runtime.ProcessInstanceQuery
 import org.activiti.engine.task.Task
 import org.activiti.engine.task.TaskQuery
+import com.rosten.app.workflow.FlowBusiness
+
+import com.rosten.app.system.SystemService
+import com.rosten.app.share.ShareService
+import com.rosten.app.start.StartService
+import com.rosten.app.workflow.WorkFlowService
 
 class BbsController {
 	def springSecurityService
@@ -27,6 +30,7 @@ class BbsController {
 	def workFlowService
 	def taskService
 	def systemService
+	def shareService
 	
 	
 	def bbsSearchView ={
@@ -116,56 +120,6 @@ class BbsController {
 		}
 		
 	}
-	def bbsAddComment ={
-		def json=[:]
-		def bbs = Bbs.get(params.id)
-		def user = User.get(params.userId)
-		if(bbs){
-			def bbsComment = new BbsComment()
-			bbsComment.user = user
-			bbsComment.status = bbs.status
-			bbsComment.content = params.dataStr
-			bbsComment.bbs = bbs
-			
-			if(bbsComment.save(flush:true)){
-				json["result"] = true
-			}else{
-				bbsComment.errors.each{
-					println it
-				}
-				json["result"] = false
-			}
-			
-		}else{
-			json["result"] = false
-		}
-		
-		render json as JSON
-	}
-	def getCommentLog ={
-		def model =[:]
-		def bbs = Bbs.get(params.id)
-		if(bbs){
-			def logs = BbsComment.findAllByBbs(bbs,[ sort: "createDate", order: "desc"])
-			model["log"] = logs
-		}
-		
-		render(view:'/share/commentLog',model:model)
-	}
-	def getFlowLog={
-		def model =[:]
-		def bbs = Bbs.get(params.id)
-		if(bbs){
-			def bbsLogs = BbsLog.findAllByBbs(bbs,[ sort: "createDate", order: "asc"])
-			model["log"] = bbsLogs
-			
-			model["logEntityId"] = params.id
-			model["logEntityName"] = "bbs"
-		}
-		
-		render(view:'/share/flowLog',model:model)
-	}
-	
 	def publishBbs ={
 		
 		def user = User.get(params.userId)
@@ -226,88 +180,7 @@ class BbsController {
 		}
 		render bbsList as JSON
 	}
-	def flowActiveExport ={
-		def bbs = Bbs.get(params.id)
-		InputStream imageStream = workFlowService.getflowActiveStream(bbs.processDefinitionId,bbs.taskId)
-		
-		byte[] b = new byte[1024];
-		int len = -1;
-		while ((len = imageStream.read(b, 0, 1024)) != -1) {
-		  response.outputStream.write(b, 0, len);
-		}
-		response.outputStream.flush()
-		response.outputStream.close()
-		
-	}
-	/*
-	 * 获取下个处理人员----2014-9-2
-	 */
-	def getSelectFlowUser ={
-		def json=[:]
-		json.dealFlow = true
-		
-		def currentUser = springSecurityService.getCurrentUser()
-		
-		def bbs = Bbs.get(params.id)
-		def defEntity = workFlowService.getNextTaskDefinition(bbs.taskId);
-		
-		if(!defEntity){
-			//流程处于最后一个节点
-			json.dealFlow = false
-			render json as JSON
-			return
-		}
-		
-		//存在处理人员的情况
-		def expEntity = defEntity.getAssigneeExpression()
-		if(expEntity){
-			def expEntityText = expEntity.getExpressionText()
-			if(expEntityText.contains("{")){
-				json.user = bbs.drafter.username
-			}else{
-				json.user = expEntity.getExpressionText()
-			}
-			
-			//判断下一处理人是否有多部门情况，如果有，则弹出对话框选择，如果没有，直接进入下一步
-			def userEntity = User.findByUsername(json.user)
-			def userDeparts = userEntity.getAllDepartEntity()
-			if(userDeparts && userDeparts.size()>1){
-				//一个人存在多个部门的情况，这种情况比较少
-				json.showDialog = true
-			}else{
-				json.showDialog = false
-				json.userDepart = userDeparts[0].departName
-				json.userId = userEntity.id
-			}
-			
-			json.dealType = "user"
-			render json as JSON
-			return
-		}
-		
-		//处理部门群组的情况
-		def groupEntity = defEntity.getCandidateGroupIdExpressions()
-		if(groupEntity.size()>0){
-			//默认有一组group的方式为true，则整组均为true;true:严格控制本部门权限
-			def groupIds = []
-			def limit = false
-			groupEntity.each{
-				groupIds << Util.strLeft(it.getExpressionText(), ":")
-				if(!limit && "true".equals(Util.strRight(it.getExpressionText(), ":"))){
-					limit = true
-				}
-			}
-			json.groupIds = groupIds.unique().join("-")
-			if(limit){
-				json.limitDepart = currentUser.getDepartEntityTrueName()
-			}
-			
-			json.dealType = "group"
-			render json as JSON
-			return
-		}
-		
-	}
+	
 	def bbsFlowBack ={
 		def json=[:]
 		def bbs = Bbs.get(params.id)
@@ -391,8 +264,7 @@ class BbsController {
 				
 				//添加日志
 				def logContent = "退回【" + user.getFormattedName() + "】"
-				
-				bbsService.addFlowLog(bbs,currentUser,logContent)
+				shareService.addFlowLog(bbs.id,"bbs",currentUser,logContent)
 			}
 				
 			json["result"] = true
@@ -417,7 +289,11 @@ class BbsController {
 		//流程引擎相关信息处理-------------------------------------------------------------------------------------
 		
 		//结束当前任务，并开启下一节点任务
-		taskService.complete(bbs.taskId)	//结束当前任务
+		def map =[:]
+		if(params.conditionName){
+			map[params.conditionName] = params.conditionValue
+		}
+		taskService.complete(bbs.taskId,map)	//结束当前任务
 		
 		ProcessInstance processInstance = workFlowService.getProcessIntance(bbs.processInstanceId)
 		if(!processInstance || processInstance.isEnded()){
@@ -451,7 +327,7 @@ class BbsController {
 					def _model = Model.findByModelCodeAndCompany("bbs",bbs.company)
 					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
 					if(authorize){
-						bbsService.addFlowLog(bbs,nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						shareService.addFlowLog(bbs.id,"bbs",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
 						
 						nextUser = authorize.beAuthorizer
 						nextDepart = authorize.beAuthorizerDepart
@@ -549,7 +425,7 @@ class BbsController {
 					logContent = "提交" + bbs.status + "【" + nextUsers.join("、") + "】"
 					break
 			}
-			bbsService.addFlowLog(bbs,currentUser,logContent)
+			shareService.addFlowLog(bbs.id,"bbs",currentUser,logContent)
 						
 			json["result"] = true
 		}else{
@@ -626,9 +502,9 @@ class BbsController {
 		
 		//流程引擎相关信息处理-------------------------------------------------------------------------------------
 		if(!bbs.processInstanceId){
+			
 			//启动流程实例
-			def _model = Model.findByModelCodeAndCompany("bbs",bbs.company)
-			def _processInstance = workFlowService.getProcessDefinition(_model.relationFlow)
+			def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
 			Map<String, Object> variables = new HashMap<String, Object>();
 			ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, user.username,bbs.id, variables);
 			bbs.processInstanceId = processInstance.getProcessInstanceId()
@@ -650,16 +526,22 @@ class BbsController {
 			
 			if("new".equals(bbsStatus)){
 				//添加日志
-				def bbsLog = new BbsLog()
-				bbsLog.user = user
-				bbsLog.bbs = bbs
-				bbsLog.content = "起草公告"
-				bbsLog.save(flush:true)
+				shareService.addFlowLog(bbs.id,params.flowCode,user,"起草公告")
 				
 				//修改配置文档中的流水号，改为发布后产生流水号
 //				bbsConfig.nowSN += 1
 //				bbsConfig.save(flush:true) 
 			}
+			
+			//增加附件功能
+			if(params.attachmentIds){
+				params.attachmentIds.split(",").each{
+					def attachment = Attachment.get(it)
+					attachment.beUseId = bbs.id
+					attachment.save(flush:true)
+				}
+			}
+			
 		}else{
 			bbs.errors.each{
 				println it
@@ -690,14 +572,19 @@ class BbsController {
 		render json as JSON
 	}
 	def bbsAdd ={
-		//判断是否关联流程引擎
-		def company = Company.get(params.companyId)
-		def model = Model.findByModelCodeAndCompany("bbs",company)
-		if(model.relationFlow && !"".equals(model.relationFlow)){
-			redirect(action:"bbsShow",params:params)
+		if(params.flowCode){
+			//需要走流程
+			def company = Company.get(params.companyId)
+			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
+			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+				params.relationFlow = flowBusiness.relationFlow
+				redirect(action:"bbsShow",params:params)
+			}else{
+				//不存在流程引擎关联数据
+				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
+			}
 		}else{
-			//不存在流程引擎关联数据
-			render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前模块不存在流程设置，无法创建，请联系管理员！</h2>'
+			redirect(action:"bbsShow",params:params)
 		}
 	}
 	def bbsGetContent ={
@@ -727,14 +614,22 @@ class BbsController {
 	}
 	def bbsShow ={
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
 		
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
 		def bbs = new Bbs()
 		if(params.id){
 			bbs = Bbs.get(params.id)
+			//判断是否为当前处理人
+			if(currentUser.equals(bbs.currentUser)){
+				if(!"已结束".equals(bbs.status) && !"已发布".equals(bbs.status)){
+					model["isShowFile"] = true
+				}
+			}
 		}else{
 			bbs.currentUser = user
+			model["isShowFile"] = true
 		}
 		
 		if(!bbs){
@@ -764,6 +659,11 @@ class BbsController {
 			}
 		}
 		model["fieldAcl"] = fa
+		
+		//流程相关信息----------------------------------------------
+		model["relationFlow"] = params.relationFlow
+		model["flowCode"] = params.flowCode
+		//------------------------------------------------------
 		
 		render(view:'/bbs/bbs',model:model)
 	}
