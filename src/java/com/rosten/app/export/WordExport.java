@@ -16,11 +16,15 @@ import javax.servlet.http.HttpServletResponse;
 //import sun.misc.BASE64Encoder;
 
 
+
+
 import com.rosten.app.util.Base64Util;
 import com.rosten.app.export.ZipUtil;
 import com.rosten.app.staff.ContactInfor;
+import com.rosten.app.staff.DepartChange;
 import com.rosten.app.staff.PersonInfor;
 import com.rosten.app.staff.StaffService;
+import com.rosten.app.staff.StatusChange;
 import com.rosten.app.system.Attachment;
 
 public class WordExport {
@@ -171,8 +175,11 @@ public class WordExport {
 		private File getLzjjdWord(String id) throws Exception {
 			Map<String, Object> data = new HashMap<String, Object>();
 			StaffService staffser = new StaffService();
-			PersonInfor personInfor = staffser.getPersonInfor(id);
+			StatusChange statusChange = staffser.getStatusChange(id);
+			PersonInfor personInfor = staffser.getPersonByStatuCh(id);
+			data.put("statusChange", statusChange);	
 			data.put("personInfor", personInfor);	
+			
 			File wordFile = FreeMarkerUtil.getWordFile(data,
 					"classpath:com/rosten/app/template", "lzjjd.xml",personInfor.getChinaName()+"离职交接单");
 			return wordFile;
@@ -209,19 +216,21 @@ public class WordExport {
 			return null;
 		}
 		
-		// 填充模版数据生成word文件(离职交接单)
+		// 填充模版数据生成word文件(调动交接单)
 		private File getDdjjdWord(String id) throws Exception {
 			Map<String, Object> data = new HashMap<String, Object>();
 			StaffService staffser = new StaffService();
-			PersonInfor personInfor = staffser.getPersonInfor(id);
-			data.put("personInfor", personInfor);	
+			DepartChange depaChange = staffser.getDepartChange(id);
+			PersonInfor personInfor = staffser.getPersonByDepaCh(id);
+			data.put("personInfor", personInfor);
+			data.put("depaChange", depaChange);	
 			File wordFile = FreeMarkerUtil.getWordFile(data,
 					"classpath:com/rosten/app/template", "ddjjd.xml",personInfor.getChinaName()+"调动交接单");
 			return wordFile;
 		}
 		
 		/**
-		 * 单个打印离职交接单
+		 * 单个打印调动交接单
 		 */
 		public String dyDdjjd(HttpServletResponse response,String ids) throws Exception {
 			
@@ -231,7 +240,7 @@ public class WordExport {
 		}
 		
 		/**
-		 * 批量打印离职交接单
+		 * 批量打印调动交接单
 		 * @param response
 		 * @return
 		 * @throws Exception

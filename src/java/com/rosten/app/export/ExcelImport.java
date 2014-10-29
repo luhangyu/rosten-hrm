@@ -1,8 +1,6 @@
 package com.rosten.app.export;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -25,10 +23,10 @@ public class ExcelImport {
 			 String ssbm =sourceSheet.getCell(0, i).getContents();	//所属部门
 			 String xm =sourceSheet.getCell(1, i).getContents();	//姓名
 			 String xb =sourceSheet.getCell(2, i).getContents();	//性别
-			 String csny =sourceSheet.getCell(3, i).getContents();	//所属部门
-			 String xl =sourceSheet.getCell(4, i).getContents();	//所属部门
-			 String zzmm =sourceSheet.getCell(5, i).getContents();	//所属部门
-			 String jg =sourceSheet.getCell(6, i).getContents();	//所属部门
+			 String csny =sourceSheet.getCell(3, i).getContents();	//出生年月
+			 String xl =sourceSheet.getCell(4, i).getContents();	//学历
+			 String zzmm =sourceSheet.getCell(5, i).getContents();	//政治面貌
+			 String jg =sourceSheet.getCell(6, i).getContents();	//籍贯
 			 
 			//根据用户名插入对应数据
 			PersonInfor personInfor = new PersonInfor();
@@ -36,6 +34,8 @@ public class ExcelImport {
 			personInfor.setUser(userEntity);
 			personInfor.setUserTypeEntity(userType);
 			personInfor.setSex(xb);
+			//personInfor.setBirthday(csny);
+			personInfor.setNativeAddress(jg);
 			personInfor.setIdCard("000001");
 			
 			_service.commonSave(personInfor,ssbm,userEntity);
