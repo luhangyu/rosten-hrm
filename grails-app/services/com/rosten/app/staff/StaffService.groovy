@@ -20,6 +20,24 @@ class StaffService {
 		return Attachment.findByBeUseIdAndType(ids,"staff")
 	}
 	
+	public DepartChange getDepartChange(String id){
+		return DepartChange.get(id);
+	}
+	
+	public PersonInfor getPersonByDepaCh(String id){
+		DepartChange depa =  DepartChange.get(id);
+		return depa.personInfor;
+	}
+	
+	public StatusChange getStatusChange(String id){
+		return StatusChange.get(id);
+	}
+	
+	public PersonInfor getPersonByStatuCh(String id){
+		StatusChange depa =  StatusChange.get(id);
+		return depa.personInfor;
+	}
+	
 	def getBargainListLayout ={
 		def gridUtil = new GridUtil()
 		return gridUtil.buildLayoutJSON(new Bargain())

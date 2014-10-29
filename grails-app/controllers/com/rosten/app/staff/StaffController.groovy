@@ -2386,9 +2386,9 @@ class StaffController {
 		def ids = params.id.split(",")
 		if(null!=ids&&ids.length>0){
 			if(ids.length==1){
-				word.dyLzjjd(response,params.id)
+				word.dyDdjjd(response,params.id)
 			}else{
-				word.downloadLzjjdZip(response,params.id)
+				word.downloadDdjjdZip(response,params.id)
 			}
 		}
 	}
