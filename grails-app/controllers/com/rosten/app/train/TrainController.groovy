@@ -240,7 +240,7 @@ class TrainController {
 					def args = [:]
 					args["type"] = "【培训管理】"
 					args["content"] = "请您审核名称为  【" + trainCourse.courseName +  "】 的培训申请"
-					args["contentStatus"] = trainCourse.status
+					args["contentStatus"] = nextStatus
 					args["contentId"] = trainCourse.id
 					args["user"] = nextUser
 					args["company"] = nextUser.company

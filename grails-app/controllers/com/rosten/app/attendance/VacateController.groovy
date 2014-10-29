@@ -182,7 +182,7 @@ class VacateController {
 					def args = [:]
 					args["type"] = "【请假】"
 					args["content"] = "请您审核名称为  【" + vacate.getFormattedDrafter() +  "】 的请假申请"
-					args["contentStatus"] = vacate.status
+					args["contentStatus"] = nextStatus
 					args["contentId"] = vacate.id
 					args["user"] = nextUser
 					args["company"] = nextUser.company
