@@ -762,7 +762,7 @@ class StaffController {
 				
 				//增加待办事项
 				def args = [:]
-				args["type"] = "【公告】"
+				args["type"] = "【员工入职】"
 				args["content"] = "名称为  【" + personInfor.chinaName +  "】 的入职人员信息被退回，请查看！"
 				args["contentStatus"] = nextStatus
 				args["contentId"] = personInfor.id
@@ -771,7 +771,7 @@ class StaffController {
 				
 				startService.addGtask(args)
 					
-				//修改当前公告信息
+				//修改当前员工入职信息
 				personInfor.currentUser = user
 				personInfor.currentDepart = user.getDepartName()
 				personInfor.currentDealDate = new Date()
