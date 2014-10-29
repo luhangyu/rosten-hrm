@@ -386,6 +386,9 @@ define(["dojo/_base/kernel"
     	case "【员工调动】":
     		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
     		break;
+    	case "【培训管理】":
+    		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    		break;
     	}
     	
     	if(gtaskId){

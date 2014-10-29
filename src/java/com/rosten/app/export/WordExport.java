@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
 
+
+import com.rosten.app.util.Base64Util;
 import com.rosten.app.export.ZipUtil;
 import com.rosten.app.staff.ContactInfor;
 import com.rosten.app.staff.PersonInfor;
@@ -53,6 +56,7 @@ public class WordExport {
 	/**
 	 * 獲取照片
 	 */
+	@SuppressWarnings("static-access")
 	public String getZpStr(String filePath)  {
 		byte[] buffer  = null;  
 		try {  
@@ -72,8 +76,20 @@ public class WordExport {
         } catch (IOException e) {  
             e.printStackTrace();  
         }  
-			BASE64Encoder encoder = new BASE64Encoder();
-			return buffer != null ? encoder.encode(buffer) : null;
+//			BASE64Encoder encoder = new BASE64Encoder();
+//			return buffer != null ? encoder.encode(buffer) : null;
+		
+			Base64Util encoder = new Base64Util();
+			byte[] b = encoder.encode(buffer);
+			String s = null;
+			try {
+				s = new String(b, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return buffer != null ?s : null;
 	}
 	
 	

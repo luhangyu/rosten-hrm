@@ -21,8 +21,6 @@ class TrainService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("trainCourse",trainCourse)
-			order("user", "asc")
-			
 			searchArgs.each{k,v->
 				like(k,"%" + v + "%")
 			}

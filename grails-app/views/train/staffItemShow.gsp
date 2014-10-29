@@ -9,6 +9,7 @@
 	<div style="text-Align:center">
 		<input  data-dojo-type="dijit/form/ValidationTextBox" id="itemId"  data-dojo-props='name:"itemId",style:{display:"none"}' />
         <div class="rosten_form" style="width:700px;text-align:left">
+        	<input id="personInforId" data-dojo-type="dijit/form/ValidationTextBox"  data-dojo-props='name:"personInforId",style:{display:"none"},value:""' />
             <fieldset class="fieldset-form">
                 <legend class="tableHeader">学员信息</legend>
                 <table class="tableData">
@@ -17,14 +18,21 @@
                             <td width="100">
                                 <div align="right"><span style="color:red">*&nbsp;</span>学员名称：</div>
                             </td>
-                           <td  width="200">
+                           <td  width="250">
                                 <input id="itemName" data-dojo-type="dijit/form/ValidationTextBox"
                                 	data-dojo-props='name:"itemName",
                                 		"class":"input",
                                 		trim:true,
                                 		required:true,
+                                		readOnly:true,
                                 		promptMessage:"请正确输入学员名称..."
-                                '/>                                
+                                '/>    
+                                <button data-dojo-type='dijit/form/Button' 
+									data-dojo-props="label:'选择',iconClass:'docAddIcon'">
+									<script type="dojo/method" data-dojo-event="onClick">
+										addPersonInfor();
+									</script>
+								</button>                              
                             </td>
                             
                           	<td width="100">
@@ -36,16 +44,17 @@
                                 		"class":"input",
                                 		trim:true,
                                 		required:true,
+                                		readOnly:true,
                                 		promptMessage:"请正确输入部门名称"
-                                '/>                                
+                                '/>
                             </td>
                             
                         </tr>
                         <tr>
-                        	<td width="100">
+                        	<td>
                                 <div align="right"><span style="color:red">*&nbsp;</span>培训费用：</div>
                             </td>
-                           	<td  width="200">
+                           	<td>
                                 <input id="itemMoney" data-dojo-type="dijit/form/ValidationTextBox"
                                 	data-dojo-props='name:"itemMoney",
                                 		"class":"input",
@@ -76,14 +85,13 @@
                             	
                                 <input id="itemCert1" data-dojo-type="dijit/form/RadioButton"
 					           		data-dojo-props='name:"itemCert",type:"radio",
-					           			<g:if test="${staffItemShowEntity?.itemCert=="是" }">checked:true,</g:if>
 										value:"是"
 				              	'/>
 								<label for="itemCert1">是</label>
 							
 				              	<input id="itemCert2" data-dojo-type="dijit/form/RadioButton"
 				           			data-dojo-props='name:"itemCert",type:"radio",
-				           			<g:if test="${staffItemShowEntity?.itemCert=="否" }">checked:true,</g:if>
+				           			checked:true,
 									value:"否"
 				              	'/>
 								<label for="itemCert2">否</label>
@@ -93,11 +101,11 @@
                             </td>
                         </tr>
 						<tr>
-							<td></td>
-							<td>
-								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){staffItem_Submit()}'>确定</button>
-								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.hideRostenShowDialog()}'>取消</button>
-								
+							<td colspan=4>
+								<div style="text-align:center;margin-top:10px">
+									<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){staffItem_Submit()}'>确定</button>
+									<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.hideRostenShowDialog()}'>取消</button>
+								</div>
 							</td>
 						</tr>
                     </tbody>

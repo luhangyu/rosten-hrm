@@ -35,7 +35,37 @@ class TrainActionController {
 		def actionList = []
 		
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+		
+		def user = User.get(params.userid)
+		if(params.id){
+			def trainCourse = TrainCourse.get(params.id)
+			if(user.equals(trainCourse.currentUser)){
+				//当前处理人
+				switch (true){
+					case trainCourse.status.contains("新建"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+					case trainCourse.status.contains("审核") || trainCourse.status.contains("审批"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+						break;
+					case trainCourse.status.contains("归档"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_save")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("归档",webPath +imgPath + "gd.png",strname +"_submit")
+						break;
+					default :
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+				}
+			}
+		}else{
+			actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+		}
 		
 		render actionList as JSON
 	}

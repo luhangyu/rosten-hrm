@@ -7,7 +7,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	trainMessage_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("trainMessage", rosten.webPath + "/train/trainMessageAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("trainMessage", rosten.webPath + "/train/trainMessageAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=trainCourse");
 	};
 	trainMessage_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
@@ -43,7 +43,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	trainCourse_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=trainCourse");
 	};
 	trainCourse_read = function(){
 		trainCourse_change();
@@ -54,7 +54,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			return;
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 	};
 	trainCourse_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
