@@ -89,12 +89,15 @@
                                 <div align="right">政治面貌：</div>
                             </td>
                             <td>
-                            	<input id="family_politicsStatus" data-dojo-type="dijit/form/ValidationTextBox"
+                            	<select id="family_politicsStatus" data-dojo-type="dijit/form/ComboBox"
                                 	data-dojo-props='name:"family_politicsStatus",
-                                		"class":"input",
                                 		trim:true,
                                 		promptMessage:"请正确输入政治面貌..."
-                                '/>
+                                '>
+                                	<g:each in="${politicsStatusList}" var="item">
+					                	<option value="${item.code }">${item.name }</option>
+					                </g:each>
+                                </select>
                             </td>
                         </tr>
                         

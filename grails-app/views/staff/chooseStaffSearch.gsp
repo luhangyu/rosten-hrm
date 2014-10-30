@@ -17,19 +17,19 @@
         
         <tbody>
           <tr>
-            <th width="5%">登录名</th>
+            <th width="10%">登录名</th>
             <td width="18%">
             	<input id="s_username" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="5%">姓名</th>
+            <th width="10%">姓名</th>
             <td width="18%">
             	<input id="s_chinaName"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="5%">部门</th>
+            <th width="10%">部门</th>
             <td width="18%">
             	<input id="s_departName" data-dojo-type="dijit/form/ValidationTextBox"
 	                data-dojo-props='trim:true,value:""
@@ -37,42 +37,49 @@
             </td>
           </tr>
           <tr>
-            <th width="5%">身份证号</th>
-            <td width="18%">
+            <th>身份证号</th>
+            <td>
             	<input id="s_idCard" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="5%">性别</th>
-            <td width="18%">
-            	<input id="s_sex"  data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true
-               '/>
+            <th>性别</th>
+            <td>
+            	<select id="s_sex"  data-dojo-type="dijit/form/ComboBox" 
+                	data-dojo-props='trim:true,value:""
+               '>
+               		<option value="男">男</option>
+	            	<option value="女">女</option>
+	           </select>
             </td>
-            <th width="5%">政治面貌</th>
-            <td width="18%">
-            	<input id="s_politicsStatus" data-dojo-type="dijit/form/ValidationTextBox"
+            <th>政治面貌</th>
+            <td>
+            	<select id="s_politicsStatus" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""
-	            ' />
+	            '>
+	            	<g:each in="${politicsStatusList}" var="item">
+	                	<option value="${item.code }">${item.name }</option>
+	                </g:each>
+	            </select>
             </td>
           </tr>
           <tr>
-            <th width="5%">籍贯</th>
-            <td width="18%">
+            <th>籍贯</th>
+            <td>
             	<input id="s_nativeAddress" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="5%">国籍</th>
-            <td width="18%">
+            <th>国籍</th>
+            <td>
             	<input id="s_city"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="5%">状态</th>
-            <td width="18%">
+            <th>状态</th>
+            <td>
             	<input id="s_status" data-dojo-type="dijit/form/ValidationTextBox"
-	                data-dojo-props='trim:true,value:""
+	                data-dojo-props='trim:true,readOnly:true,value:"在职"
 	            ' />
             </td>
           </tr>

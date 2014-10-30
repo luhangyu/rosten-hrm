@@ -42,8 +42,24 @@ class StaffController {
 	def taskService
 	def startService
 	
+	def staffZZ ={
+		//员工转正
+		def json=[:]
+		def personInfor = PersonInfor.get(params.id)
+		personInfor.status = "在职"
+		if(personInfor.save(flush:true)){
+			json["result"] = true
+		}else{
+			json["result"] = false
+		}
+		render json as JSON
+	}
 	def getChooseListSearch ={
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		//政治面貌
+		model["politicsStatusList"] = shareService.getSystemCodeItems(currentUser.company,"rs_politicsStatus")
+		
 		render(view:'/staff/chooseStaffSearch',model:model)
 	}
 	def checkHasBargain ={
@@ -1173,11 +1189,9 @@ class StaffController {
 		def json
 		try{
 			ids.each{
-				def user = User.get(it)
-				if(user){
-					//先刪除关联信息
-					PersonInfor.findByUser(user)?.delete(flush:true)
-					user.delete(flush: true)
+				def personInfor = PersonInfor.get(it)
+				if(personInfor){
+					personInfor.delete(flush: true)
 				}
 			}
 			json = [result:'true']
@@ -1433,8 +1447,9 @@ class StaffController {
 		model["type"] = params.type
 		
 		//个人概况
+		def personInfor
 		if(params.id){
-			def personInfor = PersonInfor.get(params.id)
+			personInfor = PersonInfor.get(params.id)
 			
 			if(!personInfor){
 				render '<h2 style="color:red;width:500px;margin:0 auto">此文件已过期或已被删除，请联系管理员！</h2>'
@@ -1461,20 +1476,21 @@ class StaffController {
 			}else{
 				model["user"] = new User()
 			}
-			model["personInfor"] = personInfor
+			
 		}else{
 			if(params.searchId){
 				//兼容首页打开用户信息
 				def _user = User.get(params.searchId)
-				def personInfor = PersonInfor.findByUser(_user)
-				
 				model["user"] = _user
-				model["personInfor"] = personInfor
+				
+				personInfor = PersonInfor.findByUser(_user)
 			}else{
 				model["user"] = new User()
-				model["personInfor"] = new PersonInfor()
+				personInfor = new PersonInfor()
 			}
 		}
+		model["personInfor"] = personInfor
+		
 		if(params.companyId){
 			def company = Company.get(params.companyId)
 			model["company"] = company
@@ -1496,6 +1512,30 @@ class StaffController {
 				model["userType"] = "admin"
 			}else{
 				model["userType"] = "normal"
+			}
+		}
+		
+		//面试结果
+		if("staffAdd".equals(params.type)){
+			if(personInfor.id){
+				if(loginUser.equals(personInfor.currentUser)){
+					if(!("新增".equals(personInfor.status) || "面试中".equals(personInfor.status))){
+						fa.readOnly << "msResult"
+					}
+				}else{
+					fa.readOnly << "msResult"
+				}
+			}
+			//是否显示合同信息
+			switch (personInfor.status){
+				case "已签发":
+				case "试用":
+				case "实习":
+					model["showBargainInfor"] = true
+					break
+				default:
+					model["showBargainInfor"] = false
+					break
 			}
 		}
 		model["fieldAcl"] = fa
@@ -1523,7 +1563,7 @@ class StaffController {
 			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName","formatter":"personInfor_formatTopic"]
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
 			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
-			_gridHeader << ["name":"性别","width":"auto","colIdx":5,"field":"sex"]
+			_gridHeader << ["name":"性别","width":"30px","colIdx":5,"field":"sex"]
 			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
 			_gridHeader << ["name":"身份证号","width":"auto","colIdx":7,"field":"idCard"]
 			_gridHeader << ["name":"手机号码","width":"auto","colIdx":8,"field":"mobile"]
@@ -1644,9 +1684,9 @@ class StaffController {
 			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName","formatter":"personInfor_formatTopic_normal"]
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
 			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
-			_gridHeader << ["name":"性别","width":"auto","colIdx":5,"field":"sex"]
+			_gridHeader << ["name":"性别","width":"30px","colIdx":5,"field":"sex"]
 			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
-			_gridHeader << ["name":"身份证号","width":"auto","colIdx":7,"field":"idCard"]
+			_gridHeader << ["name":"身份证号","width":"130px","colIdx":7,"field":"idCard"]
 			_gridHeader << ["name":"手机号码","width":"auto","colIdx":8,"field":"mobile"]
 			_gridHeader << ["name":"民族","width":"auto","colIdx":9,"field":"nationality"]
 			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":10,"field":"politicsStatus"]
@@ -1660,6 +1700,12 @@ class StaffController {
 		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
 		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
 		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		if(params.idCard && !"".equals(params.idCard)) searchArgs["idCard"] = params.idCard
+		if(params.sex && !"".equals(params.sex)) searchArgs["sex"] = params.sex
+		if(params.politicsStatus && !"".equals(params.politicsStatus)) searchArgs["politicsStatus"] = params.politicsStatus
+		if(params.nativeAddress && !"".equals(params.nativeAddress)) searchArgs["nativeAddress"] = params.nativeAddress
+		if(params.city && !"".equals(params.city)) searchArgs["city"] = params.city
+		if(params.status && !"".equals(params.status)) searchArgs["status"] = params.status
 		
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -1811,6 +1857,7 @@ class StaffController {
 			if(!isEdit){
 				fa.readOnly = ["bargainSerialNo","bargainType","startDate","endDate"]
 			}
+			
 		}else{
 			//其他情况,均可编辑
 			model["isShowFile"] = true
@@ -1910,6 +1957,8 @@ class StaffController {
 			if(!personInfor || !"已签发".equals(personInfor.status)){
 				fa.readOnly = ["bargainSerialNo","bargainType","startDate","endDate"]
 			}
+		}else if("onlyShow".equals(params.type)){
+			fa.readOnly = ["bargainSerialNo","bargainType","startDate","endDate"]
 		}
 		model["fieldAcl"] = fa
 		
@@ -2182,11 +2231,18 @@ class StaffController {
 	
 	def familyInforShow ={
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = currentUser.company
+		
 		if(params.id){
 			model["familyInfor"] = FamilyInfor.get(params.id)
 		}else{
 			model["familyInfor"] = new FamilyInfor()
 		}
+		
+		//政治面貌
+		model["politicsStatusList"] = shareService.getSystemCodeItems(company,"rs_politicsStatus")
+		
 		render(view:'/staff/familyInfor',model:model)
 	}
 	def degreeInforShow={

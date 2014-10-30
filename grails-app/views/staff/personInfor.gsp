@@ -18,11 +18,11 @@
 							value:"${personInforEntity?.chinaName}"
 	                '/>
 		    </td>
-		    <td width="120"><div align="right">曾用名：</div></td>
+		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>状态：</div></td>
 		  	<td width="240">
 		    	<input id="usedName" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"usedName",trim:true,${fieldAcl.isReadOnly("usedName")},
-							value:"${personInforEntity?.usedName}"
+	                 	data-dojo-props='name:"usedName",trim:true,readOnly:true,disabled:true,
+							value:"${personInforEntity?.status}"
 	                '/>
 		    </td>
 		</tr>
@@ -264,6 +264,9 @@
 			</script>
 		</div>
 		</g:if>
+		<g:elseif test="${!personInforEntity.id}">
+			<div style="margin-top:10px;margin-left:5px;color:red">保存后再上传头像</div>
+		</g:elseif>
 	</div>
 </body>
 </html>

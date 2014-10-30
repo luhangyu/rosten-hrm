@@ -10,7 +10,7 @@
 		}
 		.rosten .rostenFamilyTitleGrid .dijitTitlePaneContentInner{
 			padding:2px 1px 1px 1px;
-			height:160px;
+			height:280px;
 		}
 		.rosten .rostenDegreeTitleGrid .dijitTitlePaneContentInner{
 			padding:2px 1px 1px 1px;
@@ -342,13 +342,14 @@
 			user_end = function(object){
 				//结束流程,检测是否已经生成合同信息
 				rosten.readSync(rosten.webPath + "/staff/checkHasBargain",{id:"${personInfor?.id}"},function(data){
-					if(data.result==false){
+					if(data.result==false || data.result=="false"){
 						rosten.alert("请先录入合同！").queryDlgClose = function(){
 							rostenTabContainer.selectChild(barginContentPane); 
 						};
+					}else{
+						user_submit(object);
 					}
 				});
-				user_submit(object);
 			};
 			user_cancel = function(object){
 				user_submit(object,{conditionName:"flow",conditionValue:"notAgree"});
@@ -546,7 +547,7 @@
 						  		<td>
 							  		<textarea id="msResult" data-dojo-type="dijit/form/SimpleTextarea" 
 										data-dojo-props='name:"msResult",
-						                    style:{width:"680px",height:"470px"},
+						                    style:{width:"680px",height:"470px"},${fieldAcl.isReadOnly("msResult")},
 						                    trim:true,value:"${personInfor?.msResult}"
 						            '>
 									</textarea>
@@ -558,10 +559,12 @@
 				</div>
 			</div>
 			<g:if test="${personInfor?.id}">
-				<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-id="barginContentPane" class="rosten_form" title="合同信息" data-dojo-props='refreshOnShow:true,
-					href:"${createLink(controller:'staff',action:'getBargainAllInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
-				'>
-				</div>
+				<g:if test="${showBargainInfor}">
+					<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-id="barginContentPane" class="rosten_form" title="合同信息" data-dojo-props='refreshOnShow:true,
+						href:"${createLink(controller:'staff',action:'getBargainAllInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
+					'>
+					</div>
+				</g:if>
 				
 				<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 					href:"${createLink(controller:'share',action:'getCommentLog',id:personInfor?.id)}"
@@ -579,10 +582,10 @@
 					href:"${createLink(controller:'staff',action:'getBargainAllInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
 				'>
 				</div>
-				
+				<%--
 				<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
 				
-				</div>
+				</div> --%>
 			</g:if>
 		</g:else>
 	</div>

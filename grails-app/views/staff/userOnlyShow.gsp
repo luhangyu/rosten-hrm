@@ -119,9 +119,11 @@
 				
 			</div>
 		</div>
+		<%--
 		<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
 		
 		</div>
+		--%>
 	</div>
 </body>
 </html>

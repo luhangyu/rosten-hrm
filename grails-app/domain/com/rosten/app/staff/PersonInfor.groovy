@@ -243,6 +243,17 @@ class PersonInfor {
 			WorkResume.findAllByPersonInfor(this).each{item->
 				item.delete()
 			}
+			DepartChange.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			StatusChange.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
+			
+//			if(this.user){
+//				this.user.delete()
+//			}
+			
 			session.flush()
 		}
 	}

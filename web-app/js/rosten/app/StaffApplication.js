@@ -28,6 +28,32 @@ define(["dojo/dom",
 		if(departName.get("value")!=""){
 			content.departName = departName.get("value");
 		}
+		
+		var idCard = registry.byId("s_idCard");
+		if(idCard.get("value")!=""){
+			content.idCard = idCard.get("value");
+		}
+		var sex = registry.byId("s_sex");
+		if(sex.get("value")!=""){
+			content.sex = sex.get("value");
+		}
+		var politicsStatus = registry.byId("s_politicsStatus");
+		if(politicsStatus.get("value")!=""){
+			content.politicsStatus = politicsStatus.get("value");
+		}
+		var nativeAddress = registry.byId("s_nativeAddress");
+		if(nativeAddress.get("value")!=""){
+			content.nativeAddress = nativeAddress.get("value");
+		}
+		var city = registry.byId("s_city");
+		if(city.get("value")!=""){
+			content.city = city.get("value");
+		}
+		var status = registry.byId("s_status");
+		if(status.get("value")!=""){
+			content.status = status.get("value");
+		}
+		
 		chooseListGrid.refresh(null,content);
 	};
 	personInfor_formatTopic_normal = function(value,rowIndex){

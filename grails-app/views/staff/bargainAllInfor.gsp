@@ -100,6 +100,15 @@
 	</div>
 </div>
 </form>
+<g:if test="${isShowFile}">
+<div style="margin:10px 0 0 5px">
+	<div data-dojo-type="dijit/form/Button" data-dojo-props="label:'录入合同'">
+		<script type="dojo/method" data-dojo-event="onClick">
+			user_addBargain();
+		</script>
+	</div>
+</div>
+</g:if>
 <iframe name="bargain_iframe" scrollbars=no menubar=no height=600 width=800 resizable=yes toolbar=no status=no style="display:none"></iframe>
 </body>
 </html>

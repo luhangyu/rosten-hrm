@@ -302,6 +302,29 @@ define(["dojo/_base/connect",
         rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userAdd?companyId=" + companyId + "&userid=" + userid + "&type=staffAdd&flowCode=staffAdd");
         
     };
+    personInfor_zz = function() {
+    	var unid = rosten.getGridItemValue1(rosten.kernel.getGrid(),"id");
+        if (unid == "")
+            return;
+        var status = rosten.getGridItemValue1(rosten.kernel.getGrid(),"status");
+        if(!(status=="试用"||status=="实习")){
+        	rosten.alert("只有状态为<试用/实习>的员工才允许转正");
+        	return;
+        }
+        
+        var content = {};
+        content.id = unid;
+        rosten.read(rosten.webPath + "/staff/staffZZ", content, function(data,ioArgs){
+        	if (data.result == "true" || data.result == true) {
+                rosten.alert("成功!").queryDlgClose = function(){
+                    rosten.kernel.refreshGrid();
+                };
+            } else {
+                rosten.alert("失败!");
+            }
+        });
+        
+    };
 	personInfor_dj = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
@@ -330,7 +353,7 @@ define(["dojo/_base/connect",
         var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
         _1.callback = function() {
         	var unids;
-        	if(rosten.kernel.navigationEntity=="newStaffAdd"){
+        	if(rosten.kernel.navigationEntity=="staffAdd" || rosten.kernel.navigationEntity=="staffRegi"){
         		unids = rosten.getGridUnid("multi");
         	}else{
         		unids = rosten._getGridUnid(dom_rostenGrid,"multi");
@@ -339,8 +362,8 @@ define(["dojo/_base/connect",
             if (unids == "") return;
             var content = {};
             content.id = unids;
-            rosten.read(rosten.webPath + "/staff/userDelete", content, function(data,ioArgs){
-            	if(rosten.kernel.navigationEntity=="newStaffAdd"){
+            rosten.readSyncNoTime(rosten.webPath + "/staff/userDelete", content, function(data,ioArgs){
+            	if(rosten.kernel.navigationEntity=="staffAdd" || rosten.kernel.navigationEntity=="staffRegi"){
             		delete_callback(data);
             	}else{
             		delete_callback(data,ioArgs,dom_rostenGrid);

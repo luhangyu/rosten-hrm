@@ -9,6 +9,8 @@ import com.rosten.app.system.Attachment;
 import com.rosten.app.system.Depart
 import com.rosten.app.system.Company
 import com.rosten.app.system.User;
+import com.rosten.app.gtask.Gtask
+import com.rosten.app.share.*
 
 class DepartChange {
 	String id
@@ -175,5 +177,19 @@ class DepartChange {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_STAFF_DEPARTCHANGE"
 		changeReason sqlType:"text"
+	}
+	def beforeDelete(){
+		DepartChange.withNewSession{session ->
+			Gtask.findAllByContentId(this.id).each{item->
+				item.delete()
+			}
+			FlowComment.findAllByBelongToId(this.id).each{item->
+				item.delete()
+			}
+			FlowLog.findAllByBelongToId(this.id).each{item->
+				item.delete()
+			}
+			session.flush()
+		}
 	}
 }

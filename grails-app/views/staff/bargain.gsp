@@ -20,7 +20,7 @@
 		    </td>
 		 	<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>合同类别：</div></td>
 		  	<td width="250">
-		    	<select id="userTypeName" data-dojo-type="dijit/form/ComboBox"
+		    	<select id="bargainType" data-dojo-type="dijit/form/ComboBox"
 	                 	data-dojo-props='name:"bargainType",trim:true,required:true,${fieldAcl.isReadOnly("bargainType")},
 							value:"${bargain?.bargainType}"
 	                '>

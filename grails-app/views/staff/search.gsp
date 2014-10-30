@@ -15,19 +15,19 @@
         
         <tbody>
           <tr>
-            <th width="5%">登录名</th>
+            <th width="8%">登录名</th>
             <td width="18%">
             	<input id="s_username" data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="5%">姓名</th>
+            <th width="8%">姓名</th>
             <td width="18%">
             	<input id="s_chinaName"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="5%">部门</th>
+            <th width="8%">部门</th>
             <td width="18%">
             	<input id="s_departName" data-dojo-type="dijit/form/ValidationTextBox"
 	                data-dojo-props='trim:true,value:""
