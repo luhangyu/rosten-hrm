@@ -98,6 +98,7 @@ class DepartChange {
 	//当前处理人
 	User currentUser
 
+	@GridColumn(name="当前处理人",width="60px",colIdx=8)
 	def getCurrentUserName(){
 		if(currentUser!=null){
 			return currentUser.getFormattedName()
@@ -146,7 +147,7 @@ class DepartChange {
 	String taskId
 	
 	//状态
-	@GridColumn(name="状态",width="60px",colIdx=8)
+	@GridColumn(name="状态",width="60px",colIdx=9)
 	String status = "新增"
 	
 	//--------------------------------------------------------------------------

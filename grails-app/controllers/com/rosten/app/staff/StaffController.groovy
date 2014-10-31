@@ -1713,7 +1713,14 @@ class StaffController {
 			_gridHeader << ["name":"手机号码","width":"auto","colIdx":8,"field":"mobile"]
 			_gridHeader << ["name":"民族","width":"auto","colIdx":9,"field":"nationality"]
 			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":10,"field":"politicsStatus"]
-			_gridHeader << ["name":"状态","width":"auto","colIdx":11,"field":"status"]
+			
+			if("staffAdd".equals(params.type)){
+				_gridHeader << ["name":"当前处理人","width":"auto","colIdx":11,"field":"currentUser"]
+				_gridHeader << ["name":"状态","width":"auto","colIdx":12,"field":"status"]
+			}else{
+				_gridHeader << ["name":"状态","width":"auto","colIdx":11,"field":"status"]
+			}
+			
 
 			json["gridHeader"] = _gridHeader
 		}
@@ -1793,6 +1800,11 @@ class StaffController {
 				sMap["mobile"] = contactInfor?.mobile
 				sMap["nationality"] = personInfor?.nationality
 				sMap["politicsStatus"] = personInfor?.politicsStatus
+				
+				if("staffAdd".equals(params.type)){
+					sMap["currentUser"] = personInfor?.getCurrentUserName()
+				}
+				
 				sMap["status"] = personInfor?.status
 				
 				_json.items+=sMap
