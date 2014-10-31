@@ -118,6 +118,9 @@ class StaffController {
 		bargain.properties = params
 		bargain.clearErrors()
 		
+		bargain.startDate = Util.convertToTimestamp(params.startDate)
+		bargain.endDate = Util.convertToTimestamp(params.endDate)
+		
 		def personInfor = PersonInfor.get(params.personInforId)
 		bargain.personInfor = personInfor
 		
