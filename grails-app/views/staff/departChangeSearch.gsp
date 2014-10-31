@@ -25,16 +25,24 @@
             
             <th width="10%">调入部门</th>
             <td width="18%">
-            	<input id="s_inDepart" data-dojo-type="dijit/form/ValidationTextBox"
+            	<div id="s_inDepart" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""
-	            ' />
+	            '>
+	            	<g:each in="${departList}" var="item">
+	                	<option value="${item.departName }">${item.departName }</option>
+	                </g:each>
+	            </div>
             </td>
             
              <th width="10%">调出部门</th>
             <td width="18%">
-            	<input id="s_departName" data-dojo-type="dijit/form/ValidationTextBox"
+            	<div id="s_departName" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""
-	            ' />
+	            '>
+	            	<g:each in="${departList}" var="item">
+	                	<option value="${item.departName }">${item.departName }</option>
+	                </g:each>
+	            </div>
             </td>
             
             <td>

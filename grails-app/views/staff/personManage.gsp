@@ -51,7 +51,16 @@
 					var p = registry.byId("departTreePane");
 					p.domNode.appendChild(tree.domNode);
 				}
-			}
+			};
+			treeOnLoad = function(){
+				//默认显示的为全部员工信息
+				rosten.variable.currentDeartId = "all";
+				var w = registry.byId("departEditPane");
+				var href = "${createLink(controller:'staff',action:'personInforView')}";
+				var href = href+"/"+"all";
+				w.attr("href",href);
+				
+			};
 			getItem = function(){
 				var tree = registry.byId('depart_tree');
 				if(tree.selectedItem){

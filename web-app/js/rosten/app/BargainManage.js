@@ -66,7 +66,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.openNewWindow("bargain", rosten.webPath + "/staff/bargainShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 	};
 	read_bargain = function() {
-		change_staffDepartChange();
+		change_bargain();
 	};
 	delete_bargain = function() {
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");

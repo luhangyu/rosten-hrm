@@ -57,8 +57,13 @@ class StaffController {
 	def getChooseListSearch ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
+		
 		//政治面貌
 		model["politicsStatusList"] = shareService.getSystemCodeItems(currentUser.company,"rs_politicsStatus")
+		
+		//部门
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
 		
 		render(view:'/staff/chooseStaffSearch',model:model)
 	}
@@ -104,8 +109,8 @@ class StaffController {
 		
 		def company = Company.get(params.companyId)
 		def bargain = new Bargain()
-		if(params.id && !"".equals(params.id)){
-			bargain = Bargain.get(params.id)
+		if(params.barginId && !"".equals(params.barginId)){
+			bargain = Bargain.get(params.barginId)
 		}else{
 			bargain.company = company
 		}
@@ -723,20 +728,26 @@ class StaffController {
 	}
 	
 	def searchView ={
-		
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
 		render(view:'/staff/search',model:model)
 	}
 
 	def departChangeSearchView ={
-		
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
 		render(view:'/staff/departChangeSearch',model:model)
 	}
 	
 	def statusChangeSearchView ={
-		
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
 		render(view:'/staff/statusChangeSearch',model:model)
 	}
 
@@ -1553,7 +1564,13 @@ class StaffController {
 	
 	def userGrid ={
 		def company = Company.get(params.companyId)
-		def departEntity = Depart.get(params.departId)
+		
+		def departEntity
+		//增加部门id为"all"时的特殊处理
+		if("all".equals(params.departId)){
+			departEntity = Depart.get(params.departId)
+		}
+		
 		def json=[:]
 		if(params.refreshHeader){
 			def _gridHeader =[]
@@ -1608,9 +1625,13 @@ class StaffController {
 					}
 				}
 				
-				departs{
-					eq("id",params.departId)
+				//增加部门id为"all"时的特殊处理
+				if(!"all".equals(params.departId)){
+					departs{
+						eq("id",params.departId)
+					}
 				}
+				
 				order("chinaName", "asc")
 				
 			}
@@ -1627,7 +1648,7 @@ class StaffController {
 				sMap["username"] = _user?_user.username:""
 				sMap["userId"] = _user?_user.id:""
 				sMap["chinaName"] = it.chinaName
-				sMap["departName"] = departEntity.departName
+				sMap["departName"] = departEntity?departEntity.departName:it.getUserDepartName()
 				sMap["type"] = it?.getUserTypeName()
 				sMap["sex"] = it?.sex
 				sMap["birthday"] = it?.getFormatteBirthday()
@@ -1649,10 +1670,12 @@ class StaffController {
 			
 			def c = PersonInfor.createCriteria()
 			def query = {
-				departs{
-					eq("id",params.departId)
+				//增加部门id为"all"时的特殊处理
+				if(!"all".equals(params.departId)){
+					departs{
+						eq("id",params.departId)
+					}
 				}
-				
 				searchArgs.each{k,v->
 					if(k.equals("departName")){
 						departs{
