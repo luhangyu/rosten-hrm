@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date;
 
 import com.rosten.app.system.User
+import com.rosten.app.util.SystemUtil
 
 class StaffLog {
 	String id
@@ -48,6 +49,12 @@ class StaffLog {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_STAFF_LOG"
 		
-		reson sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			reson sqlType:"clob"
+		}else{
+			reson sqlType:"text"
+		}
 	}
 }

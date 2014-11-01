@@ -11,6 +11,7 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.User;
 import com.rosten.app.gtask.Gtask
 import com.rosten.app.share.*
+import com.rosten.app.util.SystemUtil
 
 class DepartChange {
 	String id
@@ -176,8 +177,15 @@ class DepartChange {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_STAFF_DEPARTCHANGE"
-		changeReason sqlType:"text"
+		table "ROSTEN_STAFF_DPCH"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			changeReason sqlType:"clob"
+		}else{
+			changeReason sqlType:"text"
+		}
 	}
 	def beforeDelete(){
 		DepartChange.withNewSession{session ->

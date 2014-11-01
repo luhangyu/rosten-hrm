@@ -148,7 +148,7 @@ class ShareController {
 		attachment.realName = realName
 		attachment.type = params.uploadPath
 		attachment.url = uploadPath
-		attachment.size = f.size
+		attachment.size1 = f.size
 		attachment.upUser = (User) springSecurityService.getCurrentUser()
 		
 		if(params.id){
@@ -212,7 +212,7 @@ class ShareController {
 		attachment.realName = realName
 		attachment.type = params.uploadPath
 		attachment.url = uploadPath
-		attachment.size = f.size
+		attachment.size1 = f.size
 		attachment.beUseId = params.id
 		attachment.upUser = (User) springSecurityService.getCurrentUser()
 		attachment.save(flush:true)

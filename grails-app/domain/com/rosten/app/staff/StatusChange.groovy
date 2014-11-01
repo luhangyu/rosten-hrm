@@ -7,6 +7,7 @@ import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Depart
 import com.rosten.app.system.Company
 import com.rosten.app.system.User;
+import com.rosten.app.util.SystemUtil
 
 class StatusChange {
 	String id
@@ -75,7 +76,15 @@ class StatusChange {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_STAFF_STATUSCHANGE"
-		changeReason sqlType:"text"
+		table "ROSTEN_STAFF_STACH"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			changeReason sqlType:"clob"
+		}else{
+			changeReason sqlType:"text"
+		}
+		
 	}
 }

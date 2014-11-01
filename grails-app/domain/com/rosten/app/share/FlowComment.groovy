@@ -5,6 +5,7 @@ import java.util.Date
 
 import com.rosten.app.system.User
 import com.rosten.app.system.Company
+import com.rosten.app.util.SystemUtil
 
 class FlowComment {
 	String id
@@ -40,6 +41,13 @@ class FlowComment {
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_FLOW_COMMENT"
-		content sqlType:"longtext"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			content sqlType:"clob"
+		}else{
+			content sqlType:"longtext"
+		}
 	}
 }

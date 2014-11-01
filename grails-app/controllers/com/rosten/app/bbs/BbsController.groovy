@@ -102,7 +102,7 @@ class BbsController {
 		attachment.realName = realName
 		attachment.type = "bbs"
 		attachment.url = uploadPath
-		attachment.size = f.size
+		attachment.size1 = f.size
 		attachment.beUseId = params.id
 		attachment.upUser = (User) springSecurityService.getCurrentUser()
 		attachment.save(flush:true)
@@ -596,7 +596,7 @@ class BbsController {
 		def bbs = Bbs.get(params.id)
 		json["topic"] = bbs.topic
 		json["content"] = bbs.content
-		json["level"] = bbs.level
+		json["level1"] = bbs.level1
 		json["publishDate"] = bbs.getFormattedPublishDate()
 		json["serialNo"] = bbs.serialNo
 		json["category"] = bbs.category
@@ -651,11 +651,11 @@ class BbsController {
 					case "待发布":
 						break
 					case "已发布":
-						fa.readOnly = ["level","category","publishDate","topic","content"]
+						fa.readOnly = ["level1","category","publishDate","topic","content"]
 						break;
 				}
 			}else{
-				fa.readOnly = ["level","category","publishDate","topic","content"]
+				fa.readOnly = ["level1","category","publishDate","topic","content"]
 			}
 		}
 		model["fieldAcl"] = fa
@@ -710,15 +710,15 @@ class BbsController {
 			
 			//处理format中的内容
 			gridData.items.each{
-				switch(it.level){
+				switch(it.level1){
 				case "普通":
-					it.level = ""
+					it.level1 = ""
 					break
 				case "紧急":
-					it.level = "images/rosten/share/alert_1.gif"
+					it.level1 = "images/rosten/share/alert_1.gif"
 					break
 				case "特急":
-					it.level = "images/rosten/share/alert_1.gif"
+					it.level1 = "images/rosten/share/alert_1.gif"
 					break
 				}
 			}

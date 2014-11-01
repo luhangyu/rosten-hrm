@@ -50,6 +50,6 @@ class ContactInfor {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_STAFF_CONTACTINFOR"
+		table "ROSTEN_STAFF_CON"
 	}
 }

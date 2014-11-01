@@ -9,6 +9,7 @@ import com.rosten.app.system.Company
 import java.text.SimpleDateFormat
 import java.util.Date;
 import java.util.List;
+import com.rosten.app.util.SystemUtil
 
 //个人概况
 class PersonInfor {
@@ -250,16 +251,19 @@ class PersonInfor {
 				item.delete()
 			}
 			
-//			if(this.user){
-//				this.user.delete()
-//			}
-			
 			session.flush()
 		}
 	}
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_STAFF_PERSONINFOR"
-		msResult sqlType:"text"
+		table "ROSTEN_STAFF_PER"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			msResult sqlType:"clob"
+		}else{
+			msResult sqlType:"text"
+		}
 	}
 }

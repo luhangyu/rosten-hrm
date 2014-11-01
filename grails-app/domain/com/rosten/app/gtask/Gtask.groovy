@@ -6,6 +6,7 @@ import com.rosten.app.system.User
 
 import java.text.SimpleDateFormat
 import java.util.Date;
+import com.rosten.app.util.SystemUtil
 
 class Gtask {
 	String id
@@ -74,6 +75,13 @@ class Gtask {
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_GTASK"
-		content sqlType:"text"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			content sqlType:"clob"
+		}else{
+			content sqlType:"text"
+		}
 	}
 }

@@ -2,6 +2,7 @@ package com.rosten.app.staff
 
 import com.rosten.app.system.User
 import java.text.SimpleDateFormat
+import com.rosten.app.util.SystemUtil
 
 //政治面貌
 class Political {
@@ -78,7 +79,14 @@ class Political {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_STAFF_POLITICAL"
 		
-		inReson sqlType:"text"
-		outReson sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			inReson sqlType:"clob"
+			outReson sqlType:"clob"
+		}else{
+			inReson sqlType:"text"
+			outReson sqlType:"text"
+		}
 	}
 }

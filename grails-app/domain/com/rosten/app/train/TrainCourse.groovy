@@ -7,6 +7,7 @@ import java.util.List;
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
+import com.rosten.app.util.SystemUtil
 
 class TrainCourse {
 	
@@ -152,7 +153,14 @@ class TrainCourse {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_TRAIN_COURSE"
-		description sqlType:"text"
+		table "ROSTEN_TRAIN_CO"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			description sqlType:"clob"
+		}else{
+			description sqlType:"text"
+		}
 	}
 }

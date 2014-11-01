@@ -8,6 +8,7 @@ import com.rosten.app.system.Company
 import com.rosten.app.gtask.Gtask
 import java.text.SimpleDateFormat
 import com.rosten.app.share.*
+import com.rosten.app.util.SystemUtil
 
 /**
  * 请假申请
@@ -168,7 +169,14 @@ class Vacate {
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_VACATE"
-		remark sqlType:"text"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			remark sqlType:"clob"
+		}else{
+			remark sqlType:"text"
+		}
 	}
 	def beforeDelete(){
 		Vacate.withNewSession{session ->

@@ -1953,7 +1953,7 @@ class StaffController {
 				attachment.realName = realName
 				attachment.type = "bargain"
 				attachment.url = uploadPath
-				attachment.size = f.size
+				attachment.size1 = f.size
 				attachment.beUseId = bargain.id
 				attachment.upUser = currentUser
 				attachment.save(flush:true)
@@ -2416,7 +2416,7 @@ class StaffController {
 				attachment.realName = realName
 				attachment.type = "staff"
 				attachment.url = uploadPath
-				attachment.size = f.size
+				attachment.size1 = f.size
 				attachment.beUseId = params.personId
 				attachment.upUser = currentUser
 			}

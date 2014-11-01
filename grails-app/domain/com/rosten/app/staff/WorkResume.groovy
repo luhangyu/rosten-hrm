@@ -2,6 +2,7 @@ package com.rosten.app.staff
 
 import java.text.SimpleDateFormat
 import com.rosten.app.annotation.GridColumn
+import com.rosten.app.util.SystemUtil
 
 //工作简历
 class WorkResume {
@@ -68,7 +69,15 @@ class WorkResume {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_STAFF_WORKRESUME"
 		
-		workContent sqlType:"text"
-		remark sqlType:"text"
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			workContent sqlType:"clob"
+			remark sqlType:"clob"
+		}else{
+			workContent sqlType:"text"
+			remark sqlType:"text"
+		}
+		
 	}
 }

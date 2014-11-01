@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import com.rosten.app.system.Company
 
 import com.rosten.app.annotation.GridColumn
+import com.rosten.app.util.SystemUtil
 
 class TrainMessage {
 
@@ -75,8 +76,15 @@ class TrainMessage {
     }
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_TRAIN_MESSAGE"
-		remark sqlType:"text"
+		table "ROSTEN_TRAIN_ME"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			remark sqlType:"clob"
+		}else{
+			remark sqlType:"text"
+		}
 	}
 	
 }

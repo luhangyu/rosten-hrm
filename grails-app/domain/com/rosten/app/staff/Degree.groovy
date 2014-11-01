@@ -59,4 +59,5 @@ class Degree {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_STAFF_DEGREE"
 	}
+	
 }

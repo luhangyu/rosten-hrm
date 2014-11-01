@@ -54,7 +54,7 @@
 				});
 				
 			bbs_add = function(object){
-				var chenkids = ["level","category","publishDate","topic"];
+				var chenkids = ["level1","category","publishDate","topic"];
 				if(!rosten.checkData(chenkids)) return;
 				
 				var content = {};
@@ -308,10 +308,10 @@
 						    	<div align="right"><span style="color:red">*&nbsp;</span>紧急程度：</div>
 				            </td>
 				            <td>
-				            	<select id="level" data-dojo-type="dijit/form/FilteringSelect"
-					                data-dojo-props='name:"level",${fieldAcl.isReadOnly("level")},
+				            	<select id="level1" data-dojo-type="dijit/form/FilteringSelect"
+					                data-dojo-props='name:"level1",${fieldAcl.isReadOnly("level1")},
 					               	trim:true,required:true,missingMessage:"请选择紧急程度！",invalidMessage:"请选择紧急程度！",
-					      			value:"${bbs?.level}"
+					      			value:"${bbs?.level1}"
 					            '>
 									<option value="普通">普通</option>
 									<option value="紧急">紧急</option>

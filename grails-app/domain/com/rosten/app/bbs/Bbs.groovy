@@ -10,6 +10,7 @@ import com.rosten.app.share.*
 import com.rosten.app.gtask.Gtask
 
 import java.text.SimpleDateFormat
+import com.rosten.app.util.SystemUtil
 
 class Bbs {
 	String id
@@ -20,7 +21,7 @@ class Bbs {
 	
 	//紧急层度:普通,紧急,特急
 	@GridColumn(name="紧急度",width="40px",formatter="formatBbsLevel")
-	String level = "普通"
+	String level1 = "普通"
 
 	//类别
 	@GridColumn(name="类别",width="40px")
@@ -185,7 +186,15 @@ class Bbs {
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
 		table "ROSTEN_BBS"
-		content sqlType:"longtext"
+		
+		//兼容mysql与oracle
+		def systemUtil = new SystemUtil()
+		if(systemUtil.getDatabaseType().equals("oracle")){
+			content sqlType:"clob"
+		}else{
+			content sqlType:"longtext"
+		}
+		
 	}
 	def beforeDelete(){
 		Bbs.withNewSession{session ->
