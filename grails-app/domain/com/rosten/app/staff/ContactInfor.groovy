@@ -44,6 +44,7 @@ class ContactInfor {
 		homeAddress nullable:true,blank:true
 		postcode nullable:true,blank:true
 		email nullable:true,blank:true
+		wechat nullable:true,blank:true
     }
 	
 	static belongsTo = [personInfor:PersonInfor]

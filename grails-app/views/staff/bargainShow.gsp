@@ -45,6 +45,13 @@
 				});
 				
 			bargain_add = function(object){
+
+				var rosten_form = registry.byId("rosten_form");
+				if(!rosten_form.validate()){
+					rosten.alert("请正确填写信息！");
+					return;
+				}
+				
 				var content = {};
 				
 				//添加新增时添加附件功能
@@ -102,7 +109,7 @@
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
 	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"600px"}'>
-	  		<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">	
+	  		<form data-dojo-type="dijit/form/Form" class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">	
 	  		<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
 	  			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"员工信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
 					href:"${createLink(controller:'bargain',action:'getBargainPerson',id:bargain?.id)}"

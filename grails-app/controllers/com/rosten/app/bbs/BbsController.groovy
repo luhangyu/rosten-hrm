@@ -171,11 +171,15 @@ class BbsController {
 //				smap["isnew"] = true
 //			}
 			
-			def _num = today - it.publishDate
-			if(_num < bbsConfig.showDays){
+			if(bbsConfig){
+				def _num = today - it.publishDate
+				if(_num < bbsConfig.showDays){
+					smap["isnew"] = true
+				}
+			}else{
+				//默认全部显示
 				smap["isnew"] = true
 			}
-			
 			bbsList << smap
 		}
 		render bbsList as JSON

@@ -1872,7 +1872,9 @@ class StaffController {
 		if(!entity){
 			entity = new Bargain()
 			def bargainConfig = BargainConfig.first()
-			entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
+			if(bargainConfig){
+				entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
+			}
 		}
 		
 		model["bargain"] = entity
@@ -2013,7 +2015,9 @@ class StaffController {
 			entity = new Bargain()
 			
 			def bargainConfig = BargainConfig.first()
-			entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
+			if(bargainConfig){
+				entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
+			}
 		}
 		
 		model["bargain"] = entity
