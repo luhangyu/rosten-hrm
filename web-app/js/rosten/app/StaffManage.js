@@ -94,7 +94,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=staffDepartChange");
 		rosten.kernel.getGrid().clearSelected();
 	};
 	add_staffDepartChange = function() {
@@ -108,7 +108,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			return;
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=staffDepartChange");
 	};
 	read_staffDepartChange = function() {
 		change_staffDepartChange();

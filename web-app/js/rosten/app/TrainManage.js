@@ -27,7 +27,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainMessageShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainMessageShow/" + unid + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=trainCourse");
 		rosten.kernel.getGrid().clearSelected();
 	};
 	trainCourse_formatTopic = function(value,rowIndex){
@@ -37,7 +37,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=trainCourse");
 		rosten.kernel.getGrid().clearSelected();
 	};
 	trainCourse_add = function(){
@@ -54,7 +54,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			return;
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=trainCourse");
 	};
 	trainCourse_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
@@ -68,12 +68,10 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		};
 	};
 	
-	
-	
 	degreeStudy_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("DegreeStudy", rosten.webPath + "/train/degreeStudyAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("DegreeStudy", rosten.webPath + "/train/degreeStudyAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=degree");
 	};
 	degreeStudy_delete = function(){
 		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
@@ -93,7 +91,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("degreeStudy", rosten.webPath + "/train/degreeStudyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("degreeStudy", rosten.webPath + "/train/degreeStudyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=degree");
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
@@ -101,7 +99,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	forgeinStudy_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("forgeinStudy", rosten.webPath + "/train/forgeinStudyAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("forgeinStudy", rosten.webPath + "/train/forgeinStudyAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=forgeinStudy");
 	};
 	
 	forgeinStudy_delete = function(){
@@ -124,7 +122,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("forgeinStudy", rosten.webPath + "/train/forgeinStudyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+		rosten.openNewWindow("forgeinStudy", rosten.webPath + "/train/forgeinStudyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=forgeinStudy");
 		rosten.kernel.getGrid().clearSelected();
 	};
 	

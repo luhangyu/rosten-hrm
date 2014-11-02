@@ -375,19 +375,19 @@ define(["dojo/_base/kernel"
     	
     	switch(type){
     	case "【公告】":
-    		rosten.openNewWindow("bbs", rosten.webPath + "/bbs/bbsShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    		rosten.openNewWindow("bbs", rosten.webPath + "/bbs/bbsShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=bbs");
     		break;
     	case "【员工入职】":
     		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&type=staffAdd&flowCode=staffAdd");
     		break;
     	case "【请假】":
-    		rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    		rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=vacate");
     		break;
     	case "【员工调动】":
-    		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=staffDepartChange");
     		break;
     	case "【培训管理】":
-    		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + id + "?userid=" + userid + "&companyId=" + companyId);
+    		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=trainCourse");
     		break;
     	}
     	

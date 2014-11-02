@@ -12,6 +12,7 @@
 	<script type="text/javascript">
 		require(["dojo/parser",
 		 		"dojo/_base/kernel",
+		 		"dojo/dom",
 		 		"dijit/registry",
 		 		"dojo/_base/xhr",
 		 		"dijit/form/ValidationTextBox",
@@ -21,10 +22,12 @@
 		 		"dijit/form/DateTextBox",
 		 		"dijit/form/NumberTextBox",
 		 		"dijit/form/Form",
+		 		"dojox/form/Uploader",
+		 		"dojox/form/uploader/FileList",
 		     	"rosten/widget/ActionBar",
 		     	"rosten/app/Application",
 		     	"rosten/kernel/behavior"],
-			function(parser,kernel,registry,xhr,datestamp,DepartUserDialog){
+			function(parser,kernel,dom,registry,xhr,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
 					rosten.init({webpath:"${request.getContextPath()}"});
 					rosten.cssinit();
@@ -38,8 +41,25 @@
 					};
 					return;
 				}
+
+				var content ={};
 				
-				rosten.readSync(rosten.webPath + "/publicc/downloadFileSave",{},function(data){
+				//添加新增时添加附件功能
+				<g:if test="${!downloadFile?.id}">
+					var filenode = dom.byId("fileUpload_show");
+					var fileIds = [];
+
+			       	var node=filenode.firstChild;
+			       	while(node!=null){
+			            node=node.nextSibling;
+			            if(node!=null){
+			            	fileIds.push(node.getAttribute("id"));
+				        }
+			        }
+					content.attachmentIds = fileIds.join(",");
+				</g:if>
+				
+				rosten.readSync(rosten.webPath + "/publicc/downloadFileSave",content,function(data){
 					if(data.result=="true" || data.result == true){
 						rosten.alert("保存成功！").queryDlgClose= function(){
 							if(window.location.href.indexOf(data.id)==-1){
@@ -68,11 +88,11 @@
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'publiccAction',action:'downloadFileForm',id:downloadFile?.id,params:[userid:user?.id])}"'></div>
 	</div>
 	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
+	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"600px"}'>
         	<form class="rosten_form" id="rosten_form" onsubmit="return false;" style="padding:0px">
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${downloadFile?.id }"' />
         		<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
-        	  	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"240px",marginBottom:"2px"'>
+        	  	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"250px",marginBottom:"2px"'>
         	  
                 <table class="tableData" style="width:740px;margin:0px">
                     <tbody>
@@ -100,11 +120,11 @@
 						    <td width="120" name="numberTd"><div align="right"><span style="color:red">*&nbsp;</span>显示顺序：</div></td>
 						    <td width="250" name="numberTd">
 						    	<select id="number" data-dojo-type="dijit/form/NumberTextBox" 
-					                data-dojo-props='name:"number",${fieldAcl.isReadOnly("number")},
+					                data-dojo-props='name:"number",${fieldAcl.isReadOnly("number1")},
 					                trim:true,
 				                 	required:true,
 				                 	style:{width:"60px"},
-					      			value:"${downloadFile?.number}"
+					      			value:"${downloadFile?.number1}"
 					            '>
 					    	</select>
 				           </td>
@@ -143,9 +163,9 @@
                 </div>
 			</form>
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-				height:"60px",href:"${createLink(controller:'publicc',action:'getFileUpload',id:downloadFile?.id)}"'>
+	  			href:"${createLink(controller:'share',action:'getFileUploadNew',id:downloadFile?.id,params:[uploadPath:'publicc',isShowFile:isShowFile])}"'>
+				
 			</div>
-			
 		</div>
 	</div>
 </body>
