@@ -1470,7 +1470,7 @@
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>年  月</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
-	w:w="1165" w:type="dxa" /><w:vAlign w:val="center" /></w:tcPr><w:p
+	w:w="1170" w:type="dxa" /><w:vAlign w:val="center" /></w:tcPr><w:p
 	wsp:rsidR="00F00001" wsp:rsidRDefault="00E71A5C" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
@@ -1563,7 +1563,7 @@
 	wsp:rsidRDefault="00E71A5C" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>浙江大学</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${degree.degreeName!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="1469" w:type="dxa" /><w:gridSpan w:val="2" /><w:vAlign
 	w:val="center" /></w:tcPr><w:p wsp:rsidR="00F00001"
 	wsp:rsidRDefault="00F00001" wsp:rsidP="00AD527C"><w:pPr><w:spacing
@@ -1574,7 +1574,7 @@
 	wsp:rsidR="00F00001" wsp:rsidRDefault="00E71A5C" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>200908</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${degree.getFormatteEndDate()!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="1544" w:type="dxa" /><w:vmerge /><w:vAlign w:val="center" /></w:tcPr><w:p
 	wsp:rsidR="00F00001" wsp:rsidRDefault="00F00001" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
@@ -1620,7 +1620,7 @@
 	wsp:rsidRDefault="00E71A5C" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>浙江大学</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${workResume.workCompany!}    </w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="1469" w:type="dxa" /><w:gridSpan w:val="2" /><w:vAlign
 	w:val="center" /></w:tcPr><w:p wsp:rsidR="00F00001"
 	wsp:rsidRDefault="00F00001" wsp:rsidP="00AD527C"><w:pPr><w:spacing
@@ -1636,7 +1636,7 @@
 	wsp:rsidRDefault="00E71A5C" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>200910</w:t></w:r></w:p></w:tc></w:tr><w:tr
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>  ${workResume.getFormatteStartDate()!}   </w:t></w:r></w:p></w:tc></w:tr><w:tr
 	wsp:rsidR="00F83629"><w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa" /><w:bottom
 	w:w="0" w:type="dxa" /></w:tblCellMar></w:tblPrEx><w:trPr><w:cantSplit /><w:trHeight
 	w:val="575" /><w:jc w:val="center" /></w:trPr><w:tc><w:tcPr><w:tcW
@@ -1665,7 +1665,7 @@
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz-cs
 	w:val="21" /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="宋体"
 	w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz-cs
-	w:val="21" /></w:rPr><w:t>会长</w:t></w:r></w:p></w:tc></w:tr><w:tr
+	w:val="21" /></w:rPr><w:t>    </w:t></w:r></w:p></w:tc></w:tr><w:tr
 	wsp:rsidR="00F83629"><w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa" /><w:bottom
 	w:w="0" w:type="dxa" /></w:tblCellMar></w:tblPrEx><w:trPr><w:cantSplit /><w:trHeight
 	w:val="676" /><w:jc w:val="center" /></w:trPr><w:tc><w:tcPr><w:tcW
@@ -1707,7 +1707,7 @@
 	wsp:rsidR="00571C78" wsp:rsidRPr="00571C78" wsp:rsidRDefault="00E71A5C"
 	wsp:rsidP="00F13803"><w:pPr><w:rPr><w:rFonts w:ascii="宋体" w:h-ansi="宋体"
 	w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>简历简历</w:t></w:r></w:p></w:tc></w:tr><w:tr
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${worstr!}</w:t></w:r></w:p></w:tc></w:tr><w:tr
 	wsp:rsidR="00F00001"><w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa" /><w:bottom
 	w:w="0" w:type="dxa" /></w:tblCellMar></w:tblPrEx><w:trPr><w:cantSplit /><w:trHeight
 	w:val="1544" /><w:jc w:val="center" /></w:trPr><w:tc><w:tcPr><w:tcW
@@ -1725,7 +1725,7 @@
 	wsp:rsidR="00571C78" wsp:rsidRPr="00571C78" wsp:rsidRDefault="00E71A5C"
 	wsp:rsidP="00571C78"><w:pPr><w:ind w:first-line-chars="50" w:first-line="105" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>成员成员</w:t></w:r></w:p></w:tc></w:tr><w:tr
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${famstr!}</w:t></w:r></w:p></w:tc></w:tr><w:tr
 	wsp:rsidR="00F00001"><w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa" /><w:bottom
 	w:w="0" w:type="dxa" /></w:tblCellMar></w:tblPrEx><w:trPr><w:cantSplit /><w:trHeight
 	w:val="1393" /><w:jc w:val="center" /></w:trPr><w:tc><w:tcPr><w:tcW
@@ -1739,9 +1739,13 @@
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>审 核 意 见</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="7321" w:type="dxa" /><w:gridSpan w:val="7" /><w:vAlign
 	w:val="center" /></w:tcPr><w:p wsp:rsidR="00F00001"
-	wsp:rsidRDefault="00E71A5C"><w:pPr><w:jc w:val="center" /><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>意见</w:t></w:r></w:p></w:tc></w:tr><w:tr
+	wsp:rsidRDefault="00E71A5C" wsp:rsidP="00F83629"><w:pPr><w:spacing
+	w:line="280" w:line-rule="exact" /><w:ind w:left-chars="34"
+	w:left="479" w:hanging-chars="170" w:hanging="408" /><w:rPr><w:rFonts
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz
+	w:val="24" /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="宋体"
+	w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz
+	w:val="24" /></w:rPr><w:t>${rlzyyj!}</w:t></w:r></w:p></w:tc></w:tr><w:tr
 	wsp:rsidR="00F00001"><w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa" /><w:bottom
 	w:w="0" w:type="dxa" /></w:tblCellMar></w:tblPrEx><w:trPr><w:cantSplit /><w:trHeight
 	w:val="1553" /><w:jc w:val="center" /></w:trPr><w:tc><w:tcPr><w:tcW
@@ -1762,7 +1766,7 @@
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz
 	w:val="24" /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="宋体"
 	w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz
-	w:val="24" /></w:rPr><w:t>审批</w:t></w:r></w:p></w:tc></w:tr><w:tr
+	w:val="24" /></w:rPr><w:t>${mszyyj!}</w:t></w:r></w:p></w:tc></w:tr><w:tr
 	wsp:rsidR="00F51AAF"><w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa" /><w:bottom
 	w:w="0" w:type="dxa" /></w:tblCellMar></w:tblPrEx><w:trPr><w:cantSplit /><w:trHeight
 	w:val="1857" /><w:jc w:val="center" /></w:trPr><w:tc><w:tcPr><w:tcW
@@ -1783,7 +1787,7 @@
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz
 	w:val="24" /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="宋体"
 	w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /><w:sz
-	w:val="24" /></w:rPr><w:t>协会意见</w:t></w:r></w:p></w:tc></w:tr></w:tbl><w:p
+	w:val="24" /></w:rPr><w:t>${lszyyj!}</w:t></w:r></w:p></w:tc></w:tr></w:tbl><w:p
 	wsp:rsidR="00FB3064" wsp:rsidRPr="005B4CEE" wsp:rsidRDefault="005B4CEE"
 	wsp:rsidP="00061675"><w:pPr><w:ind w:first-line-chars="150" w:first-line="315" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
