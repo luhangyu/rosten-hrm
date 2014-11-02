@@ -1,34 +1,112 @@
 package com.rosten.app.staff
 
+import java.util.Map;
+
 import com.rosten.app.util.GridUtil
 import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.system.User
 import com.rosten.app.system.Attachment
+import com.rosten.app.share.FlowComment
 
 class StaffService {
+	
+	public List<Map<String, Object>> getCommentByStatus(String dealId,String status){
+		def _list =[]
+		def commentList = FlowComment.findAllByBelongToIdAndStatus(dealId,status)
+		if(commentList && commentList.size()>0){
+			commentList.each{
+				def map =[:]
+				map["name"] = it.user.getChinaName()
+				map["content"]= it.content
+				map["date"]= it.getFormattedCreatedDate()
+				_list << map
+			}
+			
+		}
+		return _list
+	}
 	
 	public PersonInfor getPersonInfor(String id) {
 		return PersonInfor.get(id)
 	}
 	
+	//通讯方式
 	public ContactInfor getContactInfor(PersonInfor person){
 		return ContactInfor.findByPersonInfor(person)
 	}
 	
+	//工作经历
+	public WorkResume getWorkResumeByPersonInfor(PersonInfor person){
+		def _list = WorkResume.findAllByPersonInfor(person,[max: 1, sort: "startDate", order: "desc"])
+		if(_list && _list.size()>0){
+			return _list[0]
+		}else{
+			return null
+		}
+	}
+	
+	//工作经历
+	public String getWorkResume(PersonInfor person){
+		def _list = WorkResume.findAllByPersonInfor(person)
+		if(_list && _list.size()>0){
+			String con="";
+			for(int i=0;i<_list.size();i++){
+				def gzdw = _list[i].workCompany
+				def kssj = _list[i].getFormatteStartDate()
+				def jssj = _list[i].getFormatteEndDate()
+				def zw = (null==_list[i].duty||"".equals(_list[i].duty))?"":_list[i].duty
+				def zmr =(null==_list[i].proveName||"".equals(_list[i].proveName))?"": _list[i].proveName
+				
+				con+="工作单位："+gzdw+" 时间："+kssj+"—"+jssj+" 职务："+zw+" 证明人："+zmr+"&#x000D;";
+			}
+			return con;
+		}else{
+			return ""
+		}
+	}
+	
+	//家庭成员
+	public String geFamilyInfor(PersonInfor person){
+		def _list = FamilyInfor.findAllByPersonInfor(person)
+		if(_list && _list.size()>0){
+			String con="";
+			for(int i=0;i<_list.size();i++){
+				con+="关系："+_list[i].relation+" 姓名："+_list[i].name+" 移动电话："+_list[i].mobile+"&#x000D;";
+			}
+			return con;
+		}else{
+			return ""
+		}
+	}
+	
+	//最高学历（毕业学校，毕业时间）
+	public Degree getDegreeByPersonInfor(PersonInfor person){
+		def _list = Degree.findAllByPersonInfor(person,[max: 1, sort: "endDate", order: "desc"])
+		if(_list && _list.size()>0){
+			return _list[0]
+		}else{
+			return null
+		}
+	}
+	
+	//附件信息
 	public Attachment getAttachment(String ids){  
 		return Attachment.findByBeUseIdAndType(ids,"staff")
 	}
 	
+	//部门调动信息
 	public DepartChange getDepartChange(String id){
 		return DepartChange.get(id);
 	}
+	
 	
 	public PersonInfor getPersonByDepaCh(String id){
 		DepartChange depa =  DepartChange.get(id);
 		return depa.personInfor;
 	}
 	
+	//离职，退休
 	public StatusChange getStatusChange(String id){
 		return StatusChange.get(id);
 	}

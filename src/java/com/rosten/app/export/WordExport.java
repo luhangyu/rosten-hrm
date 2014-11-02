@@ -18,13 +18,19 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
+
+
 import com.rosten.app.util.Base64Util;
 import com.rosten.app.export.ZipUtil;
 import com.rosten.app.staff.ContactInfor;
+import com.rosten.app.staff.Degree;
 import com.rosten.app.staff.DepartChange;
 import com.rosten.app.staff.PersonInfor;
 import com.rosten.app.staff.StaffService;
 import com.rosten.app.staff.StatusChange;
+import com.rosten.app.staff.WorkResume;
 import com.rosten.app.system.Attachment;
 
 public class WordExport {
@@ -35,7 +41,7 @@ public class WordExport {
 		StaffService staffser = new StaffService();
 		String zpstr="";
 		PersonInfor personInfor = staffser.getPersonInfor(id);
-		data.put("personInfor", personInfor);	
+		data.put("personInfor", personInfor);
 		Attachment attachment = staffser.getAttachment(id);
 		if(null!=attachment){
 			 zpstr = getZpStr("web-app/images/staff/" + attachment.getRealName());
@@ -49,8 +55,73 @@ public class WordExport {
 				con = new ContactInfor();
 				con.setHomeAddress("");
 			}
+			//简历
+			WorkResume work = staffser.getWorkResumeByPersonInfor(personInfor);
+			if (null==work){
+				work = new WorkResume();
+				work.setDuty("");
+			}
+			
+			//学习经历
+			Degree deg = staffser.getDegreeByPersonInfor(personInfor);
+			if (null==deg){
+				deg = new Degree();
+				deg.setDegree("");
+			}
+			
+			//简历
+			String worstr =  staffser.getWorkResume(personInfor);
+			
+			//家庭成员
+			String famstr =  staffser.geFamilyInfor(personInfor);
+			
+			//人力资源
+			List<Map<String, Object>> rlzylist = staffser.getCommentByStatus(personInfor.getId(),"部门审核");
+			String rlzyyj="";
+			if(null!=rlzylist){
+				for(int i=0;i<rlzylist.size();i++){
+					rlzyyj +=rlzylist.get(i).get("name")+"  "+ rlzylist.get(i).get("content")+"  "+rlzylist.get(i).get("date")+"&#x000D;";
+				}
+			}
+			
+			//秘书长
+			List<Map<String, Object>> mszlist = staffser.getCommentByStatus(personInfor.getId(),"秘书长审核");
+			
+			String mszyyj="";
+			if(null!=mszlist){
+				for(int i=0;i<mszlist.size();i++){
+					mszyyj += mszlist.get(i).get("name")+"  "
+				+(null== mszlist.get(i).get("content")||"".equals(mszlist.get(i).get("content"))?"": mszlist.get(i).get("content")
+				+"  "
+				+mszlist.get(i).get("date")+"&#x000D;");
+				}
+			}
+			
+			//利是长
+			List<Map<String, Object>> lszlist = staffser.getCommentByStatus(personInfor.getId(),"理事长审批");
+			String lszyyj="";
+			if(null!=lszlist){
+				for(int i=0;i<lszlist.size();i++){
+					mszyyj += lszlist.get(i).get("name")+"  "
+				+(null== lszlist.get(i).get("content")||"".equals(lszlist.get(i).get("content"))?"": lszlist.get(i).get("content")
+				+"  "
+				+mszlist.get(i).get("date")+"&#x000D;");
+				}
+				
+			}
+			
 			data.put("contactInfor", con);	
+			data.put("workResume", work);	
 			data.put("zpstr", zpstr);	
+			data.put("degree", deg);	
+			data.put("worstr", worstr);
+			data.put("famstr", famstr);
+			
+			data.put("rlzyyj", rlzyyj);
+			
+			data.put("mszyyj", mszyyj);
+			
+			data.put("lszyyj", lszyyj);
 		}
 		File wordFile = FreeMarkerUtil.getWordFile(data,
 				"classpath:com/rosten/app/template", "ygdjb.xml",personInfor.getChinaName()+"登记表");
