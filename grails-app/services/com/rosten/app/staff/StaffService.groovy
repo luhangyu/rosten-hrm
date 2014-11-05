@@ -10,7 +10,6 @@ import com.rosten.app.system.Attachment
 import com.rosten.app.share.FlowComment
 
 class StaffService {
-	
 	public List<Map<String, Object>> getCommentByStatus(String dealId,String status){
 		def _list =[]
 		def commentList = FlowComment.findAllByBelongToIdAndStatus(dealId,status)

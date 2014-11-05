@@ -1019,6 +1019,8 @@ class StaffController {
 			//所属机构
 			def currentUser = springSecurityService.getCurrentUser()
 			def company = currentUser.company
+			def personInfor = PersonInfor.get(params.personInforId)
+			def contactInfor = ContactInfor.findByPersonInfor(personInfor)
 			
 			def user 
 			if(params.id && !"".equals(params.id)){
@@ -1034,10 +1036,17 @@ class StaffController {
 			user.properties = params
 			user.clearErrors()
 			
+			//冗余相关用户信息
+			user.chinaName = personInfor.chinaName
+			user.userTypeEntity = personInfor.userTypeEntity
+			user.telephone = contactInfor?.mobile
+			user.idCard = personInfor.idCard
+			user.address = contactInfor?.address
+			user.email = contactInfor.email
+			
 			user.company = company
 			user.save()
 			
-			def personInfor = PersonInfor.get(params.personInforId)
 			personInfor.user = user
 			
 			if(personInfor.save(flush:true)){
@@ -1253,6 +1262,8 @@ class StaffController {
 			user.properties = params
 			user.username = username
 			user.clearErrors()
+			
+			user.telephone = params.mobile
 			
 			if(params.userTypeName && !params.userTypeName.equals(user.getUserTypeName())){
 				if(userType){

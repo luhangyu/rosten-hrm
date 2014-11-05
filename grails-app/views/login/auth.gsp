@@ -17,6 +17,7 @@
 				<g:if test='${flash.message}'>
 					
 				</g:if>
+				<input type='checkbox' style="display:none" id='remember_me' name='${rememberMeParameter}' <g:if test='${hasCookie}'>checked='checked'</g:if> />
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<th>用户名</th>

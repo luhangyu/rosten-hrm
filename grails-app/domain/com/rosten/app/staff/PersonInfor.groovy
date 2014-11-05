@@ -72,6 +72,21 @@ class PersonInfor {
 	//户口所在地
 	String householdRegi
 	
+	//毕业学校
+	String schoolName
+	
+	//最高学历
+	String upDegree
+	
+	//职称
+	String technicalName
+	
+	//工作岗位
+	String workJob
+	
+	//工作时间
+	Date workJobDate
+	
 	//人事关系转入时间
 	Date intoday = new Date()
 	
@@ -209,6 +224,12 @@ class PersonInfor {
 		user nullable:true,blank:true
 		attachment nullable:true,blank:true
 		msResult nullable:true,blank:true
+		
+		schoolName nullable:true,blank:true
+		upDegree nullable:true,blank:true
+		technicalName nullable:true,blank:true
+		workJob nullable:true,blank:true
+		workJobDate nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true
