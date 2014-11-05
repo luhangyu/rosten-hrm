@@ -230,6 +230,9 @@ class PersonInfor {
 		technicalName nullable:true,blank:true
 		workJob nullable:true,blank:true
 		workJobDate nullable:true,blank:true
+		politicsStatus nullable:true,blank:true
+		health nullable:true,blank:true
+		marriage nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true

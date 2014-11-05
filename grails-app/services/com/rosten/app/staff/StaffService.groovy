@@ -381,8 +381,11 @@ class StaffService {
 	public boolean commonSave(PersonInfor entity,String departName,User userEntity) {
 		
 		def departEntity = Depart.findByDepartName(departName);
-		entity.addToDeparts(departEntity)
-		entity.company = userEntity.company
+		if(departEntity){
+			entity.addToDeparts(departEntity)
+			entity.company = userEntity.company
+		}
+		
 		
 		if(entity.save(flush:true)){
 			return true
