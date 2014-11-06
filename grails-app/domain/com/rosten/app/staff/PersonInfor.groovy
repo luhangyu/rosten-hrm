@@ -9,6 +9,7 @@ import com.rosten.app.system.Company
 import java.text.SimpleDateFormat
 import java.util.Date;
 import java.util.List;
+
 import com.rosten.app.util.SystemUtil
 
 //个人概况
@@ -84,8 +85,20 @@ class PersonInfor {
 	//工作岗位
 	String workJob
 	
+	//所学专业
+	String major
+	
 	//工作时间
 	Date workJobDate
+	
+	def getFormatteWorkJobDate(){
+		if(workJobDate!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			return sd.format(workJobDate)
+		}else{
+			return ""
+		}
+	}
 	
 	//人事关系转入时间
 	Date intoday = new Date()
@@ -230,6 +243,7 @@ class PersonInfor {
 		technicalName nullable:true,blank:true
 		workJob nullable:true,blank:true
 		workJobDate nullable:true,blank:true
+		major nullable:true,blank:true
 		politicsStatus nullable:true,blank:true
 		health nullable:true,blank:true
 		marriage nullable:true,blank:true

@@ -253,7 +253,51 @@
                 '/>
 		    </td>
 		</tr>
-		
+		<tr>
+		 	<td><div align="right">毕业学校：</div></td>
+			<td>
+		    	<input id="schoolName" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"schoolName",trim:true,${fieldAcl.isReadOnly("schoolName")},
+						value:"${personInforEntity?.schoolName}"
+                '/>
+			</td>
+			<td><div align="right">所学专业：</div></td>
+		 	<td>
+		    	<input id="major" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"major",trim:true,${fieldAcl.isReadOnly("major")},
+						value:"${personInforEntity?.major}"
+                '/>
+		    </td>
+		</tr>
+		<tr>
+		 	<td><div align="right">学历：</div></td>
+			<td>
+		    	<input id="upDegree" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"upDegree",trim:true,${fieldAcl.isReadOnly("upDegree")},
+						value:"${personInforEntity?.upDegree}"
+                '/>
+			</td>
+			<td><div align="right">工作岗位：</div></td>
+		 	<td>
+		    	<input id="workJob" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"workJob",trim:true,${fieldAcl.isReadOnly("workJob")},
+						value:"${personInforEntity?.workJob}"
+                '/>
+		    </td>
+		</tr>
+		<tr>
+		 	<td><div align="right">参加工作时间：</div></td>
+			<td>
+		    	<input id="workJobDate" data-dojo-type="dijit/form/DateTextBox" 
+                 	data-dojo-props='name:"workJobDate",trim:true,${fieldAcl.isReadOnly("workJobDate")},
+						value:"${personInforEntity?.getFormatteWorkJobDate()}"
+                '/>
+			</td>
+			<td></td>
+		 	<td>
+		    	
+		    </td>
+		</tr>
 	</table>
 	<div>
 		<img id="pic" src="${resource(dir:'images/staff',file:imgName)}" style="width:80px;height:100px"></img>

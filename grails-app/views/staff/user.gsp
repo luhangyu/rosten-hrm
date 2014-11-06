@@ -188,9 +188,13 @@
 							}
 						};
 					}else if(data.result=="repeat"){
-						rosten.alert("账号冲突，保存失败!");
+						rosten.alert("账号冲突，保存失败!").queryDlgClose = function(){
+		            		registry.byId("username").set("value","");
+		            	};
+						rosten.toggleAction(buttonWidget,false);
 					}else{
 						rosten.alert("保存失败!");
+						rosten.toggleAction(buttonWidget,false);
 					}
 				},function(error){
 					rosten.alert("系统错误，请通知管理员！");
@@ -503,7 +507,7 @@
 			</div>
 			</g:if>
 			
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"345px",marginBottom:"2px",
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"410px",marginBottom:"2px",
 				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId])}"
 			'>
 			</div>

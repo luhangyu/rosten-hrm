@@ -26,7 +26,7 @@
 							<td colspan="2">
 								<div style="margin-top:10px">
 								
-								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){}'>模板下载</button>
+								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.openNewWindow("staffTemplate", rosten.webPath + "/templates/staffTemplate.xls");}'>模板下载</button>
 								<button data-dojo-type="dijit/form/Button" type="submit" data-dojo-props=''}'>确定</button>
 								<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){rosten.kernel.hideRostenShowDialog()}'>取消</button>
 								</div>

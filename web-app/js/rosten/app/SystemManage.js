@@ -215,6 +215,10 @@ define(["dojo/_base/connect",
                 rosten.kernel.hideRostenShowDialog();
                 dom_rostenGrid.refresh();
                 rosten.alert("成功!");
+            }else if(data.result == "exist"){
+            	rosten.alert("当前账号已存在!").queryDlgClose = function(){
+            		registry.byId("username").set("value","");
+            	}
             } else {
                 rosten.alert("失败!");
             }

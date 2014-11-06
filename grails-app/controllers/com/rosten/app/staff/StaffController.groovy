@@ -435,6 +435,13 @@ class StaffController {
 			switch (true){
 				case departChange.status.contains("已结束"):
 					logContent = "结束流程"
+					
+					//修改当前用户的部门信息
+					def personInfor = departChange.personInfor
+					personInfor.departs.clear()
+					personInfor.addToDeparts(departChange.inDepart)
+					personInfor.save(flush:true)
+					
 					break
 				case departChange.status.contains("归档"):
 					logContent = "归档"
@@ -1016,6 +1023,20 @@ class StaffController {
 	def asignAccountSubmit ={
 		def json
 		try{
+			
+			/*
+			 * 2014-11-6判断用户名是否已存在
+			 */
+			def _username = params.username
+			if(params.userNameFront){
+				_username = params.userNameFront + params.username
+			}
+			if(User.findByUsername(_username)){
+				json = [result:'exist']
+				render json as JSON
+				return
+			}
+			
 			//所属机构
 			def currentUser = springSecurityService.getCurrentUser()
 			def company = currentUser.company
@@ -1258,6 +1279,13 @@ class StaffController {
 				if(params.userNameFront){
 					username = params.userNameFront + params.username
 				}
+				
+				if(User.findByUsername(username)){
+					model["result"] = "repeat"
+					render model as JSON
+					return
+				}
+				
 			}
 			user.properties = params
 			user.username = username
@@ -2115,7 +2143,7 @@ class StaffController {
 		if("onlyShow".equals(params.type)){
 			//只提供查询显示功能
 			fa.readOnly = ["chinaName","usedName","userTypeName","idCard","birthday","city","nationality","birthAddress","nativeAddress","politicsStatus","blood","health","householdRegi","intoday","techGrade","staffOnDay"]
-			fa.readOnly += ["sex","marriage","religion"]
+			fa.readOnly += ["sex","marriage","religion","schoolName","major","upDegree","workJob","workJobDate"]
 			model["onlyShow"] = true
 		}
 		model["fieldAcl"] = fa
@@ -2454,18 +2482,24 @@ class StaffController {
 		def currentUser = (User) springSecurityService.getCurrentUser()
 		def f = request.getFile("uploadedfile")
 		if (!f.empty) {
+			
+			def uploadPath
+			def companyPath = currentUser.company?.shortName
+			if(companyPath == null){
+				uploadPath = sysUtil.getUploadPath("template")+"/"
+			}else{
+				uploadPath = sysUtil.getUploadPath(currentUser.company.shortName + "/template") + "/"
+			}
+			
 			//添加附件信息
-			def uploadPath = new File(servletContext.getRealPath("/"), "/template/staff/")
+//			def uploadPath = new File(servletContext.getRealPath("/"), "/template/staff/")
 			
 			String name = f.getOriginalFilename()//获得文件原始的名称
 			def realName = sysUtil.getRandName(name)
 			f.transferTo(new File(uploadPath,realName))
 			
-			
-			UserType userType = UserType.first()
-			
 			def excelimp = new ExcelImport()
-			def result = excelimp.personsjdr(servletContext.getRealPath("/")+"template/staff/",realName,currentUser,userType)
+			def result = excelimp.personsjdr(uploadPath,realName,currentUser)
 			if("true".equals(result)){
 				ostr ="<script>var _parent = window.parent;_parent.rosten.alert('导入成功').queryDlgClose=function(){_parent.rosten.kernel.hideRostenShowDialog();_parent.rosten.kernel.refreshGrid();}</script>"
 			}else{

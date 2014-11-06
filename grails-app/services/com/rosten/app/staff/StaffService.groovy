@@ -7,9 +7,21 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.system.User
 import com.rosten.app.system.Attachment
+import com.rosten.app.system.UserType
 import com.rosten.app.share.FlowComment
 
 class StaffService {
+	
+	def getPersonInforByDepart(Depart depart){
+		def c = PersonInfor.createCriteria()
+		def resultList = c.list{
+			departs{
+				eq("id",depart?.id)
+			}
+		}
+		return resultList
+	}
+	
 	public List<Map<String, Object>> getCommentByStatus(String dealId,String status){
 		def _list =[]
 		def commentList = FlowComment.findAllByBelongToIdAndStatus(dealId,status)
@@ -378,16 +390,24 @@ class StaffService {
 	
 	//后期需要更新改造
 	
-	public boolean commonSave(PersonInfor entity,String departName,User userEntity) {
+	public boolean commonSave(PersonInfor entity,ContactInfor contactInfor,User userEntity,String departName,String userTypeName) {
 		
 		def departEntity = Depart.findByDepartName(departName);
 		if(departEntity){
 			entity.addToDeparts(departEntity)
-			entity.company = userEntity.company
 		}
 		
+		def userType = UserType.findByTypeName(userTypeName)
+		if(!userType){
+			userType = UserType.first()
+		}
+		
+		entity.userTypeEntity = userType
+		entity.company = userEntity.company
 		
 		if(entity.save(flush:true)){
+			contactInfor.personInfor = entity
+			contactInfor.save(flush:true)
 			return true
 		}else{
 			entity.errors.each{

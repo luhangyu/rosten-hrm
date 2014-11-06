@@ -10,11 +10,13 @@ import com.rosten.app.staff.PersonInfor;
 import com.rosten.app.staff.StaffService;
 import com.rosten.app.system.User;
 import com.rosten.app.system.UserType;
+import com.rosten.app.util.Util;
+
 
 public class ExcelImport {
 	
 	/**--数据导入*/
-	public String personsjdr(String filePath,String realName,User userEntity,UserType userType) throws Exception{
+	public String personsjdr(String filePath,String realName,User userEntity) throws Exception{
 		Sheet sourceSheet = Workbook.getWorkbook(new File(filePath+realName)).getSheet(0);
 		int sourceRowCount = sourceSheet.getRows();//获得源excel的行数
 		
@@ -34,7 +36,7 @@ public class ExcelImport {
 			 String zc =sourceSheet.getCell(10, i).getContents();	//职称
 			 String zzmm =sourceSheet.getCell(11, i).getContents();	//政治面貌
 			 String gzgw =sourceSheet.getCell(12, i).getContents();	//工作岗位
-			 String ygxs =sourceSheet.getCell(13, i).getContents();	//用功形式
+			 String ygxs =sourceSheet.getCell(13, i).getContents();	//用工形式
 			 String cjgzsj =sourceSheet.getCell(14, i).getContents();	//参加工作时间
 			 String dxhgzsj =sourceSheet.getCell(15, i).getContents();	//到协会工作时间
 			 String sjhm =sourceSheet.getCell(16, i).getContents();	//手机号码
@@ -42,26 +44,33 @@ public class ExcelImport {
 			 
 			 ContactInfor con = new ContactInfor();
 			 con.setMobile(null==sjhm?"":sjhm);
+			 con.setQq("无");
+			 con.setAddress("无");
+			 con.setPostcode("无");
 			 
 			//根据用户名插入对应数据
 			PersonInfor personInfor = new PersonInfor();
 			personInfor.setChinaName(xm);
-			//personInfor.setUser(userEntity);
-			personInfor.setUserTypeEntity(userType);
 			personInfor.setSex(xb);
 			personInfor.setMarriage(hyzk);
 			personInfor.setNativeAddress(jg);
 			personInfor.setIdCard(sfzh);
 			personInfor.setSchoolName(byxx);
+			personInfor.setMajor(sxzy);
 			
 			personInfor.setUpDegree(xl);
 			personInfor.setTechGrade(zc);
 			personInfor.setPoliticsStatus(zzmm);
 			personInfor.setWorkJob(gzgw);
-		//	personInfor.setWorkJobDate(cjgzsj);
 			
+			if(!"".equals(cjgzsj)){
+				personInfor.setWorkJobDate(Util.convertToTimestamp(cjgzsj));
+			}
+			if(!"".equals(dxhgzsj)){
+				personInfor.setIntoday(Util.convertToTimestamp(dxhgzsj));
+			}
 			
-			_service.commonSave(personInfor,ssbm,userEntity);
+			_service.commonSave(personInfor,con,userEntity,ssbm,ygxs);
 			
 		}
 		return "true";
