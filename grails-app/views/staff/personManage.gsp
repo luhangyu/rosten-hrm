@@ -30,7 +30,7 @@
 					var treeModel = new ForestStoreModel({ 
 				    	store: store, // the data store that this model connects to 
 				    	query: {parentId:null}, // filter multiple top level items 
-				    	rootLabel: "部门层级", 
+				    	//rootLabel: "部门层级", 
 				    	childrenAttrs: ["children"] // children attributes used in data store. 
 					}); 
 					var tree = new Tree({
@@ -85,7 +85,6 @@
 		
 		<div id="departTreePane" data-dojo-type="dojox/layout/ContentPane" data-dojo-props="region:'leading',splitter:true,style:'width:200px'">
 			<div id="depart_tree" data-dojo-type="dijit.Tree" data-dojo-props='store:treeDataStore, query:{parentId:null},
-				label:"部门层级",
 				autoExpand:true, onLoad:function(){treeOnLoad()}'>
 				<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="item">
 					if(item && !item.root){
