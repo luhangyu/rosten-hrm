@@ -27,6 +27,21 @@ define(["dojo/_base/connect",
 			content.departName = departName.get("value");
 		}
 		
+		var idCard = registry.byId("s_idCard");
+		if(idCard.get("value")!=""){
+			content.idCard = idCard.get("value");
+		}
+		
+		var sex = registry.byId("s_sex");
+		if(sex.get("value")!=""){
+			content.sex = sex.get("value");
+		}
+		
+		var politicsStatus = registry.byId("s_politicsStatus");
+		if(politicsStatus.get("value")!=""){
+			content.politicsStatus = politicsStatus.get("value");
+		}
+		
 		switch(rosten.kernel.navigationEntity) {
 		
 		case "userManage":
@@ -46,6 +61,9 @@ define(["dojo/_base/connect",
 			registry.byId("s_username").set("value","");
 			registry.byId("s_chinaName").set("value","");
 			registry.byId("s_departName").set("value","");
+			registry.byId("s_idCard").set("value","");
+			registry.byId("s_sex").set("value","");
+			registry.byId("s_politicsStatus").set("value","");
 			
 			dom_rostenGrid.refresh();
 			break;
@@ -54,6 +72,9 @@ define(["dojo/_base/connect",
 			registry.byId("s_username").set("value","");
 			registry.byId("s_chinaName").set("value","");
 			registry.byId("s_departName").set("value","");
+			registry.byId("s_idCard").set("value","");
+			registry.byId("s_sex").set("value","");
+			registry.byId("s_politicsStatus").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	

@@ -225,6 +225,9 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
 		
 		switch (oString) {
+		case "serialNoCodeManage":
+            rosten.kernel.setHref(rosten.webPath + "/staff/serialNoCodeManage", oString);
+            break;
 		case "staffAdd":	//员工入职
 			var naviJson = {
 				identifier : oString,

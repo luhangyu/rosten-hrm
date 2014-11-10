@@ -42,6 +42,54 @@ class StaffController {
 	def taskService
 	def startService
 	
+	def serialNoCodeSave ={
+		def json=[:]
+		def config = new NoticeConfig()
+		if(params.id && !"".equals(params.id)){
+			config = NoticeConfig.get(params.id)
+		}
+		config.properties = params
+		config.clearErrors()
+		config.company = Company.get(params.companyId)
+		
+		config.nowCancel = params.config_nowCancel
+		config.frontCancel = params.config_frontCancel
+		
+		if(config.save(flush:true)){
+			json["result"] = true
+			json["coonfigId"] = config.id
+			json["companyId"] = config.company.id
+		}else{
+			config.errors.each{
+				println it
+			}
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	def serialNoCodeManage ={
+		def model = [:]
+		def user = springSecurityService.getCurrentUser()
+		
+		def config = NoticeConfig.findWhere(company:user.company)
+		if(config==null) {
+			config = new NoticeConfig()
+			
+			Calendar cal = Calendar.getInstance();
+			config.nowYear = cal.get(Calendar.YEAR)
+			config.frontYear = config.nowYear -1
+			
+			model.companyId = user.company.id
+		}else{
+			model.companyId = config.company.id
+		}
+		model.config = config
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		
+		render(view:'/staff/serialNoCodeConfig',model:model)
+	}
 	def staffZZ ={
 		//员工转正
 		def json=[:]
@@ -740,8 +788,13 @@ class StaffController {
 	def searchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
+		
 		def dataList = Depart.findAllByCompany(currentUser.company)
 		model["departList"] = dataList
+		
+		//政治面貌
+		model["politicsStatusList"] = shareService.getSystemCodeItems(currentUser.company,"rs_politicsStatus")
+		
 		render(view:'/staff/search',model:model)
 	}
 
@@ -1638,6 +1691,12 @@ class StaffController {
 		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
 		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
 		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		if(params.idCard && !"".equals(params.idCard)) searchArgs["idCard"] = params.idCard
+		if(params.sex && !"".equals(params.sex)) searchArgs["sex"] = params.sex
+		if(params.politicsStatus && !"".equals(params.politicsStatus)) searchArgs["politicsStatus"] = params.politicsStatus
+		if(params.nativeAddress && !"".equals(params.nativeAddress)) searchArgs["nativeAddress"] = params.nativeAddress
+		if(params.city && !"".equals(params.city)) searchArgs["city"] = params.city
+		if(params.status && !"".equals(params.status)) searchArgs["status"] = params.status
 		
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)

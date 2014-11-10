@@ -6,6 +6,14 @@ import com.rosten.app.system.User
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def serialNoCodeView ={
+		def actionList =[]
+		def strname = "serialNoCode"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("保存",imgPath + "Save.gif",strname + "_save")
+		
+		render actionList as JSON
+	}
 	def bargainForm ={
 		def webPath = request.getContextPath() + "/"
 		def actionList = []
