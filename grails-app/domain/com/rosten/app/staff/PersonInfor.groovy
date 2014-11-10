@@ -288,6 +288,9 @@ class PersonInfor {
 			StatusChange.findAllByPersonInfor(this).each{item->
 				item.delete()
 			}
+			NoticeBill.findAllByPersonInfor(this).each{item->
+				item.delete()
+			}
 			
 			session.flush()
 		}
