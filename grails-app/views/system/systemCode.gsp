@@ -180,7 +180,7 @@
                 </div>
                 <div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='"class":"rostenTitleGrid",title:"条目信息",toggleable:false,_moreClick:systemCode_addItem,moreText:"<span style=\"color:#108ac6\">增加条目</span>",marginBottom:"2px"'>
                 	<div data-dojo-type="rosten/widget/RostenGrid" id="systemCodeItemGrid" data-dojo-id="systemCodeItemGrid"
-						data-dojo-props='showPageControl:false,url:"${createLink(controller:'systemExtend',action:'systemCodeItemGrid',id:systemCode?.id)}"'></div>
+						data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'systemExtend',action:'systemCodeItemGrid',id:systemCode?.id)}"'></div>
                 </div>
 			</form>
 		</div>

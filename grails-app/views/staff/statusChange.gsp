@@ -234,7 +234,7 @@
 					data-dojo-props='style:{overflow:"auto",padding:"1px"}'>
 					
 					<div data-dojo-type="rosten/widget/RostenGrid" id="chooseListGrid" data-dojo-id="chooseListGrid"
-						data-dojo-props='url:"${createLink(controller:'staff',action:'staffGrid',params:[companyId:company?.id])}"'></div>
+						data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",url:"${createLink(controller:'staff',action:'staffGrid',params:[companyId:company?.id])}"'></div>
 				</div>
 			</div>
 			<script type="dojo/method" event="cancelFunction">

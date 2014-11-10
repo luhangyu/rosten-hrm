@@ -87,7 +87,7 @@
 					_moreClick:staff_addFamily,moreText:"<g:if test="${!type }"><span style=\"color:#108ac6\">增加成员</span></g:if>",marginBottom:"2px"'>
 				
 				<div data-dojo-type="rosten/widget/RostenGrid" id="staffFamilyGrid" data-dojo-id="staffFamilyGrid"
-					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:personInfor?.id,params:[type:type])}"'></div>
+					data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:personInfor?.id,params:[type:type])}"'></div>
 			
 			</div>
 			
@@ -96,7 +96,7 @@
 					_moreClick:staff_addDegree,moreText:"<g:if test="${!type }"><span style=\"color:#108ac6\">增加学历学位</span></g:if>",marginBottom:"2px"'>
 				
 				<div data-dojo-type="rosten/widget/RostenGrid" id="degreeGrid" data-dojo-id="degreeGrid"
-					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getDegree',id:personInfor?.id,params:[type:type])}"'></div>
+					data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'staff',action:'getDegree',id:personInfor?.id,params:[type:type])}"'></div>
 				
 			</div>
 			
@@ -105,7 +105,7 @@
 					_moreClick:staff_addWorkResume,moreText:"<g:if test="${!type }"><span style=\"color:#108ac6\">增加工作经历</span></g:if>",marginBottom:"2px"'>
 				
 				<div data-dojo-type="rosten/widget/RostenGrid" id="workResumeGrid" data-dojo-id="workResumeGrid"
-					data-dojo-props='showPageControl:false,url:"${createLink(controller:'staff',action:'getWorkResume',id:personInfor?.id,params:[type:type])}"'></div>
+					data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'staff',action:'getWorkResume',id:personInfor?.id,params:[type:type])}"'></div>
 				
 			</div>
         </div>

@@ -1680,6 +1680,7 @@ class StaffController {
 			def userList = c.list(pa,query)
 			
 			def idx = 0
+			if(offset!=null) idx=offset
 			userList.each{
 				def _user = it.user
 				def contactInfor = ContactInfor.findByPersonInfor(it)
@@ -1823,6 +1824,7 @@ class StaffController {
 			def personList = c.list(pa,query)
 			
 			def idx = 0
+			if(offset!=null) idx=offset
 			personList.each{
 				def _user = it.user
 				def personInfor = it
