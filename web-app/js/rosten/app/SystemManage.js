@@ -268,23 +268,38 @@ define(["dojo/_base/connect",
 		 var companyId = rosten.kernel.getUserInforByKey("companyid");
 		 
 		 var content = {};
-			
+			var query = "";
 			var username = registry.byId("s_username");
 			if(username.get("value")!=""){
-				content.username = username.get("value");
+				query += "&username="+username.get("value");
 			}
 			
 			var chinaName = registry.byId("s_chinaName");
 			if(chinaName.get("value")!=""){
-				content.chinaName = chinaName.get("value");
+				query += "&chinaName="+chinaName.get("value");
 			}
 			
 			var departName = registry.byId("s_departName");
 			if(departName.get("value")!=""){
-				content.departName = departName.get("value");
+				query += "&departName="+departName.get("value");
+			}
+			
+			var idCard = registry.byId("s_idCard");
+			if(idCard.get("value")!=""){
+				query += "&idCard="+idCard.get("value");
+			}
+			
+			var sex = registry.byId("s_sex");
+			if(sex.get("value")!=""){
+				query += "&sex="+sex.get("value");
+			}
+			
+			var politicsStatus = registry.byId("s_politicsStatus");
+			if(politicsStatus.get("value")!=""){
+				query += "&politicsStatus="+politicsStatus.get("value");
 			}
 		 
-		rosten.openNewWindow("export", rosten.webPath + "/staff/exportPerson?companyId="+companyId+"&type="+ rosten.kernel.navigationEntity );
+		rosten.openNewWindow("export", rosten.webPath + "/staff/exportPerson?companyId="+companyId+"&type="+ rosten.kernel.navigationEntity+query );
 	};
 	
 	import_personInfor = function(){

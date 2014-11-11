@@ -2436,6 +2436,9 @@ class StaffController {
 		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
 		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
 		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		if(params.idCard && !"".equals(params.idCard)) searchArgs["idCard"] = params.idCard
+		if(params.sex && !"".equals(params.sex)) searchArgs["sex"] = params.sex
+		if(params.politicsStatus && !"".equals(params.politicsStatus)) searchArgs["politicsStatus"] = params.politicsStatus
 		
 		def c = PersonInfor.createCriteria()
 
