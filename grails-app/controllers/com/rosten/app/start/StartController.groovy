@@ -76,7 +76,7 @@ class StartController {
 		def user = User.get(params.userId)
 		def company = Company.get(params.companyId)
 		
-		def max = 4
+		def max = 6
 		def offset = 0
 		
 		def c = Gtask.createCriteria()
@@ -108,7 +108,10 @@ class StartController {
 			
 			_list << smap
 		}
-		render _list as JSON
+		def json=[:]
+		json.dataList = _list
+		json.dataCount = startService.getGtaskCount(company,user)
+		render json as JSON
 	}
     def index() { }
 }

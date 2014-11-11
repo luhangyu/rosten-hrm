@@ -311,14 +311,15 @@ define(["dojo/_base/kernel"
     	showStartDownloadFile(userId,companyId);
     };
     showStartGtask = function(userId,companyId){
-    	rosten.readNoTime(rosten.webPath + "/start/getGtask", {userId:userId,companyId:companyId}, function(data) {
+    	rosten.readNoTime(rosten.webPath + "/start/getGtask", {userId:userId,companyId:companyId}, function(_data) {
     		var titlePaneNode = registry.byId("home_gtask");
-    		if(data.length>0){
-    			titlePaneNode.changeTitleCount("(" + data.length + "条)");
+    		if(_data.dataCount){
+    			titlePaneNode.changeTitleCount("(" + _data.dataCount + "条)");
     		}else{
     			titlePaneNode.changeTitleCount("");
     		}
     		
+    		var data = _data.dataList;
     		var node = titlePaneNode.containerNode;
         	node.innerHTML = "";
         	
