@@ -44,6 +44,12 @@ class StaffController {
 	def taskService
 	def startService
 	
+	def getPersonOtherInfor ={
+		def model =[:]
+		def personInfor = PersonInfor.get(params.id)
+		
+		render(view:'/staff/otherInfor',model:model)
+	}
 	def serialNoCodeSave ={
 		def json=[:]
 		def config = new NoticeConfig()
@@ -1884,16 +1890,14 @@ class StaffController {
 				
 				if("staffAdd".equals(params.type)){
 					not {'in'("status",["在职","退休","离职"])}
-					order("createDate", "desc")
 				}else if("staffSearch".equals(params.type)){
 					//所有状态下均可查询
 					'in'("status",["在职","退休","离职","试用","实习"])
-					order("createDate", "desc")
 				}else{
 					'in'("status",["在职","退休","离职"])
 					//createAlias('user', 'a')
-					order("createDate", "desc")
 				}
+				order("chinaName", "asc")
 			}
 			def personList = c.list(pa,query)
 			

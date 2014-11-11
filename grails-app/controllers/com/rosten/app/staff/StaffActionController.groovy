@@ -6,6 +6,13 @@ import com.rosten.app.system.User
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	def userSimpleView ={
+		def actionList =[]
+		actionList << createAction("退出", imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("保存",imgPath + "Save.gif","userSimple_save")
+		actionList << createAction("详细信息",imgPath + "search.gif","showUserInfor")
+		render actionList as JSON
+	}
 	def serialNoCodeView ={
 		def actionList =[]
 		def strname = "serialNoCode"

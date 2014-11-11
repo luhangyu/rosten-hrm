@@ -224,7 +224,7 @@
                 '/>
                 
 		    </td>
-	     	<td><div align="right">人事转入时间：</div></td>
+	     	<td><div align="right">档案转入时间：</div></td>
 		  	<td>
 		    	<input id="intoday" data-dojo-type="dijit/form/DateTextBox" 
                  	data-dojo-props='name:"intoday",trim:true,${fieldAcl.isReadOnly("intoday")},

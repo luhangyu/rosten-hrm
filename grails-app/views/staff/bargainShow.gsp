@@ -119,9 +119,13 @@
 					href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id)}"
 				'></div>
 		  	
-		  		<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
+		  		<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",marginBottom:"2px",
 		  			href:"${createLink(controller:'share',action:'getFileUploadNew',id:bargain?.id,params:[uploadPath:'staff',isShowFile:isShowFile])}"'>
 					
+				</div>
+				
+				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"历史合同信息",toggleable:false,moreText:""'>
+				
 				</div>
 	  		</form>
 		</div>

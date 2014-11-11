@@ -55,7 +55,7 @@
 		</tr>
 	</table>
 </div>
-<div data-dojo-type="rosten/widget/TitlePane" class="upload" data-dojo-props='title:"附件信息",toggleable:false,moreText:""'>
+<div data-dojo-type="rosten/widget/TitlePane" class="upload" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",marginBottom:"2px"'>
 
 <g:if test="${isShowFile}">
 	<div data-dojo-type="dojox/form/Uploader"  type="file" data-dojo-id="uploaderDom"
@@ -79,7 +79,7 @@
 		</script>
 	</div>
 	
-	<div id="fileUpload_fileList" data-dojo-type="dojox/form/uploader/FileList"  data-dojo-id="uploaderListDom" 
+	<div id="fileUpload_fileList" data-dojo-type="dojox/form/uploader/FileList"  data-dojo-id="uploaderListDom" style="display:none"
 		data-dojo-props='uploaderId:"fileUploader",headerIndex:"序号",headerType:"类型",headerFilename:"文件名",headerFilesize:"大小"'></div>
 </g:if>
 	
@@ -100,6 +100,11 @@
 	</div>
 </div>
 </form>
+
+<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"历史合同信息",toggleable:false,moreText:""'>
+
+</div>
+
 <g:if test="${isShowFile}">
 <div style="margin:10px 0 0 5px">
 	<div data-dojo-type="dijit/form/Button" data-dojo-props="label:'录入合同'">
@@ -109,6 +114,9 @@
 	</div>
 </div>
 </g:if>
+
+
+
 <iframe name="bargain_iframe" scrollbars=no menubar=no height=600 width=800 resizable=yes toolbar=no status=no style="display:none"></iframe>
 </body>
 </html>

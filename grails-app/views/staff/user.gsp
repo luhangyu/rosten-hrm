@@ -586,10 +586,12 @@
 					href:"${createLink(controller:'staff',action:'getBargainAllInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
 				'>
 				</div>
-				<%--
-				<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
 				
-				</div> --%>
+				<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="其他信息" data-dojo-props='refreshOnShow:true,
+					href:"${createLink(controller:'staff',action:'getPersonOtherInfor',id:personInfor?.id,params:[type:type,userId:loginUser?.id])}"
+				'>
+					
+				</div>
 			</g:if>
 		</g:else>
 	</div>

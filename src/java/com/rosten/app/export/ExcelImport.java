@@ -67,6 +67,7 @@ public class ExcelImport {
 				personInfor.setWorkJobDate(Util.convertToTimestamp(cjgzsj));
 			}
 			if(!"".equals(dxhgzsj)){
+				personInfor.setStaffOnDay(Util.convertToTimestamp(dxhgzsj));
 				personInfor.setIntoday(Util.convertToTimestamp(dxhgzsj));
 			}
 			

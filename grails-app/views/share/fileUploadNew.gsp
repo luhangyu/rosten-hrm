@@ -54,7 +54,7 @@
 		</script>
 		</div>
 		
-		<div id="fileUpload_fileList" data-dojo-type="dojox/form/uploader/FileList"  data-dojo-id="uploaderListDom" 
+		<div id="fileUpload_fileList" data-dojo-type="dojox/form/uploader/FileList"  data-dojo-id="uploaderListDom" style="display:none"
 			data-dojo-props='uploaderId:"fileUploader",headerIndex:"序号",headerType:"类型",headerFilename:"文件名",headerFilesize:"大小"'></div>
 </g:if>
 

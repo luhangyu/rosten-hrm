@@ -119,11 +119,9 @@
 				
 			</div>
 		</div>
-		<%--
-		<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="劳资福利" data-dojo-props=''>
-		
-		</div>
-		--%>
+		<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="其他信息" data-dojo-props='refreshOnShow:true,
+			href:"${createLink(controller:'staff',action:'getPersonOtherInfor',id:personInfor?.id,params:[type:type])}"
+		'>
 	</div>
 </body>
 </html>
