@@ -15,6 +15,8 @@ import com.rosten.app.system.UserRole
 import com.rosten.app.system.UserType
 import com.rosten.app.system.SystemService
 import com.rosten.app.system.Role
+import com.rosten.app.train.TrainCourse
+import com.rosten.app.train.TrainMessage
 
 import java.io.OutputStream
 
@@ -1288,12 +1290,25 @@ class StaffController {
 			ids.each{
 				def personInfor = PersonInfor.get(it)
 				if(personInfor){
+					//处理培训班信息
+					TrainMessage.findAllByPersonInfor(personInfor).each{item ->
+						if(item.trainCourse){
+							item.trainCourse.removeFromItems(item)
+							item.trainCourse.save()
+						}else{
+							item.delete()
+						}
+					}
+					//回收账号信息
+					if(personInfor.user){
+						personInfor.user.delete()
+					}
 					personInfor.delete(flush: true)
 				}
 			}
 			json = [result:'true']
 		}catch(Exception e){
-			log.debug(e);
+			println e
 			json = [result:'error']
 		}
 		render json as JSON
