@@ -481,6 +481,13 @@ define(["dojo/_base/connect",
             }
         });
     };
+    import_user = function(){
+    	var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.kernel.createRostenShowDialog(rosten.webPath + "/system/importUser/"+ companyId, {
+            onLoadFunction : function() {
+            }
+        });
+    };
     add_user = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
