@@ -1372,16 +1372,7 @@
 	w:val="32" /></w:rPr><w:t> </w:t></w:r><w:r wsp:rsidR="00F83629"><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b /><w:sz
 	w:val="32" /></w:rPr><w:t>                                     </w:t></w:r><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>填报时间：</w:t></w:r><w:r
-	wsp:rsidR="00B2134C"><w:rPr><w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font
-	wx:val="宋体" /><w:b-cs /></w:rPr><w:t>     </w:t></w:r><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t> 年</w:t></w:r><w:r
-	wsp:rsidR="00B2134C"><w:rPr><w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font
-	wx:val="宋体" /><w:b-cs /></w:rPr><w:t>   </w:t></w:r><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>月  </w:t></w:r><w:r
-	wsp:rsidR="00B2134C"><w:rPr><w:rFonts w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font
-	wx:val="宋体" /><w:b-cs /></w:rPr><w:t> </w:t></w:r><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>日           </w:t></w:r><w:r><w:rPr><w:rFonts
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>填报时间：${year}年${month}月 ${day}日    </w:t></w:r><w:r><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b /><w:sz
 	w:val="30" /></w:rPr><w:t>            </w:t></w:r></w:p><w:tbl><w:tblPr><w:tblW
 	w:w="9325" w:type="dxa" /><w:jc w:val="center" /><w:tblInd
@@ -1721,10 +1712,11 @@
 	wsp:rsidR="00F00001" wsp:rsidRDefault="00F00001"><w:pPr><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>要  成  员</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
-	w:w="7321" w:type="dxa" /><w:gridSpan w:val="7" /></w:tcPr><w:p
+	w:w="7321" w:type="dxa" /><w:gridSpan w:val="7" /><w:tcBorders><w:bottom
+	w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto" /></w:tcBorders></w:tcPr><w:p
 	wsp:rsidR="00571C78" wsp:rsidRPr="00571C78" wsp:rsidRDefault="00E71A5C"
-	wsp:rsidP="00571C78"><w:pPr><w:ind w:first-line-chars="50" w:first-line="105" /><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
+	wsp:rsidP="00F13803"><w:pPr><w:rPr><w:rFonts w:ascii="宋体" w:h-ansi="宋体"
+	w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${famstr!}</w:t></w:r></w:p></w:tc></w:tr><w:tr
 	wsp:rsidR="00F00001"><w:tblPrEx><w:tblCellMar><w:top w:w="0" w:type="dxa" /><w:bottom
 	w:w="0" w:type="dxa" /></w:tblCellMar></w:tblPrEx><w:trPr><w:cantSplit /><w:trHeight

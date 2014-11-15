@@ -309,7 +309,7 @@
 	w:val="24" /></w:rPr><w:t>编号：</w:t></w:r><w:r><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:cs="宋体" w:hint="fareast" /><wx:font
 	wx:val="宋体" /><w:kern w:val="0" /><w:sz w:val="24" /><w:sz-cs
-	w:val="24" /></w:rPr><w:t>12</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:val="24" /></w:rPr><w:t>           </w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="1137" w:type="dxa" /><w:tcBorders><w:top w:val="nil" /><w:left
 	w:val="nil" /><w:bottom w:val="nil" /><w:right w:val="nil" /></w:tcBorders><w:vAlign
 	w:val="bottom" /></w:tcPr><w:p wsp:rsidR="00000000"

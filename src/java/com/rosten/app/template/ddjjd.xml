@@ -420,7 +420,7 @@
 	w:cs="宋体" /><wx:font wx:val="宋体" /><w:kern w:val="0" /><w:sz
 	w:val="22" /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="宋体"
 	w:h-ansi="宋体" w:cs="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:kern
-	w:val="0" /><w:sz w:val="22" /></w:rPr><w:t>${depaChange.currentDepart!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:val="0" /><w:sz w:val="22" /></w:rPr><w:t>${depaChange.getOutDepartName()!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="236" w:type="dxa" /><w:tcBorders><w:top w:val="single" w:sz="4"
 	wx:bdrwidth="10" w:space="0" w:color="auto" /><w:left w:val="nil" /><w:bottom
 	w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto" /><w:right
@@ -520,7 +520,7 @@
 	w:cs="宋体" /><wx:font wx:val="宋体" /><w:kern w:val="0" /><w:sz
 	w:val="22" /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="宋体"
 	w:h-ansi="宋体" w:cs="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:kern
-	w:val="0" /><w:sz w:val="22" /></w:rPr><w:t>               </w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:val="0" /><w:sz w:val="22" /></w:rPr><w:t>${depaChange.getInDepartName()!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="1164" w:type="dxa" /><w:tcBorders><w:top w:val="nil" /><w:left
 	w:val="nil" /><w:bottom w:val="single" w:sz="4" wx:bdrwidth="10"
 	w:space="0" w:color="auto" /><w:right w:val="single" w:sz="4"

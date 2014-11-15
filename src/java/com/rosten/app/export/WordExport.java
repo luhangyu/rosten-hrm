@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 //import sun.misc.BASE64Encoder;
+
 
 
 
@@ -97,15 +99,15 @@ public class WordExport {
 				}
 			}
 			
-			//利是长
+			//协会审批
 			List<Map<String, Object>> lszlist = staffser.getCommentByStatus(personInfor.getId(),"理事长审批");
 			String lszyyj="";
 			if(null!=lszlist){
 				for(int i=0;i<lszlist.size();i++){
-					mszyyj += lszlist.get(i).get("name")+"  "
+					lszyyj += lszlist.get(i).get("name")+"  "
 				+(null== lszlist.get(i).get("content")||"".equals(lszlist.get(i).get("content"))?"": lszlist.get(i).get("content")
 				+"  "
-				+mszlist.get(i).get("date")+"&#x000D;");
+				+lszlist.get(i).get("date")+"&#x000D;");
 				}
 				
 			}
@@ -122,6 +124,16 @@ public class WordExport {
 			data.put("mszyyj", mszyyj);
 			
 			data.put("lszyyj", lszyyj);
+			
+			Calendar now = Calendar.getInstance();  
+			String year = String.valueOf(now.get(Calendar.YEAR));  
+			String month = String.valueOf(now.get(Calendar.MONTH) + 1);  
+			String day = String.valueOf(now.get(Calendar.DAY_OF_MONTH));  
+			
+			data.put("year", year);
+			data.put("month", month);
+			data.put("day", day);
+
 		}
 		File wordFile = FreeMarkerUtil.getWordFile(data,
 				"classpath:com/rosten/app/template", "ygdjb.xml",personInfor.getChinaName()+"登记表");
