@@ -2534,7 +2534,7 @@ class StaffController {
 				attachment.realName = realName
 				attachment.upUser = currentUser
 				attachment.url = uploadPath
-				attachment.size = f.size
+				attachment.size1 = f.size
 				
 			}else{
 				attachment = new Attachment()

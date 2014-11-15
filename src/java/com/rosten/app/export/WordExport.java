@@ -165,7 +165,7 @@ public class WordExport {
         }  
 //			BASE64Encoder encoder = new BASE64Encoder();
 //			return buffer != null ? encoder.encode(buffer) : null;
-		
+		if(buffer!=null){
 			Base64Util encoder = new Base64Util();
 			byte[] b = encoder.encode(buffer);
 			String s = null;
@@ -175,8 +175,10 @@ public class WordExport {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			return buffer != null ?s : null;
+			return s;
+		}else{
+			return null;
+		}
 	}
 	
 	
