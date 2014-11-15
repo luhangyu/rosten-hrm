@@ -41,14 +41,15 @@
 .rosten .rosten_form .tableHeader {
 	border-collapse: collapse;
 	font-size: 15px;
-	COLOR: #2E2E5A;
+	color: #2E2E5A;
+	text-align:left;
 	
 }
 
 .rosten .rosten_form .tableData {
 	font-size: 12px;
-	BACKGROUND: #FFFFFF;
-	COLOR: #000000;
+	background: #FFFFFF;
+	color: #000000;
 	margin:0 auto;
 	margin-top:10px;
 	margin-bottom:10px;
