@@ -1614,6 +1614,9 @@ class StaffController {
 			}else{
 				model["user"] = new User()
 				personInfor = new PersonInfor()
+				if("staffAdd".equals(params.type)){
+					personInfor.status = "新增"
+				}
 			}
 		}
 		model["personInfor"] = personInfor
@@ -1889,12 +1892,12 @@ class StaffController {
 				}
 				
 				if("staffAdd".equals(params.type)){
-					not {'in'("status",["在职","退休","离职"])}
+					not {'in'("status",["在职","在职下派","在职借用","退休","离职"])}
 				}else if("staffSearch".equals(params.type)){
 					//所有状态下均可查询
-					'in'("status",["在职","退休","离职","试用","实习"])
+					'in'("status",["在职","在职下派","在职借用","退休","离职","试用","实习"])
 				}else{
-					'in'("status",["在职","退休","离职"])
+					'in'("status",["在职","在职下派","在职借用","退休","离职"])
 					//createAlias('user', 'a')
 				}
 				order("chinaName", "asc")
@@ -1957,10 +1960,10 @@ class StaffController {
 				}
 				
 				if("staffAdd".equals(params.type)){
-					not {'in'("status",["在职","退休","离职"])}
+					not {'in'("status",["在职","在职下派","在职借用","退休","离职"])}
 					order("chinaName", "asc")
 				}else{
-					'in'("status",["在职","退休","离职"])
+					'in'("status",["在职","在职下派","在职借用","退休","离职"])
 					//createAlias('user', 'a')
 					order("chinaName", "asc")
 				}
@@ -2169,6 +2172,9 @@ class StaffController {
 			if(params.departId){
 				depart = Depart.get(params.departId)
 			}
+			if("staffAdd".equals(params.type)){
+				personInfor.status = "新增"
+			}
 		}else{
 			depart = personInfor.departs[0]
 		}
@@ -2188,6 +2194,13 @@ class StaffController {
 		if(userTypeList && userTypeList.size()>0){
 			model["userTypeEntity"] = userTypeList[0]
 		}
+		
+		//是否可以修改状态
+		if("staffAdd".equals(params.type)){
+			model["statusNotWrite"] = true
+		}
+		
+		model["statusList"] = ["在职","在职下派","在职借用"]
 		
 		//血型
 		model["bloodList"] = shareService.getSystemCodeItems(company,"rs_blood")
@@ -2222,7 +2235,7 @@ class StaffController {
 		FieldAcl fa = new FieldAcl()
 		if("onlyShow".equals(params.type)){
 			//只提供查询显示功能
-			fa.readOnly = ["chinaName","usedName","userTypeName","idCard","birthday","city","nationality","birthAddress","nativeAddress","politicsStatus","blood","health","householdRegi","intoday","techGrade","staffOnDay"]
+			fa.readOnly = ["status","chinaName","usedName","userTypeName","idCard","birthday","city","nationality","birthAddress","nativeAddress","politicsStatus","blood","health","householdRegi","intoday","techGrade","staffOnDay"]
 			fa.readOnly += ["sex","marriage","religion","schoolName","major","upDegree","workJob","workJobDate"]
 			model["onlyShow"] = true
 		}
@@ -2479,9 +2492,9 @@ class StaffController {
 		def ids = params.id.split(",")
 		if(null!=ids&&ids.length>0){
 			if(ids.length==1){
-				word.dyDjb(response,params.id)
+				word.dyDjb(response,params.id,servletContext.getRealPath("/"))
 			}else{
-			word.downloadDjbZip(response,params.id)
+				word.downloadDjbZip(response,params.id,servletContext.getRealPath("/"))
 			}
 		}
 	}

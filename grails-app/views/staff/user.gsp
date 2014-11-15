@@ -508,7 +508,7 @@
 			</g:if>
 			
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"410px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId])}"
+				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId,type:type])}"
 			'>
 			</div>
 			

@@ -20,10 +20,15 @@
 		    </td>
 		    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>状态：</div></td>
 		  	<td width="240">
-		    	<input id="usedName" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"usedName",trim:true,readOnly:true,disabled:true,
-							value:"${personInforEntity?.status}"
-	                '/>
+		    	<select id="status" data-dojo-type="dijit/form/ComboBox" 
+                 	data-dojo-props='name:"status",trim:true,${fieldAcl.isReadOnly("status")},
+                 		<g:if test="${statusNotWrite }">disabled:true,</g:if>
+						value:"${personInforEntity?.status}"
+                '>
+	                <g:each in="${statusList}" var="item">
+	                	<option value="${item}">${item}</option>
+	                </g:each>
+	            </select>
 		    </td>
 		</tr>
 		<tr>
