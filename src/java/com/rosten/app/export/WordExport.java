@@ -38,7 +38,7 @@ import com.rosten.app.system.Attachment;
 public class WordExport {
 	
 	// 填充模版数据生成word文件（登记表）
-	private File getDjbWord(String id) throws Exception {
+	private File getDjbWord(String id,String contextPath) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
 		StaffService staffser = new StaffService();
 		String zpstr="";
@@ -46,9 +46,9 @@ public class WordExport {
 		data.put("personInfor", personInfor);
 		Attachment attachment = staffser.getAttachment(id);
 		if(null!=attachment){
-			 zpstr = getZpStr("web-app/images/staff/" + attachment.getRealName());
+			 zpstr = getZpStr(contextPath + "/images/staff/" + attachment.getRealName());
 		}else{
-			zpstr = getZpStr("web-app/images/staff/regpic.gif");
+			zpstr = getZpStr(contextPath + "/images/staff/regpic.gif");
 		}
 		
 		if(null!=personInfor){
@@ -185,9 +185,9 @@ public class WordExport {
 	/**
 	 * 单个打印登记表
 	 */
-	public String dyDjb(HttpServletResponse response,String ids) throws Exception {
+	public String dyDjb(HttpServletResponse response,String ids,String contextPath) throws Exception {
 		
-		File wordFile = getDjbWord(ids);
+		File wordFile = getDjbWord(ids,contextPath);
 		FileUtil.outputWord(response,wordFile);
 		return null;
 	}
@@ -198,13 +198,13 @@ public class WordExport {
 	 * @return
 	 * @throws Exception
 	 */
-	public String downloadDjbZip(HttpServletResponse response,String ids)
+	public String downloadDjbZip(HttpServletResponse response,String ids,String contextPath)
 			throws Exception {
 		String[] pks = ids.split(",");
 		if (null!=pks) {
 			List<File> files = new ArrayList<File>();
 			for (int i = 0, n = pks.length; i < n; i++) {
-				File file = getDjbWord(pks[i]);
+				File file = getDjbWord(pks[i],contextPath);
 				files.add(file);
 			}
 			File zipFile = ZipUtil.zip("登记表",files.toArray(new File[] {}));

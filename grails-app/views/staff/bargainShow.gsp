@@ -12,6 +12,9 @@
 		.rosten .rostenGridView .pagecontrol{
 			text-align:left;
 		}
+		.rosten .rostenTitleGrid .dijitTitlePaneContentInner{
+			padding:2px 1px 1px 1px;
+		}
     </style>
 	<script type="text/javascript">
 		require(["dojo/parser",
@@ -37,6 +40,7 @@
 		     	"rosten/widget/ActionBar",
 		     	"rosten/app/Application",
 		     	"rosten/app/StaffApplication",
+		     	"rosten/app/BargainApplication",
 		     	"rosten/kernel/behavior"],
 			function(parser,kernel,registry,xhr,dom,datestamp,DepartUserDialog){
 				kernel.addOnLoad(function(){
@@ -111,11 +115,11 @@
 	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"600px"}'>
 	  		<form data-dojo-type="dijit/form/Form" class="rosten_form" id="rosten_form" onsubmit="return false;" style="text-align:left;padding:0px">	
 	  		<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
-	  			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"员工信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
+	  			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"员工信息",toggleable:false,moreText:"",height:"70px",marginBottom:"2px",
 					href:"${createLink(controller:'bargain',action:'getBargainPerson',id:bargain?.id)}"
 				'></div>
 	  		
-		  		<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"80px",marginBottom:"2px",
+		  		<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"合同基本信息",toggleable:false,moreText:"",height:"70px",marginBottom:"2px",
 					href:"${createLink(controller:'staff',action:'getBargain',id:bargain?.id)}"
 				'></div>
 		  	
@@ -123,10 +127,12 @@
 		  			href:"${createLink(controller:'share',action:'getFileUploadNew',id:bargain?.id,params:[uploadPath:'staff',isShowFile:isShowFile])}"'>
 					
 				</div>
-				
-				<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"历史合同信息",toggleable:false,moreText:""'>
-				
-				</div>
+				<g:if test="${bargain?.id }">
+					<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='"class":"rostenTitleGrid",title:"历史合同信息",toggleable:false,moreText:"",marginBottom:"2px"'>
+	                	<div data-dojo-type="rosten/widget/RostenGrid" id="bargainItemGrid" data-dojo-id="bargainItemGrid"
+							data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'bargain',action:'bargainItemGrid',id:bargain?.id)}"'></div>
+	                </div>
+                </g:if>
 	  		</form>
 		</div>
 	</div>
