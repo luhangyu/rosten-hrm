@@ -42,6 +42,21 @@ define(["dojo/_base/connect",
 			content.politicsStatus = politicsStatus.get("value");
 		}
 		
+		var nativeAddress = registry.byId("s_nativeAddress");
+		if(nativeAddress.get("value")!=""){
+			content.nativeAddress = nativeAddress.get("value");
+		}
+		
+		var city = registry.byId("s_city");
+		if(city.get("value")!=""){
+			content.city = city.get("value");
+		}
+		
+		var status = registry.byId("s_status");
+		if(status.get("value")!=""){
+			content.status = status.get("value");
+		}
+		
 		switch(rosten.kernel.navigationEntity) {
 		
 		case "userManage":
@@ -64,6 +79,9 @@ define(["dojo/_base/connect",
 			registry.byId("s_idCard").set("value","");
 			registry.byId("s_sex").set("value","");
 			registry.byId("s_politicsStatus").set("value","");
+			registry.byId("s_nativeAddress").set("value","");
+			registry.byId("s_city").set("value","");
+			registry.byId("s_status").set("value","");
 			
 			dom_rostenGrid.refresh();
 			break;
@@ -75,6 +93,9 @@ define(["dojo/_base/connect",
 			registry.byId("s_idCard").set("value","");
 			registry.byId("s_sex").set("value","");
 			registry.byId("s_politicsStatus").set("value","");
+			registry.byId("s_nativeAddress").set("value","");
+			registry.byId("s_city").set("value","");
+			registry.byId("s_status").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	
