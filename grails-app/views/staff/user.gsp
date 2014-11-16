@@ -20,6 +20,9 @@
 			padding:2px 1px 1px 1px;
 			height:280px;
 		}
+		.rosten .rostenBargainTitleGrid .dijitTitlePaneContentInner{
+			padding:2px 1px 1px 1px;
+		}
 		/*
  * 附件上传css样式
  */
@@ -109,6 +112,7 @@
 		     	"dijit/form/ComboBox",
 		     	"rosten/app/SystemApplication",
 		     	"rosten/app/StaffApplication",
+		     	"rosten/app/BargainApplication",
 		     	"rosten/kernel/behavior",
 		     	"rosten/app/Application"],
 			function(parser,lang,kernel,registry,ActionBar){

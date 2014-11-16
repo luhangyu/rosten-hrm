@@ -20,6 +20,9 @@
 			padding:2px 1px 1px 1px;
 			height:280px;
 		}
+		.rosten .rostenBargainTitleGrid .dijitTitlePaneContentInner{
+			padding:2px 1px 1px 1px;
+		}
 		
     </style>
 	<script type="text/javascript">
@@ -45,6 +48,7 @@
 		     	"dijit/form/FilteringSelect",
 		     	"dijit/form/ComboBox",
 		     	"rosten/app/SystemApplication",
+		     	"rosten/app/BargainApplication",
 		     	"rosten/app/StaffApplication"],
 			function(parser,lang,kernel,registry,ActionBar){
 				kernel.addOnLoad(function(){
@@ -118,6 +122,10 @@
 				href:"${createLink(controller:'staff',action:'getBargainFileByPersonInfor',id:personInfor?.id,params:[type:type])}"'>
 				
 			</div>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='"class":"rostenBargainTitleGrid",title:"历史合同信息",toggleable:false,moreText:"",marginBottom:"2px"'>
+	            <div data-dojo-type="rosten/widget/RostenGrid" id="bargainItemGrid" data-dojo-id="bargainItemGrid"
+					data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'bargain',action:'bargainItemGrid',id:bargain?.id)}"'></div>
+               </div>
 		</div>
 		<div data-dojo-type="dijit/layout/ContentPane" class="rosten_form" title="其他信息" data-dojo-props='refreshOnShow:true,
 			href:"${createLink(controller:'staff',action:'getPersonOtherInfor',id:personInfor?.id,params:[type:type])}"

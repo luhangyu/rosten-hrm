@@ -1674,7 +1674,7 @@ class StaffController {
 			//只提供查询显示功能
 			fa.readOnly = []
 			model["type"] = "onlyShow"
-			
+			model["bargain"] = Bargain.findByPersonInfor(personInfor)
 			render(view:'/staff/userOnlyShow',model:model)
 			return
 		}

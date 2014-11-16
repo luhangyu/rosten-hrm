@@ -616,6 +616,7 @@ define(["dojo/_base/kernel"
         if (showInformation == "")
             showInformation = rosten.variable.logoname;
             rosten.kernel.returnToMain("&nbsp;&nbsp;欢迎进入" + showInformation + "，当前您已成功登录！......");
+            rosten.kernel.closeUnderlay();
     };
     quit = function() {
         var dialog = rosten.confirm("是否确定退出系统?");

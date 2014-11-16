@@ -26,7 +26,7 @@
 	     <td width="120"><div align="right">性别：</div></td>
 	     <td width="250">
 	    	<input id="sex" data-dojo-type="dijit/form/ValidationTextBox" 
-                	data-dojo-props='trim:true,required:true,readOnly:true,value:"${bargain?.personInfor?.sex }"
+                	data-dojo-props='trim:true,required:true,readOnly:true,disabled:true,value:"${bargain?.personInfor?.sex }"
                '/>
 	    </td>
 	    
@@ -36,14 +36,14 @@
 			 <td width="120"><div align="right">部门：</div></td>
 		    <td width="250">
 		    	<input id="departName" data-dojo-type="dijit/form/ValidationTextBox" 
-	                	data-dojo-props='trim:true,required:true,readOnly:true,value:"${bargain?.personInfor?.getUserDepartName()}"
+	                	data-dojo-props='trim:true,required:true,readOnly:true,disabled:true,value:"${bargain?.personInfor?.getUserDepartName()}"
 	               '/>
 		    </td>
 		    
 		     <td width="120"><div align="right">状态：</div></td>
 		     <td width="250">
 		    	<input id="status" data-dojo-type="dijit/form/ValidationTextBox" 
-	                	data-dojo-props='trim:true,required:true,readOnly:true,value:"${bargain?.personInfor?.status}"
+	                	data-dojo-props='trim:true,required:true,readOnly:true,disabled:true,value:"${bargain?.personInfor?.status}"
 	               '/>
 		    </td>
 	    

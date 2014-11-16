@@ -32,7 +32,7 @@
 				<div class="con">
 					<div class="demo_data">
 						<h4>${it.chinaName }</h4>
-						<p>用户类型：${it.getUserTypeName() }</p>
+						<p>工作岗位：${it?.workJob }</p>
 						<p>手机号码：${utilService.getContactInfor(it)?.mobile }</p>
 					</div>
 				</div>
@@ -46,7 +46,7 @@
 					<div class="con">
 						<div class="demo_data">
 							<h4>${it.chinaName }</h4>
-							<p>用户类型：${it.getUserTypeName() }</p>
+							<p>工作岗位：${it?.workJob }</p>
 							<p>手机号码：${utilService.getContactInfor(it)?.mobile }</p>
 						</div>
 					</div>
