@@ -91,6 +91,9 @@ class PersonInfor {
 	//工作时间
 	Date workJobDate
 	
+	//备注
+	String remark
+	
 	def getFormatteWorkJobDate(){
 		if(workJobDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -247,6 +250,7 @@ class PersonInfor {
 		politicsStatus nullable:true,blank:true
 		health nullable:true,blank:true
 		marriage nullable:true,blank:true
+		remark nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true

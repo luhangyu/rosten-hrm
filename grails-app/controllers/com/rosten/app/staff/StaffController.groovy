@@ -803,6 +803,8 @@ class StaffController {
 		//政治面貌
 		model["politicsStatusList"] = shareService.getSystemCodeItems(currentUser.company,"rs_politicsStatus")
 		
+		model["statusList"] = ["在职","在职下派","在职借用","试用","实习","离职","退休"]
+		
 		render(view:'/staff/search',model:model)
 	}
 
@@ -2236,7 +2238,7 @@ class StaffController {
 		if("onlyShow".equals(params.type)){
 			//只提供查询显示功能
 			fa.readOnly = ["status","chinaName","usedName","userTypeName","idCard","birthday","city","nationality","birthAddress","nativeAddress","politicsStatus","blood","health","householdRegi","intoday","techGrade","staffOnDay"]
-			fa.readOnly += ["sex","marriage","religion","schoolName","major","upDegree","workJob","workJobDate"]
+			fa.readOnly += ["sex","marriage","religion","schoolName","major","upDegree","workJob","workJobDate","remark"]
 			model["onlyShow"] = true
 		}
 		model["fieldAcl"] = fa

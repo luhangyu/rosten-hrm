@@ -298,9 +298,12 @@
 						value:"${personInforEntity?.getFormatteWorkJobDate()}"
                 '/>
 			</td>
-			<td></td>
+			<td><div align="right">备注：</div></td>
 		 	<td>
-		    	
+		    	<input id="remark" data-dojo-type="dijit/form/ValidationTextBox" 
+                 	data-dojo-props='name:"remark",trim:true,${fieldAcl.isReadOnly("remark")},
+						value:"${personInforEntity?.remark}"
+                '/>
 		    </td>
 		</tr>
 	</table>
