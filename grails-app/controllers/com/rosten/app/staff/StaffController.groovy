@@ -342,11 +342,23 @@ class StaffController {
 	}
 	//-------------------------------------------------------------
 	def getPersonOtherInfor ={
-		def model =[:]
-		def personInfor = PersonInfor.get(params.id)
-		
-		render(view:'/staff/otherInfor',model:model)
+			def model =[:]
+			def personInfor = PersonInfor.get(params.id)
+			def statusChangList = StatusChange.findAllByPersonInfor(personInfor)
+			
+			def departChangList = DepartChange.findAllByPersonInfor(personInfor)
+			
+			
+			model["statusChangList"] = statusChangList
+			
+			model["departChangList"] = departChangList
+			
+			
+			render(view:'/staff/otherInfor',model:model)
 	}
+	
+	
+	
 	def serialNoCodeSave ={
 		def json=[:]
 		def config = new NoticeConfig()
