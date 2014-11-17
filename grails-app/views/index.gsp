@@ -277,7 +277,7 @@
 							data-dojo-props='region:"center",title:"员工信息",toggleable:false,
 								height:"157px",moreText:""'>
 								
-								<p class="userPic"><img src="${resource(dir:'images/staff',file:imgName)}"></p>
+								<p class="userPic"><img src="${resource(dir:'images/staff',file:imgName)}" /></p>
 								<div class="userInfor">
 									<div style="font-size:20px;font-weight:bold">${user?.getFormattedName() + "(" + personInfor?.sex + ")" }</div>
 									<div style="margin-top:10px;color:#404040;font-size:16px">${user.getDepartName()?user.getDepartName():"无部门" }</div>

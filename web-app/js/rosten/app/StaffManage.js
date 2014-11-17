@@ -4,6 +4,49 @@
 define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/kernel/behavior"], function(
 		connect, registry,General) {
 	
+	//员工转正申请----------------------------------------------------------------
+	officialApply_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:officialApply_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	officialApply_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=officialApply");
+		rosten.kernel.getGrid().clearSelected();
+	};
+	add_officialApply = function() {
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=officialApply");
+    };
+	change_officialApply = function() {
+		var unid = rosten.getGridUnid("single");
+		if (unid == "")
+			return;
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=officialApply");
+	};
+	read_officialApply = function() {
+		change_officialApply();
+	};
+	delete_officialApply = function() {
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.readNoTime(rosten.webPath + "/staff/officialApplyDelete", content,
+					rosten.deleteCallback);
+		};
+	};
+	
+	//------------------------------------------------------------------------
+	
+	
 	staffStatusChange_print_tzd = function(){
 		//打印通知单
 	};
@@ -55,7 +98,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 	        
 		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&type=" + type);
 	};
-	read_staffDepartChange = function() {
+	read_staffStatusChange = function() {
 		change_staffStatusChange();
 	};
 	delete_staffStatusChange = function() {
@@ -247,8 +290,12 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			rosten.kernel.addRightContent(naviJson);
 			break;
 		case "staffProba":	//员工转正
-			rosten.alert("此功能尚未开通")
-			returnToMain();
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/staffAction/officialApplyView?userId=" + userid,
+				gridSrc : rosten.webPath + "/staff/officialApplyGrid?companyId=" + companyId + "&userId=" + userid
+			};
+			rosten.kernel.addRightContent(naviJson);
 			break;
 		case "staffDepartChange":	//员工调动
 			var naviJson = {

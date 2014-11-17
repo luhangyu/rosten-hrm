@@ -12,6 +12,55 @@ import com.rosten.app.share.FlowComment
 
 class StaffService {
 	
+	//2014-11-17增加员工转正-------------------------------------------
+	
+	def getOfficialApplyListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new OfficialApply())
+	}
+	def getOfficialApplyListDataStore ={params,searchArgs->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllOfficialApply(offset,max,params.company,searchArgs)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	private def getAllOfficialApply={offset,max,company,searchArgs->
+		def c = OfficialApply.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("company",company)
+			order("createDate", "desc")
+			
+			searchArgs.each{k,v->
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+		}
+		return c.list(pa,query)
+	}
+	def getOfficialApplyCount ={company,searchArgs->
+		def c = OfficialApply.createCriteria()
+		def query = {
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+		}
+		return c.count(query)
+	}
+	
+	//------------------------------------------------------------
 	def getPersonInforByDepart(Depart depart){
 		def c = PersonInfor.createCriteria()
 		def resultList = c.list{

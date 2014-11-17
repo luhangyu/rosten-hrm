@@ -103,7 +103,7 @@
 
 <div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='"class":"rostenBargainTitleGrid",title:"历史合同信息",toggleable:false,moreText:"",marginBottom:"2px"'>
 	<div data-dojo-type="rosten/widget/RostenGrid" id="bargainItemGrid" data-dojo-id="bargainItemGrid"
-		data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'bargain',action:'bargainItemGrid',id:bargain?.id)}"'></div>
+		data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",showPageControl:false,url:"${createLink(controller:'bargain',action:'bargainItemGrid',id:bargain?.id)}"'></div>
 </div>
 
 <g:if test="${isShowFile}">

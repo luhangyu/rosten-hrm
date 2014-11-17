@@ -381,6 +381,9 @@ define(["dojo/_base/kernel"
     	case "【员工入职】":
     		rosten.openNewWindow("personInfor", rosten.webPath + "/staff/userShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&type=staffAdd&flowCode=staffAdd");
     		break;
+    	case "【员工转正】":
+    		rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=officialApply");
+    		break;
     	case "【请假】":
     		rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=vacate");
     		break;

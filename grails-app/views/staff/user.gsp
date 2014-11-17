@@ -524,7 +524,7 @@
 				data-dojo-props='"class":"rostenFamilyTitleGrid",title:"家庭成员",toggleable:true,_moreClick:staff_addFamily,moreText:"<span style=\"color:#108ac6\">增加成员</span>",marginBottom:"2px"'>
 				
 				<div data-dojo-type="rosten/widget/RostenGrid" id="staffFamilyGrid" data-dojo-id="staffFamilyGrid"
-					data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:personInfor?.id)}"'></div>
+					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",showPageControl:false,url:"${createLink(controller:'staff',action:'getFamily',id:personInfor?.id)}"'></div>
 			
 			</div>
 			
@@ -532,7 +532,7 @@
 				data-dojo-props='"class":"rostenDegreeTitleGrid",title:"学历学位",toggleable:true,_moreClick:staff_addDegree,moreText:"<span style=\"color:#108ac6\">增加学历学位</span>",marginBottom:"2px"'>
 				
 				<div data-dojo-type="rosten/widget/RostenGrid" id="degreeGrid" data-dojo-id="degreeGrid"
-					data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'staff',action:'getDegree',id:personInfor?.id)}"'></div>
+					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",showPageControl:false,url:"${createLink(controller:'staff',action:'getDegree',id:personInfor?.id)}"'></div>
 				
 			</div>
 			
@@ -540,7 +540,7 @@
 				data-dojo-props='"class":"rostenWorkResumeTitleGrid",title:"工作经历",toggleable:true,_moreClick:staff_addWorkResume,moreText:"<span style=\"color:#108ac6\">增加工作经历</span>",marginBottom:"2px"'>
 				
 				<div data-dojo-type="rosten/widget/RostenGrid" id="workResumeGrid" data-dojo-id="workResumeGrid"
-					data-dojo-props='imgSrc:"../../images/rosten/share/wait.gif",showPageControl:false,url:"${createLink(controller:'staff',action:'getWorkResume',id:personInfor?.id)}"'></div>
+					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",showPageControl:false,url:"${createLink(controller:'staff',action:'getWorkResume',id:personInfor?.id)}"'></div>
 				
 			</div>
 		</form>
