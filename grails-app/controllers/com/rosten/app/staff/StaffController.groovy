@@ -44,6 +44,7 @@ class StaffController {
 	def taskService
 	def startService
 	
+<<<<<<< HEAD
 	//2014-11-17增加员工转正-------------------------------------------
 	
 	def officialApplyAdd ={
@@ -60,7 +61,24 @@ class StaffController {
 			}
 		}
 		redirect(action:"officialApplyShow",params:params)
+=======
+	def getPersonOtherInfor ={
+		def model =[:]
+		def personInfor = PersonInfor.get(params.id)
+		def statusChangList = StatusChange.findAllByPersonInfor(personInfor)
+		
+		def departChangList = DepartChange.findAllByPersonInfor(personInfor)
+		
+		
+		model["statusChangList"] = statusChangList
+		
+		model["departChangList"] = departChangList
+		
+		
+		render(view:'/staff/otherInfor',model:model)
+>>>>>>> branch 'master' of https://github.com/luhangyu/rosten-hrm.git
 	}
+<<<<<<< HEAD
 	def officialApplyShow ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
@@ -356,6 +374,8 @@ class StaffController {
 			
 			render(view:'/staff/otherInfor',model:model)
 	}
+=======
+>>>>>>> branch 'master' of https://github.com/luhangyu/rosten-hrm.git
 	
 	
 	
