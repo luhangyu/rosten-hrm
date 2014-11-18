@@ -337,7 +337,7 @@
 				 	
 				 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"207px"}' >
 						<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" id ="home_download"
-							data-dojo-props='region:"left",title:"下载专区",toggleable:false,showTitleCount:false,
+							data-dojo-props='region:"left",title:"下载专区",toggleable:false,showTitleCount:true,
 								height:"157px",width:"50%",style:{marginRight:"1px"},
 								_moreClick:more_downloadFile,moreText:"更多"'>
 						</div>
@@ -390,7 +390,7 @@
 			</div>
 		</div>
 		<div data-dojo-type="dijit/layout/ContentPane" id="footer"
-			data-dojo-props='region:"bottom",style:"border:1px solid #B5BCC7"'>Copyright @2012 ; rosten
+			data-dojo-props='region:"bottom",style:"border:1px solid #B5BCC7"'>Copyright @2014 ; rosten
 			版权所有,提供技术支持</div>
 	</div>
 </body>
