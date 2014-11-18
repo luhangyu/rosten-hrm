@@ -19,7 +19,7 @@ class Engage {
 	String engageDepart
 	
 	//聘任时间
-	Date engageDate
+	Date engageDate = new Date()
 	
 	@GridColumn(name="聘任时间",width="106px",colIdx=3)
 	def getFormattedEngageDate(){
@@ -35,10 +35,17 @@ class Engage {
 	@GridColumn(name="聘任理由",colIdx=4)
 	String reason
 	
+	//是否已发布
+	boolean isPublish = false
+	@GridColumn(name="是否已发布",width="60px",colIdx=5)
+	def getIsPublishFormat(){
+		return isPublish?"是":"否 "
+	}
+	
 	//创建时间
 	Date createDate = new Date()
 	
-	@GridColumn(name="创建时间",width="106px",colIdx=5)
+	@GridColumn(name="创建时间",width="106px",colIdx=6)
 	def getFormattedCreatedDate(){
 		if(createDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -47,6 +54,7 @@ class Engage {
 			return ""
 		}
 	}
+	
 	static belongsTo = [company:Company]
 	
     static constraints = {

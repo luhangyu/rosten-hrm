@@ -65,13 +65,7 @@ class StaffController {
 		
 		FieldAcl fa = new FieldAcl()
 		
-		if(!currentUser.equals(entity.currentUser)){
-			//当前登录用户不是当前处理人，则不允许修改相关信息
-			fa.readOnly +=["engageName","engageDepart","engageDate","reason"]
-			model["isShowFile"] = false
-		}else{
-			model["isShowFile"] = true
-		}
+		model["isShowFile"] = true
 		model["fieldAcl"] = fa
 		
 		render(view:'/staff/engage',model:model)

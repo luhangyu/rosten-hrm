@@ -4,6 +4,47 @@
 define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/kernel/behavior"], function(
 		connect, registry,General) {
 	
+	//员工聘任--------------------------------------------------------------------------------------------
+	engage_formatTopic = function(value,rowIndex){
+		return "<a href=\"javascript:engage_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+	};
+	engage_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("engage", rosten.webPath + "/staff/engageShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=engage");
+		rosten.kernel.getGrid().clearSelected();
+	};
+	add_engage = function() {
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("engage", rosten.webPath + "/staff/engageAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=engage");
+    };
+	change_engage = function() {
+		var unid = rosten.getGridUnid("single");
+		if (unid == "")
+			return;
+		var userid = rosten.kernel.getUserInforByKey("idnumber");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.openNewWindow("engage", rosten.webPath + "/staff/engageShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=engage");
+	};
+	read_engage = function() {
+		change_engage();
+	};
+	delete_engage = function() {
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.readNoTime(rosten.webPath + "/staff/engageDelete", content,
+					rosten.deleteCallback);
+		};
+	};
+	//-------------------------------------------------------------------------------------------------
+	
 	//员工转正申请----------------------------------------------------------------
 	officialApply_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:officialApply_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
@@ -321,6 +362,14 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 				actionBarSrc : rosten.webPath + "/staffAction/staffStatusChangeView?userId=" + userid +"&type=retire",
 				searchSrc:rosten.webPath + "/staff/statusChangeSearchView",
 				gridSrc : rosten.webPath + "/staff/staffStatusChangeGrid?companyId=" + companyId + "&userId=" + userid + "&type=retire"
+			};
+			rosten.kernel.addRightContent(naviJson);
+			break;
+		case "staffEngage":	//员工聘任
+			var naviJson = {
+				identifier : oString,
+				actionBarSrc : rosten.webPath + "/staffAction/engageView?userId=" + userid,
+				gridSrc : rosten.webPath + "/staff/engageGrid?companyId=" + companyId + "&userId=" + userid
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;

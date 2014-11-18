@@ -6,6 +6,31 @@ import com.rosten.app.system.User
 class StaffActionController {
 	def imgPath ="images/rosten/actionbar/"
 	
+	//员工聘任----------------------------------------------------------------------------
+	
+	def engageForm ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		def strname = "engage"
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		if(params.id){
+			def entity = Engage.get(params.id)
+			actionList << createAction("发布",webPath +imgPath + "Save.gif",strname + "_public")
+		}
+		render actionList as JSON
+	}
+	def engageView ={
+		def actionList =[]
+		def strname = "engage"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("员工聘任",imgPath + "add.png","add_" + strname)
+		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		render actionList as JSON
+	}
+	
+	//---------------------------------------------------------------------------------
 	def officialApplyForm ={
 		def webPath = request.getContextPath() + "/"
 		def actionList = []
