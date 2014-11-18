@@ -512,7 +512,7 @@ define(["dojo/_base/kernel"
 				_showName = "暂无公告";
 				break;
 			case "home_download":
-				_showName = "暂下载文件";
+				_showName = "暂无下载文件";
 				break;
 			}
 			titlePaneNode.changeTitleCount("(" + _showName + ")");
