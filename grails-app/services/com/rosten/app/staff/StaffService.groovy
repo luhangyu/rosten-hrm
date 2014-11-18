@@ -12,6 +12,44 @@ import com.rosten.app.share.FlowComment
 
 class StaffService {
 	
+	//2014-11-18增加员工聘任------------------------------------------
+	def getEngageListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new Engage())
+	}
+	def getEngageListDataStore ={params,searchArgs->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllEngage(offset,max,params.company,searchArgs)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	private def getAllEngage={offset,max,company,searchArgs->
+		def c = Engage.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("company",company)
+			order("createDate", "desc")
+			
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.list(pa,query)
+	}
+	def getEngageCount ={company,searchArgs->
+		def c = Engage.createCriteria()
+		def query = {
+			eq("company",company)
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.count(query)
+	}
+	//------------------------------------------------------------
+	
 	//2014-11-17增加员工转正-------------------------------------------
 	
 	def getOfficialApplyListLayout ={

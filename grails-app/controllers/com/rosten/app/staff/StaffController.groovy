@@ -44,8 +44,124 @@ class StaffController {
 	def taskService
 	def startService
 	
-	//2014-11-17增加员工转正-------------------------------------------
+	//2014-11-18增加员工聘任---------------------------------------------------------
+	def engageAdd ={
+		redirect(action:"engageShow",params:params)
+	}
+	def engageShow ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		model["company"] = Company.get(params.companyId)
+		
+		model["user"] = currentUser
+		
+		def entity
+		if(params.id){
+			entity = Engage.get(params.id)
+		}else{
+			entity = new Engage()
+		}
+		model["engage"] = entity
+		
+		FieldAcl fa = new FieldAcl()
+		
+		if(!currentUser.equals(entity.currentUser)){
+			//当前登录用户不是当前处理人，则不允许修改相关信息
+			fa.readOnly +=["engageName","engageDepart","engageDate","reason"]
+			model["isShowFile"] = false
+		}else{
+			model["isShowFile"] = true
+		}
+		model["fieldAcl"] = fa
+		
+		render(view:'/staff/engage',model:model)
+	}
+	def engageSave ={
+		def model=[:]
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = Company.get(params.companyId)
+		def entity = new Engage()
+		if(params.id && !"".equals(params.id)){
+			entity = Engage.get(params.id)
+		}else{
+			entity.company = company
+		}
+		
+		entity.properties = params
+		entity.clearErrors()
+		
+		entity.engageDate = Util.convertToTimestamp(params.engageDate)
+		
+		if(entity.save(flush:true)){
+			model["id"] = entity.id
+			
+			//增加附件功能
+			if(params.attachmentIds){
+				params.attachmentIds.split(",").each{
+					def attachment = Attachment.get(it)
+					attachment.beUseId = entity.id
+					attachment.save(flush:true)
+				}
+			}
+			
+			model["result"] = "true"
+		}else{
+			entity.errors.each{
+				println it
+			}
+			model["result"] = "false"
+		}
+		render model as JSON
+	}
+	def engageDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def entity = Engage.get(it)
+				if(entity){
+					entity.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	def engageGrid ={
+		def model=[:]
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			model["gridHeader"] = staffService.getEngageListLayout()
+		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+		
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			model["gridData"] = staffService.getEngageListDataStore(args,searchArgs)
+			
+		}
+		if(params.refreshPageControl){
+			def total = staffService.getEngageCount(company,searchArgs)
+			model["pageControl"] = ["total":total.toString()]
+		}
+		render model as JSON
+	}
+	//---------------------------------------------------------------------------
 	
+	//2014-11-17增加员工转正-------------------------------------------
 	def officialApplyAdd ={
 		if(params.flowCode){
 			//需要走流程
@@ -1353,7 +1469,8 @@ class StaffController {
 					break
 			}
 			shareService.addFlowLog(personInfor.id,"staffAdd",currentUser,logContent)
-						
+			
+			json["nextUserName"] = nextUsers.join("、")
 			json["result"] = true
 		}else{
 			personInfor.errors.each{
