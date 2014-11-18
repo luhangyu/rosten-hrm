@@ -57,8 +57,8 @@
 				</tbody>
 			</table>
 			
+		</div>
 	</div>
-	
 	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"离(退)休信息",toggleable:false,moreText:"",marginBottom:"2px"'>
 		
 		  <div class="personSearch">
