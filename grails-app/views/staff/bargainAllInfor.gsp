@@ -88,10 +88,10 @@
 			<legend class="tableHeader">附件查看</legend>
 			<div id="fileUpload_show" style="padding:5px;margin:8px;font-size:14px">
 				<g:each in="${attachFiles}">
-					<div style="height:30px;width:50%;float:left">
+					<div id="${it.id}" style="height:30px;width:50%;float:left">
 						<a href="${createLink(controller:'system',action:'downloadFile',id:it.id)}" style="margin-right:20px" dealId="${it.id }">${it.name }</a>
 						<g:if test="${isShowFile}">
-							<a href="javascript:deleteFile('${it.id}')" style="color:green">删除</a>
+							<a href="javascript:rosten.deleteFile('fileUpload_show','${it.id}')" style="color:green">删除</a>
 						</g:if>
 					</div>
 				</g:each>
