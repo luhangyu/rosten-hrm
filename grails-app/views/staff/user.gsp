@@ -259,7 +259,11 @@
 				}
 				rosten.readSync(rosten.webPath + "/staff/staffAddFlowDeal",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！").queryDlgClose= function(){
+						var _nextUserName = "";
+						if(data.nextUserName && data.nextUserName!=""){
+							_nextUserName = data.nextUserName;
+						}
+						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 							//刷新待办事项内容
 							window.opener.showStartGtask("${loginUser?.id}","${company?.id }");
 							
@@ -370,7 +374,11 @@
 				var content = {};
 				rosten.readSync("${createLink(controller:'staff',action:'staffAddFlowBack',params:[id:personInfor?.id])}",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！").queryDlgClose= function(){
+						var _nextUserName = "";
+						if(data.nextUserName && data.nextUserName!=""){
+							_nextUserName = data.nextUserName;
+						}
+						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 							//刷新待办事项内容
 							window.opener.showStartGtask("${loginUser}","${company?.id }");
 							

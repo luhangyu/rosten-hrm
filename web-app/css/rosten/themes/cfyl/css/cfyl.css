@@ -74,7 +74,9 @@
 	background-image:url("../images/titleBar_bg.png");
     padding: 5px 0 5px 10px;
 }
-
+.rosten .simpleNavigation .bgClass{
+	background-image:url("../images/titleBar_bg.png");
+}
 /*
  * 弹出广告样式
  */

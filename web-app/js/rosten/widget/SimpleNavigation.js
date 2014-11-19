@@ -1,64 +1,75 @@
-define(["dojo/_base/declare","dojo/_base/lang","dojo/_base/xhr","dijit/_WidgetBase","dijit/_TemplatedMixin","dojox/collections/SortedList","rosten/util/general"],function(_1,_2,_3,_4,_5,_6,_7){
-return _1("rosten.widget.SimpleNavigation",[_4,_5],{general:new _7(),id:"",url:"",urlArgs:null,templateString:"<div class=\"simpleNavigation\""+"\t><div  data-dojo-attach-point=\"containerNode\""+"\t>Loading...</div>"+"</div>",navigationData:null,defaultentry:"",constructor:function(){
+define(["dojo/_base/declare","dojo/_base/kernel","dojo/_base/lang","dojo/dom-class","dojo/_base/xhr","dijit/_WidgetBase","dijit/_TemplatedMixin","dojox/collections/SortedList","rosten/util/general"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
+return _1("rosten.widget.SimpleNavigation",[_6,_7],{general:new _9(),id:"",url:"",urlArgs:null,templateString:"<div class=\"simpleNavigation\""+"\t><div  data-dojo-attach-point=\"containerNode\""+"\t>Loading...</div>"+"</div>",navigationData:null,defaultentry:"",ulnode:null,constructor:function(){
 },postCreate:function(){
 this.id=this.id!=""?this.id:this.widgetId;
-this.navigationData=new _6();
+this.navigationData=new _8();
 if(this.url!=""){
 this.refreshNavigation(this.url);
 }
-},refreshNavigation:function(_8){
+},refreshNavigation:function(_a){
 this.containerNode.innerHTML="";
-if(this.url!=_8){
-this.url=_8;
+if(this.url!=_a){
+this.url=_a;
 }
-var _9={url:this.url,sync:true,preventCache:true,handleAs:"json",load:_2.hitch(this,function(_a){
-this._setData(_a);
-}),error:_2.hitch(this,function(_b){
-console.log("get Navigation data is error: ",_b);
-this.onDownloadError(_b);
+var _b={url:this.url,sync:true,preventCache:true,handleAs:"json",load:_3.hitch(this,function(_c){
+this._setData(_c);
+}),error:_3.hitch(this,function(_d){
+console.log("get Navigation data is error: ",_d);
+this.onDownloadError(_d);
 })};
 if(this.urlArgs!=null){
-_9.content=this.urlArgs;
+_b.content=this.urlArgs;
 }
-_3.post(_9);
-},onDownloadError:function(_c){
-},_setData:function(_d){
+_5.post(_b);
+},onDownloadError:function(_e){
+},_setData:function(_f){
 console.log("navigation set data start");
 if(this.navigationData!=null){
 this.navigationData.clear();
 }else{
-this.navigationData=new _6();
+this.navigationData=new _8();
 }
-var _e=document.createElement("ul");
-for(var i=0;i<_d.length;i++){
+var _10=document.createElement("ul");
+for(var i=0;i<_f.length;i++){
 if(i==0){
-this.defaultEntity=_d[i].url;
+this.defaultEntity=_f[i].url;
 }
-if(_d[i].isDefault==true||_d[i].isDefault=="true"){
-this.defaultEntity=_d[i].url;
+if(_f[i].isDefault==true||_f[i].isDefault=="true"){
+this.defaultEntity=_f[i].url;
 }
-var _f=_d[i]["name"];
-var img=_d[i]["img"];
-var _10=_d[i]["href"];
-var _11=document.createElement("li");
-var _12=document.createElement("A");
-_12.setAttribute("href",_10);
-var _13=document.createElement("img");
-var _14=document.createAttribute("src");
-_14.nodeValue=img;
-_13.setAttributeNode(_14);
-_12.appendChild(_13);
-_12.appendChild(document.createTextNode("  "+_f));
-_11.appendChild(_12);
-_e.appendChild(_11);
-this.navigationData.add(this.general.stringLeft(this.general.stringRight(_10,"\""),"\""),_f);
+var _11=_f[i]["name"];
+var img=_f[i]["img"];
+var _12=_f[i]["href"];
+var _13=this.general.stringLeft(this.general.stringRight(_12,"\""),"\"");
+var _14=document.createElement("li");
+_14.setAttribute("liid",_13);
+var _15=document.createElement("A");
+_15.setAttribute("href",_12);
+var _16=document.createElement("img");
+var _17=document.createAttribute("src");
+_17.nodeValue=img;
+_16.setAttributeNode(_17);
+_15.appendChild(_16);
+_15.appendChild(document.createTextNode("  "+_11));
+_14.appendChild(_15);
+_10.appendChild(_14);
+this.navigationData.add(_13,_11);
+this.ulnode=_10;
 }
-this.containerNode.appendChild(_e);
+this.containerNode.appendChild(_10);
 console.log("navigation set data end");
+},rendNavigationClass:function(str){
+_2.forEach(this.ulnode.childNodes,function(_18){
+if(_18.getAttribute("liid")==str){
+_4.add(_18,"bgClass");
+}else{
+_4.remove(_18,"bgClass");
+}
+});
 },getShowName:function(key){
 if(this.navigationData.contains(key)){
-var _15=this.navigationData.item(key);
-return _15;
+var _19=this.navigationData.item(key);
+return _19;
 }else{
 return "";
 }

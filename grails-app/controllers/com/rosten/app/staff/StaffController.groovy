@@ -927,7 +927,8 @@ class StaffController {
 					break
 			}
 			shareService.addFlowLog(departChange.id,"staffDepartChange",currentUser,logContent)
-						
+			
+			json["nextUserName"] = nextUsers.join("、")
 			json["result"] = true
 		}else{
 			departChange.errors.each{
@@ -1017,6 +1018,8 @@ class StaffController {
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				
 				shareService.addFlowLog(departChange.id,"staffDepartChange",currentUser,logContent)
+				
+				json["nextUserName"] = user?.getFormattedName()
 			}
 				
 			json["result"] = true
@@ -1321,6 +1324,8 @@ class StaffController {
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				
 				shareService.addFlowLog(personInfor.id,"staffAdd",currentUser,logContent)
+				
+				json["nextUserName"] = user?.getFormattedName()
 			}
 				
 			json["result"] = true
@@ -2120,11 +2125,12 @@ class StaffController {
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
 			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
 			_gridHeader << ["name":"性别","width":"30px","colIdx":5,"field":"sex"]
-			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
-			_gridHeader << ["name":"身份证号","width":"auto","colIdx":7,"field":"idCard"]
-			_gridHeader << ["name":"手机号码","width":"auto","colIdx":8,"field":"mobile"]
-			_gridHeader << ["name":"民族","width":"auto","colIdx":9,"field":"nationality"]
-			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":10,"field":"politicsStatus"]
+//			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
+			_gridHeader << ["name":"身份证号","width":"auto","colIdx":6,"field":"idCard"]
+			_gridHeader << ["name":"手机号码","width":"auto","colIdx":7,"field":"mobile"]
+			_gridHeader << ["name":"民族","width":"auto","colIdx":8,"field":"nationality"]
+			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":9,"field":"politicsStatus"]
+			_gridHeader << ["name":"角色","width":"auto","colIdx":10,"field":"userRoles"]
 			_gridHeader << ["name":"状态","width":"auto","colIdx":11,"field":"status"]
 
 			json["gridHeader"] = _gridHeader
@@ -2203,6 +2209,7 @@ class StaffController {
 				sMap["nationality"] = it?.nationality
 				sMap["politicsStatus"] = it?.politicsStatus
 				sMap["status"] = it?.status
+				sMap["userRoles"] = _user?.getAllRolesValue()
 				
 				_json.items+=sMap
 				
@@ -2254,7 +2261,7 @@ class StaffController {
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
 			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
 			_gridHeader << ["name":"性别","width":"30px","colIdx":5,"field":"sex"]
-			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
+//			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
 			_gridHeader << ["name":"身份证号","width":"130px","colIdx":7,"field":"idCard"]
 			_gridHeader << ["name":"手机号码","width":"auto","colIdx":8,"field":"mobile"]
 			_gridHeader << ["name":"民族","width":"auto","colIdx":9,"field":"nationality"]

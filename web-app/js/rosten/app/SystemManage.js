@@ -1122,23 +1122,24 @@ define(["dojo/_base/connect",
                 rostenGrid.onRowDblClick = change_group;
                 break;
             case "userManage" :
-//                var companyId = rosten.kernel.getUserInforByKey("companyid");
-//                var naviJson = {
-//                    identifier : oString,
-//                    actionBarSrc : rosten.webPath + "/systemAction/userView",
-//                    gridSrc : rosten.webPath + "/system/userGrid?companyId=" + companyId
-//                };
-//                rosten.kernel.addRightContent(naviJson);
-//
-//                var rostenGrid = rosten.kernel.getGrid();
-//                rostenGrid.onRowDblClick = change_user;
-//                break;
-                
-                //2014-7-13修改为人事系统中的员工信息
+            	//账号管理
                 var companyId = rosten.kernel.getUserInforByKey("companyid");
-                rosten.kernel.setHref(rosten.webPath + "/staff/depart?companyId=" + companyId, oString);
+                var naviJson = {
+                    identifier : oString,
+                    actionBarSrc : rosten.webPath + "/systemAction/userView",
+                    gridSrc : rosten.webPath + "/system/userGrid?companyId=" + companyId
+                };
+                rosten.kernel.addRightContent(naviJson);
+
+                var rostenGrid = rosten.kernel.getGrid();
+                rostenGrid.onRowDblClick = change_user;
                 break;
                 
+            case "userManage1" :
+              //2014-7-13修改为人事系统中的员工信息
+              var companyId = rosten.kernel.getUserInforByKey("companyid");
+              rosten.kernel.setHref(rosten.webPath + "/staff/depart?companyId=" + companyId, oString);
+              break; 
             case "userTypeManage" :
                 var companyId = rosten.kernel.getUserInforByKey("companyid");
                 var naviJson = {

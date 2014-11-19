@@ -158,6 +158,9 @@ td.errors textarea {
 	/*border:1px solid #c8c8c8;*/
 	background-color: #60a1ea; 
 }
+.rosten .simpleNavigation .bgClass{
+	background-image:url("../images/titleBar_bg.png");
+}
 
 /*
  * 弹出广告样式

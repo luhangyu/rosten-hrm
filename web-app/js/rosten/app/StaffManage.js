@@ -321,7 +321,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			};
 			rosten.kernel.addRightContent(naviJson);
 			break;
-		case "staffRegi":	//员工登记
+		case "staffRegi":	//员工管理
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/staffAction/staffView?userId=" + userid,

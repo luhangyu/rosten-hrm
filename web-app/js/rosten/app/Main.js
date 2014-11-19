@@ -737,6 +737,7 @@ define(["dojo/_base/kernel"
      */
     show_naviEntity = function(oString) {
         console.log(oString);
+        rosten.kernel.getNavigation().rendNavigationClass(oString);
     };
     freshGrid = function() {
         rosten.kernel.refreshGrid();
