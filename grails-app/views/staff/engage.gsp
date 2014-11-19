@@ -102,7 +102,17 @@
 				},"rosten_form");
 			};
 			engage_public = function(){
-
+				rosten.readSync(rosten.webPath + "/staff/engagePublish",{id:"${engage?.id}"},function(data){
+					if(data.result==true || data.result=="true"){
+						rosten.alert("发布成功，请在首页查看！").queryDlgClose = function(){
+							//刷新首页bbs内容
+							window.opener.showStartBbs("${user?.id}","${company?.id }");
+							rosten.pagequit();
+						};
+					}else{
+						rosten.alert("发布失败，请通知管理员！");
+					}
+				});
 			};
 			page_quit = function(){
 				rosten.pagequit();

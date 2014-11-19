@@ -17,6 +17,8 @@ import com.rosten.app.system.SystemService
 import com.rosten.app.system.Role
 import com.rosten.app.train.TrainCourse
 import com.rosten.app.train.TrainMessage
+import com.rosten.app.bbs.Bbs
+import com.rosten.app.bbs.BbsConfig
 
 import java.io.OutputStream
 
@@ -150,6 +152,66 @@ class StaffController {
 		if(params.refreshPageControl){
 			def total = staffService.getEngageCount(company,searchArgs)
 			model["pageControl"] = ["total":total.toString()]
+		}
+		render model as JSON
+	}
+	def engagePublish ={
+		def model =[:]
+		def engage = Engage.get(params.id)
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = currentUser.company
+		
+		def bbsConfig = BbsConfig.first()
+		def bbs = new Bbs()
+		
+		bbs.serialNo = bbsConfig.nowYear + bbsConfig.nowSN.toString().padLeft(4,"0")
+		bbs.category = "聘任"
+		bbs.topic = "关于【" + engage.engageName + "】的聘任公示"
+		bbs.category = "聘任"
+		bbs.content = engage.reason
+		bbs.isTop = true
+		bbs.isPublish = true
+		bbs.publisher = currentUser
+		bbs.publisherDepart = currentUser.getDepartName()
+		bbs.publishDate = new Date()
+		bbs.status = "已发布"
+		bbs.company = company
+		bbs.currentDealDate = new Date()
+		bbs.drafter = currentUser
+		bbs.drafterDepart = currentUser.getDepartName()
+		bbs.publisher = currentUser
+		bbs.publisherDepart = currentUser.getDepartName()
+		bbs.publishDate = new Date()
+		bbs.addDefaultReader("all")
+		
+		if(bbs.save(flush:true)){
+			//处理附件信息
+			Attachment.findAllByBeUseId(engage.id).each{item->
+				def _attachment = new Attachment()
+				
+				_attachment.properties = params
+				_attachment.clearErrors()
+				
+				_attachment.upUser = currentUser
+				_attachment.beUseId = bbs.id
+				_attachment.type = "bbs"
+				
+				_attachment.save()
+			}
+			
+			//修改配置文档中的流水号
+			bbsConfig.nowSN += 1
+			bbsConfig.save()
+			
+			engage.isPublish = true
+			engage.save(flush:true)
+			
+			model["result"] = "true"
+		}else{
+			bbs.errors.each{
+				println it
+			}
+			model["result"] = "false"
 		}
 		render model as JSON
 	}

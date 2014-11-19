@@ -207,6 +207,9 @@ class Bbs {
 			Gtask.findAllByContentId(this.id).each{item->
 				item.delete()
 			}
+			Attachment.findAllByBeUseId(this.id).each{item->
+				item.delete()
+			}
 			session.flush()
 		}
 		

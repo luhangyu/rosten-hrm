@@ -124,29 +124,7 @@ class BbsController {
 		
 		def user = User.get(params.userId)
 		def company = Company.get(params.companyId)
-		
-		def max = 18
-		def offset = 0
-		
 		def c = Bbs.createCriteria()
-		def pa=[max:max,offset:offset]
-		def query = {
-			eq("company",company)
-			or{
-				//defaultReaders为：all或者【角色】或者readers中包含当前用户的均有权访问
-				like("defaultReaders", "%all%")
-				readers{
-					eq("id",user?.id)
-				}
-			}
-			or{
-				eq("status","已发布")
-				eq("status","已归档")
-				eq("status","已结束")
-			}
-			
-			order("publishDate", "desc")
-		}
 		
 		//获取配置文档
 		def bbsConfig = BbsConfig.first()
@@ -154,9 +132,30 @@ class BbsController {
 		
 		//取最前面9条数据
 		def bbsList = []
-		def cResult =c.list(pa,query).unique()
-		if(cResult.size() > 9){
-			cResult = cResult[0..8]
+		def cResult =c.list{
+			eq("company",company)
+			
+			//defaultReaders为：all或者【角色】或者readers中包含当前用户的均有权访问
+			like("defaultReaders", "%all%")
+			
+//			or{
+//				
+//				readers{
+//					eq("id",user?.id)
+//				}
+//			}
+			or{
+				eq("status","已发布")
+				eq("status","已归档")
+				eq("status","已结束")
+			}
+			
+			order("publishDate", "desc")
+		}.unique()
+		
+		def _resultCount = cResult.size()
+		if(cResult.size() > 6){
+			cResult = cResult[0..5]
 		}
 		cResult.each{
 			def smap =[:]
@@ -182,7 +181,12 @@ class BbsController {
 			}
 			bbsList << smap
 		}
-		render bbsList as JSON
+		
+		def json=[:]
+		json.dataList = bbsList
+		json.dataCount = _resultCount
+		render json as JSON
+		
 	}
 	
 	def bbsFlowBack ={

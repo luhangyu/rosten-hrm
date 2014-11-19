@@ -508,11 +508,12 @@ define(["dojo/_base/kernel"
         	addUlInformation("home_bbs","openBbs",_data);
         });
     };
-    addUlInformation = function(idname,functionName,data){
+    addUlInformation = function(idname,functionName,_data){
     	
     	var titlePaneNode = registry.byId(idname);
-		if(data.length>0){
-			titlePaneNode.changeTitleCount("(" + data.length + "条)");
+    	
+		if(_data.dataCount>0){
+			titlePaneNode.changeTitleCount("(" + _data.dataCount + "条)");
 		}else{
 			var _showName = "暂无数据";
 			switch(idname){
@@ -528,6 +529,7 @@ define(["dojo/_base/kernel"
 		
 		var node = titlePaneNode.containerNode;
     	node.innerHTML = "";
+    	var data = _data.dataList;
     	
     	var ul = document.createElement("ul");
     	for (var i = 0; i < data.length; i++) {

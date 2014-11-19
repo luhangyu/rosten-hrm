@@ -293,7 +293,7 @@
 						    </td>
 						    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>类别：</div></td>
 						    <td width="250">
-						    	<select id="category" data-dojo-type="dijit/form/FilteringSelect" 
+						    	<select id="category" data-dojo-type="dijit/form/ComboBox" 
 					                data-dojo-props='name:"category",${fieldAcl.isReadOnly("category")},
 					                trim:true,required:true,missingMessage:"请选择类别！",invalidMessage:"请选择类别！",
 					      			value:"${bbs?.category}"
@@ -308,7 +308,7 @@
 						    	<div align="right"><span style="color:red">*&nbsp;</span>紧急程度：</div>
 				            </td>
 				            <td>
-				            	<select id="level1" data-dojo-type="dijit/form/FilteringSelect"
+				            	<select id="level1" data-dojo-type="dijit/form/ComboBox"
 					                data-dojo-props='name:"level1",${fieldAcl.isReadOnly("level1")},
 					               	trim:true,required:true,missingMessage:"请选择紧急程度！",invalidMessage:"请选择紧急程度！",
 					      			value:"${bbs?.level1}"
@@ -368,7 +368,7 @@
 		</form>
 		</div>
 		
-		<g:if test="${bbs?.id}">
+		<g:if test="${bbs?.id && bbs?.processDefinitionId}">
 			<div data-dojo-type="dijit/layout/ContentPane" id="bbsComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 				href:"${createLink(controller:'share',action:'getCommentLog',id:bbs?.id)}"
 			'>	

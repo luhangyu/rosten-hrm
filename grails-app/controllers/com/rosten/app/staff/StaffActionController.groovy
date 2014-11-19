@@ -13,10 +13,15 @@ class StaffActionController {
 		def actionList = []
 		def strname = "engage"
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		
 		if(params.id){
 			def entity = Engage.get(params.id)
-			actionList << createAction("发布",webPath +imgPath + "Save.gif",strname + "_public")
+			if(!entity.isPublish){
+				actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+				actionList << createAction("发布",webPath +imgPath + "submit.png",strname + "_public")
+			}
+		}else{
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
 		}
 		render actionList as JSON
 	}
