@@ -857,7 +857,7 @@ class StaffController {
 		if(nextInfor.nextUser && nextInfor.nextUser.size()>0){
 			def args = [:]
 			args["type"] = "【员工" + entity.changeType +"】"
-			args["content"] = "请您审核名称为  【" + entity.getApplayPersonInforName() +  "】 的转正申请"
+			args["content"] = "请您审核名称为  【" + entity.getApplayPersonInforName() +  "】 的" + entity.changeType  + "申请"
 			args["contentStatus"] = nextInfor.nextStatus
 			args["contentId"] = entity.id
 			args["user"] = nextInfor.nextUser[0]

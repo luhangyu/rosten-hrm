@@ -385,12 +385,13 @@ define(["dojo/_base/kernel"
     		rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=officialApply");
     		break;
     	case "【员工退休】":
-    	case "【员工离职】":
     		var type="retire";
-            if(rosten.kernel.navigationEntity=="staffLeave"){
-            	type="leave";
-            }
-            rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeAdd?companyId=" + companyId + "&userid=" + userid + "&type=" + type+ "&flowCode=statusChange");
+    		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&type=" + type+ "&flowCode=statusChange");
+            break;
+    	case "【员工离职】":
+    		var type="leave";
+            rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + id + "?companyId=" + companyId + "&userid=" + userid + "&type=" + type+ "&flowCode=statusChange");
+            break;
     	case "【员工调动】":
     		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=staffDepartChange");
     		break;
