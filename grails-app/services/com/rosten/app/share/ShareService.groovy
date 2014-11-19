@@ -74,6 +74,8 @@ class ShareService {
 			entity.currentUser = null
 			entity.currentDepart = null
 			entity.taskId = null
+			entity.status = nextStatus
+			entity.currentDealDate = new Date()
 		}else{
 			//获取下一节点任务，目前处理串行情况
 			def tasks = workFlowService.getTasksByFlow(entity.processInstanceId)

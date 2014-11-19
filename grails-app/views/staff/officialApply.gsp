@@ -256,6 +256,9 @@
 					rosten.toggleAction(buttonWidget,false);
 				});
 			};
+			officialApply_print_zzkhb = function(){
+				
+			};
 			page_quit = function(){
 				rosten.pagequit();
 			};

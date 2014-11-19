@@ -369,6 +369,11 @@ class StaffController {
 			switch (true){
 				case entity.status.contains("已结束"):
 					logContent = "结束流程"
+					
+					//修改员工状态为在职
+					entity.personInfor.status = "在职"
+					entity.personInfor.save(flush:true)
+					
 					break
 				case entity.status.contains("归档"):
 					logContent = "归档"
@@ -670,12 +675,27 @@ class StaffController {
 		render model as JSON
 	}
 	
+	//离职退休----------------------------------------------------------------------------------------------------
 	def staffStatusChangeAdd ={
+		if(params.flowCode){
+			//需要走流程
+			def company = Company.get(params.companyId)
+			def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(params.flowCode,company)
+			if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+				params.relationFlow = flowBusiness.relationFlow
+			}else{
+				//不存在流程引擎关联数据
+				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
+				return
+			}
+		}
 		redirect(action:"staffStatusChangeShow",params:params)
 	}
 	def staffStatusChangeShow ={
 		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
 		model["company"] = Company.get(params.companyId)
+		model["user"] = currentUser
 		
 		def statusChange
 		if(params.id){
@@ -694,6 +714,12 @@ class StaffController {
 		
 		FieldAcl fa = new FieldAcl()
 		model["fieldAcl"] = fa
+		
+		//流程相关信息----------------------------------------------
+		model["relationFlow"] = params.relationFlow
+		model["flowCode"] = params.flowCode
+		//------------------------------------------------------
+		
 		render(view:'/staff/statusChange',model:model)
 	}
 	def staffStatusChangeSave ={
@@ -707,9 +733,6 @@ class StaffController {
 		}else{
 			statusChange.company = company
 			statusChange.applayUser = currentUser
-			
-			statusChange.currentDepart = currentUser.getDepartName()
-			statusChange.currentDealDate = new Date()
 		}
 		
 		statusChange.properties = params
@@ -719,9 +742,28 @@ class StaffController {
 		def personInfor = PersonInfor.get(params.personInforId)
 		statusChange.personInfor = personInfor
 		
+		//判断是否需要走流程
+		def _status
+		if(params.relationFlow){
+			//需要走流程
+			if(params.id){
+				_status = "old"
+			}else{
+				_status = "new"
+			}
+			//流程引擎相关信息处理
+			shareService.businessFlowSave(statusChange,currentUser,params.relationFlow)
+		}
+		
 		if(statusChange.save(flush:true)){
-			personInfor.status = statusChange.changeType
-			personInfor.save(flush:true)
+			model["id"] = statusChange.id
+			//流程引擎相关日志信息
+			if("new".equals(_status)){
+				//添加日志
+				shareService.addFlowLog(statusChange.id,params.flowCode,currentUser,"新增" + statusChange.changeType + "申请")
+			}
+//			personInfor.status = statusChange.changeType
+//			personInfor.save(flush:true)
 			
 			//增加附件功能
 			if(params.attachmentIds){
@@ -794,6 +836,149 @@ class StaffController {
 		}
 		render model as JSON
 	}
+	def staffStatusChangeFlowDeal ={
+		def json=[:]
+		
+		def entity = StatusChange.get(params.id)
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = currentUser.company
+		def frontStatus = entity.status
+		def nextUserName=[]
+		
+		//流程引擎相关信息处理-------------------------------------------------------------------------------------
+		def map =[:]
+		if(params.conditionName){
+			map[params.conditionName] = params.conditionValue
+		}
+		def nextInfor = shareService.businessFlowDeal(company,entity,params.dealUser,map,"staffManage","statusChange")
+		//--------------------------------------------------------------------------------------------------
+		
+		//增加待办事项
+		if(nextInfor.nextUser && nextInfor.nextUser.size()>0){
+			def args = [:]
+			args["type"] = "【员工" + entity.changeType +"】"
+			args["content"] = "请您审核名称为  【" + entity.getApplayPersonInforName() +  "】 的转正申请"
+			args["contentStatus"] = nextInfor.nextStatus
+			args["contentId"] = entity.id
+			args["user"] = nextInfor.nextUser[0]
+			args["company"] = company
+			startService.addGtask(args)
+			
+			nextUserName << nextInfor.nextUser[0].getFormattedName()
+		}
+		
+		//判断下一处理人是否与当前处理人员为同一人
+		if(currentUser.equals(entity.currentUser)){
+			json["refresh"] = true
+		}
+		
+		//修改代办事项状态
+		def gtask = Gtask.findWhere(
+			user:currentUser,
+			company:company,
+			contentId:entity.id,
+			contentStatus:frontStatus,
+			status:"0"
+		)
+		if(gtask!=null){
+			gtask.dealDate = new Date()
+			gtask.status = "1"
+			gtask.save(flush:true)
+		}
+		
+		if(entity.save(flush:true)){
+			//添加日志
+			def logContent
+			switch (true){
+				case entity.status.contains("已结束"):
+					logContent = "结束流程"
+					
+					//修改员工状态为在职
+					entity.personInfor.status = entity.changeType
+					entity.personInfor.save(flush:true)
+					
+					break
+				case entity.status.contains("归档"):
+					logContent = "归档"
+					break
+				case entity.status.contains("不同意"):
+					logContent = "不同意！"
+					break
+				default:
+					logContent = "提交" + entity.status + "【" + nextUserName.join("、") + "】"
+					break
+			}
+			shareService.addFlowLog(entity.id,"statusChange",currentUser,logContent)
+			
+			json["nextUserName"] = nextUserName.join("、")
+			json["result"] = true
+		}else{
+			entity.errors.each{
+				println it
+			}
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	def staffStatusChangeFlowBack ={
+		def json=[:]
+		def entity = StatusChange.get(params.id)
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = currentUser.company
+		def frontStatus = entity.status
+		def nextUser
+		
+		try{
+			
+			def nextInfor = shareService.businessFlowBack(entity)
+			if(nextInfor.nextUser){
+				nextUser = nextInfor.nextUser
+				//增加待办事项
+				def args = [:]
+				args["type"] = "【员工转正】"
+				args["content"] = "名称为  【" + entity.getPersonInforName() +  "】 的" + entity.changeType + "申请被退回，请查看！"
+				args["contentStatus"] = nextInfor.nextDepart
+				args["contentId"] = entity.id
+				args["user"] = nextUser
+				args["company"] = company
+				startService.addGtask(args)
+			}
+			
+			//修改代办事项状态
+			def gtask = Gtask.findWhere(
+				user:currentUser,
+				company:company,
+				contentId:entity.id,
+				contentStatus:frontStatus,
+				status:"0"
+			)
+			if(gtask!=null){
+				gtask.dealDate = new Date()
+				gtask.status = "1"
+				gtask.save(flush:true)
+			}
+			
+			entity.save(flush:true)
+			
+			//判断下一处理人是否与当前处理人员为同一人
+			if(currentUser.equals(nextUser)){
+				json["refresh"] = true
+			}
+			
+			//添加日志
+			def logContent = "退回【" + nextUser?.getFormattedName() + "】"
+			shareService.addFlowLog(entity.id,"changeType",currentUser,logContent)
+				
+			json["result"] = true
+			json["nextUserName"] = nextUser?.getFormattedName()
+			
+		}catch(Exception e){
+			json["result"] = false
+		}
+		render json as JSON
+	}
+	//-----------------------------------------------------------------------------------------------------
 	
 	def staffDepartChangeFlowDeal ={
 		def json=[:]

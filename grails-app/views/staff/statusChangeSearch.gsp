@@ -16,13 +16,13 @@
         <tbody>
           <tr>
       
-            <th width="5%">申请人</th>
+            <th width="5%">员工名称</th>
             <td width="18%">
             	<input id="s_chinaName"  data-dojo-type="dijit/form/ValidationTextBox" 
                 	data-dojo-props='trim:true
                '/>
             </td>
-            <th width="10%">申请部门</th>
+            <th width="10%">所属部门</th>
             <td width="18%">
             	<div id="s_departName" data-dojo-type="dijit/form/ComboBox"
 	                data-dojo-props='trim:true,value:""

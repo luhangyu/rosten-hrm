@@ -49,6 +49,11 @@ class StaffActionController {
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
 						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
 						break;
+					case entity.status.contains("已签发"):
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("打印转正考核表",webPath +imgPath + "word_print.png",strname +"_print_zzkhb")
+						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_submit")
+						break;
 					default :
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
@@ -99,7 +104,33 @@ class StaffActionController {
 		def actionList = []
 		def strname = "statusChange"
 		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
-		actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		
+		if(params.id){
+			def entity = StatusChange.get(params.id)
+			def user = User.get(params.userid)
+			if(user.equals(entity.currentUser)){
+				//当前处理人
+				switch (true){
+					case entity.status.contains("审核") || entity.status.contains("审批"):
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
+						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+						break;
+					case entity.status.contains("已签发"):
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("结束流程",webPath +imgPath + "submit.png",strname +"_submit")
+						break;
+					default :
+						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
+						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
+						break;
+				}
+			}
+		}else{
+			actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
+		}
 		render actionList as JSON
 	}
 	def bargainView ={

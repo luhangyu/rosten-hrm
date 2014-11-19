@@ -116,7 +116,11 @@
 				rosten.readSync(rosten.webPath + "/staff/staffStatusChangeSave",content,function(data){
 					if(data.result=="true" || data.result == true){
 						rosten.alert("保存成功！").queryDlgClose= function(){
-							page_quit();
+							if(window.location.href.indexOf(data.id)==-1){
+								window.location.replace(window.location.href + "&id=" + data.id);
+							}else{
+								window.location.reload();
+							}
 						};
 					}else if(data.result=="noConfig"){
 						rosten.alert("系统不存在配置文档，请通知管理员！");
@@ -128,6 +132,155 @@
 					rosten.alert("系统错误，请通知管理员！");
 					rosten.toggleAction(buttonWidget,false);
 				},"rosten_form");
+			};
+			statusChange_addComment = function(){
+				//flowCode为是否需要走流程，如需要，则flowCode为业务流程代码
+				var commentDialog = rosten.addCommentDialog({type:"statusChange"});
+				commentDialog.callback = function(_data){
+					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${statusChange?.status}",flowCode:"${flowCode}"};
+					rosten.readSync(rosten.webPath + "/share/addComment/${statusChange?.id}",content,function(data){
+						if(data.result=="true" || data.result == true){
+							rosten.alert("成功！");
+						}else{
+							rosten.alert("失败!");
+						}	
+					});
+				};
+			};
+			statusChange_submit = function(object,conditionObj){
+				/*
+				 * 从后台获取下一处理人;conditionObj为流程中排他分支使用
+				 */
+				//增加对多次单击的控制
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
+				
+				var content = {};
+
+				//增加对排他分支的控制
+				if(conditionObj){
+					lang.mixin(content,conditionObj);
+				}
+				rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:statusChange?.taskId,drafterUsername:statusChange?.drafter?.username])}",content,function(data){
+					if(data.dealFlow==false){
+						//流程无下一节点
+						statusChange_deal("submit",null,buttonWidget,conditionObj);
+						return;
+					}
+					var url = "${createLink(controller:'system',action:'userTreeDataStore',params:[companyId:company?.id])}";
+					if(data.dealType=="user"){
+						//人员处理
+						if(data.showDialog==false){
+							//单一处理人
+							var _data = [];
+							_data.push(data.userId + ":" + data.userDepart);
+							statusChange_deal("submit",_data,buttonWidget,conditionObj);
+						}else{
+							//多人，多部门处理
+							url += "&type=user&user=" + data.user;
+							statusChange_select(url,buttonWidget,conditionObj);
+						}
+					}else{
+						//群组处理
+						url += "&type=group&groupIds=" + data.groupIds;
+						if(data.limitDepart){
+							url += "&limitDepart="+data.limitDepart;
+						}
+						statusChange_select(encodeURI(url),buttonWidget,conditionObj);
+					}
+
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				});
+			};
+			statusChange_select = function(url,buttonWidget,conditionObj){
+				var rostenShowDialog = rosten.selectFlowUser(url,"single");
+	            rostenShowDialog.callback = function(data) {
+	            	if(data.length==0){
+		            	rosten.alert("请正确选择人员！");
+	            		rosten.toggleAction(buttonWidget,false);
+		            }else{
+		            	var _data = [];
+		            	for (var k = 0; k < data.length; k++) {
+		            		var item = data[k];
+		            		_data.push(item.value + ":" + item.departId);
+		            	};
+		            	statusChange_deal("submit",_data,buttonWidget,conditionObj);
+		            }
+	            };
+				rostenShowDialog.afterLoad = function(){
+					var _data = rostenShowDialog.getData();
+		            if(_data && _data.length==1){
+			            //直接调用
+		            	rostenShowDialog.doAction();
+			        }else{
+						//显示对话框
+						rostenShowDialog.open();
+				    }
+				};
+				rostenShowDialog.queryDlgClose = function(){
+					rosten.toggleAction(buttonWidget,false);
+				};	
+			};
+			statusChange_deal = function(type,readArray,buttonWidget,conditionObj){
+				var content = {};
+				content.id = "${statusChange?.id}";
+				content.deal = type;
+				if(readArray){
+					content.dealUser = readArray.join(",");
+				}
+				if(conditionObj){
+					lang.mixin(content,conditionObj);
+				}
+				rosten.readSync(rosten.webPath + "/staff/staffStatusChangeFlowDeal",content,function(data){
+					if(data.result=="true" || data.result == true){
+						rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
+							//刷新待办事项内容
+							window.opener.showStartGtask("${user?.id}","${company?.id }");
+							
+							if(data.refresh=="true" || data.refresh==true){
+								window.location.reload();
+							}else{
+								rosten.pagequit();
+							}
+						}
+					}else{
+						rosten.alert("失败!");
+						rosten.toggleAction(buttonWidget,false);
+					}	
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				});
+			};
+			statusChange_back = function(object,conditionObj){
+				//增加对多次单击的控制
+				var buttonWidget = object.target;
+				rosten.toggleAction(buttonWidget,true);
+				
+				var content = {};
+				rosten.readSync("${createLink(controller:'staff',action:'staffStatusChangeFlowBack',params:[id:statusChange?.id])}",content,function(data){
+					if(data.result=="true" || data.result == true){
+						rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
+							//刷新待办事项内容
+							window.opener.showStartGtask("${user}","${company?.id }");
+							
+							if(data.refresh=="true" || data.refresh==true){
+								window.location.reload();
+							}else{
+								rosten.pagequit();
+							}
+						}
+					}else{
+						rosten.alert("失败!");
+						rosten.toggleAction(buttonWidget,false);
+					}
+					
+				},function(error){
+					rosten.alert("系统错误，请通知管理员！");
+					rosten.toggleAction(buttonWidget,false);
+				});
 			};
 			page_quit = function(){
 				rosten.pagequit();
@@ -153,7 +306,7 @@
 <body>
 <div class="rosten_action">
 	<div data-dojo-type="rosten/widget/ActionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'statusChangeForm')}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'statusChangeForm',id:statusChange?.id,params:[userid:user?.id])}"'>
 	</div>
 </div>
 <div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
@@ -166,10 +319,10 @@
        	  	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"员工信息",toggleable:false,moreText:"",height:"220px",marginBottom:"2px"'>
        	  		<table border="0" align="left" style="margin:0 auto;width:740px">
 					<tr>
-					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>员工名称：</div></td>
+					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>离职人员：</div></td>
 					    <td width="260">
 					    	<input id="personInforName" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='trim:true,required:true,readOnly:true
+			                 	data-dojo-props='trim:true,required:true,readOnly:true,value:"${statusChange?.getApplayPersonInforName()}"
 			                '/>
 			                <button data-dojo-type='dijit/form/Button' 
 								data-dojo-props="label:'选择',iconClass:'docAddIcon'">
@@ -181,7 +334,7 @@
 					    <td width="120"><div align="right">所属部门：</div></td>
 					    <td width="250">
 					    	<input id="personInforDepartName" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='readOnly:true'/>
+			                 	data-dojo-props='readOnly:true,value:"${statusChange?.getOutDepartName()}"'/>
 			           </td>
 					</tr>
 					<tr>
@@ -220,6 +373,16 @@
             
 		</form>
 	</div>
+	<g:if test="${statusChange?.id}">
+		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
+			href:"${createLink(controller:'share',action:'getCommentLog',id:statusChange?.id)}"
+		'>	
+		</div>
+		<div data-dojo-type="dijit/layout/ContentPane" id="flowLog" title="流程跟踪" data-dojo-props='refreshOnShow:true,
+			href:"${createLink(controller:'share',action:'getFlowLog',id:statusChange?.id,params:[processDefinitionId:statusChange?.processDefinitionId,taskId:statusChange?.taskId])}"
+		'>	
+		</div>
+	</g:if>
 </div>
 	<div id="chooseDialog" data-dojo-type="dijit/Dialog" class="displayLater" data-dojo-props="title:'人员选择',style:'width:800px;height:450px'">
 		<div id="chooseWizard" data-dojo-type="dojox/widget/Wizard" 

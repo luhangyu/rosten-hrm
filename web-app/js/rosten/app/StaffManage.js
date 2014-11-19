@@ -46,6 +46,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 	//-------------------------------------------------------------------------------------------------
 	
 	//员工转正申请----------------------------------------------------------------
+	
 	officialApply_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:officialApply_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
 	};
@@ -123,7 +124,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
         if(rosten.kernel.navigationEntity=="staffLeave"){
         	type="leave";
         }
-        rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeAdd?companyId=" + companyId + "&userid=" + userid + "&type=" + type);
+        rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeAdd?companyId=" + companyId + "&userid=" + userid + "&type=" + type+ "&flowCode=statusChange");
     };
 	change_staffStatusChange = function() {
 		var unid = rosten.getGridUnid("single");
@@ -137,7 +138,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 	        	type="leave";
 	        }
 	        
-		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&type=" + type);
+		rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&type=" + type+ "&flowCode=statusChange");
 	};
 	read_staffStatusChange = function() {
 		change_staffStatusChange();

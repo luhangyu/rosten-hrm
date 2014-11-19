@@ -384,14 +384,21 @@ define(["dojo/_base/kernel"
     	case "【员工转正】":
     		rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=officialApply");
     		break;
-    	case "【请假】":
-    		rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=vacate");
-    		break;
+    	case "【员工退休】":
+    	case "【员工离职】":
+    		var type="retire";
+            if(rosten.kernel.navigationEntity=="staffLeave"){
+            	type="leave";
+            }
+            rosten.openNewWindow("staffStatusChange", rosten.webPath + "/staff/staffStatusChangeAdd?companyId=" + companyId + "&userid=" + userid + "&type=" + type+ "&flowCode=statusChange");
     	case "【员工调动】":
     		rosten.openNewWindow("staffDepartChange", rosten.webPath + "/staff/staffDepartChangeShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=staffDepartChange");
     		break;
     	case "【培训管理】":
     		rosten.openNewWindow("trainCourse", rosten.webPath + "/train/trainCourseShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=trainCourse");
+    		break;
+    	case "【请假】":
+    		rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateShow/" + id + "?userid=" + userid + "&companyId=" + companyId + "&flowCode=vacate");
     		break;
     	}
     	
