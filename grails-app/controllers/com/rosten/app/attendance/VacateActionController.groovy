@@ -31,15 +31,17 @@ class VacateActionController {
 			if(user.equals(vacate.currentUser)){
 				//当前处理人
 				switch (true){
-					case vacate.status.contains("新建"):
+					case vacate.status.contains("新增"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
 					case vacate.status.contains("审核") || vacate.status.contains("审批"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
 						actionList << createAction("同意",webPath +imgPath + "ok.png",strname + "_submit")
 						actionList << createAction("退回",webPath +imgPath + "back.png",strname + "_back")
+						break;
+					case vacate.status.contains("已签发"):
+						actionList << createAction("销假,结束流程",webPath +imgPath + "submit.png",strname +"_submit")
 						break;
 					case vacate.status.contains("归档"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_save")

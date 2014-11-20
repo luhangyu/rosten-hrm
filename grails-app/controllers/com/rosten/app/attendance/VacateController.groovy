@@ -111,9 +111,10 @@ class VacateController {
 				//添加日志
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				shareService.addFlowLog(vacate.id,"vacate",currentUser,logContent)
-			}
 				
-			json["result"] = true
+				json["nextUserName"] = user?.getFormattedName()
+				json["result"] = true
+			}
 		}catch(Exception e){
 			json["result"] = false
 		}
@@ -181,7 +182,12 @@ class VacateController {
 					
 					def args = [:]
 					args["type"] = "【请假】"
-					args["content"] = "请您审核名称为  【" + vacate.getFormattedDrafter() +  "】 的请假申请"
+					
+					if(nextStatus.equals("已签发")){
+						args["content"] = "领导已审批，请您查看名称为  【" + vacate.getFormattedUser() +  "】 的请假申请"
+					}else{
+						args["content"] = "请您审核名称为  【" + vacate.getFormattedUser() +  "】 的请假申请"
+					}
 					args["contentStatus"] = nextStatus
 					args["contentId"] = vacate.id
 					args["user"] = nextUser
@@ -228,9 +234,11 @@ class VacateController {
 			//添加日志
 			def logContent
 			switch (true){
+				case vacate.status.contains("已结束"):
+					logContent = "结束流程"
+					break
 				case vacate.status.contains("已签发"):
-					logContent = "签发文件【" + nextUsers.join("、") + "】"
-					
+					logContent = "审批通过【" + nextUsers.join("、") + "】"
 					break
 				case vacate.status.contains("归档"):
 					logContent = "归档"
@@ -243,7 +251,8 @@ class VacateController {
 					break
 			}
 			shareService.addFlowLog(vacate.id,"vacate",currentUser,logContent)
-						
+			
+			json["nextUserName"] = nextUsers.join("、")
 			json["result"] = true
 		}else{
 			vacate.errors.each{
@@ -329,9 +338,9 @@ class VacateController {
 		model["vacate"] = vacate
 		
 		FieldAcl fa = new FieldAcl()
-		if("normal".equals(user.getUserType())){
+		if(!"新增".equals(vacate.status)){
 			//普通用户
-//			fa.readOnly += ["description"]
+			fa.readOnly += ["startDate","endDate","vacateType","numbers","remark"]
 		}
 		model["fieldAcl"] = fa
 		
@@ -449,6 +458,9 @@ class VacateController {
 				}
 			}
 			seleSql+=" )"
+		}else{
+			//默认取单位名称
+			model["departName"] = user.company?.companyName
 		}
 		seleSql+=" union all ( "
 		seleSql+="  select '' user_id, sum(sjnums),sum(bjnums),sum(nxjnums),sum(hjnums),sum(sajnums),sum(qtjnums),'合计' china_name,'' depart_id, '' depart_name from  "

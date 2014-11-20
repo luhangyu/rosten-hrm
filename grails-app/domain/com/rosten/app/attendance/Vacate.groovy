@@ -6,9 +6,12 @@ import com.rosten.app.system.User
 import com.rosten.app.annotation.GridColumn
 import com.rosten.app.system.Company
 import com.rosten.app.gtask.Gtask
+
 import java.text.SimpleDateFormat
+
 import com.rosten.app.share.*
 import com.rosten.app.util.SystemUtil
+import com.rosten.app.util.Util
 
 /**
  * 请假申请
@@ -20,7 +23,7 @@ class Vacate {
 	String id
 	
 	@GridColumn(name="申请人",formatter="vacate_formatTopic",colIdx=1)
-	def getFormattedDrafter(){
+	def getFormattedUser(){
 		if(user!=null){
 			return user.getFormattedName()
 		}else{
@@ -41,7 +44,7 @@ class Vacate {
 	//开始时间
 	Date startDate = new Date()
 	
-	@GridColumn(name="开始时间",width="106px",colIdx=3)
+	@GridColumn(name="开始时间",width="106px",colIdx=5)
 	def getFormatteStartDate(){
 		if(startDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -52,9 +55,9 @@ class Vacate {
 	}
 	
 	//结束时间
-	Date endDate = new Date()
+	Date endDate = new Date() + 1
 	
-	@GridColumn(name="结束时间",width="106px",colIdx=4)
+	@GridColumn(name="结束时间",width="106px",colIdx=6)
 	def getFormatteEndDate(){
 		if(endDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -67,24 +70,28 @@ class Vacate {
 	}
 	
 	//请假数量
-	int numbers = 1
+	double numbers = 1
+	@GridColumn(name="申请天数",width="60px",colIdx=3)
+	def getFormattedNumbers(){
+		return Util.DoubleToFormat(numbers,1)
+	}
 	
 	String unitType = "天"//小时或者天
 	
 	//请假类型
-	@GridColumn(name="类型",colIdx=5)
+	@GridColumn(name="类型",colIdx=4)
 	String vacateType = "事假"
 	
 	//请假内容
 	String remark
 	
-	@GridColumn(name="状态",colIdx=6)
-	String status = "新建"
+	@GridColumn(name="状态",colIdx=8)
+	String status = "新增"
 	
 	//创建时间
 	Date createDate = new Date()
 
-	@GridColumn(name="创建时间",width="106px",colIdx=7)
+	@GridColumn(name="创建时间",width="106px",colIdx=9)
 	def getFormattedCreatedDate(){
 		if(createDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -94,19 +101,14 @@ class Vacate {
 		}
 	}
 	
-	//前处理人
-	User frontUser
-	
-	//前处理部门
-	String frontDepart
-	
-	//前处理时间
-	Date frontDealDate
+	//流程相关字段信息----------------------------------------------------------
+	//已阅读人员,读者
+	static hasMany=[hasReaders:User,readers:User]
 	
 	//当前处理人
 	User currentUser
 
-	@GridColumn(name="当前处理人",colIdx=5)
+	@GridColumn(name="当前处理人",colIdx=7)
 	def getCurrentUserName(){
 		if(currentUser!=null){
 			return currentUser.getFormattedName()
@@ -122,11 +124,8 @@ class Vacate {
 	//当前处理时间
 	Date currentDealDate
 	
-	//已阅读人员,读者
-	static hasMany=[hasReaders:User,readers:User]
-	
 	//缺省读者；*:允许所有人查看,[角色名称]:允许角色,user:普通人员查看
-	String defaultReaders="[普通人员],[请假管理员]"
+	String defaultReaders="[普通人员],[应用管理员]"
 	def addDefaultReader(String userRole){
 		if(defaultReaders==null || "".equals(defaultReaders)){
 			defaultReaders = userRole
@@ -135,7 +134,20 @@ class Vacate {
 		}
 	}
 	
-	//-------------------------流程引擎----------
+	//起草人
+	User drafter
+	
+	def getFormattedDrafter(){
+		if(drafter!=null){
+			return drafter.getFormattedName()
+		}else{
+			return ""
+		}
+	}
+
+	//起草部门
+	String drafterDepart
+	
 	//流程定义id
 	String processDefinitionId
 	
@@ -151,17 +163,18 @@ class Vacate {
 		remark nullable:true,blank:true
 		numbers nullable:true,blank:true
 		
-		frontUser nullable:true,blank:true
-		frontDepart nullable:true,blank:true
-		frontDealDate nullable:true,blank:true
-		
+		//流程相关-------------------------------------------------------------
+		defaultReaders nullable:true,blank:true
 		currentUser nullable:true,blank:true
 		currentDepart nullable:true,blank:true
 		currentDealDate nullable:true,blank:true
+		drafter nullable:true,blank:true
+		drafterDepart nullable:true,blank:true
 		
-		processDefinitionId nullable:true,blank:true
 		processInstanceId nullable:true,blank:true
 		taskId nullable:true,blank:true
+		processDefinitionId nullable:true,blank:true
+		//--------------------------------------------------------------------
     }
 	
 	static belongsTo = [user:User,company:Company]

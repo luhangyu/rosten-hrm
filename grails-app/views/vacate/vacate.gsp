@@ -97,7 +97,7 @@
 					}
 					rosten.readSync(rosten.webPath + "/vacate/vacateFlowDeal",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！").queryDlgClose= function(){
+							rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
 								//刷新待办事项内容
 								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								
@@ -123,6 +123,11 @@
 					
 					var content = {};
 
+					//2014-11-20 特殊处理
+					if(!conditionObj){
+						conditionObj ={conditionName:"numbers",conditionValue:${vacate?.numbers}};
+					}
+					
 					//增加对排他分支的控制
 					if(conditionObj){
 						lang.mixin(content,conditionObj);
@@ -198,7 +203,7 @@
 					var content = {};
 					rosten.readSync("${createLink(controller:'vacate',action:'vacateFlowBack',params:[id:vacate?.id])}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！").queryDlgClose= function(){
+							rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
 								//刷新待办事项内容
 								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								
@@ -248,7 +253,7 @@
 					    <td >
 					    	<input id="userName" data-dojo-type="dijit/form/ValidationTextBox" 
 			                 	data-dojo-props='trim:true,readOnly:true,
-									value:"${vacate?.getFormattedDrafter()}"
+									value:"${vacate?.getFormattedUser()}"
 			                '/>
 					    </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
@@ -282,11 +287,11 @@
 			            
 			            <tr>
 			            
-			             <td><div align="right">请假类型：</div></td>
+			             <td><div align="right"><span style="color:red">*&nbsp;</span>请假类型：</div></td>
 					   <td>
 					    	<select id="vacateType" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"vacateType",
-                           			autoComplete:false,${fieldAcl.isReadOnly("cssStyle")},
+                           			autoComplete:false,${fieldAcl.isReadOnly("vacateType")},
             						value:"${vacate?.vacateType}"
                             '>
 	                            <option value="事假">事假</option>
@@ -301,9 +306,10 @@
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>请假时长：</div></td>
 					    <td>
 					    	<input id="numbers" data-dojo-type="dijit/form/NumberTextBox" 
-			                 	data-dojo-props='trim:true,required:true,name:"numbers",missingMessage:"请正确填写请假时长！",invalidMessage:"请正确填写请假时长！",
-									value:"${vacate?.numbers}"
-			                '/>天
+			                 	data-dojo-props='trim:true,required:true,name:"numbers",
+			                 		missingMessage:"请正确填写请假时长！",invalidMessage:"请正确填写请假时长！",${fieldAcl.isReadOnly("numbers")},
+									value:"${vacate?.getFormattedNumbers()}"
+			                '/>&nbsp;天
 			            </td>
 <%--					<td><div align="right"><span style="color:red">*&nbsp;</span>单位：</div></td>--%>
 <%--					   <td width="250">--%>
@@ -328,7 +334,7 @@
 					    <td  colspan=3>
 					    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
     							data-dojo-props='name:"remark","class":"input",
-                               		style:{width:"550px"},rows:"10",
+                               		style:{width:"550px"},rows:"10",${fieldAcl.isReadOnly("remark")},
                                		trim:true,value:"${vacate?.remark}"
                            '>
     						</textarea>
