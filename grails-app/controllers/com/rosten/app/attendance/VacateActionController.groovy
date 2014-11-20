@@ -65,8 +65,7 @@ class VacateActionController {
 		def actionList =[]
 		def strname = "vacate"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("打印",imgPath + "add.png",strname + "_print")
-		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
 		
 		render actionList as JSON
 	}

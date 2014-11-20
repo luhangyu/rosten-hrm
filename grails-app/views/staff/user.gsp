@@ -23,7 +23,7 @@
 		.rosten .rostenBargainTitleGrid .dijitTitlePaneContentInner{
 			padding:2px 1px 1px 1px;
 		}
-		/*
+/*
  * 附件上传css样式
  */
 .dijitFileInput {

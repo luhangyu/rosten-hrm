@@ -5,10 +5,10 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 </head>
 <style type="text/css">
-	.dojoxLegendNode {border: 1px solid #ccc; margin: 5px 10px 0px;}
+	.dojoxLegendNode {border: 1px solid #ccc; margin: 1px 1px 0px;}
     .dojoxLegendText {vertical-align: text-top; padding-right: 10px}
 	.charts {
-		clear: both;
+		overflow:auto;
 	}
 	.chart-area {
 		float: left;
@@ -31,26 +31,28 @@
 		height: 190px;
 	}
 	
+	/*员工按年龄段统计*/
 	.chart-area-pie {
 		/*border: 1px solid #ccc;*/
-        height: 190px;
+        height:210px;
         width:400px;
         margin:0 auto;
 	}
 	.chart-pie {
 		width:400px;
-		height: 190px;
+		height: 200px;
 	}
 	
+	/*用工性质统计图*/
 	.chart-area-cols {
 		/*border: 1px solid #ccc;*/
-        height: 200px;
-        width:520px;
+        height: 220px;
+        width:4000px;
         float:left;
 	}
 	.chart-cols {
-		width:520px;
-		height: 190px;
+		width:4000px;
+		height: 210px;
 	}
 	
 </style>
@@ -241,8 +243,12 @@
 	        	radius:     80
 	        });
 
+			/*
 	        var chartData = [{y:18.78,text:"30以下   (18.78%)"},{y:25.31,text:"31-40 (25.31%)"},
 	             	        {y:24.94,text:"41-50 (24.94%)"},{y:20.61,text:"51-60 (20.61%)"},{y:10.32,text:"61以上  (10.32%)"}];
+	        */
+
+	        var chartData = JSON.parse('${ageChartData}');
 	        
 	        pieChart3.addSeries("ageStatic",chartData);
 	        pieChart3.render();
@@ -265,66 +271,69 @@
 </script>
 <body>
 	<div data-dojo-type="rosten/widget/TitlePane" style="padding:0px"
-		data-dojo-props='title:"年度部门工资金额统计    (2014年度)",toggleable:false,height:"200px",marginBottom:"2px",moreText:""'>
+		data-dojo-props='title:"部门员工按用工性质统计     (年度)",toggleable:false,height:"260px",marginBottom:"2px",moreText:""'>
+		
 		<div class="charts">
-			<div class="chart-area">
-	            <div id="lines_legend"></div>
-				<div id="lines" class="chart"></div>
+			<div id="cols_legend"></div>
+			<div class="chart-area-cols">
+				<div id="cols" class="chart-cols"></div>
 			</div>
-			
-		</div>
+		</div>	
+		
 	</div>
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"近几年度部门支出金额统计趋势",toggleable:false,
-				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
-			<div class="charts">
-				<div id="lines1_legend"></div>
-				<div class="chart-area-lines1">
-					<div id="lines1" class="chart-lines1"></div>
-				</div>
-			</div>
-				
-		</div>
-		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"员工按年龄段统计    (2014年度)",toggleable:false,
-				height:"210px",_moreClick:more_demo,moreText:"详情"'>
-				
+			data-dojo-props='region:"left",title:"员工按年龄段统计    (年度)",toggleable:false,
+				height:"220px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+			
 			<div class="charts">	
 				<div class="chart-area-pie">
 		            <div id="pie_legend1"></div>
 					<div id="pie1" class="chart-pie"></div>
 				</div>
-			</div>	
+			</div>
+				
+		</div>
+		<div data-dojo-type="rosten/widget/TitlePane"
+			data-dojo-props='region:"center",title:"员工人数按部门统计  (年度)",toggleable:false,
+				height:"220px",_moreClick:more_demo,moreText:"详情"'>
+				
+				<div class="charts">
+					<div id="pie_legend"></div>
+					<div class="chart-area-pie">
+						<div id="pie" class="chart-pie"></div>
+					</div>
+				</div>
 				
 		</div>						
 	</div>
 	
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
-			data-dojo-props='region:"left",title:"部门员工类型统计    (2014年度)",toggleable:false,
+			data-dojo-props='region:"left",title:"年度部门工资金额统计  (年度)<span style=\"color:red;margin-left:5px\">(暂无数据)</span>",toggleable:false,
 				height:"210px",width:"50%",style:{marginRight:"1px"},moreText:""'>
 				
 			<div class="charts">
-				<div id="cols_legend"></div>
-				<div class="chart-area-cols">
-					<div id="cols" class="chart-cols"></div>
+				<div class="chart-area">
+		            <div id="lines_legend"></div>
+					<div id="lines" class="chart"></div>
 				</div>
-			</div>	
+				
+			</div>
 			
 		</div>
 		
 		<div data-dojo-type="rosten/widget/TitlePane"
-			data-dojo-props='region:"center",title:"部门员工人数分布统计   (2014年度)",toggleable:false,
+			data-dojo-props='region:"center",title:"近几年度部门支出金额统计趋势<span style=\"color:red;margin-left:5px\">(暂无数据)</span>",toggleable:false,
 				height:"210px",moreText:""'>
 				
 			<div class="charts">
-				<div id="pie_legend"></div>
-				<div class="chart-area-pie">
-					<div id="pie" class="chart-pie"></div>
+				<div id="lines1_legend"></div>
+				<div class="chart-area-lines1">
+					<div id="lines1" class="chart-lines1"></div>
 				</div>
 			</div>	
-				
+			
 		</div>						
 	</div>
 	

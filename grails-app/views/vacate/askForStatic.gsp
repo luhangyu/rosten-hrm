@@ -44,20 +44,30 @@
 			width:520px;
 			height: 230px;
 		}
+		.rostenDisplay {
+			display:none
+		}
 		
    	</style>
 	<script type="text/javascript">
 		require(["dijit/registry",
 		         "dojo/json",
+		         "dojo/dom",
+		         "dojo/dom-class",
 		         "rosten/app/Application",
 		     "rosten/widget/ActionBar"],
-			function(registry,JSON){
+			function(registry,JSON,dom,domClass){
+				rosten.variable.tempAskFor = JSON.parse('${json}');
+				rosten.variable.titleName = '${titleName}';
+				
 				vacate_print = function(){
 					
 				};
+				vacate_showHideChart = function(){
+					var chartsDom = dom.byId("chartsId");
+					domClass.toggle(chartsDom,"rostenDisplay");
+				};
 				
-				rosten.variable.tempAskFor = JSON.parse('${json}');
-				rosten.variable.titleName = '${titleName}';
 		});
     </script>
 </head>
@@ -70,35 +80,37 @@
 <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px"}' class="static">
 
 <table border="0" align="left" style="margin:0 auto;width:740px">
-				<tr>
-				    <td width="120"><div align="right">选择部门：</div></td>
-				    <td width="260">
-		                <input id="departName" data-dojo-type="dijit/form/ValidationTextBox" 
-			               	data-dojo-props='name:"departName",readOnly:true,
-			               		trim:true,required:true,value:"${departName}"
-			          	'/>
-			         	<input id="departId" data-dojo-type="dijit/form/ValidationTextBox"  data-dojo-props='style:{display:"none"},trim:true,required:true' />
-						<button data-dojo-type="dijit/form/Button" 
-							data-dojo-props='onClick:function(){
-								selecWorktDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:companyId])}",false)}'>选择</button>
-		           </td>
-		           <td width="120"><div align="right"></div></td>
-				   <td width="250">
-				    	
-		           </td>
-				</tr>
-			</table>
+	<tr>
+	    <td width="120"><div align="right">选择部门：</div></td>
+	    <td width="400">
+               <input id="departName" data-dojo-type="dijit/form/ValidationTextBox" 
+               	data-dojo-props='name:"departName",readOnly:true,
+               		trim:true,required:true,value:"${departName}"
+          	'/>
+         	<input id="departId" data-dojo-type="dijit/form/ValidationTextBox"  data-dojo-props='style:{display:"none"},trim:true,required:true' />
+			<button data-dojo-type="dijit/form/Button" 
+				data-dojo-props='onClick:function(){
+					selecWorktDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:companyId])}",false)}'>切换部门</button>
+			<button data-dojo-type="dijit/form/Button" 
+				data-dojo-props='onClick:function(){
+					vacate_showHideChart();
+					}'>显示&nbsp;/&nbsp;隐藏图形信息</button>
+          </td>
+          <td width="120"></td>
+          <td></td>
+	</tr>
+</table>
 
-	<div class="charts">
+	<div id="chartsId" class="charts">
 		<div id="askFor_pie_legend"></div>
 		<div class="chart-area-pie">
 			<div id="askFor_pie" class="chart-pie"></div>
 		</div>
 	</div>
 	
-	<table width="100%" class="tab_css">
+	<table width="100%" class="tab_css simpleNavigation">
 		<THEAD> 
-			<tr class="tableBackGround">
+			<tr class="bgClass">
 				<th >部门</th>
 				<th >姓名</th>
 				<th>事假(天)</th>

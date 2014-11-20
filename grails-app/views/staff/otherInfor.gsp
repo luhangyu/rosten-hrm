@@ -3,8 +3,6 @@
 <head>
 <title>其他信息</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-</head>
-<style type="text/css">
 <style type="text/css">
 	.personSearch table.tab_css {
 		font-size:11px;
@@ -27,14 +25,14 @@
 		border-color: #b5bcc7;
 	}
 </style>
-
+</head>
 <body>
 	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"岗位调动信息",toggleable:false,moreText:"",marginBottom:"2px"'>
 	
-		  <div class="personSearch">
+		  <div class="personSearch simpleNavigation">
 			<table width="98%" class="tab_css">
 				<THEAD> 
-					<tr>
+					<tr class="bgClass">
 							<td>调出部门</td>
 							<th>调入部门</th>
 	   						<th>调入岗位</th>
@@ -61,10 +59,10 @@
 	</div>
 	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"离(退)休信息",toggleable:false,moreText:"",marginBottom:"2px"'>
 		
-		  <div class="personSearch">
-			<table width="98%" class="tab_css">
+		  <div class="personSearch simpleNavigation">
+			<table width="98%" class="tab_css ">
 				<THEAD> 
-					<tr>
+					<tr class="bgClass">
 							<th>申请类型</th>
 	   						<td>申请时间</td>
 	   					</tr>
