@@ -28,7 +28,7 @@
 </head>
 <body>
 	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"岗位调动信息",toggleable:false,moreText:"",marginBottom:"2px"'>
-	
+		<g:if test="${departChangList && departChangList.size()>0}">
 		  <div class="personSearch simpleNavigation">
 			<table width="98%" class="tab_css">
 				<THEAD> 
@@ -36,51 +36,103 @@
 							<td>调出部门</td>
 							<th>调入部门</th>
 	   						<th>调入岗位</th>
-	   						<th>调入编制</th>
-	   						<td>调动类型</td>  
-	   						<td>调动时间</td>  
+	   						<th>调入类型</th>
+	   						<th>调动理由</th>  
+	   						<th>调动时间</th>  
 	   					</tr>
 	   					</THEAD>
 	   				<tbody>	
 					<g:each in="${departChangList}">
 						<tr>
 	   						<td>${it.getOutDepartName()}</td>
-	   						<th>${it.getInDepartName()}</th>
-	   						<th>${it.inDuty}</th>
-	   						<th>${it.inPersonType}</th>
+	   						<td>${it.getInDepartName()}</td>
+	   						<td>${it.inDuty}</td>
 	   						<td>${it.changeType}</td>
+	   						<td>${it.changeReason}</td>
 	   						<td>${it.getShowChangeDate()}</td>
 	   					</tr>
 					</g:each>
 				</tbody>
 			</table>
-			
 		</div>
+		</g:if>
+	</div>
+	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"升职聘任信息",toggleable:false,moreText:"",marginBottom:"2px"'>
+		<g:if test="${officialApplyList && officialApplyList.size()>0}">
+		<div class="personSearch simpleNavigation">
+			<table width="98%" class="tab_css ">
+				<THEAD> 
+					<tr class="bgClass">
+							<th>聘任开始时间</th>
+							<th>聘任结束时间</th>
+	   						<th>申请理由</th>
+	   					</tr>
+	   					</THEAD>
+	   					<tbody>
+					<g:each in="${officialApplyList}">
+						<tr>
+							<td>${it.getFormattedStartDate()}</td>
+							<td>${it.getFormattedEndDate}</td>
+	   						<td>${it.applyReason}</td>
+	   					</tr>
+					</g:each>
+				</tbody>
+			</table>
+		</div>
+		</g:if>
 	</div>
 	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"离(退)休信息",toggleable:false,moreText:"",marginBottom:"2px"'>
-		
+		<g:if test="${statusChangList && statusChangList.size()>0}">
 		  <div class="personSearch simpleNavigation">
 			<table width="98%" class="tab_css ">
 				<THEAD> 
 					<tr class="bgClass">
 							<th>申请类型</th>
-	   						<td>申请时间</td>
+							<th>申请理由</th>
+	   						<th>申请时间</th>
 	   					</tr>
 	   					</THEAD>
 	   					<tbody>
 					<g:each in="${statusChangList}">
 						<tr>
-							<th>${it.changeType}</th>
+							<td>${it.changeType}</td>
+							<td>${it.changeReason}</td>
 	   						<td>${it.getFormattedChangeDate()}</td>
 	   					</tr>
 					</g:each>
 				</tbody>
 			</table>
 			</div>
+		</g:if>
 	</div>
 	
 	<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"培训信息",toggleable:false,moreText:"",marginBottom:"2px"'>
-		
+		<g:if test="${trainMessagegList && trainMessagegList.size()>0}">
+		  <div class="personSearch simpleNavigation">
+			<table width="98%" class="tab_css ">
+				<THEAD> 
+					<tr class="bgClass">
+							<th>培训班名称</th>
+							<th>培训时间</th>
+	   						<th>培训费用</th>
+	   						<th>培训考试结果</th>
+	   						<th>是否发放证书</th>
+	   					</tr>
+	   					</THEAD>
+	   					<tbody>
+					<g:each in="${trainMessagegList}">
+						<tr>
+							<td>${it.getCourseName()}</td>
+							<td>${it.getTrainDate()}</td>
+	   						<td>${it.userMoney}</td>
+	   						<td>${it.trainResult}</td>
+	   						<td>${it.trainCert}</td>
+	   					</tr>
+					</g:each>
+				</tbody>
+			</table>
+			</div>
+		</g:if>
 	</div>
 	
 </body>

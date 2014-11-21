@@ -521,15 +521,11 @@ class StaffController {
 	def getPersonOtherInfor ={
 			def model =[:]
 			def personInfor = PersonInfor.get(params.id)
-			def statusChangList = StatusChange.findAllByPersonInfor(personInfor)
 			
-			def departChangList = DepartChange.findAllByPersonInfor(personInfor)
-			
-			
-			model["statusChangList"] = statusChangList
-			
-			model["departChangList"] = departChangList
-			
+			model["statusChangList"] = StatusChange.findAllByPersonInfor(personInfor)
+			model["departChangList"] = DepartChange.findAllByPersonInfor(personInfor)
+			model["officialApplyList"] = OfficialApply.findAllByPersonInfor(personInfor)
+			model["trainMessagegList"] = TrainMessage.findAllByPersonInfor(personInfor)
 			
 			render(view:'/staff/otherInfor',model:model)
 	}
