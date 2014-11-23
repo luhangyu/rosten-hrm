@@ -254,7 +254,7 @@
 						}
 						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
 							//刷新待办事项内容
-							window.opener.showStartGtask("${user}","${company?.id }");
+							window.opener.showStartGtask("${user?.id}","${company?.id }");
 							
 							if(data.refresh=="true" || data.refresh==true){
 								window.location.reload();

@@ -59,7 +59,7 @@ define(["dojo/_base/connect",
 		
 		switch(rosten.kernel.navigationEntity) {
 		
-		case "userManage":
+		case "userManage1":
 			dom_rostenGrid.refresh(null,content);
 			break;
 		default:
