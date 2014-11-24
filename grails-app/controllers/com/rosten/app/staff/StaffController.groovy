@@ -189,7 +189,7 @@ class StaffController {
 			Attachment.findAllByBeUseId(engage.id).each{item->
 				def _attachment = new Attachment()
 				
-				_attachment.properties = params
+				_attachment.properties = item.properties
 				_attachment.clearErrors()
 				
 				_attachment.upUser = currentUser
@@ -218,6 +218,28 @@ class StaffController {
 	//---------------------------------------------------------------------------
 	
 	//2014-11-17增加员工转正-------------------------------------------
+	def officialApplyCheck ={
+		def model = [:]
+		def user = User.get(params.userid)
+		def personInfor = PersonInfor.findByUser(user)
+		if(personInfor){
+			def statusList =["试用","实习"]
+			if(personInfor.status in statusList){
+				//检查是否已经申请过
+				def applyEntity = OfficialApply.findByPersonInfor(personInfor)
+				if(applyEntity){
+					model["result"] = "false"
+				}else{
+					model["result"] "true"
+				}
+			}else{
+				model["result"] = "hasOfficial"
+			}
+		}else{
+			model["result"] = "false"
+		}
+		render model as JSON
+	}
 	def officialApplyAdd ={
 		if(params.flowCode){
 			//需要走流程
@@ -477,7 +499,7 @@ class StaffController {
 				def args = [:]
 				args["type"] = "【员工转正】"
 				args["content"] = "名称为  【" + entity.getPersonInforName() +  "】 的转正申请被退回，请查看！"
-				args["contentStatus"] = nextInfor.nextDepart
+				args["contentStatus"] = nextInfor.nextStatus
 				args["contentId"] = entity.id
 				args["user"] = nextUser
 				args["company"] = company
@@ -994,9 +1016,9 @@ class StaffController {
 				nextUser = nextInfor.nextUser
 				//增加待办事项
 				def args = [:]
-				args["type"] = "【员工转正】"
-				args["content"] = "名称为  【" + entity.getPersonInforName() +  "】 的" + entity.changeType + "申请被退回，请查看！"
-				args["contentStatus"] = nextInfor.nextDepart
+				args["type"] = "【员工" + entity.changeType +"】"
+				args["content"] = "名称为  【" + entity.getApplayPersonInforName() +  "】 的" + entity.changeType + "申请被退回，请查看！"
+				args["contentStatus"] = nextInfor.nextStatus
 				args["contentId"] = entity.id
 				args["user"] = nextUser
 				args["company"] = company

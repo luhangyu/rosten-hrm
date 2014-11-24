@@ -371,6 +371,10 @@ class VacateController {
 			vacate.currentUser = currentUser
 			vacate.currentDepart = currentUser.getDepartName()
 			vacate.currentDealDate = new Date()
+			
+			vacate.drafter = currentUser
+			vacate.drafterDepart = currentUser.getDepartName()
+			
 			vacate.startDate = Util.convertToTimestamp(params.startDate)
 			vacate.endDate = Util.convertToTimestamp(params.endDate)
 		}

@@ -22,6 +22,7 @@
 				if(dojo.isIE){
 					dataArray = dojo.fromJson(dataArray);
 				}
+				uploaderActionDom.setDisabled(false);
 				if(dataArray.result=="true"){
 					uploaderDom.reset();
 					rosten.addAttachShowNew(dojo.byId("fileUpload_show"),dataArray);	
@@ -36,9 +37,14 @@
 			uploaderDom.reset();
 		</script>
 		</div>
-		<div data-dojo-type="dijit/form/Button" data-dojo-props="label:'上传'">
+		<div data-dojo-type="dijit/form/Button" data-dojo-props="label:'上传'" data-dojo-id="uploaderActionDom">
 			<script type="dojo/method" data-dojo-event="onClick">
-			uploaderDom.upload();
+			var _1 = uploaderDom.get("value");
+			if(_1 && _1!=""){
+				uploaderDom.upload();
+				this.setDisabled(true);
+			}else{rosten.alert("请先选择上传文件！");}
+			
 		</script>
 		</div>
 		

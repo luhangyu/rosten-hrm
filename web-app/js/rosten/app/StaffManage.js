@@ -60,7 +60,16 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 	add_officialApply = function() {
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=officialApply");
+        
+        //判断当前用户是否已经转正过或者已经是正式员工
+        var content = {userid:userid,companyId:companyId};
+        rosten.readNoTime(rosten.webPath + "/staff/officialApplyCheck", content,function(data){
+        	if(data.result==true || data.result=="true"){
+        		rosten.openNewWindow("officialApply", rosten.webPath + "/staff/officialApplyAdd?companyId=" + companyId + "&userid=" + userid + "&flowCode=officialApply");
+        	}else{
+        		rosten.alert("当前不需要转正申请，请核查！");
+        	}
+        });
     };
 	change_officialApply = function() {
 		var unid = rosten.getGridUnid("single");
