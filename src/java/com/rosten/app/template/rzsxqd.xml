@@ -389,7 +389,7 @@
 	w:cs="宋体" /><wx:font wx:val="宋体" /><w:kern w:val="0" /><w:sz
 	w:val="22" /></w:rPr></w:pPr><w:r wsp:rsidRPr="00DA0AE5"><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:cs="宋体" w:hint="fareast" /><wx:font
-	wx:val="宋体" /><w:kern w:val="0" /><w:sz w:val="22" /></w:rPr><w:t>${personInfor.currentDepart!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	wx:val="宋体" /><w:kern w:val="0" /><w:sz w:val="22" /></w:rPr><w:t>${personInfor.getUserDepartName()!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="1984" w:type="dxa" /><w:gridSpan w:val="3" /><w:tcBorders><w:top
 	w:val="double" w:sz="4" wx:bdrwidth="30" w:space="0" w:color="auto" /><w:left
 	w:val="double" w:sz="4" wx:bdrwidth="30" w:space="0" w:color="auto" /><w:bottom

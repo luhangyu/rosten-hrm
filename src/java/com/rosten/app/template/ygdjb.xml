@@ -1517,7 +1517,7 @@
 	wsp:rsidR="00F00001" wsp:rsidRDefault="00E71A5C" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${personInfor.politicsStatus!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>${personInfor.major!}</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="524" w:type="dxa" /><w:vmerge /><w:vAlign w:val="center" /></w:tcPr><w:p
 	wsp:rsidR="00F00001" wsp:rsidRDefault="00F00001" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
@@ -1642,7 +1642,7 @@
 	wsp:rsidRDefault="00E71A5C" wsp:rsidP="00AD527C"><w:pPr><w:spacing
 	w:line="240" w:line-rule="exact" /><w:jc w:val="center" /><w:rPr><w:rFonts
 	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr></w:pPr><w:r><w:rPr><w:rFonts
-	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>渔业协会</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
+	w:ascii="宋体" w:h-ansi="宋体" w:hint="fareast" /><wx:font wx:val="宋体" /><w:b-cs /></w:rPr><w:t>浙江省渔业互保协会</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW
 	w:w="1469" w:type="dxa" /><w:gridSpan w:val="2" /><w:vAlign
 	w:val="center" /></w:tcPr><w:p wsp:rsidR="00F83629"
 	wsp:rsidRDefault="00F83629" wsp:rsidP="00AD527C"><w:pPr><w:spacing
