@@ -223,11 +223,21 @@
 						rosten.toggleAction(buttonWidget,false);
 					});
 				};
+				changeVacateDay = function(){
+					var startDate = registry.byId("startDate").get("value");
+					var endDate = registry.byId("endDate").get("value");
+					var number = (endDate.getTime() - startDate.getTime())/(24 * 60 * 60 * 1000);
+					if(number < 0 || number==0){
+						rosten.alert("请正确输入时间！");
+						registry.byId("numbers").set("value","");
+					}else{
+						registry.byId("numbers").set("value",number);
+					}
+					
+				};
 				page_quit = function(){
 					rosten.pagequit();
 				};
-
-			
 		});
     </script>
 </head>
@@ -269,19 +279,27 @@
 					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>开始时间：</div></td>
 					    <td>
-					    	<input id="startDate" data-dojo-type="dijit/form/DateTextBox" 
+					    	<div id="startDate" data-dojo-type="dijit/form/DateTextBox" 
 			                	data-dojo-props='name:"startDate",${fieldAcl.isReadOnly("startDate")},
 			                	trim:true,required:true,missingMessage:"请正确填写开始时间！",invalidMessage:"请正确填写开始时间！",
 			                	value:"${vacate?.getFormatteStartDate()}"
-			               '/>
+			               '>
+			               		<script type="dojo/method" data-dojo-event="onChange">
+									changeVacateDay();
+								</script>
+			               </div>
 			            </td>
 					<td><div align="right"><span style="color:red">*&nbsp;</span>结束时间：</div></td>
 					    <td>
-					    	<input id="endDate" data-dojo-type="dijit/form/DateTextBox" 
+					    	<div id="endDate" data-dojo-type="dijit/form/DateTextBox" 
 			                	data-dojo-props='name:"endDate",${fieldAcl.isReadOnly("endDate")},
 			                	trim:true,required:true,missingMessage:"请正确填写结束时间！",invalidMessage:"请正确填写结束时间！",
 			                	value:"${vacate?.getFormatteEndDate()}"
-			               '/>
+			               '>
+			               		<script type="dojo/method" data-dojo-event="onChange">
+									changeVacateDay();
+								</script>
+			               </div>
 			            </td>
 			            </tr>
 			            
