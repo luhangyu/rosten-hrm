@@ -245,7 +245,7 @@ define(["dojo/dom",
             rosten.alert("发送内容不能为空！");
             return;
         }
-        rosten.readSync(rosten.webPath + "/system/smsSave",content,function(data){
+        rosten.readSync(rosten.webPath + "/smsNew/smsSave",content,function(data){
             if(data.result=="nouse"){
                 rosten.alert("短消息功能尚未开通，请联系厂家！");
             }else if(data.result == "error"){

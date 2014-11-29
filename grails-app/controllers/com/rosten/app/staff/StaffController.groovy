@@ -2076,7 +2076,9 @@ class StaffController {
 			personInfor = PersonInfor.get(params.personInforId)
 		}
 		personInfor.properties = params
-		personInfor.user = user
+		if(user){
+			personInfor.user = user
+		}
 		
 		personInfor.clearErrors()
 		

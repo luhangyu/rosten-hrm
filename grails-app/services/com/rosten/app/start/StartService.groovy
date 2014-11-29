@@ -1,6 +1,9 @@
 package com.rosten.app.start
 import com.rosten.app.util.GridUtil
 import com.rosten.app.gtask.Gtask
+import com.rosten.app.sms.*
+import com.rosten.app.staff.PersonInfor
+import com.rosten.app.staff.FamilyInfor
 
 class StartService {
 	
@@ -10,6 +13,22 @@ class StartService {
 		gtask.properties = params
 		gtask.clearErrors()
 		gtask.save()
+		
+		//增加短消息发送功能，只发单个人信息
+		if(params.company.isSmsOn){
+			def telephone = params.user.telephone
+			def personInfor = PersonInfor.findByUser(params.user)
+			if(personInfor){
+				def familyInfor = FamilyInfor.findByPersonInfor(personInfor)
+				if(familyInfor && familyInfor.mobile){
+					telephone = familyInfor.mobile
+				}
+			}
+			if(telephone){
+				def smsClient = new AxisClient()
+				smsClient.sendPhoneInfo(telephone, "【人事系统】" + params.content)
+			}
+		}
 	}
 	
 	def getGtaskListLayout ={
