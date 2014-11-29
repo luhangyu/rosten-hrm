@@ -55,6 +55,7 @@ class ShareService {
 			
 			nextMap.nextUser = user
 			nextMap.nextDepart = user.getDepartName()
+			nextMap.nextStatus = nextStatus
 		}
 		
 		return nextMap

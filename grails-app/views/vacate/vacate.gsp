@@ -125,7 +125,7 @@
 
 					//2014-11-20 特殊处理
 					if(!conditionObj){
-						conditionObj ={conditionName:"numbers",conditionValue:${vacate?.numbers}};
+						conditionObj ={conditionName:"numbers",conditionValue:${vacate?.numbers * 10}};
 					}
 					
 					//增加对排他分支的控制

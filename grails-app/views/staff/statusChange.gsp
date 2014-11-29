@@ -368,7 +368,7 @@
 				</table>
             </div>
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"附件信息",toggleable:false,moreText:"",
-				href:"${createLink(controller:'share',action:'getFileUploadNew',id:departChange?.id,params:[uploadPath:'staff',isShowFile:isShowFile])}"'>
+				href:"${createLink(controller:'share',action:'getFileUploadNew',id:statusChange?.id,params:[uploadPath:'staff',isShowFile:isShowFile])}"'>
 			</div>
             
 		</form>

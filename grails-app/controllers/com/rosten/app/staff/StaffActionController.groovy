@@ -30,7 +30,13 @@ class StaffActionController {
 		def strname = "engage"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("员工聘任",imgPath + "add.png","add_" + strname)
-		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		
+		//增加普通员工不能删除控制
+		def user = User.get(params.userId)
+		if(user.getAllRolesValue().contains("系统管理员") || "admin".equals(user.getUserTypeName())){
+			actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		}
+		
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		render actionList as JSON
 	}
@@ -76,7 +82,13 @@ class StaffActionController {
 		def strname = "officialApply"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("转正申请",imgPath + "add.png","add_" + strname)
-		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		
+		//增加普通员工不能删除控制
+		def user = User.get(params.userId)
+		if(user.getAllRolesValue().contains("系统管理员") || "admin".equals(user.getUserTypeName())){
+			actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		}
+		
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		render actionList as JSON
 	}
@@ -183,7 +195,11 @@ class StaffActionController {
 		actionList << createAction("打印通知单",imgPath + "word_print.png",strname + "_print_tzd")
 		actionList << createAction("打印交接清单",imgPath + "word_print.png",strname + "_print_qd")
 		
-		actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		//增加普通员工不能删除控制
+		def user = User.get(params.userId)
+		if(user.getAllRolesValue().contains("系统管理员") || "admin".equals(user.getUserTypeName())){
+			actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
+		}
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		render actionList as JSON
 	}
