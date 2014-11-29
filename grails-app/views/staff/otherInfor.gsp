@@ -72,7 +72,7 @@
 					<g:each in="${officialApplyList}">
 						<tr>
 							<td>${it.getFormattedStartDate()}</td>
-							<td>${it.getFormattedEndDate}</td>
+							<td>${it.getFormattedEndDate()}</td>
 	   						<td>${it.applyReason}</td>
 	   					</tr>
 					</g:each>
