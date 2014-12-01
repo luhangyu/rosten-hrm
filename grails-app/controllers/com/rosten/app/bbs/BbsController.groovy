@@ -273,6 +273,8 @@ class BbsController {
 				//添加日志
 				def logContent = "退回【" + user.getFormattedName() + "】"
 				shareService.addFlowLog(bbs.id,"bbs",currentUser,logContent)
+				
+				json["nextUserName"] = user?.getFormattedName()
 			}
 				
 			json["result"] = true
@@ -434,6 +436,8 @@ class BbsController {
 					break
 			}
 			shareService.addFlowLog(bbs.id,"bbs",currentUser,logContent)
+			
+			json["nextUserName"] = nextUsers.join("、")
 						
 			json["result"] = true
 		}else{

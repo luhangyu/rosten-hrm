@@ -115,7 +115,7 @@
 				var content = {};
 				rosten.readSync("${createLink(controller:'bbs',action:'bbsFlowBack',params:[id:bbs?.id])}",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！").queryDlgClose= function(){
+						rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
 							//刷新首页bbs内容
 							window.opener.showStartBbs("${user?.id}","${company?.id }");
 							//刷新待办事项内容
@@ -149,7 +149,7 @@
 				}
 				rosten.readSync(rosten.webPath + "/bbs/bbsFlowDeal",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！").queryDlgClose= function(){
+						rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
 							//刷新首页bbs内容
 							window.opener.showStartBbs("${user?.id}","${company?.id }");
 							//刷新待办事项内容

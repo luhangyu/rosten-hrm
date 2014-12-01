@@ -23,17 +23,12 @@ class VacateService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			or{
+			
+//			if(!user.getAllRolesValue().contains("系统管理员") && !"admin".equals(user.getUserType())){
 				readers{
 					eq("id",user.id)
 				}
-			}
-			or{
-				notEqual("status","已结束")
-			}
-			or{
-				notEqual("status","结束")
-			}
+//			}
 			order("createDate", "desc")
 		}
 		return c.list(pa,query)
@@ -43,17 +38,12 @@ class VacateService {
 		def c = Vacate.createCriteria()
 		def query = {
 			 eq("company",company)
-			or{
-				readers{
-					eq("id",user.id)
-				}
-			}
-			or{
-				notEqual("status","已结束")
-			}
-			or{
-				notEqual("status","结束")
-			} }
+//			 if(!user.getAllRolesValue().contains("系统管理员") && !"admin".equals(user.getUserType())){
+				 readers{
+					 eq("id",user.id)
+				 }
+//			 }
+		}
 		return c.count(query)
 	}
 	

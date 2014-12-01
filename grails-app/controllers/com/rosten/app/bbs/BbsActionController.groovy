@@ -32,7 +32,7 @@ class BbsActionController {
 					case bbs.status.contains("已发布"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")
 						actionList << createAction("填写意见",webPath +imgPath + "sign.png",strname + "_addComment")
-						actionList << createAction("提交归档",webPath +imgPath + "gd.png",strname +"_submit")
+						actionList << createAction("结束流程",webPath +imgPath + "gd.png",strname +"_submit")
 						break;
 					case bbs.status.contains("归档"):
 						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname +"_add")

@@ -399,7 +399,7 @@
 				});
 			};
 			page_quit = function(){
-				if(window.opener.rosten.kernel.navigationEntity!="userManage"){
+				if(window.opener.rosten.kernel.navigationEntity!="userManage1"){
 					window.opener.rosten.kernel.refreshGrid();
 				}else{
 					window.opener.dom_rostenGrid.refresh();

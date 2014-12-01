@@ -21,7 +21,11 @@ class BbsService {
 		def pa=[max:max,offset:offset]
 		def query = { 
 			eq("company",company) 
-			eq("currentUser",user)
+//			eq("currentUser",user)
+			
+			readers{
+				eq("id",user.id)
+			}
 			
 			searchArgs.each{k,v->
 				like(k,"%" + v + "%")
@@ -35,7 +39,11 @@ class BbsService {
 		def c = Bbs.createCriteria()
 		def query = { 
 			eq("company",company) 
-			eq("currentUser",user)
+//			eq("currentUser",user)
+			
+			readers{
+				eq("id",user.id)
+			}
 			
 			searchArgs.each{k,v->
 				like(k,"%" + v + "%")
@@ -61,12 +69,12 @@ class BbsService {
 			eq("company",company)
 			or{
 				//defaultReaders为：*或者【角色】或者readers中包含当前用户的均有权访问
-				readers{
-					eq("id",user.id)
-				}
+//				readers{
+//					eq("id",user.id)
+//				}
 				like("defaultReaders", "%all%")
 			}
-			between("publishDate",now-showDays,now)
+//			between("publishDate",now-showDays,now)
 			order("createDate", "desc")
 			
 			searchArgs.each{k,v->
@@ -82,12 +90,12 @@ class BbsService {
 			eq("company",company)
 			or{
 				//defaultReaders为：*或者【角色】或者readers中包含当前用户的均有权访问
-				readers{
-					eq("id",user.id)
-				}
+//				readers{
+//					eq("id",user.id)
+//				}
 				like("defaultReaders", "%all%")
 			}
-			between("publishDate",now-showDays,now)
+//			between("publishDate",now-showDays,now)
 			order("createDate", "desc")
 			
 			searchArgs.each{k,v->

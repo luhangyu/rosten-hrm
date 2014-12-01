@@ -222,7 +222,8 @@ class VacateController {
 			user:currentUser,
 			company:currentUser.company,
 			contentId:vacate.id,
-			contentStatus:frontStatus
+			contentStatus:frontStatus,
+			status:"0"
 		)
 		if(gtask!=null){
 			gtask.dealDate = new Date()
