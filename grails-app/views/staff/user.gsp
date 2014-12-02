@@ -162,8 +162,10 @@
 				var content = {};
 				<g:if test='${!userType.equals("super")  }'>
 					content.companyId = "${company?.id}";
+
+					//2014-12-02去除账号前缀
 					<g:if test='${departId}'>
-						content.userNameFront = registry.byId("userNameFront").attr("value");
+						//content.userNameFront = registry.byId("userNameFront").attr("value");
 					</g:if>
 				</g:if>
 				
@@ -185,6 +187,13 @@
 				rosten.readSync(rosten.webPath + "/staff/userSave",content,function(data){
 					if(data.result=="true"){
 						rosten.alert("保存成功！").queryDlgClose= function(){
+
+							//2014-12-02 管理员界面不需要刷新，直接退出
+							if(window.opener.rosten.kernel.navigationEntity=="userManage1"){
+								page_quit();
+								return;
+							}
+							//----------------------------------------------------------------
 							if(window.location.href.indexOf(data.id)==-1){
 								window.location.replace(window.location.href + "&id=" + data.id);
 							}else{
@@ -438,17 +447,18 @@
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>账号：</div></td>
 					    <td width="250">
+					    	<%-- 2014-12-02 去除账号前缀 --%>
 					    	<input id="userNameFront" data-dojo-type="dijit/form/ValidationTextBox" 
-                               	data-dojo-props='name:"userNameFront",style:{width:"50px"},
+                               	data-dojo-props='name:"userNameFront",style:{width:"50px",display:"none"},
              						value:"${company?.shortName}-",disabled:true
                             '/>
-					    	
+					    	 
 				    		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
                                	data-dojo-props='name:"username",${fieldAcl.isReadOnly("username")},
                                		trim:true,required:true,
                                		promptMessage:"请正确输入账号...",
-                               		style:{width:"125px"},
-                               		<g:if test="${username && !"".equals(username)}">disabled:true,</g:if>
+                               		<%--style:{width:"125px"},
+                               		<g:if test="${username && !"".equals(username)}">disabled:true,</g:if>--%>
              							value:"${username}"
                                '/>
 					    	

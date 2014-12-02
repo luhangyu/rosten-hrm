@@ -2037,11 +2037,22 @@ class StaffController {
 			user = new User()
 			if(params.id && !"".equals(params.id)){
 				user = User.get(params.id)
-				username = user.username
+//				username = user.username
+				
+				username = params.username
+				def _tmpUser = User.findByUsername(username)
+				
+				if(_tmpUser && !_tmpUser.equals(user)){
+					model["result"] = "repeat"
+					render model as JSON
+					return
+				}
 			}else{
 				user.enabled = true
 				if(params.userNameFront){
 					username = params.userNameFront + params.username
+				}else{
+					username = params.username
 				}
 				
 				if(User.findByUsername(username)){
