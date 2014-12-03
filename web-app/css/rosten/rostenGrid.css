@@ -23,10 +23,10 @@
 	border-top-color:transparent;
 	border-width:1px;
 	border-top:1px;
-	height:26px;
+	height:25px;
 }
 .rosten .rostenGridView .dojoxGridMasterHeader,.rosten .rostenGridView .dojoxGridMasterHeader .dojoxGridCell{
-	height:26px;
+	height:25px;
 }
 .rosten .rostenGridView .dojoxGridRowbarInner{
 	border-right:1px solid #CCCCCC;
