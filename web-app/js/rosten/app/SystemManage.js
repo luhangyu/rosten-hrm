@@ -251,7 +251,7 @@ define(["dojo/_base/connect",
 		}
 		
 		var content = {};
-		content.userNameFront = registry.byId("userNameFront").attr("value");
+//		content.userNameFront = registry.byId("userNameFront").attr("value");
         rosten.readSync(rosten.webPath + "/staff/asignAccountSubmit", content, function(data) {
             if (data.result == "true") {
                 rosten.kernel.hideRostenShowDialog();

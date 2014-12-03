@@ -2866,8 +2866,10 @@ class StaffController {
 	}
 	def getPersonInfor ={
 		def model =[:]
-		def currentUser = springSecurityService.getCurrentUser()
-		def company = currentUser.company
+//		def currentUser = springSecurityService.getCurrentUser()
+//		def company = currentUser.company
+		
+		def company = Company.get(params.companyId)
 		
 		//部门信息
 		def depart

@@ -114,7 +114,12 @@
 					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${officialApply?.status}",flowCode:"${flowCode}"};
 					rosten.readSync(rosten.webPath + "/share/addComment/${officialApply?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！");
+							rosten.alert("成功！").queryDlgClose= function(){
+								var selectWidget = rosten_tabContainer.selectedChildWidget;
+								if(selectWidget.get("id")=="flowComment"){
+									rosten_tabContainer.selectedChildWidget.refresh();
+								}
+							};
 						}else{
 							rosten.alert("失败!");
 						}	
@@ -209,7 +214,11 @@
 				}
 				rosten.readSync(rosten.webPath + "/staff/officialApplyFlowDeal",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
+						var ostr = "成功！";
+						if(data.nextUserName && data.nextUserName!=""){
+							ostr += "下一处理人<" + data.nextUserName +">";
+						}
+						rosten.alert(ostr).queryDlgClose= function(){
 							//刷新待办事项内容
 							window.opener.showStartGtask("${user?.id}","${company?.id }");
 							
@@ -271,7 +280,7 @@
 	<div class="rosten_action">
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'staffAction',action:'officialApplyForm',id:officialApply?.id,params:[userid:user?.id])}"'></div>
 	</div>
-	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
+	<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
 	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"600px"}'>
 	  		<form method="post" class="rosten_form" id="rosten_form" data-dojo-type="dijit/form/Form"
 				onsubmit="return false;" style="padding:0px" enctype="multipart/form-data">

@@ -220,7 +220,12 @@
 					var content = {dataStr:_data.content,userId:"${loginUser?.id}",status:"${personInfor?.status}",flowCode:"${flowCode}"};
 					rosten.readSync(rosten.webPath + "/share/addComment/${personInfor?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！");
+							rosten.alert("成功！").queryDlgClose= function(){
+								var selectWidget = rostenTabContainer.selectedChildWidget;
+								if(selectWidget.get("id")=="flowComment"){
+									rostenTabContainer.selectedChildWidget.refresh();
+								}
+							};
 						}else{
 							rosten.alert("失败!");
 						}	
@@ -268,11 +273,11 @@
 				}
 				rosten.readSync(rosten.webPath + "/staff/staffAddFlowDeal",content,function(data){
 					if(data.result=="true" || data.result == true){
-						var _nextUserName = "";
+						var ostr = "成功！";
 						if(data.nextUserName && data.nextUserName!=""){
-							_nextUserName = data.nextUserName;
+							ostr += "下一处理人<" + data.nextUserName +">";
 						}
-						rosten.alert("成功！下一处理人<" + _nextUserName +">").queryDlgClose= function(){
+						rosten.alert(ostr).queryDlgClose= function(){
 							//刷新待办事项内容
 							window.opener.showStartGtask("${loginUser?.id}","${company?.id }");
 							
@@ -530,7 +535,7 @@
 			</g:if>
 			
 			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"个人概况  <span style=\"color:red;margin-left:5px\">(必填信息)</span>",toggleable:false,moreText:"",height:"410px",marginBottom:"2px",
-				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId,type:type])}"
+				href:"${createLink(controller:'staff',action:'getPersonInfor',id:personInfor?.id,params:[departId:departId,type:type,companyId:company?.id])}"
 			'>
 			</div>
 			

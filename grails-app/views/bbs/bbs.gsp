@@ -149,7 +149,11 @@
 				}
 				rosten.readSync(rosten.webPath + "/bbs/bbsFlowDeal",content,function(data){
 					if(data.result=="true" || data.result == true){
-						rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
+						var ostr = "成功！";
+						if(data.nextUserName && data.nextUserName!=""){
+							ostr += "下一处理人<" + data.nextUserName +">";
+						}
+						rosten.alert(ostr).queryDlgClose= function(){
 							//刷新首页bbs内容
 							window.opener.showStartBbs("${user?.id}","${company?.id }");
 							//刷新待办事项内容
@@ -253,7 +257,12 @@
 					var content = {dataStr:_data.content,userId:"${user?.id}",status:"${bbs?.status}",flowCode:"${flowCode}"};
 					rosten.readSync(rosten.webPath + "/share/addComment/${bbs?.id}",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！");
+							rosten.alert("成功！").queryDlgClose= function(){
+								var selectWidget = rosten_tabContainer.selectedChildWidget;
+								if(selectWidget.get("id")=="bbsComment"){
+									rosten_tabContainer.selectedChildWidget.refresh();
+								}
+							};
 						}else{
 							rosten.alert("失败!");
 						}	
@@ -273,7 +282,7 @@
 	<div class="rosten_action">
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'bbsAction',action:'bbsForm',id:bbs?.id,params:[userid:user?.id])}"'></div>
 	</div>
-	<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
+	<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
 		
 	  	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='style:{height:"650px"}'>
         <form class="rosten_form" id="rosten_form" onsubmit="return false;" style="padding:0px">

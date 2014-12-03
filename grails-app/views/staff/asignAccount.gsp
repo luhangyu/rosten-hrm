@@ -19,16 +19,17 @@
                                 <div align="right"><span style="color:red">*&nbsp;</span>账号：</div>
                             </td>
                             <td  width="250">
+                            <%--
                             	<input id="userNameFront" data-dojo-type="dijit/form/ValidationTextBox" 
 	                               	data-dojo-props='name:"userNameFront",style:{width:"50px"},
 	             						value:"${company?.shortName}-",disabled:true
-	                            '/>
+	                            '/> --%>
 						    	
 					    		<input id="username" data-dojo-type="dijit/form/ValidationTextBox" 
 	                               	data-dojo-props='name:"username",
 	                               		trim:true,required:true,
 	                               		promptMessage:"请正确输入账号...",
-	                               		style:{width:"125px"},
+	                               		<%--style:{width:"125px"}, --%>
 	                               		value:"${username}"
 	                               '/>
                             </td>

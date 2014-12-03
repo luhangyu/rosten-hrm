@@ -78,7 +78,12 @@
 						var content = {dataStr:_data.content,userId:"${user?.id}",status:"${vacate?.status}",flowCode:"${flowCode}"};
 						rosten.readSync(rosten.webPath + "/share/addComment/${vacate?.id}",content,function(data){
 							if(data.result=="true" || data.result == true){
-								rosten.alert("成功！");
+								rosten.alert("成功！").queryDlgClose= function(){
+									var selectWidget = rosten_tabContainer.selectedChildWidget;
+									if(selectWidget.get("id")=="flowComment"){
+										rosten_tabContainer.selectedChildWidget.refresh();
+									}
+								};
 							}else{
 								rosten.alert("失败!");
 							}	
@@ -97,7 +102,11 @@
 					}
 					rosten.readSync(rosten.webPath + "/vacate/vacateFlowDeal",content,function(data){
 						if(data.result=="true" || data.result == true){
-							rosten.alert("成功！下一处理人<" + data.nextUserName +">").queryDlgClose= function(){
+							var ostr = "成功！";
+							if(data.nextUserName && data.nextUserName!=""){
+								ostr += "下一处理人<" + data.nextUserName +">";
+							}
+							rosten.alert(ostr).queryDlgClose= function(){
 								//刷新待办事项内容
 								window.opener.showStartGtask("${user?.id}","${company?.id }");
 								
@@ -248,7 +257,7 @@
 	</div>
 </div>
 
-<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
+<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
 	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
 		<form id="rosten_form" name="rosten_form" url='[controller:"assetConfig",action:"assetCategorySave"]' onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${vacate?.id }"' />
@@ -366,7 +375,7 @@
 	</div>
 	<g:if test="${vacate?.id}">
 	
-		<div data-dojo-type="dijit/layout/ContentPane" id="Comment" title="流转意见" data-dojo-props='refreshOnShow:true,
+		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 			href:"${createLink(controller:'share',action:'getCommentLog',id:vacate?.id)}"
 		'>	
 		</div>
