@@ -136,7 +136,7 @@
 /*
  * grid css
  */
-.rosten .rostenGridView .dojoxGridHeader .dojoxGridCell,.rosten .rostenGridView .dojoxGridRowbarOver,.rosten .rostenGridView .dojoxGridRowOver .dojoxGridCell,.rosten .rostenGridView .pagecontrol{
+.rosten .rostenGridView .dojoxGridHeader,.rosten .rostenGridView .dojoxGridHeader .dojoxGridCell,.rosten .rostenGridView .dojoxGridRowbarOver,.rosten .rostenGridView .dojoxGridRowOver .dojoxGridCell,.rosten .rostenGridView .pagecontrol{
  	background: url(../images/titleBar_bg.png) repeat-x;
  }
 .rosten .rostenGridView .dojoxGridRowbar{
