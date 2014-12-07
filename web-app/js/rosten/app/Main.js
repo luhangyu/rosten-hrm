@@ -16,22 +16,15 @@ define(["dojo/_base/kernel"
 //		, "rosten/app/Mail"
 		, "rosten/kernel/behavior"], function(kernel, lang, registry, dom,domStyle,domClass,domConstruct,connect,ContentPane,rostenKernel,general) {
 	
+	//demo演示----------------------------------
 	demo_static = function(oString){
 		rosten.kernel.setHref(rosten.webPath + "/demo/demo?type=" + oString, oString);
 	};
-	
 	
 	demo_staticDesign = function(){
 		//报表设计
 		demo_static("design");
 	}; 
-	demo = function(){
-		
-	};
-	
-	more_demo = function(){
-		rosten.openNewWindow("demoView", rosten.webPath + "/demo/staticView");
-	};
 	//-------------------------------------------
 	
 	var main = {};

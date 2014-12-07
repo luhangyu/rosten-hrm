@@ -9,6 +9,31 @@ import com.rosten.app.staff.PersonInfor
 
 class StatisticsController {
 	
+	//2014-12-07增加统计报表中的详情展示-----------------------------------
+	def more_staffByCategory ={
+		//员工按用工性质统计
+		def model=[:]
+		def company = Company.get(params.companyId)
+		render(view:'/demo/designMore',model:model)
+	}
+	
+	def more_staffByAge ={
+		//员工按年龄段统计
+		def model=[:]
+		def company = Company.get(params.companyId)
+		render(view:'/demo/designMore',model:model)
+		
+	}
+	
+	def more_staffByDepart ={
+		//员工人数按部门统计
+		def model=[:]
+		def company = Company.get(params.companyId)
+		render(view:'/demo/designMore',model:model)
+		
+	}
+	
+	//------------------------------------------------------------
 	def getDepartUsersByType ={
 		def company = Company.get(params.id)
 		def json = [identifier:'id',label:'name',items:[]]

@@ -271,7 +271,7 @@
 </script>
 <body>
 	<div data-dojo-type="rosten/widget/TitlePane" style="padding:0px"
-		data-dojo-props='title:"部门员工按用工性质统计     (年度)",toggleable:false,height:"260px",marginBottom:"2px",moreText:""'>
+		data-dojo-props='title:"部门员工按用工性质统计     (年度)",toggleable:false,height:"260px",marginBottom:"2px",_moreClick:more_staffByCategory,moreText:"详情"'>
 		
 		<div class="charts">
 			<div id="cols_legend"></div>
@@ -284,7 +284,7 @@
 	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='gutters:false,style:{height:"260px"}' >
 		<div data-dojo-type="rosten/widget/TitlePane" style="margin-top:1px" 
 			data-dojo-props='region:"left",title:"员工按年龄段统计    (年度)",toggleable:false,
-				height:"220px",width:"50%",style:{marginRight:"1px"},moreText:""'>
+				height:"220px",width:"50%",style:{marginRight:"1px"},_moreClick:more_staffByAge,moreText:"详情"'>
 			
 			<div class="charts">	
 				<div class="chart-area-pie">
@@ -296,7 +296,7 @@
 		</div>
 		<div data-dojo-type="rosten/widget/TitlePane"
 			data-dojo-props='region:"center",title:"员工人数按部门统计  (年度)",toggleable:false,
-				height:"220px",_moreClick:more_demo,moreText:"详情"'>
+				height:"220px",_moreClick:more_staffByDepart,moreText:"详情"'>
 				
 				<div class="charts">
 					<div id="pie_legend"></div>
