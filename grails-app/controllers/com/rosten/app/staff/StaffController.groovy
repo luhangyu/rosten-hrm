@@ -3191,7 +3191,7 @@ class StaffController {
 			
 		}
 		def excel = new ExcelExport()
-		excel.ygxxdc(os,personList)
+		excel.zcygdc(os,personList)
 	}
 	
 	def exportPerson={

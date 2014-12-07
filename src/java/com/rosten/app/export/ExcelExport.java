@@ -165,6 +165,106 @@ public class ExcelExport {
 			return "更新失败！"+failInfo;
 		}
 	}
+	
+	/**员工信息导出 资产*/
+	public String zcygdc(OutputStream os,List<PersonInfor> personList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			WritableCellFormat title1wcfStyle = new WritableCellFormat();
+			WritableFont title1font = new WritableFont(WritableFont.ARIAL, 10);
+			title1font.setBoldStyle(WritableFont.BOLD);
+			title1wcfStyle.setFont(title1font);
+			title1wcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			title1wcfStyle.setAlignment(acenter);
+			title1wcfStyle.setVerticalAlignment(vcenter);
+			
+			WritableCellFormat bodywcfStyle = new WritableCellFormat();
+			WritableFont bodyfont = new WritableFont(WritableFont.ARIAL, 10);
+			bodywcfStyle.setFont(bodyfont);
+			bodywcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			bodywcfStyle.setAlignment(acenter);
+			bodywcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("数据导出", 0);
+			
+			ws.mergeCells(0,  0,9,0);
+			ws.addCell(new Label(0 , 0, "人员信息列表",titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "序号",title1wcfStyle));
+			ws.addCell(new Label(1, 1, "部门名称",title1wcfStyle));
+			ws.addCell(new Label(2, 1, "姓名",title1wcfStyle));
+			ws.addCell(new Label(3, 1, "账号",title1wcfStyle));
+			ws.addCell(new Label(4, 1, "密码",title1wcfStyle));
+			ws.addCell(new Label(5, 1, "身份证号",title1wcfStyle));
+			ws.addCell(new Label(6, 1, "员工类型",title1wcfStyle));
+			ws.addCell(new Label(7, 1, "手机号码",title1wcfStyle));
+			ws.addCell(new Label(8, 1, "用户地址",title1wcfStyle));
+			ws.addCell(new Label(9, 1, "电子邮箱",title1wcfStyle));
+			
+			StaffService staffser = new StaffService();
+			if(null!=personList&&personList.size()>0){
+				for(int i=0;i<personList.size();i++){
+					
+					ws.addCell(new Label(0, i+2, String.valueOf((i+1)),bodywcfStyle));
+					ws.addCell(new Label(1, i+2, (String)personList.get(i).getUserDepartName(),bodywcfStyle));
+					
+					ws.addCell(new Label(2, i+2, (String)personList.get(i).getChinaName(),bodywcfStyle));
+					
+					//
+					if(null!=personList.get(i).getUser()){
+						ws.addCell(new Label(3, i+2, personList.get(i).getUser().getUsername() ,bodywcfStyle));
+						ws.addCell(new Label(4, i+2, "",bodywcfStyle));
+						ws.addCell(new Label(8, i+2, personList.get(i).getUser().getAddress(),bodywcfStyle));
+					}else{
+						ws.addCell(new Label(3, i+2,"" ,bodywcfStyle));
+						ws.addCell(new Label(4, i+2,"",bodywcfStyle));
+						ws.addCell(new Label(8, i+2, "",bodywcfStyle));
+					}
+									
+					ws.addCell(new Label(5, i+2, personList.get(i).getIdCard(),bodywcfStyle));
+					
+					//
+					ws.addCell(new Label(6, i+2,(String)personList.get(i).getUserTypeName(),bodywcfStyle));
+				
+					if(null!=personList.get(i)){
+						ContactInfor con = staffser.getContactInfor(personList.get(i));
+						if(null==con){
+							ws.addCell(new Label(7, i+2, "",bodywcfStyle));	
+							ws.addCell(new Label(9, i+2, "",bodywcfStyle));	
+						}else{
+						ws.addCell(new Label(7, i+2, con.getMobile(),bodywcfStyle));
+						ws.addCell(new Label(9, i+2, con.getEmail(),bodywcfStyle));
+					}
+				}
+			}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 
 
 }
