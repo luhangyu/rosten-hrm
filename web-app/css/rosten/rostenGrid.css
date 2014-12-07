@@ -23,16 +23,17 @@
 	border-top-color:transparent;
 	border-width:1px;
 	border-top:1px;
-	height:25px;
+	height:20px;
 }
 .rosten .rostenGridView .dojoxGridMasterHeader,.rosten .rostenGridView .dojoxGridMasterHeader .dojoxGridCell{
 	height:25px;
+	line-height:25px;
 }
 .rosten .rostenGridView .dojoxGridRowbarInner{
 	border-right:1px solid #CCCCCC;
 }
 .rosten .rostenGridView .dojoxGridRowTable tr {
-	height:25px;
+	height:20px;
 }
 .rosten .rostenGridView .dojoxGridHeader th {
 	border-style:solid;
@@ -44,10 +45,6 @@
 	border:none;
 	margin-top:-3px;
 }
-.rosten .rostenGridView .dojoxGridHeader{
-	height:30px;
-}
-
 .rosten .rostenGridView .pagecontrol {
 	text-align:right;
 	line-height:25px;
