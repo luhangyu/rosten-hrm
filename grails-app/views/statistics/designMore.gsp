@@ -64,11 +64,20 @@ require(["dojo/parser",
 </script>
 </head>
 <body>
+	<div class="rosten_action">
+		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'statistics',action:'staticShow')}"'></div>
+	</div>
 	<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px"}' class="static">
 	<table width="100%" class="tab_css simpleNavigation">
 		<THEAD> 
-			<tr class="bgClass">
-				<th >部门</th>
+		
+			<tr>
+				<td rowspan="2">所属部门</td>
+				
+				
+				<td colspan="11" align="center">用工性质</td>
+				</tr>
+				<tr>
 				<th>省局</th>
 				<th >协会聘用</th>
 				<th>劳务派遣</th>
@@ -79,6 +88,7 @@ require(["dojo/parser",
 				<th>局合同工</th>
 				<th>挂靠</th>
 				<th>实习</th>
+				<th>小计</th>
 			</tr>
 		</THEAD>
 		<tbody >
@@ -95,7 +105,7 @@ require(["dojo/parser",
 					<td>${it.jhtg }</td>
 					<td>${it.gk }</td>
 					<td>${it.sx }</td>
-					
+					<td>${it.hjrs }</td>
 				</tr>
 			</g:each>
 		</tbody>

@@ -4,17 +4,39 @@ import com.rosten.app.system.Company
 import com.rosten.app.system.Depart
 import com.rosten.app.util.Util
 import grails.converters.JSON
+import groovy.sql.Sql
 import com.rosten.app.system.UserType
 import com.rosten.app.staff.PersonInfor
 
 class StatisticsController {
+	def imgPath ="images/rosten/actionbar/"
+	def dataSource
+	
+	def staticShow ={
+		def webPath = request.getContextPath() + "/"
+		def actionList = []
+		
+		actionList << createAction("返回",webPath + imgPath + "quit_1.gif","page_quit")
+		render actionList as JSON
+	}
 	
 	//2014-12-07增加统计报表中的详情展示-----------------------------------
 	def more_staffByCategory ={
 		//员工按用工性质统计
 		def model=[:]
 		def company = Company.get(params.companyId)
-		render(view:'/demo/designMore',model:model)
+		Sql sql = new Sql(dataSource)
+		def items = []
+		def seleSql = "select * from ygxztj"
+		def vacateList = sql.eachRow(seleSql){
+			def item = ["departName":it["depart_name"],"xhpy":it["xhpy"],"fp":it["fp"],"jy":it["jy"],"jpzz":it["jpzz"],"jpjz":it["jpjz"],
+				"jhtg":it["jhtg"],"gk":it["gk"],"sx":it["sx"],"lwpq":it["lwpq"],"sj":it["sj"],"hjrs":it["hjrs"]]
+			items<<item
+		}
+		
+		model["tableItem"] = items
+		
+		render(view:'/statistics/designMore',model:model)
 	}
 	
 	def more_staffByAge ={
@@ -170,5 +192,12 @@ class StatisticsController {
 		}else{
 			return null
 		}
+	}
+	private def createAction={name,img,action->
+		def model =[:]
+		model["name"] = name
+		model["img"] = img
+		model["action"] = action
+		return model
 	}
 }
