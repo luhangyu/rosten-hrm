@@ -3338,4 +3338,17 @@ class StaffController {
 			}
 		}
 	}
+	
+	//打印员工转正考核表
+	def printPersonZzkhb={
+		def word = new WordExport()
+		def ids = params.id.split(",")
+		if(null!=ids&&ids.length>0){
+			if(ids.length==1){
+				word.dyZzkhb(response,params.id)
+			}else{
+				word.downloadZzkhbZip(response,params.id)
+			}
+		}
+	}
 }
