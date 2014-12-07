@@ -265,9 +265,19 @@
 					rosten.toggleAction(buttonWidget,false);
 				});
 			};
+			
 			officialApply_print_zzkhb = function(){
-				
+				//打印转正申请表
+				var unids = rosten.getGridUnid("multi");
+				if (unids == ""){
+					rosten.alert("请勾选要打印的数据！");
+					return;
+				}
+				var content = {};
+				content.id = unids;
+				rosten.openNewWindow("print", rosten.webPath + "/staff/printPersonZzkhb/"+unids);
 			};
+			
 			page_quit = function(){
 				rosten.pagequit();
 			};
