@@ -3145,6 +3145,55 @@ class StaffController {
 		render(view:'/staff/workResume',model:model)
 	}
 	
+	//2014-12-07 增加导出员工账号信息
+	def exportPersonAccount ={
+		OutputStream os = response.outputStream
+		def company = Company.get(params.companyId)
+		response.setContentType('application/vnd.ms-excel')
+		response.setHeader("Content-disposition", "attachment; filename=" + new String("员工账号信息.xls".getBytes("GB2312"), "ISO_8859_1"))
+		
+		def searchArgs =[:]
+		
+		if(params.username && !"".equals(params.username)) searchArgs["username"] = params.username
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+		if(params.departName && !"".equals(params.departName)) searchArgs["departName"] = params.departName
+		if(params.idCard && !"".equals(params.idCard)) searchArgs["idCard"] = params.idCard
+		if(params.sex && !"".equals(params.sex)) searchArgs["sex"] = params.sex
+		if(params.politicsStatus && !"".equals(params.politicsStatus)) searchArgs["politicsStatus"] = params.politicsStatus
+		
+		def c = PersonInfor.createCriteria()
+
+		def personList = c.list{
+			
+			eq("company",company)
+			
+			searchArgs.each{k,v->
+				if(k.equals("departName")){
+					departs{
+						like(k,"%" + v + "%")
+					}
+				}else if(k.equals("username")){
+					createAlias('user', 'a')
+					like("a.username","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+			
+			if("staffAdd".equals(params.type)){
+				not {'in'("status",["在职","退休","离职"])}
+				order("createDate", "desc")
+			}else{
+				'in'("status",["在职","退休","离职"])
+				order("createDate", "desc")
+			}
+			
+		}
+		def excel = new ExcelExport()
+		excel.ygxxdc(os,personList)
+	}
+	
 	def exportPerson={
 		OutputStream os = response.outputStream
 		def company = Company.get(params.companyId)

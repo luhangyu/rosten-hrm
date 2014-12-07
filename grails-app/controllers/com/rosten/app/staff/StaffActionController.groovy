@@ -304,8 +304,9 @@ class StaffActionController {
 		
 		if(!"staffSearch".equals(params.type)){
 			actionList << createAction("员工登记",imgPath + "add.png",strname + "_dj")
-			actionList << createAction("批量导入",imgPath + "add.png","import_" + strname)
+			actionList << createAction("批量导入",imgPath + "back.png","import_" + strname)
 			actionList << createAction("导出员工信息",imgPath + "send.png","export_" + strname)
+			actionList << createAction("导出员工账号信息",imgPath + "send.png","export_" + strname + "_account")
 			actionList << createAction("打印登记表",imgPath + "word_print.png",strname + "_print")
 			actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		}
