@@ -344,5 +344,47 @@ public class WordExport {
 			}
 			return null;
 		}
+		
+		// 填充模版数据生成word文件(转正考核表)
+		private File getZzkhbWord(String id) throws Exception {
+			Map<String, Object> data = new HashMap<String, Object>();
+			StaffService staffser = new StaffService();
+			PersonInfor personInfor = staffser.getPersonInfor(id);
+			data.put("personInfor", personInfor);	
+			File wordFile = FreeMarkerUtil.getWordFile(data,
+					"classpath:com/rosten/app/template", "zzkhb.xml",personInfor.getChinaName()+"转正考核表");
+			return wordFile;
+		}
+		
+		/**
+		 * 单个打印转正考核表
+		 */
+		public String dyZzkhb(HttpServletResponse response,String ids) throws Exception {
+			
+			File wordFile = getZzkhbWord(ids);
+			FileUtil.outputWord(response,wordFile);
+			return null;
+		}
+		
+		/**
+		 * 批量打印转正考核表
+		 * @param response
+		 * @return
+		 * @throws Exception
+		 */
+		public String downloadZzkhbZip(HttpServletResponse response,String ids)
+				throws Exception {
+			String[] pks = ids.split(",");
+			if (null!=pks) {
+				List<File> files = new ArrayList<File>();
+				for (int i = 0, n = pks.length; i < n; i++) {
+					File file = getZzkhbWord(pks[i]);
+					files.add(file);
+				}
+				File zipFile = ZipUtil.zip("转正考核表",files.toArray(new File[] {}));
+				FileUtil.outputZip(response, zipFile);
+			}
+			return null;
+		}
 
 }

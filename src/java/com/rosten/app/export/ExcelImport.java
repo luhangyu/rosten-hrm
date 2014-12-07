@@ -9,7 +9,6 @@ import com.rosten.app.staff.ContactInfor;
 import com.rosten.app.staff.PersonInfor;
 import com.rosten.app.staff.StaffService;
 import com.rosten.app.system.User;
-import com.rosten.app.system.UserType;
 import com.rosten.app.util.Util;
 
 
