@@ -30,7 +30,7 @@ class StatisticsController {
 		def seleSql = "select * from ygxztj"
 		def vacateList = sql.eachRow(seleSql){
 			def item = ["departName":it["depart_name"],"xhpy":it["xhpy"],"fp":it["fp"],"jy":it["jy"],"jpzz":it["jpzz"],"jpjz":it["jpjz"],
-				"jhtg":it["jhtg"],"gk":it["gk"],"sx":it["sx"],"lwpq":it["lwpq"],"sj":it["sj"],"hjrs":it["hjrs"]]
+				"jhtg":it["jhtg"],"gk":it["gk"],"sx":it["sx"],"lwpq":it["lwpq"],"sj":it["sj"],"jlsg":it["jlsg"],"hjrs":it["hjrs"]]
 			items<<item
 		}
 		

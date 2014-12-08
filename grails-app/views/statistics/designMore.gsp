@@ -75,7 +75,7 @@ require(["dojo/parser",
 				<td rowspan="2">所属部门</td>
 				
 				
-				<td colspan="11" align="center">用工性质</td>
+				<td colspan="12" align="center">用工性质</td>
 				</tr>
 				<tr>
 				<th>省局</th>
@@ -88,6 +88,7 @@ require(["dojo/parser",
 				<th>局合同工</th>
 				<th>挂靠</th>
 				<th>实习</th>
+				<th>局临时工</th>
 				<th>小计</th>
 			</tr>
 		</THEAD>
@@ -105,6 +106,7 @@ require(["dojo/parser",
 					<td>${it.jhtg }</td>
 					<td>${it.gk }</td>
 					<td>${it.sx }</td>
+					<td>${it.jlsg }</td>
 					<td>${it.hjrs }</td>
 				</tr>
 			</g:each>
