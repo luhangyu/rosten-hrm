@@ -43,7 +43,16 @@ class StatisticsController {
 		//员工按年龄段统计
 		def model=[:]
 		def company = Company.get(params.companyId)
-		render(view:'/demo/designMore',model:model)
+		Sql sql = new Sql(dataSource)
+		def items = []
+		def seleSql = "select * from nldtj"
+		def vacateList = sql.eachRow(seleSql){
+			def item = ["num":it["num"],"age":it["age"]]
+			items<<item
+		}
+		
+		model["tableItem"] = items
+		render(view:'/statistics/statisticsByAge',model:model)
 		
 	}
 	
@@ -51,7 +60,16 @@ class StatisticsController {
 		//员工人数按部门统计
 		def model=[:]
 		def company = Company.get(params.companyId)
-		render(view:'/demo/designMore',model:model)
+		Sql sql = new Sql(dataSource)
+		def items = []
+		def seleSql = "select * from bmrstj"
+		def vacateList = sql.eachRow(seleSql){
+			def item = ["departName":it["depart_name"],"num":it["num"]]
+			items<<item
+		}
+		
+		model["tableItem"] = items
+		render(view:'/statistics/statisticsByDepart',model:model)
 		
 	}
 	
