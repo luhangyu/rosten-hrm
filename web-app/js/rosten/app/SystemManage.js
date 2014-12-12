@@ -57,6 +57,11 @@ define(["dojo/_base/connect",
 			content.status = status.get("value");
 		}
 		
+		var workJob = registry.byId("s_workJob");
+		if(workJob.get("value")!=""){
+			content.workJob = workJob.get("value");
+		}
+		
 		switch(rosten.kernel.navigationEntity) {
 		
 		case "userManage1":
@@ -72,7 +77,7 @@ define(["dojo/_base/connect",
 	
 	staff_resetSearch = function(){
 		switch(rosten.kernel.navigationEntity) {
-		case "userManage":
+		case "userManage1":
 			registry.byId("s_username").set("value","");
 			registry.byId("s_chinaName").set("value","");
 			registry.byId("s_departName").set("value","");
@@ -82,6 +87,7 @@ define(["dojo/_base/connect",
 			registry.byId("s_nativeAddress").set("value","");
 			registry.byId("s_city").set("value","");
 			registry.byId("s_status").set("value","");
+			registry.byId("s_workJob").set("value","");
 			
 			dom_rostenGrid.refresh();
 			break;
@@ -96,6 +102,7 @@ define(["dojo/_base/connect",
 			registry.byId("s_nativeAddress").set("value","");
 			registry.byId("s_city").set("value","");
 			registry.byId("s_status").set("value","");
+			registry.byId("s_workJob").set("value","");
 			rosten.kernel.refreshGrid();
 			break;
 		}	

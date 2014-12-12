@@ -2401,12 +2401,13 @@ class StaffController {
 			_gridHeader << ["name":"登录名","width":"auto","colIdx":1,"field":"username"]
 			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName","formatter":"personInfor_formatTopic"]
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
-			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
-			_gridHeader << ["name":"性别","width":"30px","colIdx":5,"field":"sex"]
+			_gridHeader << ["name":"工作岗位","width":"auto","colIdx":4,"field":"workJob"]
+			_gridHeader << ["name":"编制类别","width":"auto","colIdx":5,"field":"type"]
+			_gridHeader << ["name":"性别","width":"30px","colIdx":6,"field":"sex"]
 //			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
-			_gridHeader << ["name":"身份证号","width":"auto","colIdx":6,"field":"idCard"]
+//			_gridHeader << ["name":"身份证号","width":"auto","colIdx":6,"field":"idCard"]
 			_gridHeader << ["name":"手机号码","width":"auto","colIdx":7,"field":"mobile"]
-			_gridHeader << ["name":"民族","width":"auto","colIdx":8,"field":"nationality"]
+//			_gridHeader << ["name":"民族","width":"auto","colIdx":8,"field":"nationality"]
 			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":9,"field":"politicsStatus"]
 			_gridHeader << ["name":"角色","width":"auto","colIdx":10,"field":"userRoles"]
 			_gridHeader << ["name":"状态","width":"auto","colIdx":11,"field":"status"]
@@ -2425,6 +2426,7 @@ class StaffController {
 		if(params.nativeAddress && !"".equals(params.nativeAddress)) searchArgs["nativeAddress"] = params.nativeAddress
 		if(params.city && !"".equals(params.city)) searchArgs["city"] = params.city
 		if(params.status && !"".equals(params.status)) searchArgs["status"] = params.status
+		if(params.workJob && !"".equals(params.workJob)) searchArgs["workJob"] = params.workJob
 		
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -2488,6 +2490,7 @@ class StaffController {
 				sMap["politicsStatus"] = it?.politicsStatus
 				sMap["status"] = it?.status
 				sMap["userRoles"] = _user?.getAllRolesValue()
+				sMap["workJob"] = it?.workJob
 				
 				_json.items+=sMap
 				
@@ -2537,12 +2540,14 @@ class StaffController {
 			_gridHeader << ["name":"登录名","width":"auto","colIdx":1,"field":"username"]
 			_gridHeader << ["name":"姓名","width":"auto","colIdx":2,"field":"chinaName","formatter":"personInfor_formatTopic_normal"]
 			_gridHeader << ["name":"部门","width":"auto","colIdx":3,"field":"departName"]
-			_gridHeader << ["name":"编制类别","width":"auto","colIdx":4,"field":"type"]
-			_gridHeader << ["name":"性别","width":"30px","colIdx":5,"field":"sex"]
+			_gridHeader << ["name":"工作岗位","width":"auto","colIdx":4,"field":"workJob"]
+			_gridHeader << ["name":"编制类别","width":"auto","colIdx":5,"field":"type"]
+			_gridHeader << ["name":"性别","width":"30px","colIdx":6,"field":"sex"]
 //			_gridHeader << ["name":"出生年月","width":"auto","colIdx":6,"field":"birthday"]
-			_gridHeader << ["name":"身份证号","width":"130px","colIdx":7,"field":"idCard"]
+//			_gridHeader << ["name":"身份证号","width":"130px","colIdx":7,"field":"idCard"]
 			_gridHeader << ["name":"手机号码","width":"auto","colIdx":8,"field":"mobile"]
-			_gridHeader << ["name":"民族","width":"auto","colIdx":9,"field":"nationality"]
+//			_gridHeader << ["name":"民族","width":"auto","colIdx":9,"field":"nationality"]
+			
 			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":10,"field":"politicsStatus"]
 			
 			if("staffAdd".equals(params.type)){
@@ -2567,6 +2572,7 @@ class StaffController {
 		if(params.nativeAddress && !"".equals(params.nativeAddress)) searchArgs["nativeAddress"] = params.nativeAddress
 		if(params.city && !"".equals(params.city)) searchArgs["city"] = params.city
 		if(params.status && !"".equals(params.status)) searchArgs["status"] = params.status
+		if(params.workJob && !"".equals(params.workJob)) searchArgs["workJob"] = params.workJob
 		
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -2630,6 +2636,7 @@ class StaffController {
 				sMap["mobile"] = contactInfor?.mobile
 				sMap["nationality"] = personInfor?.nationality
 				sMap["politicsStatus"] = personInfor?.politicsStatus
+				sMap["workJob"] = personInfor?.workJob
 				
 				if("staffAdd".equals(params.type)){
 					sMap["currentUser"] = personInfor?.getCurrentUserName()
