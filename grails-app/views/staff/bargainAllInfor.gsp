@@ -45,10 +45,10 @@
 						value:"${bargain?.getFormatteStartDate()}"
 	          	'/>
            	</td>
-		 	<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>终聘日期：</div></td>
+		 	<td width="120"><div align="right">终聘日期：</div></td>
 		  	<td width="250">
 		    	<input id="bargain_endDate" data-dojo-type="dijit/form/DateTextBox" 
-	                 	data-dojo-props='name:"endDate",trim:true,required:true,${fieldAcl.isReadOnly("endDate")},
+	                 	data-dojo-props='name:"endDate",trim:true,${fieldAcl.isReadOnly("endDate")},
 							value:"${bargain?.getFormatteEndDate()}"
 	                '/>
 		    </td>

@@ -38,7 +38,7 @@ class Bargain {
 	}
 	
 	//终聘时间
-	Date endDate = new Date() + 360
+	Date endDate
 	
 	@GridColumn(name="终聘日期",colIdx=5)
 	def getFormatteEndDate(){
@@ -46,7 +46,7 @@ class Bargain {
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
 			return sd.format(endDate)
 		}else{
-			return ""
+			return " "
 		}
 	}
 	//附件
@@ -68,6 +68,7 @@ class Bargain {
 	
     static constraints = {
 		attachment nullable:true,blank:true
+		endDate nullable:true,blank:true
     }
 	static belongsTo = [personInfor:PersonInfor,company:Company]
 	

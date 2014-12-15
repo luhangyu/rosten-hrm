@@ -5,6 +5,9 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="layout" content="rosten" />
 <style type="text/css">
+		body{
+			overflow:auto;
+		}
     	table.tab_css {
 			font-size:11px;
 			color:#333333;
@@ -68,7 +71,7 @@ require(["dojo/parser",
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'statistics',action:'staticShow')}"'></div>
 	</div>
 	<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px"}' class="static">
-	<table width="100%" class="tab_css simpleNavigation">
+	<table width="800px" class="tab_css simpleNavigation">
 		<THEAD> 
 		
 			<tr>
