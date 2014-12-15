@@ -46,6 +46,8 @@ class StaffController {
 	def taskService
 	def startService
 	
+	private def staffStatus = ["在职","在职下派","在职借用","试用","实习","离职","退休"]
+	
 	//2014-11-18增加员工聘任---------------------------------------------------------
 	def engageAdd ={
 		redirect(action:"engageShow",params:params)
@@ -677,7 +679,12 @@ class StaffController {
 		bargain.clearErrors()
 		
 		bargain.startDate = Util.convertToTimestamp(params.startDate)
-		bargain.endDate = Util.convertToTimestamp(params.endDate)
+		
+		if(params.endDate && !"".equals(params.endDate)){
+			bargain.endDate = Util.convertToTimestamp(params.endDate)
+		}else{
+			bargain.endDate = null
+		}
 		
 		def personInfor = PersonInfor.get(params.personInforId)
 		bargain.personInfor = personInfor
@@ -1488,7 +1495,7 @@ class StaffController {
 		//政治面貌
 		model["politicsStatusList"] = shareService.getSystemCodeItems(currentUser.company,"rs_politicsStatus")
 		
-		model["statusList"] = ["在职","在职下派","在职借用","试用","实习","离职","退休"]
+		model["statusList"] = this.staffStatus
 		
 		render(view:'/staff/search',model:model)
 	}
@@ -2603,12 +2610,12 @@ class StaffController {
 				}
 				
 				if("staffAdd".equals(params.type)){
-					not {'in'("status",["在职","在职下派","在职借用","退休","离职"])}
+					not {'in'("status",this.staffStatus)}
 				}else if("staffSearch".equals(params.type)){
 					//所有状态下均可查询
-					'in'("status",["在职","在职下派","在职借用","退休","离职","试用","实习"])
+					'in'("status",this.staffStatus)
 				}else{
-					'in'("status",["在职","在职下派","在职借用","退休","离职"])
+					'in'("status",this.staffStatus)
 					//createAlias('user', 'a')
 				}
 				order("chinaName", "asc")
@@ -2672,10 +2679,10 @@ class StaffController {
 				}
 				
 				if("staffAdd".equals(params.type)){
-					not {'in'("status",["在职","在职下派","在职借用","退休","离职"])}
+					not {'in'("status",this.staffStatus)}
 					order("chinaName", "asc")
 				}else{
-					'in'("status",["在职","在职下派","在职借用","退休","离职"])
+					'in'("status",this.staffStatus)
 					//createAlias('user', 'a')
 					order("chinaName", "asc")
 				}
@@ -2760,7 +2767,12 @@ class StaffController {
 		bargain.clearErrors()
 		
 		bargain.startDate = Util.convertToTimestamp(params.startDate)
-		bargain.endDate = Util.convertToTimestamp(params.endDate)
+		
+		if(params.endDate && !"".equals(params.endDate)){
+			bargain.endDate = Util.convertToTimestamp(params.endDate)
+		}else{
+			bargain.endDate = null
+		}
 		
 		bargain.personInfor = personInfor
 		bargain.company = personInfor.company
@@ -2914,7 +2926,7 @@ class StaffController {
 			model["statusNotWrite"] = true
 		}
 		
-		model["statusList"] = ["在职","在职下派","在职借用"]
+		model["statusList"] = this.staffStatus
 		
 		//血型
 		model["bloodList"] = shareService.getSystemCodeItems(company,"rs_blood")
@@ -3189,10 +3201,10 @@ class StaffController {
 			}
 			
 			if("staffAdd".equals(params.type)){
-				not {'in'("status",["在职","退休","离职"])}
+				not {'in'("status",this.staffStatus)}
 				order("createDate", "desc")
 			}else{
-				'in'("status",["在职","退休","离职"])
+				'in'("status",this.staffStatus)
 				order("createDate", "desc")
 			}
 			
@@ -3237,10 +3249,10 @@ class StaffController {
 			}
 			
 			if("staffAdd".equals(params.type)){
-				not {'in'("status",["在职","退休","离职"])}
+				not {'in'("status",this.staffStatus)}
 				order("createDate", "desc")
 			}else{
-				'in'("status",["在职","退休","离职"])
+				'in'("status",this.staffStatus)
 				order("createDate", "desc")
 			}
 			
