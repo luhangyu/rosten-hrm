@@ -81,6 +81,15 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		};
 	};
 	
+	import_bargain = function(){
+		 var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.kernel.createRostenShowDialog(rosten.webPath + "/staff/importBargain/"+ companyId, {
+           onLoadFunction : function() {
+
+           }
+       });
+	};
+	
 	/*
 	 * 此功能默认必须存在
 	 */
