@@ -504,4 +504,21 @@ class StaffService {
 		}
 	}
 	
+	//
+	public boolean saveBargain(Bargain bar,String sfzh,User userEntity) {
+		
+		def personInfor = PersonInfor.findByIdCard(sfzh);
+		bar.personInfor = personInfor
+		bar.company = userEntity.company
+		if(bar.save(flush:true)){
+			
+			return true
+		}else{
+			bar.errors.each{
+				println it
+			}
+			return false
+		}
+	}
+	
 }
