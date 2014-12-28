@@ -48,6 +48,55 @@ class StaffController {
 	
 	private def staffStatus = ["在职","在职下派","在职借用","试用","实习","离职","退休"]
 	
+	//2014-12-28增加所有员工信息的树形展示-----------------------------------------------
+	
+	def staffTreeDataStore ={
+		def json = [identifier:'id',label:'name',items:[]]
+		
+		def currentUser = springSecurityService.getCurrentUser()
+		def company = currentUser.company
+		
+		//获取所有部门与用户
+		
+		def dataList = Depart.findAllByCompany(company,[sort: "serialNo", order: "asc"])
+		
+		dataList.each{
+			def _departId = it.id
+			def sMap = ["id":it.id,"name":it.departName,"parentId":it.parent?.id,"children":[]]
+			def childMap
+			
+			//获取所有部门下面的员工信息
+			def c = PersonInfor.createCriteria()
+			c.list{
+				eq("company",company)
+				departs{
+					eq("id",_departId)
+				}
+				order("chinaName", "asc")
+			}.each{user->
+				def contact = ContactInfor.findByPersonInfor(user)
+				def userMap = ["id":user.id,"name":user.chinaName,"type":"user","departId":it.id,"departName":it.departName,"telephone":contact.mobile?contact.mobile:"null"]
+				json.items+=userMap
+				
+				def userChildMap = ["_reference":user.id]
+				sMap.children += userChildMap
+			}
+			it.children.each{item->
+				if(null!=item){
+					childMap = ["_reference":item.id]
+					sMap.children += childMap
+				}
+			}
+			
+			
+			json.items+=sMap
+		}
+		
+		render json as JSON
+	}
+	
+	//--------------------------------------------------------------------------
+	
 	//2014-11-18增加员工聘任---------------------------------------------------------
 	def engageAdd ={
 		redirect(action:"engageShow",params:params)

@@ -4,10 +4,11 @@
 define(["dojo/dom",
         "dijit/registry",
         "dojo/_base/connect",
-        "rosten/widget/PickTreeDialog",
+        "rosten/util/general",
         "rosten/app/Application",
-        "rosten/kernel/behavior"], function(dom,registry,connect,PickTreeDialog) {
-	
+        "rosten/kernel/behavior"], function(dom,registry,connect,General) {
+            
+    var general = new General();
 	
 	add_personWorkLog = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -221,12 +222,38 @@ define(["dojo/dom",
             registry.byId("sms_Group").attr("value", _data);
         };
     };
+    
+    //2014-12-28 增加手机号码选择用户功能
+    sms_selectUser = function(url,inputName){
+        var _dialog = rosten.selectBaseTreeDialog(null,url,true,"sms_telephone");
+        _dialog.callback = function(data){
+            var _data = [];
+            for (var k = 0; k < data.length; k++) {
+                var item = data[k];
+                if(item.telephone!=null && item.telephone!="null"){
+                    _data.push(item.telephone + "<" + item.name + ">");
+                }
+            }
+            registry.byId("sms_telephone").set("value", _data.join(","));
+        };
+        _dialog.afterLoad = function(){
+            var sms_telephone = registry.byId("sms_telephone").get("value").split(",");
+            var dialogIds = [];
+            for (var k = 0; k < sms_telephone.length; k++) {
+                   var item = sms_telephone[k];
+                    dialogIds.push(general.stringLeft(item,"<"));
+            }
+            _dialog.selectedData(dialogIds);
+        };
+        
+    };
+    //----------------------------------------------------------------------------------
     sendsms = function(){
         var content = {};
         var isNext = false;
         var telephone = registry.byId("sms_telephone");
         if(telephone.attr("value")!=""){
-            content.telephone = telephone.attr("value");
+            // content.telephone = telephone.attr("value");
             isNext = true;
         }
         var smsGroup = registry.byId("sms_Group");
@@ -245,6 +272,16 @@ define(["dojo/dom",
             rosten.alert("发送内容不能为空！");
             return;
         }
+        
+        //特殊处理电话号码，去除人员名称
+        var telephoneIds = [];
+        var sms_telephone = telephone.get("value").split(",");
+        for (var k = 0; k < sms_telephone.length; k++) {
+               var item = sms_telephone[k];
+                telephoneIds.push(general.stringLeft(item,"<"));
+        }
+        content.telephone = telephoneIds.join(",");
+        
         rosten.readSync(rosten.webPath + "/smsNew/smsSave",content,function(data){
             if(data.result=="nouse"){
                 rosten.alert("短消息功能尚未开通，请联系厂家！");
