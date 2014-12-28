@@ -3468,4 +3468,43 @@ class StaffController {
 			}
 		}
 	}
+	
+	def importBargain ={
+		def model =[:]
+		model["company"] = Company.get(params.id)
+		render(view:'/staff/importBargain',model:model)
+	}
+	
+	
+	def importBargainMessage={
+		def ostr
+		
+		SystemUtil sysUtil = new SystemUtil()
+		def currentUser = (User) springSecurityService.getCurrentUser()
+		def f = request.getFile("uploadedfile")
+		if (!f.empty) {
+			
+			def uploadPath
+			def companyPath = currentUser.company?.shortName
+			if(companyPath == null){
+				uploadPath = sysUtil.getUploadPath("template")+"/"
+			}else{
+				uploadPath = sysUtil.getUploadPath(currentUser.company.shortName + "/template") + "/"
+			}
+			
+			String name = f.getOriginalFilename()//获得文件原始的名称
+			def realName = sysUtil.getRandName(name)
+			f.transferTo(new File(uploadPath,realName))
+			
+			def excelimp = new ExcelImport()
+			def result = excelimp.bargainsjdr(uploadPath,realName,currentUser)
+			if("true".equals(result)){
+				ostr ="<script>var _parent = window.parent;_parent.rosten.alert('导入成功').queryDlgClose=function(){_parent.rosten.kernel.hideRostenShowDialog();_parent.rosten.kernel.refreshGrid();}</script>"
+			}else{
+				ostr = "<script>window.parent.rosten.alert('导入失败');</script>"
+			}
+		}
+		
+		render ostr
+	}
 }

@@ -339,6 +339,7 @@ class StaffActionController {
 //			actionList << createAction("修改",imgPath + "ok.png","change_" + strname)
 			actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		}
+		actionList << createAction("导入合同",imgPath + "back.png","import_" + strname)
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		return actionList
 	}
