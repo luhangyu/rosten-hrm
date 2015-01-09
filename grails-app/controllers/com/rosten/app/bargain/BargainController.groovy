@@ -39,7 +39,7 @@ class BargainController {
 				eq("company",company)
 				eq("personInfor",personInfor)
 				not {'in'("id",[bargain?.id])}
-				order("endDate", "desc")
+				order("bargainSerialNo", "desc")
 			}
 			def idx = 0
 			_list.each{

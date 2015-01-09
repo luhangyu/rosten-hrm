@@ -231,7 +231,7 @@ class StaffService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			order("createDate", "desc")
+			order("bargainSerialNo", "desc")
 			
 			searchArgs.each{k,v->
 				if(k.equals("chinaName")){

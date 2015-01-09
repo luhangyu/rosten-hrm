@@ -2758,7 +2758,11 @@ class StaffController {
 		
 		def dealUser = User.get(params.userId)
 		def personInfor = PersonInfor.get(params.id)
-		def entity = Bargain.findByPersonInfor(personInfor)
+		def entityList = Bargain.findAllByPersonInfor(personInfor,[sort: "bargainSerialNo", order: "desc"])
+		def entity
+		if(entityList &&  entityList.size()>0){
+			entity = entityList[0]
+		}
 		if(!entity){
 			entity = new Bargain()
 			def bargainConfig = BargainConfig.first()
