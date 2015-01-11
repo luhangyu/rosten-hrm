@@ -156,6 +156,9 @@ class PersonInfor {
 	//附件
 	Attachment attachment
 	
+	//2015-1-11--------增加----工龄
+	String workYears
+	
 	//所属单位
 	static belongsTo = [company:Company]
 	
@@ -251,6 +254,9 @@ class PersonInfor {
 		health nullable:true,blank:true
 		marriage nullable:true,blank:true
 		remark nullable:true,blank:true
+		
+		//2015-1-11---------增加----工龄
+		workYears nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true
