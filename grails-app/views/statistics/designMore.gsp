@@ -8,6 +8,11 @@
 		body{
 			overflow:auto;
 		}
+		table thead tr , table thead tr td,table thead tr th{
+			background-color: #dedede;
+			text-align:center;
+			font-weight:blod;
+		}
     	table.tab_css {
 			font-size:11px;
 			color:#333333;
@@ -70,17 +75,15 @@ require(["dojo/parser",
 	<div class="rosten_action">
 		<div data-dojo-type="rosten/widget/ActionBar" id="rosten_actionBar" data-dojo-props='actionBarSrc:"${createLink(controller:'statistics',action:'staticShow')}"'></div>
 	</div>
-	<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px"}' class="static">
-	<table width="800px" class="tab_css simpleNavigation">
+	<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:{padding:"1px",width:"95%",margin:"5px auto"}' class="static" >
+	<table width="100%" class="tab_css simpleNavigation" style="text-align:center">
 		<THEAD> 
 		
 			<tr>
 				<td rowspan="2">所属部门</td>
-				
-				
 				<td colspan="12" align="center">用工性质</td>
-				</tr>
-				<tr>
+			</tr>
+			<tr>
 				<th>省局</th>
 				<th >协会聘用</th>
 				<th>劳务派遣</th>
