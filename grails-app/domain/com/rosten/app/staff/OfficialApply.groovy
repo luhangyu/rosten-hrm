@@ -156,7 +156,7 @@ class OfficialApply {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "RS_STAFF_OffApply"
+		table "RS_STAFF_OFFAPP"
 		
 		//兼容mysql与oracle
 		def systemUtil = new SystemUtil()

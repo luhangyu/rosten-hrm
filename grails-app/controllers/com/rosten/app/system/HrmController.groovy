@@ -203,34 +203,56 @@ class HrmController {
 			model = new Model(company:company)
 			model.modelName = "劳资福利"
 			model.modelUrl = path + "/system/navigation"
-			model.modelCode = "payweal"
+			model.modelCode = "salary"
 			model.serialNo = 11
 			
 			resource = new Resource()
-			resource.resourceName = "岗位工资标准"
-			resource.url = "positionPayweal"
-			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			model.addToResources(resource)
-			
-			resource = new Resource()
-			resource.resourceName = "薪级工资标准"
-			resource.url = "salaryPayweal"
+			resource.resourceName = "职级设置"
+			resource.url = "quartersConfig"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			resource.serialNo = 1
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "绩效工资标准"
-			resource.url = "perforPayweal"
+			resource.resourceName = "档位设置"
+			resource.url = "gearConfig"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			resource.serialNo = 2
 			model.addToResources(resource)
 			
 			resource = new Resource()
-			resource.resourceName = "员工工资管理"
-			resource.url = "staffPayweal"
+			resource.resourceName = "基数设置"
+			resource.url = "radixConfig"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			resource.serialNo = 3
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "五险一金设置"
+			resource.url = "wxyjConfig"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 4
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "员工等级配置"
+			resource.url = "staffConfig"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 5
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "员工补贴管理"
+			resource.url = "subsidyManage"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 6
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "工资单发放"
+			resource.url = "salaryBill"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 7
 			model.addToResources(resource)
 			
 			model.save()

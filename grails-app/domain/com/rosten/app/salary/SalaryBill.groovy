@@ -38,6 +38,6 @@ class SalaryBill {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "RS_SA_SALARYBILL"
+		table "RS_SA_SABILL"
 	}
 }
