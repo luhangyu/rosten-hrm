@@ -10,9 +10,11 @@ class Gear {
 	String id
 	
 	//名称
+	@GridColumn(name="档位名称",formatter="gear_formatTopic",colIdx=1,width="150px")
 	String gearName
 	
 	//系数
+	@GridColumn(name="档位系数",colIdx=2)
 	String gearNumber
 	
 	static belongsTo = [company:Company]

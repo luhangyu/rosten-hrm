@@ -10,9 +10,11 @@ class Radix {
 	String id
 	
     //类型
+	@GridColumn(name="类型名称",formatter="radix_formatTopic",colIdx=1,width="150px")
 	String category
 	
 	//基础
+	@GridColumn(name="基数",colIdx=2)
 	String radixNumber
 	
 	

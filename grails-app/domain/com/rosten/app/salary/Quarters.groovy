@@ -10,9 +10,11 @@ class Quarters {
 	String id
 	
 	//岗位名称
+	@GridColumn(name="岗位名称",formatter="quarters_formatTopic",colIdx=1,width="150px")
 	String quaName
 	
 	//岗位系数
+	@GridColumn(name="岗位系数",colIdx=2)
 	String quaNumber
 	
 	static belongsTo = [company:Company]
