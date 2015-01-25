@@ -236,7 +236,7 @@ class HrmController {
 			
 			resource = new Resource()
 			resource.resourceName = "员工等级配置"
-			resource.url = "staffConfig"
+			resource.url = "salaryBillConfig"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
 			resource.serialNo = 5
 			model.addToResources(resource)

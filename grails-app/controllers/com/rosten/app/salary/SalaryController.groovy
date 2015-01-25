@@ -7,7 +7,8 @@ import com.rosten.app.staff.PersonInfor
 class SalaryController {
 
  def salaryService
-	
+ def springSecurityService
+ 
  def quartersGrid ={
 	 def json=[:]
 	 def company = Company.get(params.companyId)
@@ -351,15 +352,26 @@ class SalaryController {
 	 render(view:'/salary/riskGold',model:model)
  }
  
+ def riskGoldConfig ={
+	 def model = [:]
+	 def user = springSecurityService.getCurrentUser()
+	 
+	 def riskGold = RiskGold.findWhere(company:user.company)
+	 if(riskGold==null) {
+		 riskGold = new RiskGold()
+	 }
+	
+	 model["company"] = user.company
+	 model["riskGold"] = riskGold
+	 
+	 render(view:'/salary/riskGoldConfig',model:model)
+ }
+ 
  def riskGoldSave ={
 	 def json=[:]
 	 def riskGold = new RiskGold()
 	 if(params.id && !"".equals(params.id)){
 		 riskGold = RiskGold.get(params.id)
-	 }else{
-		 if(params.companyId){
-			 riskGold.company = Company.get(params.companyId)
-		 }
 	 }
 	 riskGold.properties = params
 	 riskGold.clearErrors()
@@ -370,15 +382,15 @@ class SalaryController {
 	 riskGold.syubxBl = Util.str2int(params.syubxBl)
 	 riskGold.ylaobxBl = Util.str2int(params.ylaobxBl)
 	 
-	 riskGold.personInfor = PersonInfor.get(params.personInforId)
-	 
 	 if(riskGold.save(flush:true)){
-		 json["result"] = "true"
+		 json["result"] = true
+		 json["coonfigId"] = riskGold.id
+		 json["companyId"] = riskGold.company.id
 	 }else{
 		 riskGold.errors.each{
 			 println it
 		 }
-		 json["result"] = "false"
+		 json["result"] = false
 	 }
 	 render json as JSON
  }
@@ -389,9 +401,128 @@ class SalaryController {
 	 def json
 	 try{
 		 ids.each{
-			 def radix =Radix.get(it)
-			 if(radix){
-				 radix.delete(flush: true)
+			 def riskGold =RiskGold.get(it)
+			 if(riskGold){
+				 riskGold.delete(flush: true)
+			 }
+		 }
+		 json = [result:'true']
+	 }catch(Exception e){
+		 json = [result:'error']
+	 }
+	 render json as JSON
+ }
+ 
+ def billConfigGrid ={
+	 def json=[:]
+	 def company = Company.get(params.companyId)
+	 if(params.refreshHeader){
+		 json["gridHeader"] =salaryService.getBillConfigListLayout()
+	 }
+	 //增加查询条件
+	 def searchArgs =[:]
+	if(params.chinaName && !"".equals(params.chinaName)) searchArgs["chinaName"] = params.chinaName
+	 if(params.refreshData){
+		 def args =[:]
+		 int perPageNum = Util.str2int(params.perPageNum)
+		 int nowPage =  Util.str2int(params.showPageNum)
+		 
+		 args["offset"] = (nowPage-1) * perPageNum
+		 args["max"] = perPageNum
+		 args["company"] = company
+		 json["gridData"] = salaryService.getBillConfigListDataStore(args,searchArgs)
+		 
+	 }
+	 if(params.refreshPageControl){
+		 def total = salaryService.getBillConfigCount(company,searchArgs)
+		 json["pageControl"] = ["total":total.toString()]
+	 }
+	 render json as JSON
+	}
+ 
+ def billConfigSearchView ={
+	 def model =[:]
+	 render(view:'/salary/billConfigSearch',model:model)
+ }
+ 
+ /**
+  * 增加
+  */
+ def billConfigAdd ={
+	 redirect(action:"billConfigShow",params:params)
+ }
+ 
+ def billConfigShow ={
+	 def model =[:]
+	 
+	 def company = Company.get(params.companyId)
+	 def billConfig = new SalaryBillConfig()
+	 if(params.id){
+		 billConfig = SalaryBillConfig.get(params.id)
+	 }
+	 
+	 def currentUser = springSecurityService.getCurrentUser()
+	 
+	 //级别
+	 def quaList = Quarters.findAllByCompany(currentUser.company)
+	 
+	 //档位
+	 def gearList = Gear.findAllByCompany(currentUser.company)
+	 
+	 model["company"] = company
+	 model["billConfig"] = billConfig
+	 
+	 model["quaList"] = quaList
+	 model["gearList"] = gearList
+	 
+	 render(view:'/salary/billConfig',model:model)
+ }
+ 
+ def billConfigSave ={
+	 def json=[:]
+	 def billConfig = new SalaryBillConfig()
+	 if(params.id && !"".equals(params.id)){
+		 billConfig = SalaryBillConfig.get(params.id)
+	 }else{
+		 if(params.companyId){
+			 billConfig.company = Company.get(params.companyId)
+		 }
+	 }
+	 billConfig.properties = params
+	 billConfig.clearErrors()
+	 
+	 billConfig.gjjBl = Util.str2int(params.gjjBl)
+	 billConfig.sybxBl = Util.str2int(params.sybxBl)
+	 billConfig.ylbxBl = Util.str2int(params.ylbxBl)
+	 billConfig.syubxBl = Util.str2int(params.syubxBl)
+	 billConfig.ylaobxBl = Util.str2int(params.ylaobxBl)
+	 
+	 billConfig.personInfor = PersonInfor.get(params.personInforId)
+	 
+	 billConfig.quarters = Quarters.get(params.quartersId)
+	 
+	 billConfig.gear = Gear.get(params.gearId)
+	 
+	 if(billConfig.save(flush:true)){
+		 json["result"] = "true"
+	 }else{
+		 billConfig.errors.each{
+			 println it
+		 }
+		 json["result"] = "false"
+	 }
+	 render json as JSON
+ }
+ 
+ //删除
+ def billConfigDelete={
+	 def ids = params.id.split(",")
+	 def json
+	 try{
+		 ids.each{
+			 def billConfig =SalaryBillConfig.get(it)
+			 if(billConfig){
+				 billConfig.delete(flush: true)
 			 }
 		 }
 		 json = [result:'true']

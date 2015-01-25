@@ -56,7 +56,7 @@ class RiskGold {
 		return personInfor?.chinaName
 	}
 	
-	static belongsTo = [company:Company,personInfor:PersonInfor]
+	static belongsTo = [company:Company]
 	
     static constraints = {
     }
