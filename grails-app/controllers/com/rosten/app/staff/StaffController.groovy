@@ -667,6 +667,7 @@ class StaffController {
 			model["departChangList"] = DepartChange.findAllByPersonInfor(personInfor)
 			model["officialApplyList"] = OfficialApply.findAllByPersonInfor(personInfor)
 			model["trainMessagegList"] = TrainMessage.findAllByPersonInfor(personInfor)
+			model["engageList"] = Engage.findAllByEngageName(personInfor.chinaName)
 			
 			render(view:'/staff/otherInfor',model:model)
 	}

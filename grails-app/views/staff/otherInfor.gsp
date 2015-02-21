@@ -63,17 +63,46 @@
 			<table width="98%" class="tab_css ">
 				<THEAD> 
 					<tr class="bgClass">
-							<th>聘任开始时间</th>
-							<th>聘任结束时间</th>
-	   						<th>申请理由</th>
-	   					</tr>
-	   					</THEAD>
-	   					<tbody>
+						<th>聘任开始时间</th>
+						<th>聘任结束时间</th>
+ 						<th>申请理由</th>
+ 					</tr>
+				</THEAD>
+				<tbody>
 					<g:each in="${officialApplyList}">
 						<tr>
 							<td>${it.getFormattedStartDate()}</td>
 							<td>${it.getFormattedEndDate()}</td>
 	   						<td>${it.applyReason}</td>
+	   					</tr>
+					</g:each>
+				</tbody>
+			</table>
+			
+			
+		</div>
+		</g:if>
+		
+		<g:if test="${engageList && engageList.size()>0}">
+		<div class="personSearch simpleNavigation">
+		<table width="98%" class="tab_css ">
+				<THEAD> 
+					<tr class="bgClass">
+						<th>聘任部门</th>
+						<th>聘任岗位</th>
+						<th>聘任开始时间</th>
+						<th>聘任结束时间</th>
+ 						<th>聘任理由</th>
+ 					</tr>
+				</THEAD>
+				<tbody>
+					<g:each in="${engageList}">
+						<tr>
+							<td>${it.engageDepart}</td>
+							<td>${it.engageGw}</td>
+							<td>${it.getFormattedEngageDate()}</td>
+							<td>${it.getFormatteEndDate()}</td>
+	   						<td>${it.reason}</td>
 	   					</tr>
 					</g:each>
 				</tbody>
