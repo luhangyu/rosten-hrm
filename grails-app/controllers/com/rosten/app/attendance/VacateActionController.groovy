@@ -28,11 +28,27 @@ class VacateActionController {
 		def user = User.get(params.userid)
 		if(params.id){
 			def vacate = Vacate.get(params.id)
-			if(user.equals(vacate.currentUser)){
+			
+			//判断是否出现保存功能
+			def isChange = false
+			if("admin".equals(user.getUserType())){
+				//管理员
+				isChange = true
+			}else if(user.getAllRolesValue().contains("请假管理员")){
+				//拥有对应角色
+				isChange = true
+			}else if(user.equals(vacate.currentUser) && vacate.status.equals("新增")){
+				isChange = true
+			}
+			
+			if(isChange){
+				actionList << createAction("保存",webPath + imgPath + "Save.gif",strname + "_save")
+			}
+			
+			if(user.equals(vacate.currentUser) && !vacate.status.equals("已结束")){
 				//当前处理人
 				switch (true){
 					case vacate.status.contains("新增"):
-						actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_save")
 						actionList << createAction("提交",webPath +imgPath + "submit.png",strname + "_submit")
 						break;
 					case vacate.status.contains("审核") || vacate.status.contains("审批"):
@@ -82,6 +98,21 @@ class VacateActionController {
 		def actionList =[]
 		def strname = "vacate"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		
+		def user = User.get(params.userId)
+		def isChange = false
+		if("admin".equals(user.getUserType())){
+			//管理员
+			isChange = true
+		}else if(user.getAllRolesValue().contains("请假管理员")){
+			//拥有对应角色
+			isChange = true
+		}
+		
+		if(isChange){
+			actionList << createAction("新增",imgPath + "add.png",strname + "_add_admin")
+		}
+		
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON

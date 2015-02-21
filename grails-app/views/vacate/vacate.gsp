@@ -48,6 +48,11 @@
 							content.relationFlow = "${relationFlow}";
 						</g:if>
 
+						//是否管理员直接生成，不需要走流程
+						<g:if test='${type}'>
+							content.type = "${type}";
+						</g:if>
+
 						//增加对多次单击的次数----2014-9-4
 						var buttonWidget = object.target;
 						rosten.toggleAction(buttonWidget,true);
@@ -253,7 +258,7 @@
 <body>
 <div class="rosten_action">
 	<div data-dojo-type="rosten/widget/ActionBar" data-dojo-id="rosten_actionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'vacateAction',action:'vacateForm',id:vacate?.id,params:[userid:user?.id])}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'vacateAction',action:'vacateForm',id:vacate?.id,params:[userid:user?.id,type:type])}"'>
 	</div>
 </div>
 
@@ -373,7 +378,7 @@
 			
 		</form>
 	</div>
-	<g:if test="${vacate?.id}">
+	<g:if test="${vacate?.id && vacate?.processDefinitionId}">
 	
 		<div data-dojo-type="dijit/layout/ContentPane" id="flowComment" title="流转意见" data-dojo-props='refreshOnShow:true,
 			href:"${createLink(controller:'share',action:'getCommentLog',id:vacate?.id)}"

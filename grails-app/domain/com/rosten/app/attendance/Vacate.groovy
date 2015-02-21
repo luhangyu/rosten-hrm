@@ -41,6 +41,19 @@ class Vacate {
 		}
 	}
 	
+	//请假数量
+	double numbers = 1
+	@GridColumn(name="申请天数",width="60px",colIdx=3)
+	def getFormattedNumbers(){
+		return Util.DoubleToFormat(numbers,1)
+	}
+	
+	String unitType = "天"//小时或者天
+	
+	//请假类型
+	@GridColumn(name="类型",colIdx=4)
+	String vacateType = "事假"
+	
 	//开始时间
 	Date startDate = new Date()
 	
@@ -69,24 +82,8 @@ class Vacate {
 		}
 	}
 	
-	//请假数量
-	double numbers = 1
-	@GridColumn(name="申请天数",width="60px",colIdx=3)
-	def getFormattedNumbers(){
-		return Util.DoubleToFormat(numbers,1)
-	}
-	
-	String unitType = "天"//小时或者天
-	
-	//请假类型
-	@GridColumn(name="类型",colIdx=4)
-	String vacateType = "事假"
-	
 	//请假内容
 	String remark
-	
-	@GridColumn(name="状态",colIdx=8)
-	String status = "新增"
 	
 	//创建时间
 	Date createDate = new Date()
@@ -156,6 +153,9 @@ class Vacate {
 	
 	//任务id
 	String taskId
+	
+	@GridColumn(name="状态",colIdx=8)
+	String status = "新增"
 	
 	//-------------------------流程引擎----------
 	

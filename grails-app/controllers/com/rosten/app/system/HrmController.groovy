@@ -264,25 +264,32 @@ class HrmController {
 			model.modelCode = "workAttendance"
 			model.serialNo = 12
 			
+//			resource = new Resource()
+//			resource.resourceName = "配置文档"
+//			resource.url = "askForConfig"
+//			resource.imgUrl = "images/rosten/navigation/config.png"
+//			resource.serialNo = 1
+//			model.addToResources(resource)
+			
 			resource = new Resource()
 			resource.resourceName = "员工请假"
 			resource.url = "staffAskFor"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			resource.serialNo = 1
+			resource.serialNo = 2
 			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "所有请假"
 			resource.url = "allAskFor"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			resource.serialNo = 2
+			resource.serialNo = 3
 			model.addToResources(resource)
 			
 			resource = new Resource()
 			resource.resourceName = "请假汇总"
 			resource.url = "askForStatic"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			resource.serialNo = 3
+			resource.serialNo = 4
 			model.addToResources(resource)
 			
 			model.save()

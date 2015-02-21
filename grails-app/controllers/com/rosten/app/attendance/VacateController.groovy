@@ -338,6 +338,10 @@ class VacateController {
 		model["company"] = company
 		model["vacate"] = vacate
 		
+		if(params.type){
+			model["type"] = params.type
+		}
+		
 		FieldAcl fa = new FieldAcl()
 		if(!"新增".equals(vacate.status)){
 			//普通用户
@@ -388,7 +392,7 @@ class VacateController {
 		}
 		
 		//流程引擎相关信息处理-------------------------------------------------------------------------------------
-		if(!vacate.processInstanceId){
+		if(!vacate.processInstanceId && !params.type){
 			//启动流程实例
 			def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
 			Map<String, Object> variables = new HashMap<String, Object>();
@@ -402,6 +406,8 @@ class VacateController {
 			
 			//任务指派给当前拟稿人
 			//taskService.claim(task.getId(), user.username)
+		}else{
+			vacate.status = "已结束"
 		}
 		//-------------------------------------------------------------------------------------------------
 		
