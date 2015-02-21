@@ -82,7 +82,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	};
 	
 	import_bargain = function(){
-		 var companyId = rosten.kernel.getUserInforByKey("companyid");
+		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		rosten.kernel.createRostenShowDialog(rosten.webPath + "/staff/importBargain/"+ companyId, {
            onLoadFunction : function() {
 
@@ -114,6 +114,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             break;
 		}
 		
-	}
+	};
 	connect.connect("show_naviEntity", show_bargainNaviEntity);
 });

@@ -154,19 +154,33 @@
 									data-dojo-props='onClick:function(){selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}")}'>选择</button>
 				           </td>
 						</tr>
-						
 						<tr>
-						    <td><div align="right"><span style="color:red">*&nbsp;</span>聘任时间：</div></td>
+						    <td><div align="right"><span style="color:red">*&nbsp;</span>聘任岗位：</div></td>
 						    <td>
-				                <input id="startDate" data-dojo-type="dijit/form/DateTextBox" 
-	                 				data-dojo-props='name:"engageDate",trim:true,required:true,
-	                 					value:"${engage?.getFormattedEngageDate()}"
+				                <input id="engageGw" data-dojo-type="dijit/form/ValidationTextBox" 
+	                 				data-dojo-props='name:"engageGw",trim:true,required:true,
+	                 					value:"${engage?.engageGw}"
 	                 				'/>
 						    </td>
 						    <td><div align="right">是否已发布：</div></td>
 						    <td>
 						    	<input data-dojo-type="dijit/form/ValidationTextBox" 
 				                 	data-dojo-props='disabled:true,value:"${engage?.getIsPublishFormat() }"
+				                '/>
+						    </td>    
+						</tr>
+						<tr>
+						    <td><div align="right"><span style="color:red">*&nbsp;</span>聘任时间：</div></td>
+						    <td>
+				                <input id="engageDate" data-dojo-type="dijit/form/DateTextBox" 
+	                 				data-dojo-props='name:"engageDate",trim:true,required:true,
+	                 					value:"${engage?.getFormattedEngageDate()}"
+	                 				'/>
+						    </td>
+						    <td><div align="right">终聘时间：</div></td>
+						    <td>
+						    	<input id="endDate" data-dojo-type="dijit/form/DateTextBox" 
+				                 	data-dojo-props='name:"endDate",trim:true,value:"${engage?.getFormatteEndDate() }"
 				                '/>
 						    </td>    
 						</tr>

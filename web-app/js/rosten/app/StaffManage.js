@@ -43,6 +43,15 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 					rosten.deleteCallback);
 		};
 	};
+	//2015-2-21-------增加批量导入功能
+	import_engage = function(){
+	    var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.kernel.createRostenShowDialog(rosten.webPath + "/staff/importEngage/"+ companyId, {
+           onLoadFunction : function() {
+
+           }
+       });
+	};
 	//-------------------------------------------------------------------------------------------------
 	
 	//员工转正申请----------------------------------------------------------------
@@ -297,7 +306,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			userId:userId.attr("value"),
 			userDepartId:userDepartId.attr("value"),
 			newDepartId:newDepartId.attr("value")	
-		}
+		};
 		rosten.readSync(rosten.webPath + "/staff/staffChangeDepart", content, function(data) {
 			if (data.result == "true" || data.result == true) {
 	            rosten.alert("变更成功!").queryDlgClose = function(){
@@ -308,7 +317,7 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 	        }
     	
 		});
-	}
+	};
 	
 	/*
 	 * 此功能默认必须存在
@@ -393,6 +402,6 @@ define(["dojo/_base/connect", "dijit/registry","rosten/util/general", "rosten/ke
 			rosten.kernel.addRightContent(naviJson);
 			break;
 		}
-	}
+	};
 	connect.connect("show_naviEntity", show_staffNaviEntity);
 });

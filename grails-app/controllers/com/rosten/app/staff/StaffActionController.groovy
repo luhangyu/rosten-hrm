@@ -33,7 +33,9 @@ class StaffActionController {
 		
 		//增加普通员工不能删除控制
 		def user = User.get(params.userId)
-		if(user.getAllRolesValue().contains("系统管理员") || "admin".equals(user.getUserTypeName())){
+		if(user.getAllRolesValue().contains("系统管理员") || "admin".equals(user.getUserType())){
+			//2015-2-21-------增加批量导入功能
+			actionList << createAction("批量导入",imgPath + "back.png","import_" + strname)
 			actionList << createAction("删除",imgPath + "delete.png","delete_" + strname)
 		}
 		
@@ -327,6 +329,9 @@ class StaffActionController {
 		render actionList as JSON
 	}
 	private def createCommonAction={actionList,strname,args->
+		/*
+		 * 2015-2-21-----目前此功能只在合同管理模块中使用
+		 */
 		if(!(actionList && actionList instanceof List)){
 			actionList =[]
 		}

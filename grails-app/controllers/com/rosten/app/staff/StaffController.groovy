@@ -21,6 +21,8 @@ import com.rosten.app.bbs.Bbs
 import com.rosten.app.bbs.BbsConfig
 
 import java.io.OutputStream
+import jxl.Sheet
+import jxl.Workbook;
 
 import com.rosten.app.export.ExcelExport
 import com.rosten.app.export.ExcelImport
@@ -139,6 +141,7 @@ class StaffController {
 		entity.clearErrors()
 		
 		entity.engageDate = Util.convertToTimestamp(params.engageDate)
+		entity.endDate = Util.convertToTimestamp(params.endDate)
 		
 		if(entity.save(flush:true)){
 			model["id"] = entity.id
@@ -265,6 +268,71 @@ class StaffController {
 			model["result"] = "false"
 		}
 		render model as JSON
+	}
+	//2015-2-21-------增加批量导入聘任功能--------------------------
+	def importEngage = {
+		def model =[:]
+		model["company"] = Company.get(params.id)
+		render(view:'/staff/importEngage',model:model)
+	}
+	def importEngageSubmit ={
+		def ostr
+		try{
+			SystemUtil sysUtil = new SystemUtil()
+			def currentUser = (User) springSecurityService.getCurrentUser()
+			def f = request.getFile("uploadedfile")
+			if (!f.empty) {
+				def uploadPath
+				def companyPath = currentUser.company?.shortName
+				if(companyPath == null){
+					uploadPath = sysUtil.getUploadPath("template")+"/"
+				}else{
+					uploadPath = sysUtil.getUploadPath(currentUser.company.shortName + "/template") + "/"
+				}
+				
+				String name = f.getOriginalFilename()//获得文件原始的名称
+				def realName = sysUtil.getRandName(name)
+				def filePath = new File(uploadPath,realName)
+				f.transferTo(filePath)
+				
+				//解析上传的excel文件
+				Sheet sourceSheet = Workbook.getWorkbook(filePath).getSheet(0);
+				int sourceRowCount = sourceSheet.getRows();//获得源excel的行数
+				
+				//从第三行开始计算
+				for(int i=2;i<sourceRowCount;i++){
+					String xm =sourceSheet.getCell(0, i).getContents();	//姓名
+					String sfz =sourceSheet.getCell(1, i).getContents();//身份证
+					String bm =sourceSheet.getCell(2, i).getContents();	//部门
+					String prgw =sourceSheet.getCell(3, i).getContents();	//聘任岗位
+					String prkssj =sourceSheet.getCell(4, i).getContents();	//聘任开始时间
+					String prjssj =sourceSheet.getCell(5, i).getContents();	//聘任结束时间
+					String prly =sourceSheet.getCell(6, i).getContents();	//聘任理由
+					
+					def personInfor = PersonInfor.findByChinaName(xm)
+					if(personInfor){
+						def engage = new Engage()
+						engage.engageName = xm
+						engage.engageDepart = bm
+						engage.reason = prly
+						engage.isPublish = true
+						engage.engageGw = prgw
+						engage.engageDate = Util.convertToTimestamp(prkssj)
+						if(prjssj && !"".equals(prjssj)){
+							engage.endDate = Util.convertToTimestamp(prjssj)
+						}
+						engage.company = currentUser.company
+						engage.save()
+					}
+				}
+			}
+			ostr ="<script>var _parent = window.parent;_parent.rosten.alert('导入成功').queryDlgClose=function(){_parent.rosten.kernel.hideRostenShowDialog();_parent.rosten.kernel.refreshGrid();}</script>"
+		}catch(Exception e){
+		
+			println e
+			ostr = "<script>window.parent.rosten.alert('导入失败');</script>"
+		}
+		render ostr
 	}
 	//---------------------------------------------------------------------------
 	

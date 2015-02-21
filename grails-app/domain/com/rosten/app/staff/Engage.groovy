@@ -18,10 +18,14 @@ class Engage {
 	@GridColumn(name="聘任部门",colIdx=2,width="80px")
 	String engageDepart
 	
+	//聘任岗位
+	@GridColumn(name="聘任岗位",colIdx=3,width="80px")
+	String engageGw
+	
 	//聘任时间
 	Date engageDate = new Date()
 	
-	@GridColumn(name="聘任时间",width="106px",colIdx=3)
+	@GridColumn(name="聘任时间",width="106px",colIdx=4)
 	def getFormattedEngageDate(){
 		if(engageDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
@@ -31,13 +35,26 @@ class Engage {
 		}
 	}
 	
+	//终聘时间
+	Date endDate
+	
+	@GridColumn(name="终聘日期",width="106px",colIdx=5)
+	def getFormatteEndDate(){
+		if(endDate!=null){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
+			return sd.format(endDate)
+		}else{
+			return " "
+		}
+	}
+	
 	//聘任理由
-	@GridColumn(name="聘任理由",colIdx=4)
+	@GridColumn(name="聘任理由",colIdx=6)
 	String reason
 	
 	//是否已发布
 	boolean isPublish = false
-	@GridColumn(name="是否已发布",width="60px",colIdx=5)
+	@GridColumn(name="是否已发布",width="60px",colIdx=7)
 	def getIsPublishFormat(){
 		return isPublish?"是":"否 "
 	}
@@ -45,7 +62,6 @@ class Engage {
 	//创建时间
 	Date createDate = new Date()
 	
-	@GridColumn(name="创建时间",width="106px",colIdx=6)
 	def getFormattedCreatedDate(){
 		if(createDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -59,6 +75,7 @@ class Engage {
 	
     static constraints = {
 		reason nullable:true,blank:true
+		endDate nullable:true,blank:true
     }
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
