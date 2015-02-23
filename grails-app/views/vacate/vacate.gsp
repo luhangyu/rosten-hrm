@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
+    <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
     <title>请假申请</title>
     <style type="text/css">
     	.rosten .dsj_form table tr{
@@ -33,7 +34,7 @@
 		     	"rosten/kernel/behavior"],
 			function(parser,kernel,registry,dom,lang){
 				kernel.addOnLoad(function(){
-					rosten.init({webpath:"${request.getContextPath()}"});
+					rosten.init({webpath:"${request.getContextPath()}",dojogridcss : true});
 					rosten.cssinit();
 				});
 				vacate_save = function(object){
@@ -49,8 +50,8 @@
 						</g:if>
 
 						//是否管理员直接生成，不需要走流程
-						<g:if test='${type}'>
-							content.type = "${type}";
+						<g:if test='${notNeedFlow}'>
+							content.notNeedFlow = "${notNeedFlow}";
 						</g:if>
 
 						//增加对多次单击的次数----2014-9-4
@@ -147,7 +148,8 @@
 						lang.mixin(content,conditionObj);
 					}
 					
-					rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',params:[userId:user?.id,taskId:vacate?.taskId,drafterUsername:vacate?.user?.username])}",content,function(data){
+					rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',
+						params:[userId:user?.id,taskId:vacate?.taskId,drafterUsername:user?.username])}",content,function(data){
 						
 						if(data.dealFlow==false){
 							//流程无下一节点
@@ -252,13 +254,77 @@
 				page_quit = function(){
 					rosten.pagequit();
 				};
+				addPersonInfor = function(){
+			        registry.byId("chooseDialog").show();
+			    };
+			    addPersonInforNext = function(){
+			        var content = {};
+			        
+			        var username = registry.byId("s_username");
+			        if(username.get("value")!=""){
+			            content.username = username.get("value");
+			        }
+			        
+			        var chinaName = registry.byId("s_chinaName");
+			        if(chinaName.get("value")!=""){
+			            content.chinaName = chinaName.get("value");
+			        }
+			        
+			        var departName = registry.byId("s_departName");
+			        if(departName.get("value")!=""){
+			            content.departName = departName.get("value");
+			        }
+			        
+			        var idCard = registry.byId("s_idCard");
+			        if(idCard.get("value")!=""){
+			            content.idCard = idCard.get("value");
+			        }
+			        var sex = registry.byId("s_sex");
+			        if(sex.get("value")!=""){
+			            content.sex = sex.get("value");
+			        }
+			        var politicsStatus = registry.byId("s_politicsStatus");
+			        if(politicsStatus.get("value")!=""){
+			            content.politicsStatus = politicsStatus.get("value");
+			        }
+			        var nativeAddress = registry.byId("s_nativeAddress");
+			        if(nativeAddress.get("value")!=""){
+			            content.nativeAddress = nativeAddress.get("value");
+			        }
+			        var city = registry.byId("s_city");
+			        if(city.get("value")!=""){
+			            content.city = city.get("value");
+			        }
+			        var status = registry.byId("s_status");
+			        if(status.get("value")!=""){
+			            content.status = status.get("value");
+			        }
+			        
+			        chooseListGrid.refresh(null,content);
+			    };
+			    addPersonInforDone = function(){
+			        var chinaName = rosten.getGridItemValue1(chooseListGrid,"chinaName");
+			        var departName = rosten.getGridItemValue1(chooseListGrid,"departName");
+
+			        registry.byId("applyName").set("value",chinaName);
+			        registry.byId("applyDepart").set("value",departName);
+			        
+			        registry.byId("chooseDialog").hide();
+			    };
+			    personInfor_formatTopic_normal = function(value,rowIndex){
+					return "<a href=\"javascript:personInfor_normal_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+				};
+				personInfor_normal_onMessageOpen = function(rowIndex){
+					
+				};
+				
 		});
     </script>
 </head>
 <body>
 <div class="rosten_action">
 	<div data-dojo-type="rosten/widget/ActionBar" data-dojo-id="rosten_actionBar" 
-		data-dojo-props='actionBarSrc:"${createLink(controller:'vacateAction',action:'vacateForm',id:vacate?.id,params:[userid:user?.id,type:type])}"'>
+		data-dojo-props='actionBarSrc:"${createLink(controller:'vacateAction',action:'vacateForm',id:vacate?.id,params:[userid:user?.id,notNeedFlow:notNeedFlow])}"'>
 	</div>
 </div>
 
@@ -275,16 +341,24 @@
 					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
 					    <td >
-					    	<input id="userName" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='trim:true,readOnly:true,
-									value:"${vacate?.getFormattedUser()}"
+					    	<input id="applyName" data-dojo-type="dijit/form/ValidationTextBox" 
+			                 	data-dojo-props='name:"applyName",trim:true,readOnly:true,
+									value:"${vacate?.applyName}"
 			                '/>
+			                <g:if test='${notNeedFlow}'>
+			                <button data-dojo-type='dijit/form/Button' 
+								data-dojo-props="label:'选择',iconClass:'docAddIcon'">
+								<script type="dojo/method" data-dojo-event="onClick">
+										addPersonInfor();
+									</script>
+							</button>
+							</g:if>
 					    </td>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
 					    <td >
-					    	<input id="userDepa" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='trim:true,readOnly:true,
-									value:"${vacate?.getFormattedDepartName()}"
+					    	<input id="applyDepart" data-dojo-type="dijit/form/ValidationTextBox" 
+			                 	data-dojo-props='name:"applyDepart",trim:true,readOnly:true,
+									value:"${vacate?.applyDepart}"
 			                '/>
 					    </td>
 					     
@@ -389,5 +463,26 @@
 		'>	
 		</div>
 	</g:if>
+</div>
+<div id="chooseDialog" data-dojo-type="dijit/Dialog" class="displayLater" data-dojo-props="title:'人员选择',style:'width:800px;height:450px'">
+	<div id="chooseWizard" data-dojo-type="dojox/widget/Wizard" 
+		data-dojo-props='previousButtonLabel:"上一步",nextButtonLabel:"下一步"' style="width:780px; height:410px;padding:0px">
+		
+		<div data-dojo-type="dojox/widget/WizardPane" 
+			data-dojo-props='passFunction:addPersonInforNext,style:{padding:"0px"},
+				href:"${createLink(controller:'staff',action:'getChooseListSearch')}"
+		'></div>
+		<div data-dojo-type="dojox/widget/WizardPane" data-dojo-props='canGoBack:"true",doneFunction:addPersonInforDone,style:{padding:"0px"}' >
+			<div id="chooseList" data-dojo-id="chooseList" data-dojo-type="dijit/layout/ContentPane" 
+				data-dojo-props='style:{overflow:"auto",padding:"1px"}'>
+				
+				<div data-dojo-type="rosten/widget/RostenGrid" id="chooseListGrid" data-dojo-id="chooseListGrid"
+					data-dojo-props='imgSrc:"${resource(dir:'images/rosten/share',file:'wait.gif')}",url:"${createLink(controller:'staff',action:'staffGrid',params:[companyId:company?.id])}"'></div>
+			</div>
+		</div>
+		<script type="dojo/method" event="cancelFunction">
+				dijit.byId("chooseDialog").hide();
+			</script>
+	</div>
 </div>
 </body>

@@ -33,6 +33,13 @@ class VacateController {
 	def dataSource
 	def shareService
 	
+	def searchView ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
+		render(view:'/vacate/search',model:model)
+	}
 	def vacateFlowBack ={
 		def json=[:]
 		def vacate = Vacate.get(params.id)
@@ -184,9 +191,9 @@ class VacateController {
 					args["type"] = "【请假】"
 					
 					if(nextStatus.equals("已签发")){
-						args["content"] = "领导已审批，请您查看名称为  【" + vacate.getFormattedUser() +  "】 的请假申请"
+						args["content"] = "领导已审批，请您查看名称为  【" + vacate.applyName +  "】 的请假申请"
 					}else{
-						args["content"] = "请您审核名称为  【" + vacate.getFormattedUser() +  "】 的请假申请"
+						args["content"] = "请您审核名称为  【" + vacate.applyName +  "】 的请假申请"
 					}
 					args["contentStatus"] = nextStatus
 					args["contentId"] = vacate.id
@@ -270,6 +277,13 @@ class VacateController {
 		if(params.refreshHeader){
 			json["gridHeader"] = vacateService.getVacateListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.departName && !"".equals(params.departName)) searchArgs["applyDepart"] = params.departName
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["applyName"] = params.chinaName
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -331,15 +345,16 @@ class VacateController {
 		def vacate = new Vacate()
 		if(params.id){
 			vacate = Vacate.get(params.id)
-		}else{
-			vacate.user = user
 		}
 		model["user"]=user
 		model["company"] = company
 		model["vacate"] = vacate
 		
-		if(params.type){
-			model["type"] = params.type
+		if(params.notNeedFlow){
+			model["notNeedFlow"] = params.notNeedFlow
+		}else{
+			vacate.applyName=user.getFormattedName()
+			vacate.applyDepart = user.getDepartName()
 		}
 		
 		FieldAcl fa = new FieldAcl()
@@ -372,7 +387,6 @@ class VacateController {
 			if(params.companyId){
 				vacate.company = Company.get(params.companyId)
 			}
-			vacate.user = currentUser
 			vacate.currentUser = currentUser
 			vacate.currentDepart = currentUser.getDepartName()
 			vacate.currentDealDate = new Date()
@@ -392,7 +406,7 @@ class VacateController {
 		}
 		
 		//流程引擎相关信息处理-------------------------------------------------------------------------------------
-		if(!vacate.processInstanceId && !params.type){
+		if(!vacate.processInstanceId && !params.notNeedFlow){
 			//启动流程实例
 			def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
 			Map<String, Object> variables = new HashMap<String, Object>();
@@ -416,7 +430,7 @@ class VacateController {
 			json["companyId"]=vacate.company.id
 			json["result"] = "true"
 			
-			if("new".equals(_status)){
+			if("new".equals(_status) && !params.notNeedFlow ){
 				//添加日志
 				shareService.addFlowLog(vacate.id,params.flowCode,currentUser,"新建请假申请")
 			}

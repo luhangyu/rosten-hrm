@@ -16,6 +16,7 @@ import com.rosten.app.util.Util
 /**
  * 请假申请
  * @author xucy
+ * 备注：当前domain中applyName不允许重名
  *
  */
 class Vacate {
@@ -23,23 +24,11 @@ class Vacate {
 	String id
 	
 	@GridColumn(name="申请人",formatter="vacate_formatTopic",colIdx=1)
-	def getFormattedUser(){
-		if(user!=null){
-			return user.getFormattedName()
-		}else{
-			return ""
-		}
-	}
+	String applyName
 	
 	//部门名称
 	@GridColumn(name="申请部门",colIdx=2)
-	def getFormattedDepartName(){
-		if(user!=null){
-			return user.getDepartName()
-		}else{
-			return ""
-		}
-	}
+	String applyDepart
 	
 	//请假数量
 	double numbers = 1
@@ -177,7 +166,7 @@ class Vacate {
 		//--------------------------------------------------------------------
     }
 	
-	static belongsTo = [user:User,company:Company]
+	static belongsTo = [company:Company]
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']

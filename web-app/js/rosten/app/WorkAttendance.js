@@ -3,8 +3,38 @@
  */
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/app/ChartManage","rosten/widget/PickTreeDialog","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel,ChartManage,PickTreeDialog) {
-	
-	
+		    
+	vacate_search = function(){
+        var content = {};
+        
+        var departName = registry.byId("s_departName");
+        if(departName.get("value")!=""){
+            content.departName = departName.get("value");
+        }
+        
+        var chinaName = registry.byId("s_chinaName");
+        if(chinaName.get("value")!=""){
+            content.chinaName = chinaName.get("value");
+        }
+        
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+            break;
+        }
+    };
+    
+    departChange_resetSearch = function(){
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            registry.byId("s_departName").set("value","");
+            registry.byId("s_chinaName").set("value","");
+            break;
+        }   
+        
+        rosten.kernel.refreshGrid();
+    };
+    
 	//考勤管理选择部门统计
 	selecWorktDepart = function(url,type) {
         var id = "work_departDialog";
@@ -30,7 +60,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
     vacate_add_admin = function(){
     	var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=vacate&type=admin");
+        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=vacate&notNeedFlow=true");
     };
 	vacate_add = function(){
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -85,6 +115,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             var naviJson = {
                 identifier : oString,
                 actionBarSrc : rosten.webPath + "/vacateAction/allAskForView?userId=" + userid,
+                searchSrc:rosten.webPath + "/vacate/searchView",
                 gridSrc : rosten.webPath + "/vacate/allAskForGrid?companyId=" + companyId+"&userId=" + userid
             };
             rosten.kernel.addRightContent(naviJson);
@@ -93,8 +124,6 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             break;
             
 		}
-       
-		
-	}
+	};
 	connect.connect("show_naviEntity", show_attEndanceNaviEntity);
 });

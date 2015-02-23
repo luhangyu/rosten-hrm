@@ -61,7 +61,7 @@ define(["dojo/dom",
 	};
 	personInfor_normal_onMessageOpen = function(rowIndex){
 		
-	}
+	};
 	
 	degree_formatTopic = function(value,rowIndex){
 		return "<a href=\"javascript:degree_onMessageOpen(" + rowIndex + ");\">" + value+ "</a>";
@@ -77,12 +77,12 @@ define(["dojo/dom",
             	var startDate = rosten.getGridItemValue(degreeGrid,rowIndex,"getFormatteStartDate");
             	var endDate = rosten.getGridItemValue(degreeGrid,rowIndex,"getFormatteEndDate");
             	
-            	registry.byId("degree_id").set("value",id)
-            	registry.byId("degree_name").set("value",name)
-            	registry.byId("degree_major").set("value",major)
-            	registry.byId("degree_degree").set("value",degree)
-            	registry.byId("degree_startDate").set("value",startDate)
-            	registry.byId("degree_endDate").set("value",endDate)
+            	registry.byId("degree_id").set("value",id);
+            	registry.byId("degree_name").set("value",name);
+            	registry.byId("degree_major").set("value",major);
+            	registry.byId("degree_degree").set("value",degree);
+            	registry.byId("degree_startDate").set("value",startDate);
+            	registry.byId("degree_endDate").set("value",endDate);
 	        }
         });
 	};
@@ -155,14 +155,14 @@ define(["dojo/dom",
             	var proveName = rosten.getGridItemValue(workResumeGrid,rowIndex,"proveName");
             	var remark = rosten.getGridItemValue(workResumeGrid,rowIndex,"remark");
             	
-            	registry.byId("workResume_id").set("value",id)
-            	registry.byId("workResume_workCompany").set("value",workCompany)
-            	registry.byId("workResume_workContent").set("value",workContent)
-            	registry.byId("workResume_startDate").set("value",getFormatteStartDate)
-            	registry.byId("workResume_endDate").set("value",getFormatteEndDate)
-            	registry.byId("workResume_duty").set("value",duty)
-            	registry.byId("workResume_proveName").set("value",proveName)
-            	registry.byId("workResume_remark").set("value",remark)
+            	registry.byId("workResume_id").set("value",id);
+            	registry.byId("workResume_workCompany").set("value",workCompany);
+            	registry.byId("workResume_workContent").set("value",workContent);
+            	registry.byId("workResume_startDate").set("value",getFormatteStartDate);
+            	registry.byId("workResume_endDate").set("value",getFormatteEndDate);
+            	registry.byId("workResume_duty").set("value",duty);
+            	registry.byId("workResume_proveName").set("value",proveName);
+            	registry.byId("workResume_remark").set("value",remark);
 	        }
         });
 	};
@@ -238,13 +238,13 @@ define(["dojo/dom",
             	var duties = rosten.getGridItemValue(staffFamilyGrid,rowIndex,"duties");
             	var politicsStatus = rosten.getGridItemValue(staffFamilyGrid,rowIndex,"politicsStatus");
             	
-            	registry.byId("family_id").set("value",id)
-            	registry.byId("family_name").set("value",name)
-            	registry.byId("family_relation").set("value",relation)
-            	registry.byId("family_mobile").set("value",mobile)
-            	registry.byId("family_workUnit").set("value",workUnit)
-            	registry.byId("family_duties").set("value",duties)
-            	registry.byId("family_politicsStatus").set("value",politicsStatus)
+            	registry.byId("family_id").set("value",id);
+            	registry.byId("family_name").set("value",name);
+            	registry.byId("family_relation").set("value",relation);
+            	registry.byId("family_mobile").set("value",mobile);
+            	registry.byId("family_workUnit").set("value",workUnit);
+            	registry.byId("family_duties").set("value",duties);
+            	registry.byId("family_politicsStatus").set("value",politicsStatus);
 	        }
         });
 	};
