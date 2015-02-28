@@ -552,13 +552,13 @@ class VacateController {
 		
 		def items = []
 		Sql sql = new Sql(dataSource)
-		def seleSql = " select a.*,b.china_name,c.depart_id,c.depart_name from ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.user_id,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.user_id) a left join  ";
-		seleSql+=" ( select a.user_id,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.user_id) b on a.user_id = b.user_id left join "
-		seleSql+=" ( select a.user_id,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.user_id) c on a.user_id = c.user_id left join  "
-		seleSql+=" ( select a.user_id,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.user_id) d on a.user_id = d.user_id left join  "
-		seleSql+=" ( select a.user_id,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.user_id) e on a.user_id = e.user_id left join "
-		seleSql+=" ( select a.user_id,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.user_id) f on a.user_id = f.user_id ) a left join rosten_user b on a.user_id = b.id left join  "
-		seleSql+=" (select  a.* ,b.depart_name from rosten_user_depart  a  left join  rosten_depart  b on a.depart_id = b.id ) c on a.user_id = c.user_id "
+		def seleSql = " select a.*,b.china_name,c.depart_id,c.depart_name from ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.apply_name,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.apply_name) a left join  ";
+		seleSql+=" ( select a.apply_name,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.apply_name) b on a.apply_name = b.apply_name left join "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.apply_name) c on a.apply_name = c.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.apply_name) d on a.apply_name = d.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.apply_name) e on a.apply_name = e.apply_name left join "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.apply_name) f on a.apply_name = f.apply_name ) a left join rosten_staff_per b on a.apply_name = b.china_name left join  "
+		seleSql+=" (select  a.* ,b.depart_name,c.china_name from rosten_staff_per_rosten_depart  a  left join  rosten_depart  b on a.depart_id = b.id left join rosten_staff_per c on a.PERSON_INFOR_DEPARTS_ID = c.id) c on a.apply_name = c.china_name "
 		if(params.departId){
 			def depart = Depart.get(params.departId)
 			model["departName"] = depart.departName
@@ -581,14 +581,14 @@ class VacateController {
 			model["departName"] = user.company?.companyName
 		}
 		seleSql+=" union all ( "
-		seleSql+="  select '' user_id, sum(sjnums),sum(bjnums),sum(nxjnums),sum(hjnums),sum(sajnums),sum(qtjnums),'合计' china_name,'' depart_id, '' depart_name from  "
-		seleSql+=" ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.user_id,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.user_id) a  "
-		seleSql+=" left join   ( select a.user_id,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.user_id) b on a.user_id = b.user_id left join  "
-		seleSql+="  ( select a.user_id,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.user_id) c on a.user_id = c.user_id left join  "
-		seleSql+="  ( select a.user_id,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.user_id) d on a.user_id = d.user_id left join  "
-		seleSql+=" ( select a.user_id,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.user_id) e on a.user_id = e.user_id left join  "
-		seleSql+=" ( select a.user_id,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.user_id) f on a.user_id = f.user_id ) a "
-		seleSql+=" left join rosten_user b on a.user_id = b.id left join   (select  a.* ,b.depart_name from rosten_user_depart  a  left join  rosten_depart  b on a.depart_id = b.id ) c on a.user_id = c.user_id  "
+		seleSql+="  select '' apply_name, sum(sjnums),sum(bjnums),sum(nxjnums),sum(hjnums),sum(sajnums),sum(qtjnums),'合计' china_name,'' depart_id, '' depart_name from  "
+		seleSql+=" ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.apply_name,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.apply_name) a  "
+		seleSql+=" left join   ( select a.apply_name,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.apply_name) b on a.apply_name = b.apply_name left join  "
+		seleSql+="  ( select a.apply_name,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.apply_name) c on a.apply_name = c.apply_name left join  "
+		seleSql+="  ( select a.apply_name,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.apply_name) d on a.apply_name = d.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.apply_name) e on a.apply_name = e.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.apply_name) f on a.apply_name = f.apply_name ) a "
+		seleSql+=" left join rosten_staff_per b on a.apply_name = b.china_name left join  (select  a.* ,b.depart_name,c.china_name from rosten_staff_per_rosten_depart  a  left join  rosten_depart  b on a.depart_id = b.id left join rosten_staff_per c on a.PERSON_INFOR_DEPARTS_ID = c.id) c on a.apply_name = c.china_name "
 		
 		if(params.departId){
 			def depart = Depart.get(params.departId)
