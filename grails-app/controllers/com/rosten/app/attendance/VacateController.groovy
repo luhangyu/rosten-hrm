@@ -10,6 +10,7 @@ import com.rosten.app.system.Depart;
 import com.rosten.app.system.User
 import com.rosten.app.system.Model
 import com.rosten.app.system.Authorize
+import com.rosten.app.export.ExcelExport
 import com.rosten.app.gtask.Gtask
 import com.rosten.app.system.SystemService
 import com.rosten.app.start.StartService
@@ -34,6 +35,36 @@ class VacateController {
 	def shareService
 	
 	//2015-2-28--------------增加按月统计功能---------------------------------------------------
+	def exportStaticByMonth ={
+		OutputStream os = response.outputStream
+		def company = Company.get(params.companyId)
+		
+		Calendar calendar = Calendar.getInstance()
+		def fileName = calendar.get(Calendar.YEAR) + "年职工考勤情况表"
+		if(params.month){
+			fileName = calendar.get(Calendar.YEAR) + "年" + params.month + "职工考勤情况表"
+		}
+		
+		response.setContentType('application/vnd.ms-excel')
+		response.setHeader("Content-disposition", "attachment; filename=" + new String((fileName+".xls").getBytes("GB2312"), "ISO_8859_1"))
+		
+		def searchArgs =[:]
+		
+		if(params.applyName && !"".equals(params.applyName)) searchArgs["applyName"] = params.applyName
+		if(params.applyDepart && !"".equals(params.applyDepart)) searchArgs["applyDepart"] = params.applyDepart
+		
+		def c = Vacate.createCriteria()
+
+		def _List = c.list{
+			eq("company",company)
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+			order("applyDepart", "asc")
+		}
+		def excel = new ExcelExport()
+		excel.vacateByMonthExport(os,fileName,_List)
+	}
 	def staticByMonthGrid ={
 		def json=[:]
 		def user = User.get(params.userId)
@@ -426,7 +457,7 @@ class VacateController {
 				render '<h2 style="color:red;width:660px;margin:0 auto;margin-top:60px">当前业务不存在流程设置，无法创建，请联系管理员！</h2>'
 			}
 		}else{
-			redirect(action:"bbsShow",params:params)
+			redirect(action:"vacateShow",params:params)
 		}
 	}
 		
@@ -436,8 +467,14 @@ class VacateController {
 		def user = User.get(params.userid)
 		def company = Company.get(params.companyId)
 		def vacate = new Vacate()
+		
 		if(params.id){
 			vacate = Vacate.get(params.id)
+		}else{
+			if(!params.notNeedFlow){
+				vacate.applyName=user.getFormattedName()
+				vacate.applyDepart = user.getDepartName()
+			}
 		}
 		model["user"]=user
 		model["company"] = company
@@ -445,15 +482,27 @@ class VacateController {
 		
 		if(params.notNeedFlow){
 			model["notNeedFlow"] = params.notNeedFlow
-		}else{
-			vacate.applyName=user.getFormattedName()
-			vacate.applyDepart = user.getDepartName()
 		}
 		
 		FieldAcl fa = new FieldAcl()
-		if(!"新增".equals(vacate.status)){
+		
+		//判断是否出现保存功能
+		def isChange = false
+		if("admin".equals(user.getUserType())){
+			//管理员
+			isChange = true
+		}else if(user.getAllRolesValue().contains("请假管理员")){
+			//拥有对应角色
+			isChange = true
+		}else if(user.equals(vacate.currentUser) && vacate.status.equals("新增")){
+			isChange = true
+		}
+		
+		if(!isChange){
 			//普通用户
 			fa.readOnly += ["startDate","endDate","vacateType","numbers","remark"]
+		}else{
+		model["notNeedFlow"] = true
 		}
 		model["fieldAcl"] = fa
 		

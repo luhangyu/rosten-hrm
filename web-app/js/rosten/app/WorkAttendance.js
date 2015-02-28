@@ -13,7 +13,26 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         show_attEndanceNaviEntity("askForStatic");
     };
     vacate_print = function(){
-                    
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+         
+        var content = {};
+        var query = "";
+        var applyName = registry.byId("s_chinaName");
+        if(applyName.get("value")!=""){
+            query += "&applyName="+applyName.get("value");
+        }
+        
+        var applyDepart = registry.byId("s_departName");
+        if(applyDepart.get("value")!=""){
+            query += "&applyDepart="+applyDepart.get("value");
+        }
+        
+        var month = registry.byId("s_month");
+        if(month.get("value")!=""){
+            query += "&month="+month.get("value");
+        }
+        
+        rosten.openNewWindow("export", rosten.webPath + "/vacate/exportStaticByMonth?companyId="+companyId+"&type="+ rosten.kernel.navigationEntity+query );             
     };
     vacate_searchByMonth = function(){
         var content = {};
@@ -123,7 +142,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				return;
 			var content = {};
 			content.id = unids;
-			rosten.read(rosten.webPath + "/vacate/vacateDelete", content,rosten.deleteCallback);
+			rosten.readNoTime(rosten.webPath + "/vacate/vacateDelete", content,rosten.deleteCallback);
 		};
 	};
 	vacate_formatTopic = function(value,rowIndex){

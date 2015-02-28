@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.util.List;
 
+import com.rosten.app.attendance.Vacate;
 import com.rosten.app.staff.ContactInfor;
 import com.rosten.app.staff.PersonInfor;
 import com.rosten.app.staff.StaffService;
@@ -22,6 +23,74 @@ import jxl.write.WritableWorkbook;
 
 public class ExcelExport {
 	
+	public void vacateByMonthExport(OutputStream os,String fileName,List<Vacate> vacateList){
+		WritableWorkbook wwb = null;
+		WritableSheet ws = null;
+		try {
+			VerticalAlignment vcenter = VerticalAlignment.CENTRE;
+			Alignment acenter = Alignment.CENTRE;
+			
+			WritableCellFormat titlewcfStyle = new WritableCellFormat();
+			WritableFont titlefont = new WritableFont(WritableFont.ARIAL, 14);
+			titlefont.setBoldStyle(WritableFont.BOLD);
+			titlewcfStyle.setFont(titlefont);
+			titlewcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			titlewcfStyle.setAlignment(acenter);
+			titlewcfStyle.setVerticalAlignment(vcenter);
+			
+			WritableCellFormat title1wcfStyle = new WritableCellFormat();
+			WritableFont title1font = new WritableFont(WritableFont.ARIAL, 10);
+			title1font.setBoldStyle(WritableFont.BOLD);
+			title1wcfStyle.setFont(title1font);
+			title1wcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			title1wcfStyle.setAlignment(acenter);
+			title1wcfStyle.setVerticalAlignment(vcenter);
+			
+			WritableCellFormat bodywcfStyle = new WritableCellFormat();
+			WritableFont bodyfont = new WritableFont(WritableFont.ARIAL, 10);
+			bodywcfStyle.setFont(bodyfont);
+			bodywcfStyle.setBorder(Border.ALL, BorderLineStyle.THIN);
+			bodywcfStyle.setAlignment(acenter);
+			bodywcfStyle.setVerticalAlignment(vcenter);
+			
+			wwb = Workbook.createWorkbook(os);
+			ws = wwb.createSheet("数据导出", 0);
+			
+			ws.mergeCells(0,0,5,0);
+			ws.addCell(new Label(0 , 0, fileName,titlewcfStyle));
+			
+			ws.addCell(new Label(0, 1, "序号",title1wcfStyle));
+			ws.addCell(new Label(1, 1, "部门（机构）",title1wcfStyle));
+			ws.addCell(new Label(2, 1, "姓名",title1wcfStyle));
+			ws.addCell(new Label(3, 1, "请假时间",title1wcfStyle));
+			ws.addCell(new Label(4, 1, "天数",title1wcfStyle));
+			ws.addCell(new Label(5, 1, "事由",title1wcfStyle));
+			
+			if(null!=vacateList&&vacateList.size()>0){
+				for(int i=0;i<vacateList.size();i++){
+					
+					ws.addCell(new Label(0, i+2, String.valueOf((i+1)),bodywcfStyle));
+					ws.addCell(new Label(1, i+2, (String)vacateList.get(i).getApplyDepart(),bodywcfStyle));
+					ws.addCell(new Label(2, i+2, (String)vacateList.get(i).getApplyName(),bodywcfStyle));
+					ws.addCell(new Label(3, i+2, (String)vacateList.get(i).getFormatteStartDate()+"~"+vacateList.get(i).getFormatteEndDate(),bodywcfStyle));
+					ws.addCell(new Label(4, i+2, (String)vacateList.get(i).getFormattedNumbers().toString(),bodywcfStyle));
+					ws.addCell(new Label(5, i+2, (String)vacateList.get(i).getRemark(),bodywcfStyle));
+				
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("数据导出失败!");
+		} finally {
+			try {
+				wwb.write();
+				wwb.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	/**模板下载*/
 	public String ygxxdc(OutputStream os,List<PersonInfor> personList){
 		WritableWorkbook wwb = null;
