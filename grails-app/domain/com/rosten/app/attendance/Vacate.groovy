@@ -57,7 +57,7 @@ class Vacate {
 	}
 	
 	//结束时间
-	Date endDate = new Date() + 1
+	Date endDate = new Date()
 	
 	@GridColumn(name="结束时间",width="106px",colIdx=6)
 	def getFormatteEndDate(){

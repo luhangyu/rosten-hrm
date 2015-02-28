@@ -3,7 +3,55 @@
  */
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/app/ChartManage","rosten/widget/PickTreeDialog","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel,ChartManage,PickTreeDialog) {
-		    
+    
+    
+    //2015-2-28------增加按月统计功能------------------------------------------
+    vacate_staticByAll = function(){
+        show_attEndanceNaviEntity("staticByAll");
+    };
+    vacate_staticByMonth = function(){
+        show_attEndanceNaviEntity("askForStatic");
+    };
+    vacate_print = function(){
+                    
+    };
+    vacate_searchByMonth = function(){
+        var content = {};
+        
+        var applyDepart = registry.byId("s_departName");
+        if(applyDepart.get("value")!=""){
+            content.applyDepart = applyDepart.get("value");
+        }
+        
+        var applyName = registry.byId("s_chinaName");
+        if(applyName.get("value")!=""){
+            content.applyName = applyName.get("value");
+        }
+        
+        var month = registry.byId("s_month");
+        if(month.get("value")!=""){
+            content.month = month.get("value");
+        }
+        
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+            break;
+        }
+    };
+    vacate_resetSearchByMonth = function(){
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            registry.byId("s_departName").set("value","");
+            registry.byId("s_chinaName").set("value","");
+            registry.byId("s_month").set("value","");
+            break;
+        }   
+        
+        rosten.kernel.refreshGrid();
+    };
+    //--------------------------------------------------------------------
+    		    
 	vacate_search = function(){
         var content = {};
         
@@ -24,7 +72,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         }
     };
     
-    departChange_resetSearch = function(){
+    vacate_resetSearch = function(){
         switch(rosten.kernel.navigationEntity) {
         default:
             registry.byId("s_departName").set("value","");
@@ -108,7 +156,15 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             var rostenGrid = rosten.kernel.getGrid();
             break;
 		case "askForStatic":
-			rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic?companyId=" + companyId, oString , ChartManage.addAskForChart);
+		
+		    var naviJson = {
+                identifier : oString,
+                actionBarSrc : rosten.webPath + "/vacateAction/staticByMonth?userId=" + userid,
+                searchSrc:rosten.webPath + "/vacate/staticByMonthSearchView",
+                gridSrc : rosten.webPath + "/vacate/staticByMonthGrid?companyId=" + companyId+"&userId=" + userid
+            };
+            rosten.kernel.addRightContent(naviJson);
+            
             break;
             
 		case "allAskFor":
@@ -122,7 +178,9 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 
             var rostenGrid = rosten.kernel.getGrid();
             break;
-            
+        case "staticByAll":
+            rosten.kernel.setHref(rosten.webPath + "/vacate/askForStatic?companyId=" + companyId, oString , ChartManage.addAskForChart);
+            break; 
 		}
 	};
 	connect.connect("show_naviEntity", show_attEndanceNaviEntity);

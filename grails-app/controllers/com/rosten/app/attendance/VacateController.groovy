@@ -33,6 +33,99 @@ class VacateController {
 	def dataSource
 	def shareService
 	
+	//2015-2-28--------------增加按月统计功能---------------------------------------------------
+	def staticByMonthGrid ={
+		def json=[:]
+		def user = User.get(params.userId)
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			def _gridHeader =[]
+
+			_gridHeader << ["name":"序号","width":"26px","colIdx":0,"field":"rowIndex"]
+			_gridHeader << ["name":"部门（机构）","width":"100px","colIdx":1,"field":"applyDepart"]
+			_gridHeader << ["name":"姓名","width":"80px","colIdx":2,"field":"applyName"]
+			_gridHeader << ["name":"请假类型","width":"60px","colIdx":3,"field":"vacateType"]
+			_gridHeader << ["name":"开始时间","width":"100px","colIdx":4,"field":"startDate"]
+			_gridHeader << ["name":"结束时间","width":"100px","colIdx":5,"field":"endDate"]
+			_gridHeader << ["name":"天数","width":"60px","colIdx":6,"field":"numbers"]
+			_gridHeader << ["name":"事由","width":"auto","colIdx":7,"field":"remark"]
+			
+			json["gridHeader"] = _gridHeader
+		}
+		
+		def searchArgs =[:]
+		
+		if(params.applyName && !"".equals(params.applyName)) searchArgs["applyName"] = params.applyName
+		if(params.applyDepart && !"".equals(params.applyDepart)) searchArgs["applyDepart"] = params.applyDepart
+		
+		if(params.refreshData){
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+
+			def offset = (nowPage-1) * perPageNum
+			def max  = perPageNum
+
+			def _json = [identifier:'id',label:'name',items:[]]
+			
+			def c = Vacate.createCriteria()
+			def pa=[max:max,offset:offset]
+			def query = {
+				eq("company",company)
+				
+				searchArgs.each{k,v->
+					like(k,"%" + v + "%")
+				}
+				
+				order("applyName", "asc")
+			}
+			def _list = c.list(pa,query)
+			
+			def idx = 0
+			if(offset!=null) idx=offset
+			_list.each{
+				def sMap =[:]
+				sMap["rowIndex"] = idx+1
+				sMap["id"] = it.id
+				sMap["applyDepart"] = it.applyDepart
+				sMap["applyName"] = it.applyName
+				sMap["vacateType"] = it.vacateType
+				sMap["startDate"] = it.getFormatteStartDate()
+				sMap["endDate"] = it.getFormatteEndDate()
+				sMap["numbers"] = it.numbers
+				sMap["remark"] = it.remark
+				
+				_json.items+=sMap
+				
+				idx += 1
+			}
+
+			json["gridData"] = _json
+			
+		}
+		if(params.refreshPageControl){
+			def c = Vacate.createCriteria()
+			def query = {
+				eq("company",company)
+				
+				searchArgs.each{k,v->
+					like(k,"%" + v + "%")
+				}
+			}
+			def totalNum = c.count(query)
+			json["pageControl"] = ["total":totalNum.toString()]
+		}
+		render json as JSON
+	}
+	def staticByMonthSearchView ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
+		model["monthList"] =["1月份","2月份","3月份","4月份","5月份","6月份","7月份","8月份","9月份","10月份","11月份","12月份"]
+		render(view:'/vacate/staticByMonthSearch',model:model)
+	}
+	
+	//-------------------------------------------------------------------------------
 	def searchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()

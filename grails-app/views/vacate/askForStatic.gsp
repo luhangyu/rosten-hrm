@@ -60,9 +60,7 @@
 				rosten.variable.tempAskFor = JSON.parse('${json}');
 				rosten.variable.titleName = '${titleName}';
 				
-				vacate_print = function(){
-					
-				};
+				
 				vacate_showHideChart = function(){
 					var chartsDom = dom.byId("chartsId");
 					domClass.toggle(chartsDom,"rostenDisplay");

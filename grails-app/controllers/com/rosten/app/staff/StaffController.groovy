@@ -2834,10 +2834,10 @@ class StaffController {
 		}
 		if(!entity){
 			entity = new Bargain()
-			def bargainConfig = BargainConfig.first()
-			if(bargainConfig){
-				entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
-			}
+//			def bargainConfig = BargainConfig.first()
+//			if(bargainConfig){
+//				entity.bargainSerialNo =  bargainConfig.nowYear + bargainConfig.nowSN.toString().padLeft(4,"0")
+//			}
 		}
 		
 		model["bargain"] = entity
@@ -2881,9 +2881,15 @@ class StaffController {
 		
 		//单独增加合同管信息
 		def personInfor = PersonInfor.get(params.id)
+		def config = BargainConfig.first()
 		
 		def bargain = Bargain.get(params.barginId)
-		if(!bargain) bargain = new Bargain()
+		if(!bargain){
+			bargain = new Bargain()
+			if(config){
+				bargain.bargainSerialNo =  config.nowYear + config.nowSN.toString().padLeft(4,"0")
+			}
+		}
 		
 		bargain.properties = params
 		bargain.clearErrors()
@@ -2930,7 +2936,7 @@ class StaffController {
 			}
 			
 			//修改配置文档中的流水号，改为发布后产生流水号
-			def config = BargainConfig.first()
+			
 			config.nowSN += 1
 			config.save(flush:true)
 			

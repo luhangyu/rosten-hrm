@@ -77,11 +77,22 @@ class VacateActionController {
 		render actionList as JSON
 	}
 	
+	//--------2015-2-28--------增加按月统计统计----------------------------------
+	def staticByMonth ={
+		def actionList =[]
+		def strname = "vacate"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("统计分析",imgPath + "search.gif",strname + "_staticByAll")
+		actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
+		
+		render actionList as JSON
+	}
+	//----------------------------------------------------------------
 	def askForStatic ={
 		def actionList =[]
 		def strname = "vacate"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("打印",imgPath + "word_print.png",strname + "_print")
+		actionList << createAction("按月统计",imgPath + "search.gif",strname + "_staticByMonth")
 		
 		render actionList as JSON
 	}

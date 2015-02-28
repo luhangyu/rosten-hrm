@@ -19,7 +19,8 @@
 			<td width="120"><div align="right"><span style="color:red">*&nbsp;</span>合同编号：</div></td>
 		  	<td width="250">
 		    	<input id="bargain_serialNo" data-dojo-type="dijit/form/ValidationTextBox" 
-	                 	data-dojo-props='name:"bargainSerialNo",trim:true,required:true,readOnly:true,
+	                 	data-dojo-props='trim:true,readOnly:true,
+	                 		placeholder:"录入合同后自动生成...",
 							value:"${bargain?.bargainSerialNo}"
 	                '/>
 		    </td>

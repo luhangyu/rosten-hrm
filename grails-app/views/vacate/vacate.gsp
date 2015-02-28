@@ -242,7 +242,7 @@
 				changeVacateDay = function(){
 					var startDate = registry.byId("startDate").get("value");
 					var endDate = registry.byId("endDate").get("value");
-					var number = (endDate.getTime() - startDate.getTime())/(24 * 60 * 60 * 1000);
+					var number = (endDate.getTime() - startDate.getTime())/(24 * 60 * 60 * 1000) + 1;
 					if(number < 0 || number==0){
 						rosten.alert("请正确输入时间！");
 						registry.byId("numbers").set("value","");
