@@ -34,11 +34,11 @@
             </td>
             <th width="10%">统计月份</th>
             <td width="18%">
-            	<div id="s_month" data-dojo-type="dijit/form/ComboBox"
-	                data-dojo-props='trim:true,value:""
+            	<div id="s_month" data-dojo-type="dijit/form/FilteringSelect"
+	                data-dojo-props='trim:true,value:${currentMonth }
 	            '>
 	            	<g:each in="${monthList}" var="item">
-	                	<option value="${item}">${item}</option>
+	                	<option value="${item.code}">${item.name}</option>
 	                </g:each>
 	            </div>
             </td>

@@ -149,7 +149,7 @@
 					}
 					
 					rosten.readSync("${createLink(controller:'share',action:'getSelectFlowUser',
-						params:[userId:user?.id,taskId:vacate?.taskId,drafterUsername:user?.username])}",content,function(data){
+						params:[userId:user?.id,taskId:vacate?.taskId,drafterUsername:vacate?.drafter?.username])}",content,function(data){
 						
 						if(data.dealFlow==false){
 							//流程无下一节点

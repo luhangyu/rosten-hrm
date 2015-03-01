@@ -42,8 +42,20 @@ class VacateController {
 		Calendar calendar = Calendar.getInstance()
 		def fileName = calendar.get(Calendar.YEAR) + "年职工考勤情况表"
 		if(params.month){
-			fileName = calendar.get(Calendar.YEAR) + "年" + params.month + "职工考勤情况表"
+			fileName = calendar.get(Calendar.YEAR) + "年" + params.month + "月份职工考勤情况表"
 		}
+		
+		//获取查询时间
+		def month1,month2,month
+		
+		//当前查询月份
+		month = calendar.get(Calendar.MONTH)
+		if(params.month && !"".equals(params.month)){
+			month = Util.obj2int(params.month)-1
+		}
+		
+		month1 = new GregorianCalendar(calendar.get(Calendar.YEAR),month,1)
+		month2 = new GregorianCalendar(calendar.get(Calendar.YEAR),month + 1,1)
 		
 		response.setContentType('application/vnd.ms-excel')
 		response.setHeader("Content-disposition", "attachment; filename=" + new String((fileName+".xls").getBytes("GB2312"), "ISO_8859_1"))
@@ -57,6 +69,12 @@ class VacateController {
 
 		def _List = c.list{
 			eq("company",company)
+			
+			and{
+				lt("startDate",month2.time)
+				ge("startDate",month1.time)
+			}
+			
 			searchArgs.each{k,v->
 				like(k,"%" + v + "%")
 			}
@@ -89,6 +107,20 @@ class VacateController {
 		if(params.applyName && !"".equals(params.applyName)) searchArgs["applyName"] = params.applyName
 		if(params.applyDepart && !"".equals(params.applyDepart)) searchArgs["applyDepart"] = params.applyDepart
 		
+		//获取查询时间
+		def month1,month2,month
+		
+		Calendar calendar = Calendar.getInstance()
+		
+		//当前查询月份
+		month = calendar.get(Calendar.MONTH)
+		if(params.month && !"".equals(params.month)){
+			month = Util.obj2int(params.month)-1
+		}
+		
+		month1 = new GregorianCalendar(calendar.get(Calendar.YEAR),month,1)
+		month2 = new GregorianCalendar(calendar.get(Calendar.YEAR),month + 1,1)
+		
 		if(params.refreshData){
 			int perPageNum = Util.str2int(params.perPageNum)
 			int nowPage =  Util.str2int(params.showPageNum)
@@ -102,6 +134,13 @@ class VacateController {
 			def pa=[max:max,offset:offset]
 			def query = {
 				eq("company",company)
+				
+//				between("startDate", month1.time, month2.time)
+				
+				and{
+					lt("startDate",month2.time)
+					ge("startDate",month1.time)
+				}
 				
 				searchArgs.each{k,v->
 					like(k,"%" + v + "%")
@@ -138,6 +177,11 @@ class VacateController {
 			def query = {
 				eq("company",company)
 				
+				and{
+					lt("startDate",month2.time)
+					ge("startDate",month1.time)
+				}
+				
 				searchArgs.each{k,v->
 					like(k,"%" + v + "%")
 				}
@@ -152,7 +196,26 @@ class VacateController {
 		def currentUser = springSecurityService.getCurrentUser()
 		def dataList = Depart.findAllByCompany(currentUser.company)
 		model["departList"] = dataList
-		model["monthList"] =["1月份","2月份","3月份","4月份","5月份","6月份","7月份","8月份","9月份","10月份","11月份","12月份"]
+		
+		def monthList = []
+		monthList << [name:"1月份",code:1]
+		monthList << [name:"2月份",code:2]
+		monthList << [name:"3月份",code:3]
+		monthList << [name:"4月份",code:4]
+		monthList << [name:"5月份",code:5]
+		monthList << [name:"6月份",code:6]
+		monthList << [name:"7月份",code:7]
+		monthList << [name:"8月份",code:8]
+		monthList << [name:"9月份",code:9]
+		monthList << [name:"10月份",code:10]
+		monthList << [name:"11月份",code:11]
+		monthList << [name:"12月份",code:12]
+		
+		model["monthList"] = monthList
+		
+		Calendar calendar = Calendar.getInstance()
+		model["currentMonth"] = calendar.get(Calendar.MONTH) + 1
+		
 		render(view:'/vacate/staticByMonthSearch',model:model)
 	}
 	
@@ -309,7 +372,8 @@ class VacateController {
 					//-------------------------------------------------------------------------
 					
 					//任务指派给当前拟稿人
-					taskService.claim(vacate.taskId, nextUser.username)
+					taskService.setAssignee(vacate.taskId, nextUser.username)
+//					taskService.claim(vacate.taskId, nextUser.username)
 					
 					def args = [:]
 					args["type"] = "【请假】"
@@ -474,6 +538,7 @@ class VacateController {
 			if(!params.notNeedFlow){
 				vacate.applyName=user.getFormattedName()
 				vacate.applyDepart = user.getDepartName()
+				vacate.currentUser = user
 			}
 		}
 		model["user"]=user
@@ -494,15 +559,14 @@ class VacateController {
 		}else if(user.getAllRolesValue().contains("请假管理员")){
 			//拥有对应角色
 			isChange = true
-		}else if(user.equals(vacate.currentUser) && vacate.status.equals("新增")){
-			isChange = true
-		}
-		
-		if(!isChange){
+		}else if(vacate.currentUser && user.equals(vacate.currentUser) && vacate.status.equals("新增")){
+		}else{
 			//普通用户
 			fa.readOnly += ["startDate","endDate","vacateType","numbers","remark"]
-		}else{
-		model["notNeedFlow"] = true
+		}
+		
+		if(isChange){
+			model["notNeedFlow"] = true
 		}
 		model["fieldAcl"] = fa
 		
@@ -547,23 +611,25 @@ class VacateController {
 			vacate.addToReaders(currentUser)
 		}
 		
-		//流程引擎相关信息处理-------------------------------------------------------------------------------------
-		if(!vacate.processInstanceId && !params.notNeedFlow){
-			//启动流程实例
-			def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
-			Map<String, Object> variables = new HashMap<String, Object>();
-			ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,vacate.id, variables);
-			vacate.processInstanceId = processInstance.getProcessInstanceId()
-			vacate.processDefinitionId = processInstance.getProcessDefinitionId()
-			
-			//获取下一节点任务
-			def task = workFlowService.getTasksByFlow(processInstance.getProcessInstanceId())[0]
-			vacate.taskId = task.getId()
-			
-			//任务指派给当前拟稿人
-			//taskService.claim(task.getId(), user.username)
+		if(!params.notNeedFlow){
+			//流程引擎相关信息处理-------------------------------------------------------------------------------------
+			if(!vacate.processInstanceId){
+				//启动流程实例
+				def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = workFlowService.addFlowInstance(_processInstance.key, currentUser.username,vacate.id, variables);
+				vacate.processInstanceId = processInstance.getProcessInstanceId()
+				vacate.processDefinitionId = processInstance.getProcessDefinitionId()
+				
+				//获取下一节点任务
+				def task = workFlowService.getTasksByFlow(processInstance.getProcessInstanceId())[0]
+				vacate.taskId = task.getId()
+				
+				//任务指派给当前拟稿人
+				//taskService.claim(task.getId(), user.username)
+			}
 		}else{
-			vacate.status = "已结束"
+			vacate.status="已结束"
 		}
 		//-------------------------------------------------------------------------------------------------
 		

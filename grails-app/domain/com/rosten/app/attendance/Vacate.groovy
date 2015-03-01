@@ -31,7 +31,7 @@ class Vacate {
 	String applyDepart
 	
 	//请假数量
-	double numbers = 1
+	double numbers = 2
 	@GridColumn(name="申请天数",width="60px",colIdx=3)
 	def getFormattedNumbers(){
 		return Util.DoubleToFormat(numbers,1)
@@ -57,15 +57,13 @@ class Vacate {
 	}
 	
 	//结束时间
-	Date endDate = new Date()
+	Date endDate = new Date() + 1
 	
 	@GridColumn(name="结束时间",width="106px",colIdx=6)
 	def getFormatteEndDate(){
 		if(endDate!=null){
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd")
-			Calendar c = Calendar.getInstance();
-			c.add(Calendar.DAY_OF_MONTH, 1);
-			return sd.format(c.getTime())
+			return sd.format(endDate)
 		}else{
 			return ""
 		}
