@@ -4,6 +4,33 @@
 define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/app/ChartManage","rosten/widget/PickTreeDialog","rosten/kernel/behavior" ], function(
 		connect, lang,registry,kernel,ChartManage,PickTreeDialog) {
     
+    //2015-3-13-------------增加出勤解释单-------------------------------------
+    vacateExplain_add = function(){
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateExplainAdd?companyId=" + companyId + "&userid=" + userid);
+    };
+    vacateExplain_delete = function(){
+        var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+        _1.callback = function() {
+            var unids = rosten.getGridUnid("multi");
+            if (unids == "")
+                return;
+            var content = {};
+            content.id = unids;
+            rosten.readNoTime(rosten.webPath + "/vacate/vacateExplainDelete", content,rosten.deleteCallback);
+        };
+    };
+    vacateExplain_formatTopic = function(value,rowIndex){
+        return "<a href=\"javascript:vacateExplain_onMessageOpen(" + rowIndex + ");\">" + value + "</a>";
+    };
+    vacateExplain_onMessageOpen = function(rowIndex){
+        var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
+        var userid = rosten.kernel.getUserInforByKey("idnumber");
+        var companyId = rosten.kernel.getUserInforByKey("companyid");
+        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateExplainShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+        rosten.kernel.getGrid().clearSelected();
+    };
     
     //2015-2-28------增加按月统计功能------------------------------------------
     vacate_staticByAll = function(){
@@ -185,7 +212,17 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             rosten.kernel.addRightContent(naviJson);
             
             break;
+        case "vacateExplain":
+        
+            var naviJson = {
+                identifier : oString,
+                actionBarSrc : rosten.webPath + "/vacateAction/vacateExplainView?userId=" + userid,
+                searchSrc:rosten.webPath + "/vacate/vacateExplainSearchView",
+                gridSrc : rosten.webPath + "/vacate/vacateExplainGrid?companyId=" + companyId+"&userId=" + userid
+            };
+            rosten.kernel.addRightContent(naviJson);
             
+            break;  
 		case "allAskFor":
             var naviJson = {
                 identifier : oString,

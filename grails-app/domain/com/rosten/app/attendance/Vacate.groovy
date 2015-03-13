@@ -37,6 +37,9 @@ class Vacate {
 		return Util.DoubleToFormat(numbers,1)
 	}
 	
+	//此字段只存在number为0.5时，分为：上午/下午
+	String dateStage
+	
 	String unitType = "天"//小时或者天
 	
 	//请假类型
@@ -149,6 +152,7 @@ class Vacate {
     static constraints = {
 		remark nullable:true,blank:true
 		numbers nullable:true,blank:true
+		dateStage nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true
@@ -168,7 +172,7 @@ class Vacate {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "ROSTEN_VACATE"
+		table "RS_VACATE"
 		
 		//兼容mysql与oracle
 		def systemUtil = new SystemUtil()

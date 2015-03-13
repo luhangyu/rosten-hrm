@@ -61,11 +61,14 @@
 						rosten.readSync(rosten.webPath + "/vacate/vacateSave",content,function(data){
 							if(data.result=="true" || data.result == true){
 								rosten.alert("保存成功！").queryDlgClose= function(){
+									//2015-3-13-----根据用户要求，自动关闭页面
+									page_quit();
+									/*
 									if(window.location.href.indexOf(data.id)==-1){
 										window.location.replace(window.location.href + "&id=" + data.id);
 									}else{
 										window.location.reload();
-									}
+									}*/
 								};
 							}else{
 								rosten.alert("保存失败!");
@@ -251,6 +254,15 @@
 					}
 					
 				};
+				changeVacateDay_stage = function(){
+					var numbers = registry.byId("numbers");
+					if(numbers.get("value")==0.5 || numbers.get("value")=="0.5"){
+						dom.byId("dateStageTr").style.display = "";
+					}else{
+						dom.byId("dateStageTr").style.display = "none";
+					}
+					
+				};
 				page_quit = function(){
 					rosten.pagequit();
 				};
@@ -328,16 +340,15 @@
 	</div>
 </div>
 
-<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
-	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props=''>
+<div data-dojo-id="rosten_tabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false,persist:false, tabStrip:true,style:{width:"800px",margin:"0 auto"}' >
+	<div data-dojo-type="dijit/layout/ContentPane" title="基本信息" data-dojo-props='doLayout:false'>
 		<form id="rosten_form" name="rosten_form" url='[controller:"assetConfig",action:"assetCategorySave"]' onsubmit="return false;" class="rosten_form" style="padding:0px">
 			<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${vacate?.id }"' />
         	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
         	<input  data-dojo-type="dijit/form/ValidationTextBox" id="unitType"  data-dojo-props='name:"unitType",style:{display:"none"},value:"天"' />
         	
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"请假申请",toggleable:false,moreText:"",height:"300px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"请假申请",toggleable:false,moreText:"",height:"320px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
-
 					<tr>
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
 					    <td >
@@ -389,12 +400,12 @@
 								</script>
 			               </div>
 			            </td>
-			            </tr>
+		            </tr>
+		            
+		            <tr>
 			            
-			            <tr>
-			            
-			             <td><div align="right"><span style="color:red">*&nbsp;</span>请假类型：</div></td>
-					   <td>
+		             	<td><div align="right"><span style="color:red">*&nbsp;</span>请假类型：</div></td>
+					   	<td>
 					    	<select id="vacateType" data-dojo-type="dijit/form/FilteringSelect"
                            		data-dojo-props='name:"vacateType",
                            			autoComplete:false,${fieldAcl.isReadOnly("vacateType")},
@@ -411,36 +422,39 @@
 			            
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>请假时长：</div></td>
 					    <td>
-					    	<input id="numbers" data-dojo-type="dijit/form/NumberTextBox" 
+					    	<div id="numbers" data-dojo-type="dijit/form/NumberTextBox" 
 			                 	data-dojo-props='trim:true,required:true,name:"numbers",
 			                 		missingMessage:"请正确填写请假时长！",invalidMessage:"请正确填写请假时长！",${fieldAcl.isReadOnly("numbers")},
 									value:"${vacate?.getFormattedNumbers()}"
-			                '/>&nbsp;天
+			                '> &nbsp;天
+			                	<script type="dojo/method" data-dojo-event="onChange">
+									changeVacateDay_stage();
+								</script>
+			                </div>
 			            </td>
-<%--					<td><div align="right"><span style="color:red">*&nbsp;</span>单位：</div></td>--%>
-<%--					   <td width="250">--%>
-<%--					  		<input id="unitType1" data-dojo-type="dijit/form/RadioButton"--%>
-<%--				           		data-dojo-props='name:"unitType",type:"radio",--%>
-<%--				           			<g:if test="${vacate?.unitType=="小时" }">checked:true,</g:if>--%>
-<%--									value:"小时"--%>
-<%--			              	'/>--%>
-<%--							<label for="unitType1">小时</label>--%>
-<%--						--%>
-<%--			              	<input id="unitType2" data-dojo-type="dijit/form/RadioButton"--%>
-<%--			           			data-dojo-props='name:"unitType",type:"radio",--%>
-<%--			           			<g:if test="${vacate?.unitType=="天" }">checked:true,</g:if>--%>
-<%--								value:"天"--%>
-<%--			              	'/>--%>
-<%--							<label for="unitType2">天</label>--%>
-<%--					    </td>--%>
-			            </tr>
+		            </tr>
+		            
+		            <tr id="dateStageTr" style="<g:if test="${vacate.getFormattedNumbers()!=0.5}">display:none</g:if>">
+		            	<td><div align="right"><span style="color:red">*&nbsp;</span>请假区间：</div></td>
+		            	<td><select id="dateStage" data-dojo-type="dijit/form/FilteringSelect"
+                           		data-dojo-props='name:"dateStage",
+                           			autoComplete:false,${fieldAcl.isReadOnly("dateStage")},
+            						value:"${vacate?.dateStage?vacate.dateStage:"上午"}"
+                            '>
+	                            <option value="上午">上午</option>
+								<option value="下午">下午</option>
+                           	</select>
+                        </td>
+                        <td></td>
+                        <td></td>
+		            </tr>
 			            
 					<tr>
 					    <td><div align="right">请假理由：</div></td>
 					    <td  colspan=3>
 					    	<textarea id="remark" data-dojo-type="dijit/form/SimpleTextarea" 
     							data-dojo-props='name:"remark","class":"input",
-                               		style:{width:"550px"},rows:"10",${fieldAcl.isReadOnly("remark")},
+                               		style:{width:"586px"},rows:"10",${fieldAcl.isReadOnly("remark")},
                                		trim:true,value:"${vacate?.remark}"
                            '>
     						</textarea>
@@ -448,6 +462,7 @@
 					</tr>
 					
 				</table>
+				
 			</div>
 			
 		</form>

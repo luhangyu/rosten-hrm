@@ -286,10 +286,17 @@ class HrmController {
 			model.addToResources(resource)
 			
 			resource = new Resource()
+			resource.resourceName = "出勤解释"
+			resource.url = "vacateExplain"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 4
+			model.addToResources(resource)
+			
+			resource = new Resource()
 			resource.resourceName = "请假汇总"
 			resource.url = "askForStatic"
 			resource.imgUrl = "images/rosten/navigation/rosten.png"
-			resource.serialNo = 4
+			resource.serialNo = 5
 			model.addToResources(resource)
 			
 			model.save()

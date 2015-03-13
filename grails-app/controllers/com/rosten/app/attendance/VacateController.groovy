@@ -34,6 +34,70 @@ class VacateController {
 	def dataSource
 	def shareService
 	
+	//2015-3-13-------------增加出勤解释单-----------------------------------------------------
+	
+	def vacateExplainSearchView ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
+		
+		def monthList = []
+		monthList << [name:"1月份",code:1]
+		monthList << [name:"2月份",code:2]
+		monthList << [name:"3月份",code:3]
+		monthList << [name:"4月份",code:4]
+		monthList << [name:"5月份",code:5]
+		monthList << [name:"6月份",code:6]
+		monthList << [name:"7月份",code:7]
+		monthList << [name:"8月份",code:8]
+		monthList << [name:"9月份",code:9]
+		monthList << [name:"10月份",code:10]
+		monthList << [name:"11月份",code:11]
+		monthList << [name:"12月份",code:12]
+		
+		model["monthList"] = monthList
+		
+		Calendar calendar = Calendar.getInstance()
+		model["currentMonth"] = calendar.get(Calendar.MONTH) + 1
+		
+		render(view:'/vacate/vacateExplainSearch',model:model)
+	}
+	
+	def vacateExplainGrid ={
+		def json=[:]
+		def user = User.get(params.userId)
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			json["gridHeader"] = vacateService.getVacateExplainListLayout()
+		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.departName && !"".equals(params.departName)) searchArgs["applyDepart"] = params.departName
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["applyName"] = params.chinaName
+		
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			args["user"] = user
+			
+			json["gridData"] = vacateService.getVacateExplainDataStore(args)
+			
+		}
+		if(params.refreshPageControl){
+			def total = vacateService.getVacateExplainCount(company,user)
+			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+	}
+	
 	//2015-2-28--------------增加按月统计功能---------------------------------------------------
 	def exportStaticByMonth ={
 		OutputStream os = response.outputStream

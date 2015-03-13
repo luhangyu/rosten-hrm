@@ -7,6 +7,17 @@ class VacateActionController {
 
    	def imgPath ="images/rosten/actionbar/"
 	
+	def vacateExplainView ={
+		def actionList =[]
+		def strname = "vacateExplain"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("新增",imgPath + "add.png",strname + "_add")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		
+		render actionList as JSON
+	}
+	   
 	def vacateView ={
 		def actionList =[]
 		def strname = "vacate"
