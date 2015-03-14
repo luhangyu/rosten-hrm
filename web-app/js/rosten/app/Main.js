@@ -163,6 +163,11 @@ define(["dojo/_base/kernel"
         			show_naviEntity(oRight);
             	});
         		break;
+        	case "salary":
+        		require(["rosten/app/salary"],function(){
+        			show_naviEntity(oRight);
+            	});
+        		break;
         	default:
         		returnToMain();
         		break;
