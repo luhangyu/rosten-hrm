@@ -35,7 +35,75 @@ class VacateController {
 	def shareService
 	
 	//2015-3-13-------------增加出勤解释单-----------------------------------------------------
-	
+	def vacateExplainAdd ={
+		redirect(action:"vacateExplainShow",params:params)
+	}
+	def vacateExplainShow ={
+		def model =[:]
+		
+		def user = User.get(params.userid)
+		def company = Company.get(params.companyId)
+		def entity = new VacateExplain()
+		
+		if(params.id){
+			entity = VacateExplain.get(params.id)
+		}
+		model["user"]=user
+		model["company"] = company
+		model["vacateExplain"] = entity
+		
+		FieldAcl fa = new FieldAcl()
+		model["fieldAcl"] = fa
+		
+		render(view:'/vacate/vacateExplain',model:model)
+	}
+	def vacateExplainSave ={
+		def json=[:]
+		def entity = new VacateExplain()
+		def currentUser = springSecurityService.getCurrentUser()
+		
+		if(params.id && !"".equals(params.id)){
+			entity = VacateExplain.get(params.id)
+		}else{
+			if(params.companyId){
+				entity.company = Company.get(params.companyId)
+			}
+			
+		}
+		entity.properties = params
+		entity.clearErrors()
+		
+		entity.explainDate = Util.convertToTimestamp(params.explainDate)
+		
+		if(entity.save(flush:true)){
+			json["id"] = entity.id
+			json["companyId"]=entity.company.id
+			json["result"] = "true"
+			
+		}else{
+			entity.errors.each{
+				println it
+			}
+			json["result"] = "false"
+		}
+		render json as JSON
+	}
+	def vacateExplainDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def entity = VacateExplain.get(it)
+				if(entity){
+					entity.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
 	def vacateExplainSearchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()

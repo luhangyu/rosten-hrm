@@ -10,11 +10,11 @@ import com.rosten.app.system.Company
 class VacateExplain {
 	String id
 	
-	@GridColumn(name="申请人",formatter="vacateExplain_formatTopic",colIdx=1)
+	@GridColumn(name="申请人",formatter="vacateExplain_formatTopic",colIdx=1,width="80px")
 	String applyName
 	
 	//部门名称
-	@GridColumn(name="申请部门",colIdx=2)
+	@GridColumn(name="申请部门",colIdx=2,width="100px")
 	String applyDepart
 	
 	//未出勤时间

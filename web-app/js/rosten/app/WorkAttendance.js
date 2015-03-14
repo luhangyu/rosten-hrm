@@ -8,7 +8,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
     vacateExplain_add = function(){
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateExplainAdd?companyId=" + companyId + "&userid=" + userid);
+        rosten.openNewWindow("vacateExplain", rosten.webPath + "/vacate/vacateExplainAdd?companyId=" + companyId + "&userid=" + userid);
     };
     vacateExplain_delete = function(){
         var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
@@ -28,7 +28,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("vacate", rosten.webPath + "/vacate/vacateExplainShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
+        rosten.openNewWindow("vacateExplain", rosten.webPath + "/vacate/vacateExplainShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
         rosten.kernel.getGrid().clearSelected();
     };
     
