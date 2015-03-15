@@ -197,6 +197,21 @@ class ShareService {
 			return departList
 		}
 	}
-  
+  /*
+   * 2015-1-6
+   * 判断是否管理员以及对应的角色
+   */
+  def checkAdmin ={user,roleName ->
+	  
+	  def isTrue = false
+	  if("admin".equals(user.getUserType())){
+		  //管理员
+		  isTrue = true
+	  }else if(user.getAllRolesValue().contains(roleName)){
+		  //拥有对应角色
+		  isTrue = true
+	  }
+	  return isTrue
+  }
   
 }

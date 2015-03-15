@@ -168,6 +168,11 @@ define(["dojo/_base/kernel"
         			show_naviEntity(oRight);
             	});
         		break;
+        	case "travel":
+        	   require(["rosten/app/TravelManage"],function(){
+                    show_naviEntity(oRight);
+                });
+                break;
         	default:
         		returnToMain();
         		break;

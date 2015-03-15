@@ -301,12 +301,43 @@ class HrmController {
 			
 			model.save()
 			
+			
+			model = new Model(company:company)
+			model.modelName = "出差申请"
+			model.modelCode = "travel"
+			model.modelUrl = path + "/system/navigation"
+			model.serialNo = 13
+			model.description ="出差申请模块"
+	
+			resource = new Resource()
+			resource.resourceName = "配置文档"
+			resource.url = "travelConfigManage"
+			resource.imgUrl = "images/rosten/navigation/config.png"
+			resource.serialNo = 1
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "各人待办"
+			resource.url = "myTravelManage"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 2
+			model.addToResources(resource)
+			
+			resource = new Resource()
+			resource.resourceName = "所有审批"
+			resource.url = "allTravelManage"
+			resource.imgUrl = "images/rosten/navigation/rosten.png"
+			resource.serialNo = 3
+			model.addToResources(resource)
+			
+			model.save()
+			
 			//统计分析
 			model = new Model(company:company)
 			model.modelName = "统计分析"
 			model.modelUrl = path + "/system/navigation"
 			model.modelCode = "static"
-			model.serialNo = 13
+			model.serialNo = 14
 			
 			resource = new Resource()
 			resource.resourceName = "花名册"
