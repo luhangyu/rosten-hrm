@@ -1,8 +1,57 @@
 /**
  * @author rosten
  */
-define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/app/ChartManage","rosten/widget/PickTreeDialog","rosten/kernel/behavior" ], function(
-		connect, lang,registry,kernel,ChartManage,PickTreeDialog) {
+define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/kernel","rosten/app/ChartManage","rosten/widget/PickTreeDialog","dojo/date/stamp","rosten/kernel/behavior" ], function(
+		connect, lang,registry,kernel,ChartManage,PickTreeDialog,datestamp) {
+    
+    //2015-3-16------------增加考勤记录---------------------------------------
+    workCheck_search =function(){
+        var content = {};
+        
+        var applyName = registry.byId("s_chinaName");
+        if(applyName.get("value")!=""){
+            content.chinaName = applyName.get("value");
+        }
+        
+        var applyDepart = registry.byId("s_departName");
+        if(applyDepart.get("value")!=""){
+            content.departName = applyDepart.get("value");
+        }
+        
+        var date = registry.byId("s_workCheckDate");
+        if(date.get("value") && date.get("value")!=""){
+            content.date = datestamp.toISOString(date.get("value"),{selector: "date"});
+        }
+        
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+            break;
+        }
+    };
+    workCheck_resetSearch = function(){
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            registry.byId("s_chinaName").set("value","");
+            registry.byId("s_departName").set("value","");
+            registry.byId("s_workCheckDate").set("value"," ");
+            break;
+        }   
+        
+        rosten.kernel.refreshGrid();
+    };
+    
+    workCheck_delete = function(){
+        var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+        _1.callback = function() {
+            var unids = rosten.getGridUnid("multi");
+            if (unids == "")
+                return;
+            var content = {};
+            content.id = unids;
+            rosten.readNoTime(rosten.webPath + "/vacate/workCheckDelete", content,rosten.deleteCallback);
+        };
+    };
     
     //2015-3-13-------------增加出勤解释单-------------------------------------
     vacateExplain_search =function(){
@@ -257,7 +306,18 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
             };
             rosten.kernel.addRightContent(naviJson);
             
-            break;  
+            break;
+        case "workCheck":
+        
+            var naviJson = {
+                identifier : oString,
+                actionBarSrc : rosten.webPath + "/vacateAction/workCheckView?userId=" + userid,
+                searchSrc:rosten.webPath + "/vacate/workCheckSearchView",
+                gridSrc : rosten.webPath + "/vacate/workCheckGrid?companyId=" + companyId+"&userId=" + userid
+            };
+            rosten.kernel.addRightContent(naviJson);
+            
+            break;   
 		case "allAskFor":
             var naviJson = {
                 identifier : oString,

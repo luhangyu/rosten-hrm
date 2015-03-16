@@ -34,6 +34,66 @@ class VacateController {
 	def dataSource
 	def shareService
 	
+	
+	//2015-3-16--------增加考勤记录功能--------------------------------------------------------
+	def workCheckSearchView ={
+		def model =[:]
+		def currentUser = springSecurityService.getCurrentUser()
+		def dataList = Depart.findAllByCompany(currentUser.company)
+		model["departList"] = dataList
+		render(view:'/vacate/workCheckSearch',model:model)
+	}
+	
+	def workCheckGrid ={
+		def json=[:]
+		def user = User.get(params.userId)
+		def company = Company.get(params.companyId)
+		if(params.refreshHeader){
+			json["gridHeader"] = vacateService.getWorkCheckListLayout()
+		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["staffName"] = params.chinaName
+		if(params.departName && !"".equals(params.departName)) searchArgs["staffDepart"] = params.departName
+		if(params.date && !"".equals(params.date)) searchArgs["checkDate"] = params.date
+		
+		if(params.refreshData){
+			def args =[:]
+			int perPageNum = Util.str2int(params.perPageNum)
+			int nowPage =  Util.str2int(params.showPageNum)
+			
+			args["offset"] = (nowPage-1) * perPageNum
+			args["max"] = perPageNum
+			args["company"] = company
+			
+			json["gridData"] = vacateService.getWorkCheckDataStore(args,searchArgs)
+			
+		}
+		if(params.refreshPageControl){
+			def total = vacateService.getWorkCheckCount(company,searchArgs)
+			json["pageControl"] = ["total":total.toString()]
+		}
+		render json as JSON
+	}
+	def workCheckDelete ={
+		def ids = params.id.split(",")
+		def json
+		try{
+			ids.each{
+				def entity = WorkCheck.get(it)
+				if(entity){
+					entity.delete(flush: true)
+				}
+			}
+			json = [result:'true']
+		}catch(Exception e){
+			json = [result:'error']
+		}
+		render json as JSON
+	}
+	
 	//2015-3-13-------------增加出勤解释单-----------------------------------------------------
 	def vacateExplainAdd ={
 		redirect(action:"vacateExplainShow",params:params)

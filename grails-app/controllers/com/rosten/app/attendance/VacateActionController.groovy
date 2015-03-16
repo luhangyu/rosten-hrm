@@ -7,6 +7,15 @@ class VacateActionController {
 
    	def imgPath ="images/rosten/actionbar/"
 	
+	def workCheckView ={
+		def actionList =[]
+		def strname = "workCheck"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
+		
+		render actionList as JSON
+	}
 	def vacateExplainForm ={
 		def webPath = request.getContextPath() + "/"
 		def strname = "vacateExplain"

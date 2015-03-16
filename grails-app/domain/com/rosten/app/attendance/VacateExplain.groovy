@@ -57,7 +57,7 @@ class VacateExplain {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "Rs_VACATE_EXPLAIN"
+		table "RS_VACATE_EXPLAIN"
 		
 		//兼容mysql与oracle
 		def systemUtil = new SystemUtil()

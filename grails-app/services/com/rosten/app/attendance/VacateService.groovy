@@ -4,6 +4,45 @@ import com.rosten.app.util.GridUtil
 
 class VacateService {
 	
+	//2015-3-16------------------增加考勤记录----------------------------------------------------
+	def getWorkCheckListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new WorkCheck())
+	}
+	
+	def getWorkCheckDataStore ={params,searchArgs->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAllWorkCheck(offset,max,params.company,searchArgs)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	
+	def getAllWorkCheck ={offset,max,company,searchArgs->
+		def c = WorkCheck.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("company",company)
+			searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+			order("createDate", "desc")
+		}
+		return c.list(pa,query)
+	}
+	
+	def getWorkCheckCount ={company,searchArgs->
+		def c = WorkCheck.createCriteria()
+		def query = {
+			 eq("company",company)
+			 
+			 searchArgs.each{k,v->
+				like(k,"%" + v + "%")
+			}
+		}
+		return c.count(query)
+	}
 	
 	//2015-3-13----------------增加出勤解释单-----------------------------------------------------
 	def getVacateExplainListLayout ={
