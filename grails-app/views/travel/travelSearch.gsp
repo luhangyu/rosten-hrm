@@ -27,6 +27,7 @@
                 	data-dojo-props='trim:true
                '/>
             </td>
+            <!--
             <th width="5%">状态</th>
             <td width="18%">
             	<select id="s_status" data-dojo-type="dijit/form/ComboBox"
@@ -37,7 +38,7 @@
 	            	</g:each>
 	    		</select>
             
-            </td>
+            </td>  -->
             <td>
             	<div class="btn">
                 	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){travel_search()}'>查询</button>

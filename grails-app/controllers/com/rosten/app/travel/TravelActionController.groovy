@@ -29,7 +29,7 @@ class TravelActionController {
 			def entity = TravelApp.get(params.id)
 			
 			//判断是否出现保存功能
-			def isChange = shareService.checkPemission(user,entity,"应用管理员","员工申请")
+			def isChange = shareService.checkPemission(user,entity,"管理员","员工申请")
 			if(isChange){
 				actionList << createAction("保存",webPath +imgPath + "Save.gif",strname + "_add")
 			}
@@ -74,7 +74,7 @@ class TravelActionController {
 //		actionList << createAction("查看出差通知",imgPath + "read.gif","read_" + strname)
 		
 		def user = User.get(params.userId)
-		if(shareService.checkAdmin(user,"应用管理员")){
+		if(shareService.checkAdmin(user,"管理员")){
 			actionList << createAction("删除出差申请",imgPath + "delete.png","delete_" + strname)
 			actionList << createAction("状态迁移",imgPath + "changeStatus.gif",strname + "_changeStatus")
 			actionList << createAction("用户迁移",imgPath + "changeUser.gif",strname + "_changeUser")

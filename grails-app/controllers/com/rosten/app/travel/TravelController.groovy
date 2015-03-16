@@ -7,6 +7,7 @@ import com.rosten.app.system.Attachment
 import com.rosten.app.system.Company
 import com.rosten.app.system.User
 import com.rosten.app.system.Model
+import com.rosten.app.staff.PersonInfor
 
 import com.rosten.app.gtask.Gtask
 import com.rosten.app.workflow.FlowBusiness
@@ -81,13 +82,15 @@ class TravelController {
 			
 			entity.applyNum = config.nowYear + config.nowSN.toString().padLeft(4,"0")
 			
+			entity.drafter = user
+			entity.status = "已结束"
+			
 		}
-		
 		
 		if(params.travelUserIds){
 			entity.travelUsers?.clear()
 			params.travelUserIds.split(",").each{
-				entity.addToTravelUsers(User.get(it))
+				entity.addToTravelUsers(PersonInfor.get(it))
 			}
 		}
 		if(!entity.readers.find{ it.id.equals(user.id) }){
@@ -97,7 +100,7 @@ class TravelController {
 		//判断是否需要走流程-------------------------------------------------------------------------------------
 		if(params.relationFlow){
 			//流程引擎相关信息处理
-			shareService.businessFlowSave(entity,user,params.relationFlow)
+//			shareService.businessFlowSave(entity,user,params.relationFlow)
 		}
 		//-------------------------------------------------------------------------------------------------
 		entity.travelNum = Util.obj2int(params.travelNum)
@@ -112,7 +115,7 @@ class TravelController {
 			
 			if("new".equals(status)){
 				//添加日志
-				shareService.addFlowLog(entity.id,params.flowCode,user,"申请出差,编号为:" + entity.applyNum)
+				//shareService.addFlowLog(entity.id,params.flowCode,user,"申请出差,编号为:" + entity.applyNum)
 				
 				//修改配置文档中的流水号
 				config.nowSN += 1
@@ -179,8 +182,8 @@ class TravelController {
 		model["fieldAcl"] = fa
 		
 		//流程相关信息----------------------------------------------
-		model["relationFlow"] = params.relationFlow
-		model["flowCode"] = params.flowCode
+//		model["relationFlow"] = params.relationFlow
+//		model["flowCode"] = params.flowCode
 		//------------------------------------------------------
 		
 		render(view:'/travel/travel',model:model)
@@ -198,7 +201,6 @@ class TravelController {
 		
 		if(params.applyNum && !"".equals(params.applyNum)) searchArgs["applyNum"] = params.applyNum
 		if(params.travelDate && !"".equals(params.travelDate)) searchArgs["travelDate"] = Util.convertToTimestamp(params.travelDate)
-		if(params.status && !"".equals(params.status)) searchArgs["status"] = params.status
 		
 		if(params.refreshData){
 			def args =[:]

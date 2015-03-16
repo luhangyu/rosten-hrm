@@ -53,7 +53,7 @@ class VacateActionController {
 			if("admin".equals(user.getUserType())){
 				//管理员
 				isChange = true
-			}else if(user.getAllRolesValue().contains("请假管理员")){
+			}else if(user.getAllRolesValue().contains("管理员")){
 				//拥有对应角色
 				isChange = true
 			}else if(user.equals(vacate.currentUser) && vacate.status.equals("新增")){

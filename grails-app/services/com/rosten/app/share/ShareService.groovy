@@ -213,5 +213,23 @@ class ShareService {
 	  }
 	  return isTrue
   }
+  /*
+   * 2015-1-6
+   * 判断是否为可修改,entity对象中必须具有currentUser，status字段，否则会出错
+   */
+  def checkPemission ={user,entity,roleName,status ->
+	  
+	  def isTrue = false
+	  if("admin".equals(user.getUserType())){
+		  //管理员
+		  isTrue = true
+	  }else if(user.getAllRolesValue().contains(roleName)){
+		  //拥有对应角色
+		  isTrue = true
+	  }else if(user.equals(entity.currentUser) && entity.status.equals(status)){
+		  isTrue = true
+	  }
+	  return isTrue
+  }
   
 }

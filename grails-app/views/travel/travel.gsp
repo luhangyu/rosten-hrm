@@ -89,11 +89,15 @@
 					rosten.readSync(rosten.webPath + "/travel/travelSave",content,function(data){
 						if(data.result=="true" || data.result == true){
 							rosten.alert("保存成功！").queryDlgClose= function(){
+								//2015-3-16-----根据用户要求，自动关闭页面
+								page_quit();
+
+								/*
 								if(window.location.href.indexOf(data.id)==-1){
 									window.location.replace(window.location.href + "&id=" + data.id);
 								}else{
 									window.location.reload();
-								}
+								}*/
 							};
 						}else if(data.result=="noConfig"){
 							rosten.alert("系统不存在配置文档，请通知管理员！");
@@ -284,7 +288,7 @@
 				};
 				//自动计算出差人数
 				selectUser = function(){
-					var _dialog = rosten.selectUser("${createLink(controller:'system',action:'userTreeDataStore',params:[companyId:company?.id])}","multile","travelUsers","travelUserIds");
+					var _dialog = rosten.selectUser("${createLink(controller:'staff',action:'staffTreeDataStore',params:[companyId:company?.id])}","multile","travelUsers","travelUserIds");
 					
 					_dialog.callback = function(data) {
 			            var _data = [];
@@ -319,7 +323,7 @@
 			<input  data-dojo-type="dijit/form/ValidationTextBox" id="id"  data-dojo-props='name:"id",style:{display:"none"},value:"${travel?.id }"' />
         	<input  data-dojo-type="dijit/form/ValidationTextBox" id="companyId" data-dojo-props='name:"companyId",style:{display:"none"},value:"${company?.id }"' />
         	
-			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"500px",marginBottom:"2px"'>
+			<div data-dojo-type="rosten/widget/TitlePane" data-dojo-props='title:"基本信息",toggleable:false,moreText:"",height:"370px",marginBottom:"2px"'>
 				<table border="0" width="740" align="left">
 					<tr>
 					    <td width="120"><div align="right"><span style="color:red">*&nbsp;</span>申请单编号：</div></td>
@@ -343,22 +347,10 @@
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请人：</div></td>
 					    <td>
 					    	<input id="drafter" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='trim:true,readOnly:true,name:"drafter",
+			                 	data-dojo-props='trim:true,readOnly:true,
 									value:"${travel?.drafter?.getFormattedName()}"
 			                '/>
 			            </td>
-					    <td><div align="right"><span style="color:red">*&nbsp;</span>申请部门：</div></td>
-					    <td>
-					    	<input id="drafterDepart" data-dojo-type="dijit/form/ValidationTextBox" 
-			                 	data-dojo-props='name:"drafterDepart",trim:true,required:true,${fieldAcl.isReadOnly("drafterDepart")},
-									value:"${travel?.drafterDepart}"
-			                '/>
-			                <g:if test="${isShowFile}">
-				                <button data-dojo-type="dijit/form/Button" 
-									data-dojo-props = 'onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"drafterDepart")}'
-								>选择</button>
-							</g:if>
-			            </td>    
 					</tr>
 					
 					<tr>
@@ -383,6 +375,7 @@
 					</tr>
 					
 					<tr>
+					  <!--
 					  <td><div align="right"><span style="color:red">*&nbsp;</span>出差负责人：</div></td>
 					    <td>
 					    	<input id="chargePerson" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -391,6 +384,21 @@
 									value:"${travel?.chargePerson}"
 			                '/>
 			            </td> 
+		              -->
+		              
+		              	<td><div align="right"><span style="color:red">*&nbsp;</span>工作部门：</div></td>
+					    <td>
+					    	<input id="drafterDepart" data-dojo-type="dijit/form/ValidationTextBox" 
+			                 	data-dojo-props='name:"drafterDepart",trim:true,required:true,${fieldAcl.isReadOnly("drafterDepart")},
+									value:"${travel?.drafterDepart}"
+			                '/>
+			                <g:if test="${isShowFile}">
+				                <button data-dojo-type="dijit/form/Button" 
+									data-dojo-props = 'onClick:function(){rosten.selectDepart("${createLink(controller:'system',action:'departTreeDataStore',params:[companyId:company?.id])}",false,"drafterDepart")}'
+								>选择</button>
+							</g:if>
+			            </td>   
+		              
 					    <td><div align="right"><span style="color:red">*&nbsp;</span>出差地点：</div></td>
 					    <td>
 					    	<input id="travelAddress" data-dojo-type="dijit/form/ValidationTextBox" 
@@ -441,7 +449,7 @@
 					    <td  colspan=3>
 					    	<textarea id="travelReason" data-dojo-type="dijit/form/SimpleTextarea" 
     							data-dojo-props='name:"travelReason","class":"input",
-                               		style:{width:"550px"},rows:"15",${fieldAcl.isReadOnly("travelReason")},
+                               		style:{width:"550px"},rows:"8",${fieldAcl.isReadOnly("travelReason")},
                                		trim:true,value:"${travel?.travelReason }"
                            '>
     						</textarea>

@@ -5,6 +5,41 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		connect, lang,registry,kernel,ChartManage,PickTreeDialog) {
     
     //2015-3-13-------------增加出勤解释单-------------------------------------
+    vacateExplain_search =function(){
+        var content = {};
+        
+        var applyDepart = registry.byId("s_departName");
+        if(applyDepart.get("value")!=""){
+            content.departName = applyDepart.get("value");
+        }
+        
+        var applyName = registry.byId("s_chinaName");
+        if(applyName.get("value")!=""){
+            content.chinaName = applyName.get("value");
+        }
+        
+        var month = registry.byId("s_month");
+        if(month.get("value")!=""){
+            content.month = month.get("value");
+        }
+        
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+            break;
+        }
+    };
+    vacateExplain_resetSearch = function(){
+        switch(rosten.kernel.navigationEntity) {
+        default:
+            registry.byId("s_departName").set("value","");
+            registry.byId("s_chinaName").set("value","");
+            registry.byId("s_month").set("value","");
+            break;
+        }   
+        
+        rosten.kernel.refreshGrid();
+    };
     vacateExplain_add = function(){
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");

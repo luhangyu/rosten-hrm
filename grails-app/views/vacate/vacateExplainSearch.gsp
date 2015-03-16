@@ -32,10 +32,20 @@
 	                </g:each>
 	            </div>
             </td>
+            <th width="10%">统计月份</th>
+            <td width="18%">
+            	<div id="s_month" data-dojo-type="dijit/form/FilteringSelect"
+	                data-dojo-props='trim:true,value:${currentMonth }
+	            '>
+	            	<g:each in="${monthList}" var="item">
+	                	<option value="${item.code}">${item.name}</option>
+	                </g:each>
+	            </div>
+            </td>
             <td>
             	<div class="btn">
-                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){vacate_search()}'>查询</button>
-                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){vacate_resetSearch()}'>重置条件</button>
+                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){vacateExplain_search()}'>查询</button>
+                	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){vacateExplain_resetSearch()}'>重置条件</button>
               	</div>
             </td>
           </tr>

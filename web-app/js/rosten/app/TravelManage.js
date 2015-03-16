@@ -16,14 +16,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			}
 			
 			var travelDate = registry.byId("s_travelDate");
-			if(travelDate.get("value")!=""){
+			if(travelDate.get("value") && travelDate.get("value")!=""){
 				content.travelDate = datestamp.toISOString(travelDate.get("value"),{selector: "date"});
 			}
 			
-			var status = registry.byId("s_status");
-			if(status.get("value")!=""){
-				content.status = status.get("value");
-			}
+			// var status = registry.byId("s_status");
+			// if(status.get("value")!=""){
+				// content.status = status.get("value");
+			// }
 			break;
 		}
 		rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
@@ -33,7 +33,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		default:
 			registry.byId("s_applyNum").set("value","");
 			registry.byId("s_travelDate").set("value"," ");
-			registry.byId("s_status").set("value","");
+			// registry.byId("s_status").set("value","");
 			break;
 		}	
 		
@@ -52,14 +52,14 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
         var unid = rosten.kernel.getGridItemValue(rowIndex,"id");
         var userid = rosten.kernel.getUserInforByKey("idnumber");
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
-		rosten.openNewWindow("travel", rosten.webPath + "/travel/travelShow/" + unid + "?userid=" + userid + "&companyId=" + companyId+ "&flowCode=" + flowCode);
+		rosten.openNewWindow("travel", rosten.webPath + "/travel/travelShow/" + unid + "?userid=" + userid + "&companyId=" + companyId);
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
 	add_travel = function() {
         var userid = rosten.kernel.getUserInforByKey("idnumber");
         var companyId = rosten.kernel.getUserInforByKey("companyid");
-        rosten.openNewWindow("travel", rosten.webPath + "/travel/travelAdd?companyId=" + companyId + "&userid=" + userid+ "&flowCode=" + flowCode);
+        rosten.openNewWindow("travel", rosten.webPath + "/travel/travelAdd?companyId=" + companyId + "&userid=" + userid);
     };
 	change_travel = function() {
 		var userid = rosten.kernel.getUserInforByKey("idnumber");
@@ -99,7 +99,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/travelAction/travelView",
-				searchSrc:rosten.webPath + "/travel/searchView?companyId=" + companyId + "&flowCode=" + flowCode,
+				searchSrc:rosten.webPath + "/travel/searchView?companyId=" + companyId,
 				gridSrc : rosten.webPath + "/travel/travelGrid?companyId=" + companyId + "&userId=" + userid + "&type=person"
 			};
 			rosten.kernel.addRightContent(naviJson);
@@ -108,7 +108,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 			var naviJson = {
 				identifier : oString,
 				actionBarSrc : rosten.webPath + "/travelAction/allTravelView?userId=" + userid,
-				searchSrc:rosten.webPath + "/travel/searchView?companyId=" + companyId + "&flowCode=" + flowCode,
+				searchSrc:rosten.webPath + "/travel/searchView?companyId=" + companyId,
 				gridSrc : rosten.webPath + "/travel/travelGrid?companyId=" + companyId + "&userId=" + userid + "&type=all"
 			};
 			rosten.kernel.addRightContent(naviJson);

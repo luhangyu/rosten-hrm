@@ -146,6 +146,19 @@ class VacateController {
 		if(params.departName && !"".equals(params.departName)) searchArgs["applyDepart"] = params.departName
 		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["applyName"] = params.chinaName
 		
+		//获取查询时间------------------------------------------------------------------------------
+		def month
+		
+		Calendar calendar = Calendar.getInstance()
+		//当前查询月份
+		month = calendar.get(Calendar.MONTH)
+		if(params.month && !"".equals(params.month)){
+			month = Util.obj2int(params.month)-1
+		}
+		searchArgs["month"] = month
+		
+		//-------------------------------------------------------------------------------------
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -156,11 +169,11 @@ class VacateController {
 			args["company"] = company
 			args["user"] = user
 			
-			json["gridData"] = vacateService.getVacateExplainDataStore(args)
+			json["gridData"] = vacateService.getVacateExplainDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getVacateExplainCount(company,user)
+			def total = vacateService.getVacateExplainCount(company,user,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -614,11 +627,11 @@ class VacateController {
 			args["company"] = company
 			args["user"] = user
 			
-			json["gridData"] = vacateService.getVacateDataStore(args)
+			json["gridData"] = vacateService.getVacateDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getVacateCount(company,user)
+			def total = vacateService.getVacateCount(company,user,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
@@ -799,12 +812,12 @@ class VacateController {
 		
 		def items = []
 		Sql sql = new Sql(dataSource)
-		def seleSql = " select a.*,b.china_name,c.depart_id,c.depart_name from ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.apply_name,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.apply_name) a left join  ";
-		seleSql+=" ( select a.apply_name,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.apply_name) b on a.apply_name = b.apply_name left join "
-		seleSql+=" ( select a.apply_name,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.apply_name) c on a.apply_name = c.apply_name left join  "
-		seleSql+=" ( select a.apply_name,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.apply_name) d on a.apply_name = d.apply_name left join  "
-		seleSql+=" ( select a.apply_name,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.apply_name) e on a.apply_name = e.apply_name left join "
-		seleSql+=" ( select a.apply_name,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.apply_name) f on a.apply_name = f.apply_name ) a left join rosten_staff_per b on a.apply_name = b.china_name left join  "
+		def seleSql = " select a.*,b.china_name,c.depart_id,c.depart_name from ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.apply_name,sum(a.numbers) sjnums from rs_vacate a where a.vacate_type = '事假'  group by a.apply_name) a left join  ";
+		seleSql+=" ( select a.apply_name,sum(a.numbers) bjnums from rs_vacate a where a.vacate_type = '病假'  group by a.apply_name) b on a.apply_name = b.apply_name left join "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) nxjnums from rs_vacate a where a.vacate_type = '年休假'  group by a.apply_name) c on a.apply_name = c.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) hjnums from rs_vacate a where a.vacate_type = '婚假'  group by a.apply_name) d on a.apply_name = d.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) sajnums from rs_vacate a where a.vacate_type = '丧假'  group by a.apply_name) e on a.apply_name = e.apply_name left join "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) qtjnums from rs_vacate a where a.vacate_type = '其他'  group by a.apply_name) f on a.apply_name = f.apply_name ) a left join rosten_staff_per b on a.apply_name = b.china_name left join  "
 		seleSql+=" (select  a.* ,b.depart_name,c.china_name from rosten_staff_per_rosten_depart  a  left join  rosten_depart  b on a.depart_id = b.id left join rosten_staff_per c on a.PERSON_INFOR_DEPARTS_ID = c.id) c on a.apply_name = c.china_name "
 		if(params.departId){
 			def depart = Depart.get(params.departId)
@@ -829,12 +842,12 @@ class VacateController {
 		}
 		seleSql+=" union all ( "
 		seleSql+="  select '' apply_name, sum(sjnums),sum(bjnums),sum(nxjnums),sum(hjnums),sum(sajnums),sum(qtjnums),'合计' china_name,'' depart_id, '' depart_name from  "
-		seleSql+=" ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.apply_name,sum(a.numbers) sjnums from rosten_vacate a where a.vacate_type = '事假'  group by a.apply_name) a  "
-		seleSql+=" left join   ( select a.apply_name,sum(a.numbers) bjnums from rosten_vacate a where a.vacate_type = '病假'  group by a.apply_name) b on a.apply_name = b.apply_name left join  "
-		seleSql+="  ( select a.apply_name,sum(a.numbers) nxjnums from rosten_vacate a where a.vacate_type = '年休假'  group by a.apply_name) c on a.apply_name = c.apply_name left join  "
-		seleSql+="  ( select a.apply_name,sum(a.numbers) hjnums from rosten_vacate a where a.vacate_type = '婚假'  group by a.apply_name) d on a.apply_name = d.apply_name left join  "
-		seleSql+=" ( select a.apply_name,sum(a.numbers) sajnums from rosten_vacate a where a.vacate_type = '丧假'  group by a.apply_name) e on a.apply_name = e.apply_name left join  "
-		seleSql+=" ( select a.apply_name,sum(a.numbers) qtjnums from rosten_vacate a where a.vacate_type = '其他'  group by a.apply_name) f on a.apply_name = f.apply_name ) a "
+		seleSql+=" ( select a.*,b.bjnums,c.nxjnums,d.hjnums,e.sajnums,f.qtjnums from ( select a.apply_name,sum(a.numbers) sjnums from rs_vacate a where a.vacate_type = '事假'  group by a.apply_name) a  "
+		seleSql+=" left join   ( select a.apply_name,sum(a.numbers) bjnums from rs_vacate a where a.vacate_type = '病假'  group by a.apply_name) b on a.apply_name = b.apply_name left join  "
+		seleSql+="  ( select a.apply_name,sum(a.numbers) nxjnums from rs_vacate a where a.vacate_type = '年休假'  group by a.apply_name) c on a.apply_name = c.apply_name left join  "
+		seleSql+="  ( select a.apply_name,sum(a.numbers) hjnums from rs_vacate a where a.vacate_type = '婚假'  group by a.apply_name) d on a.apply_name = d.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) sajnums from rs_vacate a where a.vacate_type = '丧假'  group by a.apply_name) e on a.apply_name = e.apply_name left join  "
+		seleSql+=" ( select a.apply_name,sum(a.numbers) qtjnums from rs_vacate a where a.vacate_type = '其他'  group by a.apply_name) f on a.apply_name = f.apply_name ) a "
 		seleSql+=" left join rosten_staff_per b on a.apply_name = b.china_name left join  (select  a.* ,b.depart_name,c.china_name from rosten_staff_per_rosten_depart  a  left join  rosten_depart  b on a.depart_id = b.id left join rosten_staff_per c on a.PERSON_INFOR_DEPARTS_ID = c.id) c on a.apply_name = c.china_name "
 		
 		if(params.departId){
@@ -914,9 +927,17 @@ class VacateController {
 		def json=[:]
 		def user = User.get(params.userId)
 		def company = Company.get(params.companyId)
+		
 		if(params.refreshHeader){
 			json["gridHeader"] = vacateService.getVacateListLayout()
 		}
+		
+		//增加查询条件
+		def searchArgs =[:]
+		
+		if(params.departName && !"".equals(params.departName)) searchArgs["applyDepart"] = params.departName
+		if(params.chinaName && !"".equals(params.chinaName)) searchArgs["applyName"] = params.chinaName
+		
 		if(params.refreshData){
 			def args =[:]
 			int perPageNum = Util.str2int(params.perPageNum)
@@ -927,11 +948,11 @@ class VacateController {
 			args["company"] = company
 			args["user"] = user
 			
-			json["gridData"] = vacateService.getAllAskForDataStore(args)
+			json["gridData"] = vacateService.getAllAskForDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getAllVacateCount(company)
+			def total = vacateService.getAllVacateCount(company,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON

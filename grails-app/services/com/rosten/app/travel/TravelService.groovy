@@ -7,7 +7,7 @@ class TravelService {
 		def c = TravelApp.createCriteria()
 		def query = {
 			eq("company",company)
-			eq("currentUser",user)
+//			eq("currentUser",user)
 			order("createDate", "desc")
 			
 			searchArgs.each{k,v->
@@ -37,7 +37,7 @@ class TravelService {
 		def pa=[max:max,offset:offset]
 		def query = {
 			eq("company",company)
-			eq("currentUser",user)
+//			eq("currentUser",user)
 			order("createDate", "desc")
 			
 			searchArgs.each{k,v->
