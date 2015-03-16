@@ -12,6 +12,19 @@ import com.rosten.app.share.FlowComment
 
 class StaffService {
 	
+	
+	//2015-3-16-------------------------------------------------
+	def getAllDepartId ={departIdList,depart->
+		departIdList << depart.id
+		if(depart.children){
+			depart.children.each{
+				return this.getAllDepartId(departIdList,it)
+			}
+		}else{
+			return departIdList
+		}
+	}
+	
 	//2014-11-18增加员工聘任------------------------------------------
 	def getEngageListLayout ={
 		def gridUtil = new GridUtil()

@@ -19,6 +19,9 @@ class PersonInfor {
 	
 	String chinaName
 	
+	//显示顺序
+	Integer serialNo
+	
 	//个人头像
 	String imageUrl
 	
@@ -230,6 +233,8 @@ class PersonInfor {
 	String msResult
 	
     static constraints = {
+		serialNo nullable:true,blank:true
+		
 		imageUrl nullable:true,blank:true
 		birthday nullable:true,blank:true
 		birthAddress nullable:true,blank:true

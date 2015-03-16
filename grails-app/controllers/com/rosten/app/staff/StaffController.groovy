@@ -2512,10 +2512,15 @@ class StaffController {
 	def userGrid ={
 		def company = Company.get(params.companyId)
 		
-		def departEntity
+		def departEntity,departIdList=[]
 		//增加部门id为"all"时的特殊处理
-		if("all".equals(params.departId)){
+		if(!"all".equals(params.departId)){
 			departEntity = Depart.get(params.departId)
+			
+//			if(!departEntity.parent){
+				staffService.getAllDepartId(departIdList,departEntity)
+				departIdList.unique()
+//			}
 		}
 		
 		def json=[:]
@@ -2583,9 +2588,13 @@ class StaffController {
 				
 				//增加部门id为"all"时的特殊处理
 				if(!"all".equals(params.departId)){
+					
 					departs{
-						eq("id",params.departId)
+						'in'("id",departIdList)
+						
+//						eq("id",params.departId)
 					}
+					
 				}
 				
 				order("chinaName", "asc")
@@ -2632,7 +2641,8 @@ class StaffController {
 				//增加部门id为"all"时的特殊处理
 				if(!"all".equals(params.departId)){
 					departs{
-						eq("id",params.departId)
+//						eq("id",params.departId)
+						'in'("id",departIdList)
 					}
 				}
 				searchArgs.each{k,v->
