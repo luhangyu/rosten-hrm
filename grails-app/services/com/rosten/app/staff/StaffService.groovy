@@ -9,9 +9,29 @@ import com.rosten.app.system.User
 import com.rosten.app.system.Attachment
 import com.rosten.app.system.UserType
 import com.rosten.app.share.FlowComment
+import com.rosten.app.salary.SalarySlip
 
 class StaffService {
 	
+	//保存工资单
+	public boolean saveSalaryBill(SalarySlip bill,String name,User userEntity) {
+		
+		def personInfor = PersonInfor.findByChinaName(name);
+		bill.personInfor = personInfor
+		bill.company = userEntity.company
+		if(null!=personInfor){
+			if(bill.save(flush:true)){
+				return true
+			}else{
+				bill.errors.each{
+					println it
+				}
+				return false
+			}
+		}else{
+		 return false
+		}
+	}
 	
 	//2015-3-16-------------------------------------------------
 	def getAllDepartId ={departIdList,depart->

@@ -206,4 +206,54 @@ class SalaryService {
 		}
 		return c.count(query)
 	}
+	
+	
+	def getSalaryBillListLayout ={
+		def gridUtil = new GridUtil()
+		return gridUtil.buildLayoutJSON(new SalarySlip())
+	}
+	
+	def getSalaryBillListDataStore ={params,searchArgs->
+		Integer offset = (params.offset)?params.offset.toInteger():0
+		Integer max = (params.max)?params.max.toInteger():15
+		def propertyList = getAlltSalaryBill(offset,max,params.company,searchArgs)
+
+		def gridUtil = new GridUtil()
+		return gridUtil.buildDataList("id","title",propertyList,offset)
+	}
+	
+	private def getAlltSalaryBill={offset,max,company,searchArgs->
+		def c = SalarySlip.createCriteria()
+		def pa=[max:max,offset:offset]
+		def query = {
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+		}
+		return c.list(pa,query)
+	}
+	
+	def getSalaryBillCount ={company,searchArgs->
+		def c = SalarySlip.createCriteria()
+		def query = {
+			eq("company",company)
+			searchArgs.each{k,v->
+				if(k.equals("chinaName")){
+					createAlias('personInfor', 'a')
+					like("a.chinaName","%" + v + "%")
+					
+				}else{
+					like(k,"%" + v + "%")
+				}
+			}
+		}
+		return c.count(query)
+	}
 }

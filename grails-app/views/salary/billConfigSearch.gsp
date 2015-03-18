@@ -15,6 +15,21 @@
         
         <tbody>
           <tr>
+          
+          <th width="8%">年度</th>
+            <td width="10%">
+            	<input id="year" data-dojo-type="dijit/form/ValidationTextBox" 
+                	data-dojo-props='trim:true,
+               '/>
+            </td>
+            
+            <th width="8%">月份</th>
+            <td width="10%">
+            	<input id="month" data-dojo-type="dijit/form/ValidationTextBox" 
+                	data-dojo-props='trim:true,
+               '/>
+            </td>
+          
             <th width="8%">姓名</th>
             <td width="10%">
             	<input id="chinaName" data-dojo-type="dijit/form/ValidationTextBox" 

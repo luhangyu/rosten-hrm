@@ -252,8 +252,16 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		switch(rosten.kernel.navigationEntity) {
 		default:
 			var chinaName = registry.byId("chinaName");
+			var year = registry.byId("year");
+			var month = registry.byId("month");
 			if(chinaName.get("value")!=""){
 				content.chinaName =chinaName.get("value");
+			}
+			if(year.get("value")!=""){
+				content.year =year.get("value");
+			}
+			if(month.get("value")!=""){
+				content.month =month.get("value");
 			}
 			break;
 		}
@@ -281,6 +289,40 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		var companyId = rosten.kernel.getUserInforByKey("companyid");
 		rosten.openNewWindow("radix", rosten.webPath + "/salary/billConfigShow/" + unid + "?&companyId=" + companyId + "&flowCode=billConfig");
 		rosten.kernel.getGrid().clearSelected();
+	};
+	
+	salaryBill_search = function(){
+		var content = {};
+		
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			var chinaName = registry.byId("chinaName");
+			if(chinaName.get("value")!=""){
+				content.chinaName =chinaName.get("value");
+			}
+			break;
+		}
+		
+		rosten.kernel.refreshGrid(rosten.kernel.getGrid().defaultUrl, content);
+	};
+	
+	salaryBill_resetSearch = function(){
+		switch(rosten.kernel.navigationEntity) {
+		default:
+			registry.byId("chinaName").set("value","");
+			break;
+		}	
+		
+		rosten.kernel.refreshGrid();
+	};
+	
+	import_salaryBill = function(){
+		 var companyId = rosten.kernel.getUserInforByKey("companyid");
+		rosten.kernel.createRostenShowDialog(rosten.webPath + "/salary/importSalaryBill/"+ companyId, {
+           onLoadFunction : function() {
+
+           }
+       });
 	};
 	
 	/*
@@ -352,6 +394,20 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	
 	            var rostenGrid = rosten.kernel.getGrid();
 	            break;
+	      
+	            //工资发放
+		case "salaryBill":
+			 var naviJson = {
+	                identifier : oString,
+	                actionBarSrc : rosten.webPath + "/salaryAction/salaryBillView?userId=" + userid,
+	                searchSrc:rosten.webPath + "/salary/salaryBillSearchView",
+	                gridSrc : rosten.webPath + "/salary/salaryBillGrid?companyId=" + companyId
+	            };
+	            rosten.kernel.addRightContent(naviJson);
+	
+	            var rostenGrid = rosten.kernel.getGrid();
+	            break;
+
 
 		}
 		

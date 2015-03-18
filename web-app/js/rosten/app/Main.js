@@ -16,6 +16,12 @@ define(["dojo/_base/kernel"
 //		, "rosten/app/Mail"
 		, "rosten/kernel/behavior"], function(kernel, lang, registry, dom,domStyle,domClass,domConstruct,connect,ContentPane,rostenKernel,general) {
 	
+	 //工资信息
+    showSalaryInfor = function(){
+    	var userid = rosten.kernel.getUserInforByKey("idnumber");
+    	rosten.openNewWindow("salaryInfor", rosten.webPath + "/salary/salaryShow?userid=" + userid);
+    };
+    
 	//demo演示----------------------------------
 	demo_static = function(oString){
 		rosten.kernel.setHref(rosten.webPath + "/demo/demo?type=" + oString, oString);

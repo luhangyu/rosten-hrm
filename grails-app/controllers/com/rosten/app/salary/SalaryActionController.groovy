@@ -120,6 +120,17 @@ class SalaryActionController {
 		render actionList as JSON
 	}
 	
+	//员工工资发放
+	def salaryBillView ={
+		def actionList =[]
+		def strname = "salaryBill"
+		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
+		actionList << createAction("导入",imgPath + "back.png","import_" + strname)
+		actionList << createAction("新刷",imgPath + "fresh.gif","freshGrid")
+		
+		render actionList as JSON
+	}
+	
 	private def createAction={name,img,action->
 		def model =[:]
 		model["name"] = name

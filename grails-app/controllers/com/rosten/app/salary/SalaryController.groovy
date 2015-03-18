@@ -3,11 +3,15 @@ import grails.converters.JSON
 import com.rosten.app.system.Company
 import com.rosten.app.util.Util
 import com.rosten.app.staff.PersonInfor
-
+import com.rosten.app.util.SystemUtil
+import com.rosten.app.system.User
+import groovy.sql.Sql
+import com.rosten.app.export.ExcelImport
 class SalaryController {
 
  def salaryService
  def springSecurityService
+ def dataSource
  
  def quartersGrid ={
 	 def json=[:]
@@ -459,6 +463,21 @@ class SalaryController {
 	 def billConfig = new SalaryBillConfig()
 	 if(params.id){
 		 billConfig = SalaryBillConfig.get(params.id)
+	 }else{
+	 def user = springSecurityService.getCurrentUser()
+	 def riskGold = RiskGold.findWhere(company:user.company)
+	 if(null!=riskGold) {
+		billConfig.gjj = riskGold.getGjj()
+		billConfig.gjjBl = riskGold.getGjjBl()
+		billConfig.sybx = riskGold.getSybx()
+		billConfig.sybxBl = riskGold.getSybxBl()
+		billConfig.ylbx = riskGold.getYlbx()
+		billConfig.ylbxBl = riskGold.getYlbxBl()
+		billConfig.syubx = riskGold.getSyubx()
+		billConfig.syubxBl = riskGold.getSyubxBl()
+		billConfig.ylaobx = riskGold.getYlaobx()
+		billConfig.ylaobxBl = riskGold.getYlaobxBl()
+	 }
 	 }
 	 
 	 def currentUser = springSecurityService.getCurrentUser()
@@ -532,4 +551,103 @@ class SalaryController {
 	 render json as JSON
  }
  
+ 
+ def salaryBillSearchView ={
+	 def model =[:]
+	 render(view:'/salary/billConfigSearch',model:model)
+ }
+ 
+ def salaryBillGrid ={
+	 def json=[:]
+	 def company = Company.get(params.companyId)
+	 if(params.refreshHeader){
+		 json["gridHeader"] =salaryService.getSalaryBillListLayout()
+	 }
+	 //增加查询条件
+	 def searchArgs =[:]
+	if(params.chinaName && !"".equals(params.chinaName))
+	   searchArgs["chinaName"] = params.chinaName
+	if(params.year && !"".equals(params.year))
+	   searchArgs["year"] = params.year
+	if(params.month && !"".equals(params.month))
+	   searchArgs["month"] = params.month
+	
+	 if(params.refreshData){
+		 def args =[:]
+		 int perPageNum = Util.str2int(params.perPageNum)
+		 int nowPage =  Util.str2int(params.showPageNum)
+		 
+		 args["offset"] = (nowPage-1) * perPageNum
+		 args["max"] = perPageNum
+		 args["company"] = company
+		 json["gridData"] = salaryService.getSalaryBillListDataStore(args,searchArgs)
+		 
+	 }
+	 if(params.refreshPageControl){
+		 def total = salaryService.getSalaryBillCount(company,searchArgs)
+		 json["pageControl"] = ["total":total.toString()]
+	 }
+	 render json as JSON
+	}
+ 
+ def importSalaryBill ={
+	 def model =[:]
+	 model["company"] = Company.get(params.id)
+	 render(view:'/salary/importSalaryBill',model:model)
+ }
+ 
+ def importSalary={
+	 def ostr
+	 
+	 SystemUtil sysUtil = new SystemUtil()
+	 def currentUser = (User) springSecurityService.getCurrentUser()
+	 def year =params.year
+	 def month = params.month
+	 def f = request.getFile("uploadedfile")
+	 if (!f.empty) {
+		 
+		 def uploadPath
+		 def companyPath = currentUser.company?.shortName
+		 if(companyPath == null){
+			 uploadPath = sysUtil.getUploadPath("template")+"/"
+		 }else{
+			 uploadPath = sysUtil.getUploadPath(currentUser.company.shortName + "/template") + "/"
+		 }
+		 
+		 String name = f.getOriginalFilename()//获得文件原始的名称
+		 def realName = sysUtil.getRandName(name)
+		 f.transferTo(new File(uploadPath,realName))
+		 
+		 def excelimp = new ExcelImport()
+		 def result = excelimp.salarysjdr(uploadPath,realName,currentUser,year,month)
+		 if("true".equals(result)){
+			 ostr ="<script>var _parent = window.parent;_parent.rosten.alert('导入成功').queryDlgClose=function(){_parent.rosten.kernel.hideRostenShowDialog();_parent.rosten.kernel.refreshGrid();}</script>"
+		 }else{
+			 ostr = "<script>window.parent.rosten.alert('导入失败');</script>"
+		 }
+	 }
+	 
+	 render ostr
+ }
+ 
+ def salaryShow={
+		def model=[:]
+//		def year = params.year
+//		if(null==year){
+//			year="2015"
+//		}
+		def userid = params.userid
+		Sql sql = new Sql(dataSource)
+		def items = []
+		def seleSql = "select * from rs_sa_saslip where PERSON_INFOR_ID='"+userid+"' order by year ,month desc"
+		def vacateList = sql.eachRow(seleSql){
+			def item = ["year":it["year"],"month":it["month"],"ygwgz":it["ygwgz"],"yjxgz":it["yjxgz"],"glbt":it["glbt"],"gzxj":it["gzxj"],"zfbt":it["zfbt"]
+				,"khj":it["khj"],"yfje":it["yfje"],"grss":it["grss"],"gjj":it["gjj"],"sybx":it["sybx"],"ylaobx":it["ylaobx"],"ylbx":it["ylbx"]
+				,"cb":it["cb"],"wxyjxj":it["wxyjxj"],"sfje":it["sfje"]]
+			items<<item
+		}
+		
+		model["tableItem"] = items
+		render(view:'/salary/salaryShow',model:model)
+ }
 }

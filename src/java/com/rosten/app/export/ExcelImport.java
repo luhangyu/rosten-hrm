@@ -6,6 +6,7 @@ import java.util.Date;
 import jxl.Sheet;
 import jxl.Workbook;
 
+import com.rosten.app.salary.SalarySlip;
 import com.rosten.app.staff.Bargain;
 import com.rosten.app.staff.ContactInfor;
 import com.rosten.app.staff.PersonInfor;
@@ -190,6 +191,60 @@ public class ExcelImport {
 					
 					_service.saveBargain(bargain,sfzh,userEntity);
 			}
+			
+		}
+		return "true";
+	}
+	
+	/**-工资导入*/
+	public String salarysjdr(String filePath,String realName,User userEntity,String year,String month) throws Exception{
+		Sheet sourceSheet = Workbook.getWorkbook(new File(filePath+realName)).getSheet(0);
+		int sourceRowCount = sourceSheet.getRows();//获得源excel的行数
+		StaffService _service = new StaffService();
+
+		for(int i=4;i<sourceRowCount-3;i++){
+			 String name =sourceSheet.getCell(1, i).getContents().replace(" ", "");	//姓名
+			 String ygwgz =sourceSheet.getCell(11, i).getContents();//月岗位工资
+			 
+			 String yjxgz =sourceSheet.getCell(12, i).getContents();//月绩效工资
+			 
+			String glbt =sourceSheet.getCell(13, i).getContents();//工龄补贴
+			String gzxj = sourceSheet.getCell(14, i).getContents();//工资小计
+			String zfbt = sourceSheet.getCell(15, i).getContents();//租房补贴
+			String khj = sourceSheet.getCell(16, i).getContents();//租房补贴
+			String yfje = sourceSheet.getCell(17, i).getContents();//应发金额
+			String grss = sourceSheet.getCell(18, i).getContents();//个税
+			String gjj = sourceSheet.getCell(19, i).getContents();//公积金
+			String sybx = sourceSheet.getCell(20, i).getContents();//失业
+			String ylaobx = sourceSheet.getCell(21, i).getContents();//养老
+			String ylbx = sourceSheet.getCell(22, i).getContents();//医疗保险
+			String cb = sourceSheet.getCell(23, i).getContents();//
+			String wxyjxj = sourceSheet.getCell(24, i).getContents();//五险合计
+			String sfje = sourceSheet.getCell(25, i).getContents();//实发金额
+			 
+			//插入对应数据
+			SalarySlip bargain = new SalarySlip();
+			bargain.setYgwgz(Double.valueOf(!"".equals(ygwgz)&&null!=ygwgz?ygwgz:"0"));
+			bargain.setYjxgz(Double.valueOf(!"".equals(yjxgz)&&null!=yjxgz?yjxgz:"0"));
+			bargain.setGlbt(Double.valueOf(!"".equals(glbt)&&null!=glbt?glbt:"0"));
+			bargain.setGzxj(Double.valueOf(!"".equals(gzxj)&&null!=gzxj?gzxj:"0"));
+			bargain.setZfbt(Double.valueOf(!"".equals(zfbt)&&null!=zfbt?zfbt:"0"));
+			bargain.setKhj(Double.valueOf(!"".equals(khj)&&null!=khj?khj:"0"));
+			bargain.setYfje(Double.valueOf(!"".equals(yfje)&&null!=yfje?yfje:"0"));
+			bargain.setGrss(Double.valueOf(!"".equals(grss)&&null!=grss?grss:"0"));
+			bargain.setGjj(Double.valueOf(!"".equals(gjj)&&null!=gjj?gjj:"0"));
+			bargain.setSybx(Double.valueOf(!"".equals(sybx)&&null!=sybx?sybx:"0"));
+			bargain.setYlaobx(Double.valueOf(!"".equals(ylaobx)&&null!=ylaobx?ylaobx:"0"));
+			bargain.setYlbx(Double.valueOf(!"".equals(ylbx)&&null!=ylbx?ylbx:"0"));
+			bargain.setCb(Double.valueOf(!"".equals(cb)&&null!=cb?cb:"0"));
+			bargain.setWxyjxj(Double.valueOf(!"".equals(wxyjxj)&&null!=wxyjxj?wxyjxj:"0"));
+			bargain.setSfje(Double.valueOf(!"".equals(sfje)&&null!=sfje?sfje:"0"));
+			
+			bargain.setYear(year);
+			bargain.setMonth(month);
+			
+			
+			_service.saveSalaryBill(bargain,name,userEntity);
 			
 		}
 		return "true";
