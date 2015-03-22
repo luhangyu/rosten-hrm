@@ -128,7 +128,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				return;
 			var content = {};
 			content.id = unids;
-			rosten.read(rosten.webPath + "/salary/radixDelete", content,rosten.deleteCallback);
+			rosten.readNoTime(rosten.webPath + "/salary/radixDelete", content,rosten.deleteCallback);
 		};
 	};
 
@@ -241,7 +241,7 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 				return;
 			var content = {};
 			content.id = unids;
-			rosten.read(rosten.webPath + "/salary/billConfigDelete", content,rosten.deleteCallback);
+			rosten.readNoTime(rosten.webPath + "/salary/billConfigDelete", content,rosten.deleteCallback);
 		};
 	};
 
@@ -272,6 +272,8 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 	billConfig_resetSearch = function(){
 		switch(rosten.kernel.navigationEntity) {
 		default:
+			registry.byId("year").set("value","");
+			registry.byId("month").set("value","");
 			registry.byId("chinaName").set("value","");
 			break;
 		}	
@@ -291,6 +293,17 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 		rosten.kernel.getGrid().clearSelected();
 	};
 	
+	salaryBill_delete = function(){
+		var _1 = rosten.confirm("删除后将无法恢复，是否继续?");
+		_1.callback = function() {
+			var unids = rosten.getGridUnid("multi");
+			if (unids == "")
+				return;
+			var content = {};
+			content.id = unids;
+			rosten.readNoTime(rosten.webPath + "/salary/salaryBillDelete", content,rosten.deleteCallback);
+		};
+	};
 	salaryBill_search = function(){
 		var content = {};
 		
@@ -323,6 +336,24 @@ define([ "dojo/_base/connect", "dojo/_base/lang","dijit/registry", "dojo/_base/k
 
            }
        });
+	};
+	
+	import_salaryBill_submit = function(object){
+		var formWidget = registry.byId("file_form");
+		if(!formWidget.validate()){
+			rosten.alert("请正确填写相关信息！");
+			return;
+		}
+		
+	    rosten.alert("导入数据需要花费一定的时间，请耐心等待！").queryDlgClose= function(){
+	        var buttonWidget = object.target;
+            rosten.toggleAction(buttonWidget,true);
+            
+	        var importDom = registry.byId("file_form");
+            importDom.submit();
+            
+            
+	    };
 	};
 	
 	/*

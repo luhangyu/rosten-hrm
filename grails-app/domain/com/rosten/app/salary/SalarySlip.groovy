@@ -113,6 +113,6 @@ class SalarySlip {
 	
 	static mapping = {
 		id generator:'uuid.hex',params:[separator:'-']
-		table "RS_SA_SASlip"
+		table "RS_SA_SASLIP"
 	}
 }

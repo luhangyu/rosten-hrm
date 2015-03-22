@@ -550,7 +550,22 @@ class SalaryController {
 	 }
 	 render json as JSON
  }
- 
+ def salaryBillDelete ={
+	 def ids = params.id.split(",")
+	 def json
+	 try{
+		 ids.each{
+			 def salarySlip =SalarySlip.get(it)
+			 if(salarySlip){
+				 salarySlip.delete(flush: true)
+			 }
+		 }
+		 json = [result:'true']
+	 }catch(Exception e){
+		 json = [result:'error']
+	 }
+	 render json as JSON
+ }
  
  def salaryBillSearchView ={
 	 def model =[:]
@@ -632,20 +647,24 @@ class SalaryController {
  
  def salaryShow={
 		def model=[:]
+		def user = User.get(params.userid)
+		def personInfor = PersonInfor.findByUser(user)
+		def items = SalarySlip.findAllByPersonInfor(personInfor,[sort: "month", order: "desc"])
+		
 //		def year = params.year
 //		if(null==year){
 //			year="2015"
 //		}
-		def userid = params.userid
-		Sql sql = new Sql(dataSource)
-		def items = []
-		def seleSql = "select * from rs_sa_saslip where PERSON_INFOR_ID='"+userid+"' order by year ,month desc"
-		def vacateList = sql.eachRow(seleSql){
-			def item = ["year":it["year"],"month":it["month"],"ygwgz":it["ygwgz"],"yjxgz":it["yjxgz"],"glbt":it["glbt"],"gzxj":it["gzxj"],"zfbt":it["zfbt"]
-				,"khj":it["khj"],"yfje":it["yfje"],"grss":it["grss"],"gjj":it["gjj"],"sybx":it["sybx"],"ylaobx":it["ylaobx"],"ylbx":it["ylbx"]
-				,"cb":it["cb"],"wxyjxj":it["wxyjxj"],"sfje":it["sfje"]]
-			items<<item
-		}
+//		def userid = params.userid
+//		Sql sql = new Sql(dataSource)
+//		def items = []
+//		def seleSql = "select * from rs_sa_saslip where PERSON_INFOR_ID='"+userid+"' order by year ,month desc"
+//		def vacateList = sql.eachRow(seleSql){
+//			def item = ["year":it["year"],"month":it["month"],"ygwgz":it["ygwgz"],"yjxgz":it["yjxgz"],"glbt":it["glbt"],"gzxj":it["gzxj"],"zfbt":it["zfbt"]
+//				,"khj":it["khj"],"yfje":it["yfje"],"grss":it["grss"],"gjj":it["gjj"],"sybx":it["sybx"],"ylaobx":it["ylaobx"],"ylbx":it["ylbx"]
+//				,"cb":it["cb"],"wxyjxj":it["wxyjxj"],"sfje":it["sfje"]]
+//			items<<item
+//		}
 		
 		model["tableItem"] = items
 		render(view:'/salary/salaryShow',model:model)
