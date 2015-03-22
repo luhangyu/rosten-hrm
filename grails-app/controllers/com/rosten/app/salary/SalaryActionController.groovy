@@ -125,7 +125,7 @@ class SalaryActionController {
 		def actionList =[]
 		def strname = "salaryBill"
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
-		actionList << createAction("导入",imgPath + "back.png","import_" + strname)
+		actionList << createAction("批量导入",imgPath + "back.png","import_" + strname)
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("新刷",imgPath + "fresh.gif","freshGrid")
 		
