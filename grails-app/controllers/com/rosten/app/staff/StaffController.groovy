@@ -1607,7 +1607,7 @@ class StaffController {
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
 		
-		def dataList = Depart.findAllByCompany(currentUser.company)
+		def dataList = Depart.findAllByCompany(currentUser.company,[sort: "serialNo", order: "asc"])
 		model["departList"] = dataList
 		
 		//政治面貌
@@ -1621,7 +1621,7 @@ class StaffController {
 	def departChangeSearchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
-		def dataList = Depart.findAllByCompany(currentUser.company)
+		def dataList = Depart.findAllByCompany(currentUser.company,[sort: "serialNo", order: "asc"])
 		model["departList"] = dataList
 		render(view:'/staff/departChangeSearch',model:model)
 	}
@@ -1629,7 +1629,7 @@ class StaffController {
 	def statusChangeSearchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
-		def dataList = Depart.findAllByCompany(currentUser.company)
+		def dataList = Depart.findAllByCompany(currentUser.company,[sort: "serialNo", order: "asc"])
 		model["departList"] = dataList
 		render(view:'/staff/statusChangeSearch',model:model)
 	}

@@ -39,7 +39,7 @@ class VacateController {
 	def workCheckSearchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
-		def dataList = Depart.findAllByCompany(currentUser.company)
+		def dataList = Depart.findAllByCompany(currentUser.company,[sort: "serialNo", order: "asc"])
 		model["departList"] = dataList
 		render(view:'/vacate/workCheckSearch',model:model)
 	}
@@ -167,7 +167,7 @@ class VacateController {
 	def vacateExplainSearchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
-		def dataList = Depart.findAllByCompany(currentUser.company)
+		def dataList = Depart.findAllByCompany(currentUser.company,[sort: "serialNo", order: "asc"])
 		model["departList"] = dataList
 		
 		def monthList = []
@@ -399,7 +399,7 @@ class VacateController {
 	def staticByMonthSearchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
-		def dataList = Depart.findAllByCompany(currentUser.company)
+		def dataList = Depart.findAllByCompany(currentUser.company,[sort: "serialNo", order: "asc"])
 		model["departList"] = dataList
 		
 		def monthList = []
@@ -428,7 +428,7 @@ class VacateController {
 	def searchView ={
 		def model =[:]
 		def currentUser = springSecurityService.getCurrentUser()
-		def dataList = Depart.findAllByCompany(currentUser.company)
+		def dataList = Depart.findAllByCompany(currentUser.company,[sort: "serialNo", order: "asc"])
 		model["departList"] = dataList
 		render(view:'/vacate/search',model:model)
 	}
