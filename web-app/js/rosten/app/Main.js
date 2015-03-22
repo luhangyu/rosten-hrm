@@ -170,7 +170,7 @@ define(["dojo/_base/kernel"
             	});
         		break;
         	case "salary":
-        		require(["rosten/app/salary"],function(){
+        		require(["rosten/app/Salary"],function(){
         			show_naviEntity(oRight);
             	});
         		break;
