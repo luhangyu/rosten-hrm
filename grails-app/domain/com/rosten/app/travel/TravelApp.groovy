@@ -149,6 +149,7 @@ class TravelApp {
 		
 		chargePerson nullable:true,blank:true
 		travelAddress nullable:true,blank:true
+		travelReason nullable:true,blank:true
 		
 		//流程相关-------------------------------------------------------------
 		defaultReaders nullable:true,blank:true
