@@ -283,7 +283,7 @@
 							}	
 						}
 					}else{
-						registry.byId("days").set("value",(endDate.get("value")-startDate.get("value"))/1000/60/60/24);
+						registry.byId("days").set("value",(endDate.get("value")-startDate.get("value"))/1000/60/60/24 + 1);
 					}
 				};
 				//自动计算出差人数
@@ -438,7 +438,7 @@
 			               <td><div align="right"><span style="color:red">*&nbsp;</span>出差天数：</div></td>
 					    <td>
 					    	<input id="days" data-dojo-type="dijit/form/NumberTextBox" 
-			                 	data-dojo-props='trim:true,readOnly:true,required:true,name:"days",
+			                 	data-dojo-props='trim:true,required:true,name:"days",
 									value:${travel?.days}
 			                '/>
 			            </td>
