@@ -56,7 +56,7 @@ public class ExcelExport {
 			wwb = Workbook.createWorkbook(os);
 			ws = wwb.createSheet("数据导出", 0);
 			
-			ws.mergeCells(0,0,5,0);
+			ws.mergeCells(0,0,6,0);
 			ws.addCell(new Label(0 , 0, fileName,titlewcfStyle));
 			
 			ws.addCell(new Label(0, 1, "序号",title1wcfStyle));
@@ -64,7 +64,8 @@ public class ExcelExport {
 			ws.addCell(new Label(2, 1, "姓名",title1wcfStyle));
 			ws.addCell(new Label(3, 1, "请假时间",title1wcfStyle));
 			ws.addCell(new Label(4, 1, "天数",title1wcfStyle));
-			ws.addCell(new Label(5, 1, "事由",title1wcfStyle));
+			ws.addCell(new Label(5, 1, "请假类型",title1wcfStyle));
+			ws.addCell(new Label(6, 1, "事由",title1wcfStyle));
 			
 			if(null!=vacateList&&vacateList.size()>0){
 				for(int i=0;i<vacateList.size();i++){
@@ -74,7 +75,8 @@ public class ExcelExport {
 					ws.addCell(new Label(2, i+2, (String)vacateList.get(i).getApplyName(),bodywcfStyle));
 					ws.addCell(new Label(3, i+2, (String)vacateList.get(i).getFormatteStartDate()+"~"+vacateList.get(i).getFormatteEndDate(),bodywcfStyle));
 					ws.addCell(new Label(4, i+2, (String)vacateList.get(i).getFormattedNumbers().toString(),bodywcfStyle));
-					ws.addCell(new Label(5, i+2, (String)vacateList.get(i).getRemark(),bodywcfStyle));
+					ws.addCell(new Label(5, i+2, (String)vacateList.get(i).getVacateType(),bodywcfStyle));
+					ws.addCell(new Label(6, i+2, (String)vacateList.get(i).getRemark(),bodywcfStyle));
 				
 				}
 			}
