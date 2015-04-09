@@ -89,7 +89,7 @@ require(["dojo/parser",
 				<th>工龄补贴</th>
 				<th>工资小计</th>
 				<th>租房补贴</th>
-				<th>考核奖</th>
+				<!--<th>考核奖</th>  -->
 				<th>应发</th>
 				<th>个税</th>
 				<th>公积金</th>
@@ -111,7 +111,6 @@ require(["dojo/parser",
 					<td>${it.glbt }</td>
 					<td>${it.gzxj }</td>
 					<td>${it.zfbt }</td>
-					<td>${it.khj }</td>
 					<td>${it.yfje }</td>
 					<td>${it.grss }</td>
 					<td>${it.gjj }</td>

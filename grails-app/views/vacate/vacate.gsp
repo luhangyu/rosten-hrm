@@ -62,13 +62,14 @@
 							if(data.result=="true" || data.result == true){
 								rosten.alert("保存成功！").queryDlgClose= function(){
 									//2015-3-13-----根据用户要求，自动关闭页面
-									page_quit();
-									/*
+									//2015-4-9------修改为不关闭页面
+									//page_quit();
+									
 									if(window.location.href.indexOf(data.id)==-1){
 										window.location.replace(window.location.href + "&id=" + data.id);
 									}else{
 										window.location.reload();
-									}*/
+									}
 								};
 							}else{
 								rosten.alert("保存失败!");

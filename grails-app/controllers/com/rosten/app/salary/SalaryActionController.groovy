@@ -127,7 +127,7 @@ class SalaryActionController {
 		actionList << createAction("退出",imgPath + "quit_1.gif","returnToMain")
 		actionList << createAction("批量导入",imgPath + "back.png","import_" + strname)
 		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
-		actionList << createAction("新刷",imgPath + "fresh.gif","freshGrid")
+		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON
 	}
