@@ -567,6 +567,13 @@ class StaffController {
 		}
 		
 		if(entity.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新增".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,entity.id,"officialApply")
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){
@@ -1092,6 +1099,13 @@ class StaffController {
 		}
 		
 		if(entity.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新增".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,entity.id,"statusChange")
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){
@@ -1293,6 +1307,13 @@ class StaffController {
 		}
 		
 		if(departChange.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新增".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,entity.id,"staffDepartChange")
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){
@@ -1841,6 +1862,13 @@ class StaffController {
 		}
 		
 		if(personInfor.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新增".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,personInfor.id,"staffAdd")
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){

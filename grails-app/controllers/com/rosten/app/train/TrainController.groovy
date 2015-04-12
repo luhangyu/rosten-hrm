@@ -22,6 +22,9 @@ import com.rosten.app.workflow.WorkFlowService
 import com.rosten.app.share.ShareService
 import com.rosten.app.system.SystemService
 
+/*
+ * 培训
+ */
 class TrainController {
 	def trainService
 	def springSecurityService
@@ -283,6 +286,12 @@ class TrainController {
 		}
 		
 		if(trainCourse.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新增".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,trainCourse.id,"trainCourse")
+			}
+			//--------------------------------------------------------------------------
 			//添加日志
 			def logContent
 			switch (true){

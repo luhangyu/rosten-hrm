@@ -71,6 +71,8 @@
 										window.location.reload();
 									}
 								};
+							}else if(data.result=="noFlow"){
+								rosten.alert("系统未找到对应的业务流程，请通知管理员！");
 							}else{
 								rosten.alert("保存失败!");
 							}

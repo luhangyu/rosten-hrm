@@ -15,6 +15,9 @@ import com.rosten.app.workflow.FlowBusiness
 import com.rosten.app.share.ShareService
 import com.rosten.app.start.StartService
 
+/*
+ * 出差申请
+ */
 class TravelController {
 	def springSecurityService
 	def travelService
@@ -252,7 +255,7 @@ class TravelController {
 		if(params.conditionName){
 			map[params.conditionName] = params.conditionValue
 		}
-		def nextInfor = shareService.businessFlowDeal(company,entity,params.dealUser,map,"dsj","dsj")
+		def nextInfor = shareService.businessFlowDeal(company,entity,params.dealUser,map,"travel","travel")
 		//--------------------------------------------------------------------------------------------------
 		
 		//增加待办事项
@@ -290,6 +293,13 @@ class TravelController {
 		}
 		
 		if(entity.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新增".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,entity.id,"travel")
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){
@@ -327,7 +337,7 @@ class TravelController {
 					logContent = "提交" + entity.status + "【" + nextUserName.join("、") + "】"
 					break
 			}
-			shareService.addFlowLog(entity.id,"dsj",currentUser,logContent)
+			shareService.addFlowLog(entity.id,"travel",currentUser,logContent)
 			
 			json["nextUserName"] = nextUserName.join("、")
 			json["result"] = true

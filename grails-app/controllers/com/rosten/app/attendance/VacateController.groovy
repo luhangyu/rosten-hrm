@@ -23,6 +23,9 @@ import org.activiti.engine.runtime.ProcessInstanceQuery
 import org.activiti.engine.task.Task
 import org.activiti.engine.task.TaskQuery
 
+/*
+ * 请假
+ */
 class VacateController {
 	def springSecurityService
 	def vacateService
@@ -34,6 +37,11 @@ class VacateController {
 	def dataSource
 	def shareService
 	
+	private def flowCode = "vacate" 	//普通员工请假，事假
+	private def flowCodeDeptLeader = "vacate_deptLeader"	//部门领导请假，事假
+	private def flowCodeLeader = "vacate_leader"	//分管领导请假，事假
+	private def flowCodeNx	= "vacate_nx"	//普通员工年休假
+	private def flowCodeNxLeader = "vacate_nx_leader"	//部门领导年休假
 	
 	//2015-3-16--------增加考勤记录功能--------------------------------------------------------
 	def workCheckSearchView ={
@@ -570,7 +578,7 @@ class VacateController {
 					def _model = Model.findByModelCodeAndCompany("workAttendance",vacate.company)
 					def authorize = systemService.checkIsAuthorizer(nextUser,_model,new Date())
 					if(authorize){
-						shareService.addFlowLog(vacate.id,"bbs",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
+						shareService.addFlowLog(vacate.id,"vacate",nextUser,"委托授权给【" + authorize.beAuthorizerDepart + ":" + authorize.getFormattedAuthorizer() + "】")
 						nextUser = authorize.beAuthorizer
 						nextDepart = authorize.beAuthorizerDepart
 					}
@@ -632,6 +640,13 @@ class VacateController {
 		}
 		
 		if(vacate.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"新增".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,vacate.id,"vacate")
+			}
+			//--------------------------------------------------------------------------
+			
 			//添加日志
 			def logContent
 			switch (true){
@@ -712,6 +727,38 @@ class VacateController {
 			json = [result:'error']
 		}
 		render json as JSON
+	}
+	//2015-4-11------增加同一表单，启用不同流程的功能,通过当前用户的信息获取对应的流程------------------------------------
+	private def getRelationFlow ={user,type ->
+		def company = user.company
+		def flowCode = this.flowCode
+		
+		def position = shareService.getUserPosition(user,"分管领导")
+		if("sj".equals(type)){
+			//事假
+			if("leader".equals(position)){
+				//分管领导
+				flowCode = this.flowCodeLeader
+			}else if("deptLeader".equals(position)){
+				//部门领导
+				flowCode = this.flowCodeDeptLeader
+			}
+		}else{
+			//年休假
+			if("leader".equals(position) || "deptLeader".equals(position) ){
+				//分管领导
+				flowCode = this.flowCodeNxLeader
+			}else{
+				//部门领导
+				flowCode = this.flowCodeNx
+			}
+		}
+		def flowBusiness = FlowBusiness.findByFlowCodeAndCompany(flowCode,company)
+		if(flowBusiness && !"".equals(flowBusiness.relationFlow)){
+			return flowBusiness.relationFlow
+		}else{
+			return null
+		}
 	}
 	def vacateAdd ={
 		if(params.flowCode){
@@ -819,6 +866,20 @@ class VacateController {
 		if(!params.notNeedFlow){
 			//流程引擎相关信息处理-------------------------------------------------------------------------------------
 			if(!vacate.processInstanceId){
+				//2015-4-12---------------------增加对领导以及分管领导特殊流程的处理----------------------------------------
+				def _type = "sj"
+				if("年休假".equals(vacate.vacateType)){
+					_type = "nx"
+				}
+				def _relationFlow = this.getRelationFlow(currentUser, _type)
+				if(_relationFlow){
+					params.relationFlow = _relationFlow
+				}else{
+					json["result"] = "noFlow"
+					render json as JSON
+					return
+				}
+				//---------------------------------------------------------------------------------------------
 				//启动流程实例
 				def _processInstance = workFlowService.getProcessDefinition(params.relationFlow)
 				Map<String, Object> variables = new HashMap<String, Object>();

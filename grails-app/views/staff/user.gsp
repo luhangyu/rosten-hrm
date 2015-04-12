@@ -526,8 +526,26 @@
                               
                            	</select>
 			            </td>
-					    <td></td>
-					    <td></td>    
+					    <td><div align="right"><span style="color:red">*&nbsp;</span>是否领导：</div></td>
+					    <td>
+					    	<input id="leaderFlag1" data-dojo-type="dijit/form/RadioButton"
+                             		data-dojo-props='name:"leaderFlag",
+                             			type:"radio",
+                             			${fieldAcl.isReadOnly("leaderFlag")},
+                             			<g:if test="${user?.leaderFlag }">checked:true,</g:if>
+              							value:"true"
+                                '/>
+								<label for="leaderFlag1">是</label>
+								
+                                <input id="leaderFlag2" data-dojo-type="dijit/form/RadioButton"
+                             		data-dojo-props='name:"leaderFlag",
+                             			type:"radio",
+                             			${fieldAcl.isReadOnly("leaderFlag")},
+                             			<g:if test="${!user?.leaderFlag}">checked:true,</g:if>
+              							value:"false"
+                                '/>
+								<label for="leaderFlag2">否</label>
+					    </td>    
 					</tr>
 					
 				</table>

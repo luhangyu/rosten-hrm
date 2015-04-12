@@ -3,6 +3,7 @@ package com.rosten.app.share
 import com.rosten.app.system.SystemCode
 import com.rosten.app.system.User
 import com.rosten.app.system.Model
+import com.rosten.app.system.Depart
 import com.rosten.app.util.Util
 
 import com.rosten.app.workflow.WorkFlowService
@@ -17,6 +18,55 @@ class ShareService {
 	def systemService
 	def taskService
 	
+	/*
+	 * 2015-4-12-------判断当前人员职位
+	 * leader:分管领导,deptLeader:部门领导,normal:普通员工
+	 */
+	def getUserPosition={user,roleName->
+		def position = "normal";
+		
+		//判断是否为分管领导
+		def fgList = Depart.findAllByUser(user)
+		if(fgList && fgList.size()>0){
+			position = "leader"
+			return position
+		}else{
+			//判断角色中是否有分管领导角色
+			def roleStr = user.getAllRolesValue()
+			if(roleStr.contains(roleName)){
+				position = "leader"
+				return position
+			}
+		}
+		
+		//判断是否为部门领导
+		if(user.leaderFlag) return "deptLeader"
+		
+		return position
+	}
+	
+	/*
+	 * 2015-3-31：增加意见记录
+	 * user:人员,status:状态，content:默认为“同意。”
+	 */
+	def addCommentAuto ={user,status,belongToId,belongToObject->
+		def comment = FlowComment.findWhere(user:user,status:status,belongToId:belongToId)
+		if(!comment) this.addComment(user,status,"同意。",belongToId,belongToObject)
+	}
+	/*
+	 * 2015-3-31：增加意见记录
+	 * user:人员,status:状态，content:内容,
+	 */
+	def addComment ={user,status,content,belongToId,belongToObject->
+		def comment = new FlowComment()
+		comment.user = user
+		comment.status = status
+		comment.content = content
+		comment.belongToId = belongToId
+		comment.belongToObject = belongToObject
+		comment.company = user.company
+		comment.save(flush:true)
+	}
 	def businessFlowBack ={entity ->
 		def nextMap = [:]
 		//获取上一处理任务

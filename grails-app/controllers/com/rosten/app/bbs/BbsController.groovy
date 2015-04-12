@@ -31,7 +31,7 @@ class BbsController {
 	def taskService
 	def systemService
 	def shareService
-	
+	private def flowCode = "bbs"
 	
 	def bbsSearchView ={
 		def model =[:]
@@ -412,6 +412,12 @@ class BbsController {
 		}
 		
 		if(bbs.save(flush:true)){
+			//2015-4-11------增加自动添加意见功能----------------------------------------------
+			if(!"起草".equals(frontStatus)){
+				//默认增加意见内容：同意
+				shareService.addCommentAuto(currentUser,frontStatus,bbs.id,this.flowCode)
+			}
+			//--------------------------------------------------------------------------
 			//添加日志
 			def logContent
 			switch (true){

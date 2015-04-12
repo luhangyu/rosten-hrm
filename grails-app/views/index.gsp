@@ -394,7 +394,7 @@
 			</div>
 		</div>
 		<div data-dojo-type="dijit/layout/ContentPane" id="footer"
-			data-dojo-props='region:"bottom",style:"border:1px solid #B5BCC7"'>Copyright @2014 ; rosten
+			data-dojo-props='region:"bottom",style:"border:1px solid #B5BCC7"'>Copyright ©2014-2015 ; rosten
 			版权所有,提供技术支持</div>
 	</div>
 </body>

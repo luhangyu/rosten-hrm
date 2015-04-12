@@ -19,7 +19,7 @@ define(["dojo/_base/lang",
 	 * grid:表格widget;dealArray:需要处理的字段名称集合;query:查询参数json类型
 	 */
 	application.getGridDataCollect =function(grid,dealArray,query){
-		var gridContent=[]
+		var gridContent=[];
 		
 		var searchQuery = {id:"*"};
 		if(query) searchQuery = query;
@@ -191,7 +191,11 @@ define(["dojo/_base/lang",
                 registry.byId(inputName).attr("value", _data.join(","));
             }
             if( inputId !=undefined){
-                registry.byId(inputId).attr("value",_data_1.join(","));
+                if(registry.byId(inputId)){
+                    registry.byId(inputId).attr("value",_data_1.join(","));
+                }else{
+                    dom.byId(inputId).value = _data_1.join(",");
+                }
             }
         }; 
         return rosten[id];
@@ -225,7 +229,11 @@ define(["dojo/_base/lang",
             	registry.byId(inputName).attr("value", _data.join(","));
             }
             if( inputId !=undefined){
-            	registry.byId(inputId).attr("value", _data_1.join(","));
+            	if(registry.byId(inputId)){
+                    registry.byId(inputId).attr("value", _data_1.join(","));
+                }else{
+                    dom.byId(inputId).value = _data_1.join(",");
+                }
             }
         };
     };
