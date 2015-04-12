@@ -150,9 +150,9 @@ class VacateActionController {
 		
 		if(isChange){
 			actionList << createAction("新增",imgPath + "add.png",strname + "_add_admin")
+			actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		}
 		
-		actionList << createAction("删除",imgPath + "delete.png",strname + "_delete")
 		actionList << createAction("刷新",imgPath + "fresh.gif","freshGrid")
 		
 		render actionList as JSON

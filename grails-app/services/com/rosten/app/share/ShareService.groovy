@@ -19,6 +19,37 @@ class ShareService {
 	def taskService
 	
 	/*
+	 * 2015-4-12-----通过当前人获取所有部门列表
+	 */
+	def getDepartsByUser ={user ->
+		def departs =[]
+		
+		if(user.leaderFlag){
+			//部门领导，获取当前部门
+			def departList = user.getAllDepartEntity()	//当前部门
+			departs += departList
+			
+			departList.each{
+				//获取下属部门
+				def _list = []
+				this.getAllDepartByChild(_list,it)
+				departs += _list
+			}
+		}
+		
+		//获取分管部门
+		Depart.findAllByUser(user).each{
+			def _list = []
+			this.getAllDepartByChild(_list,it)
+			departs += _list
+		}
+		
+		return departs.unique().collect { elem ->
+		  elem.departName
+		}
+	}
+	
+	/*
 	 * 2015-4-12-------判断当前人员职位
 	 * leader:分管领导,deptLeader:部门领导,normal:普通员工
 	 */

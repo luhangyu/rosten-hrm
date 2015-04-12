@@ -112,7 +112,7 @@ class Vacate {
 	Date currentDealDate
 	
 	//缺省读者；*:允许所有人查看,[角色名称]:允许角色,user:普通人员查看
-	String defaultReaders="[普通人员],[应用管理员]"
+	String defaultReaders="[请假管理员],[应用管理员]"
 	def addDefaultReader(String userRole){
 		if(defaultReaders==null || "".equals(defaultReaders)){
 			defaultReaders = userRole

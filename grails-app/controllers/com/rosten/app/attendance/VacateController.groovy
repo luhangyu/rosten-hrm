@@ -1053,6 +1053,9 @@ class VacateController {
 			json["gridHeader"] = vacateService.getVacateListLayout()
 		}
 		
+		//2015-4-12--------获取当前用户所有的部门信息
+		def searchDeparts = shareService.getDepartsByUser(user)
+		
 		//增加查询条件
 		def searchArgs =[:]
 		
@@ -1068,12 +1071,13 @@ class VacateController {
 			args["max"] = perPageNum
 			args["company"] = company
 			args["user"] = user
-			
+			args["departs"] = searchDeparts
+						
 			json["gridData"] = vacateService.getAllAskForDataStore(args,searchArgs)
 			
 		}
 		if(params.refreshPageControl){
-			def total = vacateService.getAllVacateCount(company,searchArgs)
+			def total = vacateService.getAllVacateCount(company,user,searchDeparts,searchArgs)
 			json["pageControl"] = ["total":total.toString()]
 		}
 		render json as JSON
