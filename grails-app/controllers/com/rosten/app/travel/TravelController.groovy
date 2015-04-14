@@ -199,6 +199,9 @@ class TravelController {
 			json["gridHeader"] = travelService.getTravelListLayout()
 		}
 		
+		//2015-4-12--------获取当前用户所有的部门信息
+		def searchDeparts = shareService.getDepartsByUser(user)
+		
 		//2014-9-3 增加搜索功能
 		def searchArgs =[:]
 		
@@ -221,6 +224,9 @@ class TravelController {
 				gridData = travelService.getTravelListDataStoreByUser(args,searchArgs)
 			}else if("all".equals(params.type)){
 				//所有文档
+				args["user"] = user
+				args["departs"] = searchDeparts
+				
 				gridData = travelService.getTravelListDataStore(args,searchArgs)
 			}
 			
@@ -234,7 +240,7 @@ class TravelController {
 				total = travelService.getTravelCountByUser(company,user,searchArgs)
 			}else if("all".equals(params.type)){
 				//所有文档
-				total = travelService.getTravelCount(company,searchArgs)
+				total = travelService.getTravelCount(company,user,searchDeparts,searchArgs)
 			}
 			
 			json["pageControl"] = ["total":total.toString()]

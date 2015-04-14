@@ -76,7 +76,7 @@ class TravelApp {
 	static hasMany=[travelUsers:PersonInfor,readers:User]
 	
 	//缺省读者；*:允许所有人查看,[角色名称]:允许角色
-	String defaultReaders="[应用管理员]"
+	String defaultReaders="[请假管理员],[应用管理员]"
 	def addDefaultReader(String userRole){
 		if(defaultReaders==null || "".equals(defaultReaders)){
 			defaultReaders = userRole

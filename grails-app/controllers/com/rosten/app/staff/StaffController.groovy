@@ -349,7 +349,7 @@ class StaffController {
 				if(applyEntity){
 					model["result"] = "false"
 				}else{
-					model["result"] "true"
+					model["result"] ="true"
 				}
 			}else{
 				model["result"] = "hasOfficial"
@@ -1310,7 +1310,7 @@ class StaffController {
 			//2015-4-11------增加自动添加意见功能----------------------------------------------
 			if(!"新增".equals(frontStatus)){
 				//默认增加意见内容：同意
-				shareService.addCommentAuto(currentUser,frontStatus,entity.id,"staffDepartChange")
+				shareService.addCommentAuto(currentUser,frontStatus,departChange.id,"staffDepartChange")
 			}
 			//--------------------------------------------------------------------------
 			
@@ -1325,6 +1325,12 @@ class StaffController {
 					personInfor.departs.clear()
 					personInfor.addToDeparts(departChange.inDepart)
 					personInfor.save(flush:true)
+					
+					//同时修改系统用户中的部门信息
+					if(personInfor.user){
+						UserDepart.removeAll(personInfor.user)
+						UserDepart.create(personInfor.user, departChange.inDepart)
+					}
 					
 					break
 				case departChange.status.contains("归档"):
@@ -2569,6 +2575,7 @@ class StaffController {
 			_gridHeader << ["name":"政治面貌","width":"auto","colIdx":9,"field":"politicsStatus"]
 			_gridHeader << ["name":"角色","width":"auto","colIdx":10,"field":"userRoles"]
 			_gridHeader << ["name":"状态","width":"auto","colIdx":11,"field":"status"]
+			_gridHeader << ["name":"是否领导","width":"auto","colIdx":12,"field":"isLeader"]
 
 			json["gridHeader"] = _gridHeader
 		}
@@ -2653,6 +2660,7 @@ class StaffController {
 				sMap["status"] = it?.status
 				sMap["userRoles"] = _user?.getAllRolesValue()
 				sMap["workJob"] = it?.workJob
+				sMap["isLeader"] = _user?_user.getleaderFlagValue():"否"
 				
 				_json.items+=sMap
 				
@@ -2716,8 +2724,10 @@ class StaffController {
 			if("staffAdd".equals(params.type)){
 				_gridHeader << ["name":"当前处理人","width":"auto","colIdx":11,"field":"currentUser"]
 				_gridHeader << ["name":"状态","width":"auto","colIdx":12,"field":"status"]
+				_gridHeader << ["name":"是否领导","width":"auto","colIdx":13,"field":"isLeader"]
 			}else{
 				_gridHeader << ["name":"状态","width":"auto","colIdx":11,"field":"status"]
+				_gridHeader << ["name":"是否领导","width":"auto","colIdx":12,"field":"isLeader"]
 			}
 			
 
@@ -2806,6 +2816,8 @@ class StaffController {
 				}
 				
 				sMap["status"] = personInfor?.status
+				
+				sMap["isLeader"] = _user?_user.getleaderFlagValue():"否"
 				
 				_json.items+=sMap
 				

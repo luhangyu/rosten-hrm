@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="layout" content="rosten" />
     <link rel="stylesheet" href="${createLinkTo(dir:'js/dojox/widget/Wizard',file:'Wizard.css') }"></link>
-    <title>离职/退休</title>
+    <title>${statusChange?.changeType }</title>
     <style type="text/css">
 		body{
 			overflow:auto;

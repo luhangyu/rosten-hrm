@@ -25,8 +25,10 @@ class StartService {
 				}
 			}
 			if(telephone){
-				def smsClient = new AxisClient()
-				smsClient.sendPhoneInfo(telephone, "【人事系统】" + params.content)
+				
+				//2015-4-13--------------测试时期，暂时关闭短消息发送
+//				def smsClient = new AxisClient()
+//				smsClient.sendPhoneInfo(telephone, "【人事系统】" + params.content)
 			}
 		}
 	}
